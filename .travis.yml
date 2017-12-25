@@ -1,0 +1,14 @@
+language: python
+python:
+  - "3.6"
+
+install:
+  - pip install click jupyter pyyaml coveralls pytest-cov coverage
+  - pip install -e .
+
+script:
+  - pheasant --version
+  - pytest
+
+after_success:
+  - coveralls
