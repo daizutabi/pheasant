@@ -1,19 +1,19 @@
 import jupyter_client
 
-kernels_manager = {}
+kernel_managers = {}
 clients = {}
 
 
 def get_kernel_manager(kernel_name):
-    if kernel_name in kernels_manager:
-        kernel_manager = kernels_manager[kernel_name]
+    if kernel_name in kernel_managers:
+        kernel_manager = kernel_managers[kernel_name]
     else:
         kernel_specs = jupyter_client.kernelspec.find_kernel_specs()
         if kernel_name not in kernel_specs:
             msg = f'Could not find kernel name: {kernel_name}'
             raise ValueError(msg)
         kernel_manager = jupyter_client.KernelManager(kernel_name=kernel_name)
-        kernels_manager[kernel_name] = kernel_manager
+        kernel_managers[kernel_name] = kernel_manager
 
     if not kernel_manager.is_alive():
         kernel_manager.start_kernel()
@@ -48,6 +48,4 @@ def execute(kernel_name, code):
     return list(get_iopub_messages_until_idle(client))
 
 
-execute('doc', 'a=1')
-execute('doc', '%matplotlib inline\nimport matplotlib.pyplot as plt')
-execute('doc', 'plt.plot([1,2])')
+execute('doc', '1 + 1')
