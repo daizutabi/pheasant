@@ -25,8 +25,9 @@ def test_get_client():
 
 
 def test_execute():
-    pass
-    # execute(kernel_name, '1 + 1')
+    source = execute('python3', '1 + 1')
+    assert source[0]['code'] == '1 + 1'
+    assert source[1]['data']['text/plain'] == '2'
 
 
 # test_get_kernel_magager()
