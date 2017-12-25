@@ -46,6 +46,3 @@ def execute(kernel_name, code):
     client = get_client(kernel_name)
     client.execute(code)
     return list(get_iopub_messages_until_idle(client))
-
-
-execute('doc', '1 + 1')
