@@ -8,6 +8,7 @@ install:
 
 script:
   - pheasant --version
+  - jupyter kernelspec list
   - pytest
 
 after_success:
