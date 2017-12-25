@@ -49,4 +49,5 @@ def execute(kernel_name, code):
 
 
 execute('doc', 'a=1')
-execute('doc', 'print(2*a)')
+execute('doc', '%matplotlib inline\nimport matplotlib.pyplot as plt')
+execute('doc', 'plt.plot([1,2])')
