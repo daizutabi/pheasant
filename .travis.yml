@@ -5,10 +5,12 @@ python:
 install:
   - pip install click jupyter pyyaml coveralls pytest-cov coverage
   - pip install -e .
+  - which jupyter
 
 script:
   - pheasant --version
   - jupyter kernelspec list
+  - pheasant kernelname
   - pytest
 
 after_success:

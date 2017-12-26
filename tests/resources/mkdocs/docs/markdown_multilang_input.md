@@ -2,31 +2,31 @@
 
 Text1
 
-```python
+```jupyter
 def func(x):
     return 2 * x
 ```
 
 Text2
 
-```python
+```jupyter
 func(1)
 ```
 
-```python hide-input
+```jupyter hide-input
 func(2)
 ```
 
-```python hide-output
+```jupyter hide-output
 func(3)
 ```
 
-```python hide
+```jupyter hide
 func(4)
 ```
 
 Text3
 
-```python
+```jupyter
 print(1)
 ```

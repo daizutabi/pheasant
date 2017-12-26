@@ -12,7 +12,7 @@
   {%- block any_cell scoped -%}
     {{ super() }}
   {%- endblock any_cell -%}
-  {%- if not (cell.cell_type == 'code' and 'hide' in cell.metadata.pheasant) -%}
+  {%- if not (cell.cell_type == 'code' and 'hide' in cell.metadata.pheasant.options) -%}
     {{ '\n' }}{{ '\n' if not loop.last }}
   {%- endif -%}
 {%- endfor -%}
@@ -29,20 +29,23 @@
 
 {%- block codecell -%}
   {%- set ns = namespace(found=false) -%}
+  {%- set options = cell.metadata.get('pheasant', {}).get('options', []) -%}
   {%- for output in cell.outputs if output.output_type != 'display_data' -%}
     {%- set ns.found = true -%}
   {%- endfor -%}
-  {%- if 'hide' not in cell.metadata.pheasant -%}
-    {%- if 'hide-input' not in cell.metadata.pheasant or ns.found -%}
+  {%- if 'hide' not in options -%}
+    {%- if 'hide-input' not in options or ns.found -%}
       {{ '```' }}{%- if 'magics_language' in cell.metadata -%}{# for syntax highlight #}
            {{ cell.metadata.magics_language}}
+         {%- elif 'language' in cell.metadata.get('pheasant', {}) -%}
+           {{ cell.metadata.pheasant.language }}
          {%- elif 'name' in nb.metadata.get('language_info', {}) -%}
            {{ nb.metadata.language_info.name }}
          {%- endif -%}{{ '\n' }}
-      {%- if not cell.outputs or 'hide-output' in cell.metadata.pheasant -%}
+      {%- if not cell.outputs or 'hide-output' in options -%}
         {{ cell.source + '\n' }}
       {%- else -%}
-        {%- if 'hide-input' not in cell.metadata.pheasant -%}
+        {%- if 'hide-input' not in options -%}
           {%- for line in cell.source.split('\n') -%}
             {%- if line.startswith(' ') %}...{% else %}>>>{% endif %} {{ line + '\n'}}
           {%- endfor -%}

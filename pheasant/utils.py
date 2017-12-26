@@ -16,10 +16,7 @@ def read(root, filename):
     path = os.path.abspath(path)
 
     with open(path) as f:
-        if path.endswith('.md'):
-            return f.read()
-        elif path.endswith('.ipynb'):
+        if path.endswith('.ipynb'):
             return nbformat.read(f, as_version=4)
         else:
-            msg = 'Unknown file type. The extension must be `md` or `ipynb`.'
-            raise ValueError(msg, path)
+            return f.read()

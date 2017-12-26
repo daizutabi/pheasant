@@ -8,9 +8,19 @@ from traitlets.config import Config
 
 from pheasant.config import config
 
-config = config['notebook']
+config = config['jupyter']
 
 log = logging.getLogger(__name__)
+
+
+def execute(notebook, timeout=600):
+    """
+    Execute a notebook
+    """
+    timeout = config['timeout']
+    ep = ExecutePreprocessor(timeout=timeout)
+    ep.preprocess(notebook, {})  # Execute
+    # ep.preprocess_cell(cell, resources, index)
 
 
 def new_exporter():
@@ -32,15 +42,26 @@ def new_exporter():
     return exporter
 
 
-def execute(notebook, timeout=600, kernel='python3'):
+def update_cell_metadata(cell, language, option=None):
     """
-    Execute a notebook
+    Add pheasant metadata. This metadata is used when notebook is exported
+    to markdown.
     """
-    timeout = config['timeout']
-    kernel = config['kernel']
-    ep = ExecutePreprocessor(timeout=timeout, kernel_name=kernel)
-    ep.preprocess(notebook, {})  # Execute
-    # ep.preprocess_cell(cell, resources, index)
+    # For notebook
+    if option is None and 'pheasant' in cell.metadata:
+        option = cell.metadata['pheasant']
+
+    if option:
+        if isinstance(option, str):
+            options = [option.strip() for option in option.split(',')]
+        else:
+            options = option
+    else:
+        options = []
+
+    pheasant_metadata = {'options': options, 'language': language}
+    cell.metadata['pheasant'] = pheasant_metadata
+    return cell
 
 
 def export(notebook):
@@ -52,12 +73,11 @@ def export(notebook):
         with open(path) as f:
             notebook = nbformat.read(f, as_version=config['format_version'])
 
-    for cell in notebook.cells:
-        if cell.cell_type == 'code':
-            if 'pheasant' not in cell.metadata:
-                cell.metadata['pheasant'] = []
-            elif not isinstance(cell.metadata['pheasant'], list):
-                cell.metadata['pheasant'] = [cell.metadata['pheasant']]
+    if 'kernelspec' in notebook.metadata:
+        language = notebook.metadata.kernelspec.language
+        for cell in notebook.cells:
+            if cell.cell_type == 'code':
+                update_cell_metadata(cell, language)
 
     markdown, resources = exporter.from_notebook_node(notebook)
     return markdown, resources
