@@ -3,9 +3,10 @@ python:
   - "3.6"
 
 install:
-  - pip install click jupyter pyyaml coveralls pytest-cov coverage
+  - pip install click jupyter coveralls pytest-cov coverage
   - pip install -e .
   - which jupyter
+  - apt-get install julia
   - julia -e 'Pkg.build("IJulia")'
   # How can I find jupyter path?
 
