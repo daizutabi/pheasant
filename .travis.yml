@@ -1,18 +1,15 @@
-sudo: required
-dist: trusty
-
 language: python
 python:
   - "3.6"
 
 before_install:
-  - sudo apt-get install julia
+  # - sudo apt-get install julia
 
 install:
   - pip install click jupyter coveralls pytest-cov coverage
   - pip install -e .
-  - which jupyter
-  - julia -e 'Pkg.build("IJulia")'
+  # - which jupyter
+  # - julia -e 'Pkg.build("IJulia")'
 
 script:
   - pheasant --version
