@@ -2,40 +2,10 @@
 
 ```python
 x = 1
-print(2)
+print(2*x)
 ```
 
 ```julia
-x = 1
-println(2x)
-```
-
-```python
-x = 1
-print(2)
-```
-
-```julia
-x = 1
-println(2x)
-```
-
-```python
-x = 1
-print(2)
-```
-
-```julia
-x = 1
-println(2x)
-```
-
-```python
-x = 1
-print(2)
-```
-
-```julia
-x = 1
-println(2x)
+x = 3
+println(3x)
 ```

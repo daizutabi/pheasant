@@ -4,8 +4,8 @@ from html import escape
 import nbformat
 
 from pheasant.config import config as pheasant_config
-from pheasant.core.markdown import fenced_code_splitter, new_notebook
-from pheasant.core.notebook import convert, execute, export
+from pheasant.core.markdown import convert as convert_markdown
+from pheasant.core.notebook import convert as convert_notebook
 from pheasant.mkdocs.defaults import DEFAULT_SCHEMA
 
 try:
@@ -41,7 +41,11 @@ class PheasantPlugin(BasePlugin):
         plugin_config = config['plugins']['pheasant'].config
         if plugin_config['template_file']:
             template = plugin_config['template_file']
-            pheasant_config['notebook']['template'] = template
+            pheasant_config['jupyter']['template'] = template
+            logger.info(f'Template file for pheasant: {template}')
+
+        pheasant_config['jupyter']['kernel_name'].update(
+            plugin_config['kernel_name'])
 
         return config
 
@@ -79,15 +83,12 @@ class PheasantPlugin(BasePlugin):
         The raw source for a page as unicode string. If None is returned, the
         default loading from a file will be performed.
         """
-        path = page.abs_input_path
-        if not path.endswith('.ipynb'):
+        notebook = page.abs_input_path
+        if not notebook.endswith('.ipynb'):
             return
-        logger.info('[pheasant] page_read_source:page:notebook converting...')
-        with open(path) as f:
-            notebook = nbformat.read(f, as_version=4)
-        # execute(notebook)
-        markdown = convert(notebook)
-
+        logger.info(f'[pheasant] Converting notebook: {notebook}')
+        markdown = convert_notebook(notebook)
+        self._pheasant_markdown = markdown
         return markdown
 
     def on_page_markdown(self, markdown, page, config, site_navigation):
@@ -109,16 +110,14 @@ class PheasantPlugin(BasePlugin):
         -------
         Markdown source text of page as string
         """
-        if '```jupyter' in markdown:
-            msg = '[pheasant] page_markdown:markdown:markdown converting...'
-            logger.info(msg)
-            language = pheasant_config['notebook']['language']
-            notebook = new_notebook(markdown, language=language)
-            execute(notebook)
-            markdown = convert(notebook)
+        path = page.abs_input_path
+        if path.endswith('.ipynb'):
+            return markdown
 
+        msg = f'[pheasant] Converting markdown: {path}'
+        logger.info(msg)
+        markdown = convert_markdown(markdown)
         self._pheasant_markdown = markdown
-
         return markdown
 
     def on_page_content(self, html, page, config, site_navigation):
@@ -141,6 +140,6 @@ class PheasantPlugin(BasePlugin):
         plugin_config = config['plugins']['pheasant'].config
         if plugin_config.get('debug', False) and self._pheasant_markdown:
             html = escape(self._pheasant_markdown)
-            html = f'<pre>{html}</pre>'
+            html = f'<h1>DEBUG MODE</h1><pre>{html}</pre>'
 
         return html

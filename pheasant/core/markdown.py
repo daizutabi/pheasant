@@ -4,39 +4,19 @@ import re
 import nbformat
 
 from pheasant.config import config
-from pheasant.core.client import find_kernel_names, run_cell
-from pheasant.core.notebook import convert as convert_
+from pheasant.core.client import run_cell, select_kernel_name
+from pheasant.core.notebook import convert as convert_notebook
 from pheasant.core.notebook import update_cell_metadata
 
 logger = logging.getLogger(__name__)
 config = config['jupyter']
 
 
-def select_kernel_name(language):
-    """
-    Select one kernelspec per language.
-    """
-    if language in config['kernel_name']:
-        return config['kernel_name'][language]
-
-    language_kernels = find_kernel_names()
-    if language not in language_kernels:
-        logger.error(f'Could not find kernel_spec for {language}.')
-        config['kernel_name'][language] = None
-        return None
-
-    kernel_names = language_kernels[language]
-    config['kernel_name'][language] = kernel_names[0]
-    if len(kernel_names) > 1:
-        logger.warning(f'Multiple kernels are found for {language}.')
-    logger.info(f'Use kernel_name `{kernel_names[0]}` for {language}.')
-    return kernel_names[0]
-
-
 def convert(source: str):
     notebook = nbformat.v4.new_notebook(cells=list(cell_runner(source)),
                                         metadata={})
-    markdown = convert_(notebook)
+    markdown = convert_notebook(notebook)
+    return markdown
 
 
 def cell_runner(source: str):
@@ -49,7 +29,8 @@ def cell_runner(source: str):
         pheasant_metadata = cell.metadata.get('pheasant', {})
         language = pheasant_metadata.get('language', 'python')
         kernel_name = select_kernel_name(language)
-        yield run_cell(kernel_name, cell)
+        cell = run_cell(kernel_name, cell)
+        yield cell
 
 
 def cell_generator(source: str):

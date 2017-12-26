@@ -41,10 +41,11 @@ def convert_command(filename):
     with open(filename) as f:
         if filename.endswith('.ipynb'):
             notebook = nbformat.read(f, as_version=4)
-            print(convert_notebook(notebook))
+            markdown = convert_notebook(notebook)
         else:
             markdown = f.read()
-            print(convert_markdown(markdown))
+            markdown = convert_markdown(markdown)
+        print(markdown)
 
 
 @cli.command(help='Show language:kernel_name infomation.')

@@ -70,7 +70,7 @@ def export(notebook):
     """
     exporter = new_exporter()
     if isinstance(notebook, str):
-        with open(path) as f:
+        with open(notebook) as f:
             notebook = nbformat.read(f, as_version=config['format_version'])
 
     if 'kernelspec' in notebook.metadata:

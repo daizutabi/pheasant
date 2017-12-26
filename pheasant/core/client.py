@@ -7,7 +7,7 @@ from nbformat.v4 import output_from_msg
 from pheasant.config import config
 
 config = config['jupyter']
-logger = logging.getLogger('__name__')
+logger = logging.getLogger(__name__)
 kernel_managers = {}
 kernel_clients = {}
 
@@ -26,6 +26,27 @@ def find_kernel_names():
     return kernel_names
 
 
+def select_kernel_name(language):
+    """
+    Select one kernelspec per language.
+    """
+    if language in config['kernel_name']:
+        return config['kernel_name'][language]
+
+    language_kernels = find_kernel_names()
+    if language not in language_kernels:
+        logger.error(f'Could not find kernel_spec for {language}.')
+        config['kernel_name'][language] = None
+        return None
+
+    kernel_names = language_kernels[language]
+    config['kernel_name'][language] = kernel_names[0]
+    if len(kernel_names) > 1:
+        logger.warning(f'Multiple kernels are found for {language}.')
+    logger.info(f'Use kernel_name `{kernel_names[0]}` for {language}.')
+    return kernel_names[0]
+
+
 def get_kernel_manager(kernel_name):
     if kernel_name in kernel_managers:
         kernel_manager = kernel_managers[kernel_name]
@@ -34,6 +55,7 @@ def get_kernel_manager(kernel_name):
         if kernel_name not in kernel_specs:
             msg = f'Could not find kernel name: {kernel_name}'
             raise ValueError(msg)
+        logger.info(f'Creating kernel manager with kernel: {kernel_name}')
         kernel_manager = jupyter_client.KernelManager(kernel_name=kernel_name)
         kernel_managers[kernel_name] = kernel_manager
 
@@ -48,6 +70,7 @@ def get_kernel_client(kernel_name):
     if kernel_name in kernel_clients:
         return kernel_clients[kernel_name]
     else:
+        logger.info(f'Creating kernel client with kernel: {kernel_name}')
         kernel_client = kernel_manager.client()
         kernel_client.start_channels()
         try:
@@ -56,6 +79,7 @@ def get_kernel_client(kernel_name):
             kernel_client.stop_channels()
             kernel_manager.shutdown_kernel()
 
+        logger.info(f'Kernel client ready: {kernel_name}')
         kernel_client.allow_stdin = False
         kernel_clients[kernel_name] = kernel_client
         return kernel_client
@@ -86,7 +110,7 @@ def _wait_for_reply(kernel_name, msg_id, timeout=300):
 def run_cell(kernel_name, cell):
     kernel_client = get_kernel_client(kernel_name)
     msg_id = kernel_client.execute(cell.source)
-    logger.debug("Executing cell:\n%s", cell.source)
+    logger.info(f'Executing cell:\n{cell.source}')
     exec_reply = _wait_for_reply(kernel_name, msg_id)
 
     outs = cell.outputs = []
@@ -100,15 +124,15 @@ def run_cell(kernel_name, cell):
             # finishes, we won't actually have to wait this long, anyway.
             msg = kernel_client.iopub_channel.get_msg(timeout=4)
         except Empty:
-            logger.warn("Timeout waiting for IOPub output")
-            raise RuntimeError("Timeout waiting for IOPub output")
+            logger.warn('Timeout waiting for IOPub output')
+            raise RuntimeError('Timeout waiting for IOPub output')
 
         if msg['parent_header'].get('msg_id') != msg_id:
             # not an output from our execution
             continue
 
         msg_type = msg['msg_type']
-        logger.debug("output: %s", msg_type)
+        logger.info(f'output: {msg_type}')
         content = msg['content']
 
         # set the prompt number for the input and the output
@@ -140,10 +164,3 @@ def run_cell(kernel_name, cell):
 
     cell.outputs = outs
     return cell
-
-
-if __name__ == '__main__':
-    get_kernel_client('doc')
-
-    print(kernel_clients)
-    print(kernel_managers)

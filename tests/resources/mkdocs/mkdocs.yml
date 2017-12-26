@@ -11,6 +11,8 @@ extra_javascript:
 plugins:
     - pheasant:
           debug: False
+          template_file: ''
+          kernel_name: {'python': 'python3'}
 
 pages:
   - Home: index.md

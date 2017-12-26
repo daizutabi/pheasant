@@ -8,4 +8,6 @@ else:
         ('debug', config_options.Type(bool, default=False)),
         ('template_file', config_options.Type(utils.string_types,
                                               default='')),
+        ('kernel_name', config_options.Type(dict,
+                                            default={'python', 'python3'})),
     )

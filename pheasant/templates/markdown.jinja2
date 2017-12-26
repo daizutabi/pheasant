@@ -54,7 +54,7 @@
           {%- if output.output_type == 'execute_result' -%}
             {{ output.data['text/plain'] + '\n' }}
           {%- elif output.output_type == 'stream' -%}
-            {{ output.text }}
+            {{ output.text }}{%- if output.text[-1] != '\n' -%}{{ '\n' }}{%- endif -%}
           {%- elif output.output_type == 'error' -%}
             {{ output.traceback[-1] | strip_ansi + '\n'}}
           {%- endif -%}
