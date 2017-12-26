@@ -16,3 +16,8 @@
 
 
 Documentation tool for Pelican and MkDocs.
+
+
+## Demo
+
+![Demo](pheasant.gif)
