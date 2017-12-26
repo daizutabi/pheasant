@@ -6,7 +6,8 @@ install:
   - pip install click jupyter pyyaml coveralls pytest-cov coverage
   - pip install -e .
   - which jupyter
-  - echo $TRAVIS_BUILD_DIR
+  - julia -e 'Pkg.build("IJulia")'
+  # How can I find jupyter path?
 
 script:
   - pheasant --version
