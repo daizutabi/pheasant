@@ -1,7 +1,6 @@
 import pytest
-
-from pheasant.core.markdown import fenced_code_splitter, cell_generator
-from pheasant.core.notebook import execute, export
+from pheasant.core.markdown import (cell_generator, cell_runner,
+                                    fenced_code_splitter, convert)
 from pheasant.utils import read
 
 
@@ -27,7 +26,7 @@ def test_fenced_code_splitter(stream_input):
     assert next(nodes) == 'Text3'
 
 
-def test_new_notebook_stream(stream_input):
+def test_cell_generator_stream(stream_input):
     cells = cell_generator(stream_input)
     cell = next(cells)
     assert cell.cell_type == 'markdown'
@@ -35,36 +34,71 @@ def test_new_notebook_stream(stream_input):
     cell = next(cells)
     assert cell.cell_type == 'code'
     assert cell.source == 'def func(x):\n    return 2 * x'
-    assert cell['metadata']['pheasant']['language'] == 'python'
+    assert cell.metadata.pheasant.language == 'python'
     cell = next(cells)
     assert cell.cell_type == 'markdown'
     assert cell.source == 'Text2'
     cell = next(cells)
     assert cell.cell_type == 'code'
     assert cell.source == 'func(1)'
-    assert cell['metadata']['pheasant']['options'] == []
+    assert cell.metadata.pheasant.options == []
     cell = next(cells)
     assert cell.cell_type == 'code'
     assert cell.source == 'func(2)'
-    assert cell['metadata']['pheasant']['options'] == ['hide-input']
+    assert cell.metadata.pheasant.options == ['hide-input']
     cell = next(cells)
     assert cell.cell_type == 'code'
     assert cell.source == 'func(3)'
-    assert cell['metadata']['pheasant']['options'] == ['hide-output']
+    assert cell.metadata.pheasant.options == ['hide-output']
     cell = next(cells)
     assert cell.cell_type == 'code'
     assert cell.source == 'func(4)'
-    assert cell['metadata']['pheasant']['options'] == ['hide']
+    assert cell.metadata.pheasant.options == ['hide']
+    cell = next(cells)
+    assert cell.cell_type == 'markdown'
+    assert cell.source == 'Text3'
+
+
+def test_cell_runner_stream(stream_input):
+    cells = cell_runner(stream_input)
+    cell = next(cells)
+    assert cell.cell_type == 'markdown'
+    assert cell.source == '# Title\n\nText1'
+    cell = next(cells)
+    assert cell.cell_type == 'code'
+    assert cell.source == 'def func(x):\n    return 2 * x'
+    assert cell.metadata.pheasant.language == 'python'
+    assert cell.outputs == []
+    cell = next(cells)
+    assert cell.cell_type == 'markdown'
+    assert cell.source == 'Text2'
+    cell = next(cells)
+    assert cell.cell_type == 'code'
+    assert cell.source == 'func(1)'
+    assert cell.metadata.pheasant.options == []
+    assert cell.outputs[0]['data']['text/plain'] == '2'
+    cell = next(cells)
+    assert cell.cell_type == 'code'
+    assert cell.source == 'func(2)'
+    assert cell.metadata.pheasant.options == ['hide-input']
+    assert cell.outputs[0]['data']['text/plain'] == '4'
+    cell = next(cells)
+    assert cell.cell_type == 'code'
+    assert cell.source == 'func(3)'
+    assert cell.metadata.pheasant.options == ['hide-output']
+    assert cell.outputs[0]['data']['text/plain'] == '6'
+    cell = next(cells)
+    assert cell.cell_type == 'code'
+    assert cell.source == 'func(4)'
+    assert cell.metadata.pheasant.options == ['hide']
+    assert cell.outputs[0]['data']['text/plain'] == '8'
     cell = next(cells)
     assert cell.cell_type == 'markdown'
     assert cell.source == 'Text3'
 
 
 def test_execute_and_export_stream(stream_input, stream_output):
-    language = 'python'
-    # notebook = new_notebook(stream_input, language=language)
-    # execute(notebook)
-    # markdown, resources = export(notebook)
-    # for markdown_line, stream_output_line in zip(markdown.split('\n'),
-    #                                              stream_output.split('\n')):
-    #     assert markdown_line == stream_output_line
+    markdown = convert(stream_input)
+    for markdown_line, stream_output_line in zip(markdown.split('\n'),
+                                                 stream_output.split('\n')):
+        assert markdown_line == stream_output_line

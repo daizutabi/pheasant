@@ -10,7 +10,7 @@ extra_javascript:
 
 plugins:
     - pheasant:
-          debug: False
+          output_format: html
           template_file: ''
           kernel_name: {'python': 'python3'}
 
@@ -20,3 +20,4 @@ pages:
   - Notebook Stream: notebook_stream_input.ipynb
   - Markdown Display: markdown_display_input.md
   - Notebook Display: notebook_display_input.ipynb
+  - Notebook HTML: notebook_html_input.ipynb

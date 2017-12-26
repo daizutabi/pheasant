@@ -33,19 +33,19 @@ def cli(context, version):
 
 @cli.command(name='convert', help='Convert a Markdown or Jupyter notebook.')
 @click.argument('filename', required=True)
-def convert_command(filename):
+@click.option('--output_format', '-f',
+              type=click.Choice(['html', 'markdown', 'notebook']),
+              help='Output format.')
+def convert_command(filename, output_format):
     if not os.path.exists(filename):
         click.echo(f'Could not find a file: {filename}')
         return
 
-    with open(filename) as f:
-        if filename.endswith('.ipynb'):
-            notebook = nbformat.read(f, as_version=4)
-            markdown = convert_notebook(notebook)
-        else:
-            markdown = f.read()
-            markdown = convert_markdown(markdown)
-        print(markdown)
+    if filename.endswith('.ipynb'):
+        markdown = convert_notebook(filename, output=output_format)
+    else:
+        markdown = convert_markdown(filename, output=output_format)
+    print(markdown)
 
 
 @cli.command(help='Show language:kernel_name infomation.')

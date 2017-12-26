@@ -52,7 +52,9 @@
         {%- endif -%}
         {%- for output in cell.outputs if output.output_type != 'display_data' -%}
           {%- if output.output_type == 'execute_result' -%}
-            {{ output.data['text/plain'] + '\n' }}
+            {%- if 'text/html' not in output.data -%}
+              {{ output.data['text/plain'] + '\n' }}
+            {%- endif -%}
           {%- elif output.output_type == 'stream' -%}
             {{ output.text }}{%- if output.text[-1] != '\n' -%}{{ '\n' }}{%- endif -%}
           {%- elif output.output_type == 'error' -%}
@@ -61,12 +63,14 @@
         {%- endfor -%}
       {%- endif -%}{{ '```' }}{# for syntax highlight #}
     {%- endif -%}
-    {%- for output in cell.outputs if output.output_type == 'display_data' -%}
-      {{ '\n\n' }}
-      {%- block data_priority scoped -%}
-        {{ super() }}
-      {%- endblock data_priority -%}
-    {%- else -%}
+    {%- for output in cell.outputs -%}
+    {# {%- for output in cell.outputs if output.output_type == 'display_data' -%} #}
+      {%- if output.output_type == 'display_data' or (output.output_type == 'execute_result' and 'text/html' in output.data) -%}
+        {{ '\n\n' }}
+        {%- block data_priority scoped -%}
+          {{ super() }}
+        {%- endblock data_priority -%}
+      {%- endif -%}
     {%- endfor -%}
   {%- endif -%}
 {%- endblock codecell -%}

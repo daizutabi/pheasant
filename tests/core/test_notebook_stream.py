@@ -1,9 +1,9 @@
 import os
 
 import nbformat
-import pytest
 
-from pheasant.core.notebook import execute, export
+import pytest
+from pheasant.core.notebook import convert, execute
 from pheasant.utils import read
 
 
@@ -34,15 +34,15 @@ def test_new_notebook_stream(stream_input, stream_output):
     cell = notebook.cells[4]
     assert cell.cell_type == 'code'
     assert cell.source == 'func(2)'
-    assert cell['metadata']['pheasant'] == 'hide-input'
+    assert cell.metadata.pheasant == 'hide-input'
     cell = notebook.cells[5]
     assert cell.cell_type == 'code'
     assert cell.source == 'func(3)'
-    assert cell['metadata']['pheasant'] == 'hide-output'
+    assert cell.metadata.pheasant == 'hide-output'
     cell = notebook.cells[6]
     assert cell.cell_type == 'code'
     assert cell.source == 'func(4)'
-    assert cell['metadata']['pheasant'] == ['hide']
+    assert cell.metadata.pheasant == ['hide']
     cell = notebook.cells[7]
     assert cell.cell_type == 'markdown'
     assert cell.source == 'Text3'
@@ -51,7 +51,7 @@ def test_new_notebook_stream(stream_input, stream_output):
 def test_execute_and_export_stream(stream_input, stream_output):
     notebook = stream_input
     execute(notebook)
-    markdown, resources = export(notebook)
+    markdown = convert(notebook)
     for markdown_line, stream_output_line in zip(markdown.split('\n'),
                                                  stream_output.split('\n')):
         assert markdown_line == stream_output_line

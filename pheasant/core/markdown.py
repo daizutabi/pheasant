@@ -1,4 +1,5 @@
 import logging
+import os
 import re
 
 import nbformat
@@ -12,15 +13,54 @@ logger = logging.getLogger(__name__)
 config = config['jupyter']
 
 
-def convert(source: str):
-    notebook = nbformat.v4.new_notebook(cells=list(cell_runner(source)),
-                                        metadata={})
-    markdown = convert_notebook(notebook)
-    return markdown
+def convert(source: str, output='markdown'):
+    """
+    Convert markdown string or file into markdown with running results.
+
+    Parameters
+    ----------
+    source : str
+        Markdown source string or filename
+    output : str
+        Output format. If `notebook`, notebook object is returned
+        after running but before converting into markdown.
+        This is useful for debugging.
+
+    Returns
+    -------
+    results : str
+        Markdown source
+    """
+    if os.path.exists(source):
+        with open(source) as f:
+            source = f.read()
+
+    cells = list(cell_runner(source))
+    notebook = nbformat.v4.new_notebook(cells=cells, metadata={})
+
+    if output == 'notebook':
+        return notebook
+    else:
+        markdown = convert_notebook(notebook)
+        return markdown
 
 
 def cell_runner(source: str):
-    logger.info('Start markdown execution')
+    """
+    Generate cell with outputs after running the code
+    from markdown source string.
+
+    Parameters
+    ----------
+    source : str
+        Markdown source string.
+
+    Yields
+    ------
+    cell : Cell
+        Cell with outputs.
+    """
+    logger.info('Running cells from markdown source string...')
     for cell in cell_generator(source):
         if cell.cell_type != 'code':
             yield cell
@@ -36,11 +76,17 @@ def cell_runner(source: str):
 def cell_generator(source: str):
     """
     Generate notebook cell from markdown source string.
+    Generated cell has no outputs.
 
     Parameters
     ----------
     source : str
-        Markdwn source string.
+        Markdown source string.
+
+    Yields
+    ------
+    cell : Cell
+        Markdown cell or code cell.
     """
     for cell in fenced_code_splitter(source):
         if isinstance(cell, str):
@@ -56,16 +102,24 @@ def fenced_code_splitter(source: str):
     Generate splitted markdown and jupyter notebook cell from `source`.
     The type of generated value is str or tuple.
     If str, it is markdown.
-    If tuple, it is (language, code, option):
+    If tuple, it is (language, code, option). See below:
 
-    ```<language> <option>
-    <code>
-    ```
+    source:
+        <markdown>
+
+        ```<language> <option>
+        <code>
+        ```
+        ...
 
     Parameters
     ----------
     source : str
-        Markdwn source string.
+        Markdown source string.
+
+    Yields
+    ------
+    cell_string : str or tuple
     """
     pattern = r'^```(\S+)([^\n.]*)\n(.*?)\n^```$'
     re_compile = re.compile(pattern, re.DOTALL | re.MULTILINE)
@@ -94,7 +148,7 @@ def fenced_code_splitter(source: str):
 #     Parameters
 #     ----------
 #     source : str
-#         Markdwn source string.
+#         Markdown source string.
 #     language : str, optional
 #         Fenced code language
 #     metadata: dict, optional

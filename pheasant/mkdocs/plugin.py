@@ -22,7 +22,7 @@ class PheasantPlugin(BasePlugin):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self._pheasant_markdown = None
+        self._pheasant_source = None
 
     def on_config(self, config):
         """
@@ -39,6 +39,7 @@ class PheasantPlugin(BasePlugin):
         global configuration object
         """
         plugin_config = config['plugins']['pheasant'].config
+
         if plugin_config['template_file']:
             template = plugin_config['template_file']
             pheasant_config['jupyter']['template'] = template
@@ -87,9 +88,11 @@ class PheasantPlugin(BasePlugin):
         if not notebook.endswith('.ipynb'):
             return
         logger.info(f'[pheasant] Converting notebook: {notebook}')
-        markdown = convert_notebook(notebook)
-        self._pheasant_markdown = markdown
-        return markdown
+        plugin_config = config['plugins']['pheasant'].config
+        output = plugin_config['output_format']
+        source = convert_notebook(notebook, output=output)
+        self._pheasant_source = source
+        return source
 
     def on_page_markdown(self, markdown, page, config, site_navigation):
         """
@@ -116,9 +119,11 @@ class PheasantPlugin(BasePlugin):
 
         msg = f'[pheasant] Converting markdown: {path}'
         logger.info(msg)
-        markdown = convert_markdown(markdown)
-        self._pheasant_markdown = markdown
-        return markdown
+        plugin_config = config['plugins']['pheasant'].config
+        output = plugin_config['output_format']
+        source = convert_markdown(markdown, output=output)
+        self._pheasant_source = source
+        return source
 
     def on_page_content(self, html, page, config, site_navigation):
         """
@@ -138,8 +143,10 @@ class PheasantPlugin(BasePlugin):
         HTML rendered from Markdown source as string
         """
         plugin_config = config['plugins']['pheasant'].config
-        if plugin_config.get('debug', False) and self._pheasant_markdown:
-            html = escape(self._pheasant_markdown)
+        output = plugin_config['output_format']
+
+        if output != 'html' and self._pheasant_source:
+            html = escape(str(self._pheasant_source))
             html = f'<h1>DEBUG MODE</h1><pre>{html}</pre>'
 
         return html

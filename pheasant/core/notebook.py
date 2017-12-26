@@ -44,8 +44,8 @@ def new_exporter():
 
 def update_cell_metadata(cell, language, option=None):
     """
-    Add pheasant metadata. This metadata is used when notebook is exported
-    to markdown.
+    Add pheasant original metadata. This metadata is used when notebook
+    is exported to markdown.
     """
     # For notebook
     if option is None and 'pheasant' in cell.metadata:
@@ -64,31 +64,46 @@ def update_cell_metadata(cell, language, option=None):
     return cell
 
 
-def export(notebook):
+def convert(notebook, output='markdown'):
     """
-    Export markdown and resources from a notebook
+    Convert a notebook into markdown string.
+
+    Parameters
+    ----------
+    notebook : str or Notebook object
+        if str, it is a filename
+    output : str
+        Output format. If `notebook`, notebook object is returned
+        before converting. This is useful for debugging.
+
+    Returns
+    -------
+    str or Notebook object
     """
     exporter = new_exporter()
     if isinstance(notebook, str):
         with open(notebook) as f:
             notebook = nbformat.read(f, as_version=config['format_version'])
 
+    # For 'native' notebook, add language info to each code-cell.
     if 'kernelspec' in notebook.metadata:
         language = notebook.metadata.kernelspec.language
         for cell in notebook.cells:
             if cell.cell_type == 'code':
                 update_cell_metadata(cell, language)
 
-    markdown, resources = exporter.from_notebook_node(notebook)
-    return markdown, resources
+    if output == 'notebook':
+        return notebook
+    else:
+        markdown, resources = exporter.from_notebook_node(notebook)
+        return markdown
 
-
-def convert(notebook):
-    """
-    Convert a markdown with valid links and figures.
-    """
-    markdown, resources = export(notebook)
-    return markdown
+# def convert(notebook):
+#     """
+#     Convert a markdown with valid links and figures.
+#     """
+#     markdown, resources = export(notebook)
+#     return markdown
 
     # outputs = resources['outputs']
     #
