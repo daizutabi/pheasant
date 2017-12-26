@@ -9,10 +9,10 @@ extra_javascript:
   - 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML'
 
 plugins:
-    - pheasant:
-          output_format: html
-          template_file: ''
-          kernel_name: {'python': 'python3'}
+  - pheasant:
+      output_format: html
+      template_file: ''
+      kernel_name: {'python': 'python3'}
 
 pages:
   - Home: index.md
