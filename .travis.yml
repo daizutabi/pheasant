@@ -6,6 +6,7 @@ install:
   - pip install click jupyter pyyaml coveralls pytest-cov coverage
   - pip install -e .
   - which jupyter
+  - echo $TRAVIS_BUILD_DIR
 
 script:
   - pheasant --version
