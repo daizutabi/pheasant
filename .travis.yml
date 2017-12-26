@@ -12,7 +12,6 @@ install:
   - pip install -e .
   - which jupyter
   - julia -e 'Pkg.build("IJulia")'
-  # How can I find jupyter path?
 
 script:
   - pheasant --version
