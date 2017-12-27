@@ -1,8 +1,7 @@
 from markdown import Markdown
 from pelican import signals
 from pelican.readers import MarkdownReader
-from pheasant.core.markdown import convert as convert_markdown
-from pheasant.core.notebook import convert as convert_notebook
+from pheasant import convert
 
 
 class PheasantReader(MarkdownReader):
@@ -16,10 +15,7 @@ class PheasantReader(MarkdownReader):
         if '.ipynb_checkpoints' in source_path:
             return None, {}
 
-        if source_path.endswith('.ipynb'):
-            text = convert_notebook(source_path, output='html')
-        else:
-            text = convert_markdown(source_path, output='html')
+        text = convert(source_path, output='html')
 
         self._source_path = source_path
         self._md = Markdown(**self.settings['MARKDOWN'])

@@ -1,5 +1,3 @@
-import logging
-
 import nbformat
 from nbconvert import MarkdownExporter
 from nbconvert.preprocessors import ExecutePreprocessor
@@ -9,20 +7,18 @@ from pheasant.config import config
 
 config = config['jupyter']
 
-log = logging.getLogger(__name__)
-
 
 def convert(notebook, output='markdown'):
     """
-    Convert a notebook into markdown string.
+    Convert a notebook into a markdown string.
 
     Parameters
     ----------
     notebook : str or Notebook object
-        if str, it is a filename
+        If str, it is a filename.
     output : str
-        Output format. If `notebook`, notebook object is returned
-        before converting. This is useful for debugging.
+        Output format. If `notebook`, a notebook object is returned
+        before converting.
 
     Returns
     -------
@@ -94,64 +90,4 @@ def execute(notebook, timeout=600):
     """
     timeout = config['timeout']
     ep = ExecutePreprocessor(timeout=timeout)
-    ep.preprocess(notebook, {})  # Execute
-    # ep.preprocess_cell(cell, resources, index)
-
-# def convert(notebook):
-#     """
-#     Convert a markdown with valid links and figures.
-#     """
-#     markdown, resources = export(notebook)
-#     return markdown
-
-    # outputs = resources['outputs']
-    #
-    # re_link = re.compile(r'\[.*?\]\((.+?)\)')
-    #
-    # def replace(m):
-    #     src = m.group(1)
-    #     src_path = os.path.join(notebook_dir, src)
-    #     if src.endswith('.ipynb'):
-    #         dst = get_page_path(src)
-    #     elif os.path.exists(src_path):
-    #         dst = src
-    #         dst_path = os.path.join(doc_dir, dst)
-    #         shutil.copy2(src_path, dst_path)
-    #     elif src in outputs:
-    #         dst = name + src
-    #         dst_path = os.path.join(doc_dir, dst)
-    #         with open(dst_path, 'wb') as file:
-    #             file.write(outputs[src])
-    #
-    #     return m.group().replace(src, dst)
-    #
-    # return re_link.sub(replace, markdown)
-    #
-    # return markdown
-    #
-    #
-# def convert_link(path, source, outputs):
-#     notebook_path = get_notebook_abspath(path)
-#     notebook_dir = os.path.dirname(notebook_path)
-#     doc_path = get_doc_abspath(path)
-#     doc_dir, name = os.path.split(doc_path)
-#     name = os.path.splitext(name)[0] + '_'
-#
-#     def replace(m):
-#         src = m.group(1)
-#         src_path = os.path.join(notebook_dir, src)
-#         if src.endswith('.ipynb'):
-#             dst = get_page_path(src)
-#         elif os.path.exists(src_path):
-#             dst = src
-#             dst_path = os.path.join(doc_dir, dst)
-#             shutil.copy2(src_path, dst_path)
-#         elif src in outputs:
-#             dst = name + src
-#             dst_path = os.path.join(doc_dir, dst)
-#             with open(dst_path, 'wb') as file:
-#                 file.write(outputs[src])
-#
-#         return m.group().replace(src, dst)
-#
-#     return re_link.sub(replace, source)
+    ep.preprocess(notebook, {})

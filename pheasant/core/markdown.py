@@ -1,4 +1,3 @@
-import logging
 import os
 import re
 
@@ -9,7 +8,6 @@ from pheasant.core.client import run_cell, select_kernel_name
 from pheasant.core.notebook import convert as convert_notebook
 from pheasant.core.notebook import update_cell_metadata
 
-logger = logging.getLogger(__name__)
 config = config['jupyter']
 
 
@@ -60,7 +58,6 @@ def cell_runner(source: str):
     cell : Cell
         Cell with outputs.
     """
-    logger.info('Running cells from markdown source string...')
     for cell in cell_generator(source):
         if cell.cell_type != 'code':
             yield cell

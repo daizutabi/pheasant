@@ -4,9 +4,8 @@ from html import escape
 from mkdocs import utils
 from mkdocs.config import config_options
 from mkdocs.plugins import BasePlugin
-from pheasant.config import config as pheasant_config
-from pheasant.core.markdown import convert as convert_markdown
-from pheasant.core.notebook import convert as convert_notebook
+from pheasant import config as pheasant_config
+from pheasant import convert
 
 logger = logging.getLogger('mkdocs')
 
@@ -78,7 +77,8 @@ class PheasantPlugin(BasePlugin):
             return
 
         logger.info(f'[pheasant] Converting notebook: {notebook}')
-        source = convert_notebook(notebook, output=self._pheasant_output)
+        # source = convert_notebook(notebook, output=self._pheasant_output)
+        source = convert(notebook, output=self._pheasant_output)
         if not isinstance(source, str):
             source = str(source)
         self._pheasant_source = source
@@ -109,7 +109,7 @@ class PheasantPlugin(BasePlugin):
 
         msg = f'[pheasant] Converting markdown: {path}'
         logger.info(msg)
-        source = convert_markdown(markdown, output=self._pheasant_output)
+        source = convert(markdown, output=self._pheasant_output)
         if not isinstance(source, str):
             source = str(source)
         self._pheasant_source = source
