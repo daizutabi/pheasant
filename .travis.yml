@@ -24,4 +24,4 @@ script:
   - pheasant convert tests/resources/mkdocs/docs/notebook_stream_input.ipynb
 
 after_success:
-  - coveralls
+  - coveralls -e pheasant/main.py

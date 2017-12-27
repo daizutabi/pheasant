@@ -3,7 +3,7 @@ import os
 import pytest
 from pelican import Pelican
 from pelican.settings import read_settings
-from pheasant.plugins.pelican import PheasantReader
+from pheasant.plugins.pelican import PheasantReader, register
 from pheasant.utils import read
 
 
@@ -21,6 +21,10 @@ def reader(root):
     settings = read_settings('pelicanconf.py')
     yield PheasantReader(settings)
     os.chdir(curdir)
+
+
+def test_register():
+    assert register() is None
 
 
 def test_read_markdown(reader, root):

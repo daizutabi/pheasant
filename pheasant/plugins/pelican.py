@@ -36,7 +36,6 @@ class PheasantReader(MarkdownReader):
 def add_reader(readers):
     readers.reader_classes['md'] = PheasantReader
     readers.reader_classes['ipynb'] = PheasantReader
-    pass
 
 
 def register():

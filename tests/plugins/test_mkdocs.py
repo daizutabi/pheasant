@@ -57,28 +57,40 @@ def test_on_config(plugin, config):
     pheasant_config['template'] = template
 
 
-@pytest.mark.parametrize('output', ['notebook', 'markdown', 'html'])
-def test_on_page_read_source(plugin, config, root, stream_output, output):
-    class Page:
-        abs_input_path = os.path.join(root, 'docs/notebook_stream_input.ipynb')
+class Page:
+    def __init__(self, abs_input_path):
+        self.abs_input_path = abs_input_path
 
+
+paths = ['docs/markdown.md', 'docs/notebook_stream_input.ipynb']
+
+
+@pytest.mark.parametrize('output', ['notebook', 'markdown', 'html'])
+@pytest.mark.parametrize('path', paths)
+def test_on_page_read_source(plugin, config, root, stream_output,
+                             output, path):
+    page = Page(os.path.join(root, path))
     plugin._pheasant_output = output
-    source = plugin.on_page_read_source(None, Page(), config)
-    if output != 'notebook':
+    source = plugin.on_page_read_source(None, page, config)
+
+    if not path.endswith('.ipynb'):
+        assert source is None
+    elif output != 'notebook':
         assert source == stream_output
     else:
         assert source.startswith('{')
 
 
 @pytest.mark.parametrize('output', ['notebook', 'markdown', 'html'])
+@pytest.mark.parametrize('path', paths)
 def test_on_page_markdown(plugin, config, root, stream_input, stream_output,
-                          output):
-    class Page:
-        abs_input_path = os.path.join(root, 'docs/markdown_stream_input.md')
-
+                          output, path):
+    page = Page(os.path.join(root, path))
     plugin._pheasant_output = output
-    source = plugin.on_page_markdown(stream_input, Page(), config, None)
-    if output != 'notebook':
+    source = plugin.on_page_markdown(stream_input, page, config, None)
+    if path.endswith('.ipynb'):
+        assert source == stream_input
+    elif output != 'notebook':
         assert source == stream_output
     else:
         assert source.startswith('{')
