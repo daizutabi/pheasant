@@ -26,13 +26,13 @@ setup(
     license='MIT',
     packages=find_packages(exclude=['tests', 'docs']),
     include_package_data=True,
-    install_requires=['click', 'jupyter'],
+    install_requires=['click', 'jupyter', 'markdown'],
     entry_points={
         'console_scripts': [
            'pheasant = pheasant.main:cli',
         ],
         'mkdocs.plugins': [
-            'pheasant = pheasant.mkdocs.plugin:PheasantPlugin',
+            'pheasant = pheasant.plugins.mkdocs:PheasantPlugin',
         ]
     },
     classifiers=[

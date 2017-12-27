@@ -1,10 +1,11 @@
 .cache
 build/
 dist/
-site/
 .idea/
 *.pyc
 .ipynb_checkpoints/
 *.lnk
 *.egg-info/
 .coverage*
+**/pelican/output/
+**/mkdocs/site/

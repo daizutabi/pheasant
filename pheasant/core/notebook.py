@@ -1,5 +1,4 @@
 import logging
-import re
 
 import nbformat
 from nbconvert import MarkdownExporter
@@ -13,14 +12,39 @@ config = config['jupyter']
 log = logging.getLogger(__name__)
 
 
-def execute(notebook, timeout=600):
+def convert(notebook, output='markdown'):
     """
-    Execute a notebook
+    Convert a notebook into markdown string.
+
+    Parameters
+    ----------
+    notebook : str or Notebook object
+        if str, it is a filename
+    output : str
+        Output format. If `notebook`, notebook object is returned
+        before converting. This is useful for debugging.
+
+    Returns
+    -------
+    str or Notebook object
     """
-    timeout = config['timeout']
-    ep = ExecutePreprocessor(timeout=timeout)
-    ep.preprocess(notebook, {})  # Execute
-    # ep.preprocess_cell(cell, resources, index)
+    exporter = new_exporter()
+    if isinstance(notebook, str):
+        with open(notebook) as f:
+            notebook = nbformat.read(f, as_version=config['format_version'])
+
+    # For 'native' notebook, add language info to each code-cell.
+    if 'kernelspec' in notebook.metadata:
+        language = notebook.metadata.kernelspec.language
+        for cell in notebook.cells:
+            if cell.cell_type == 'code':
+                update_cell_metadata(cell, language)
+
+    if output == 'notebook':
+        return notebook
+    else:
+        markdown, resources = exporter.from_notebook_node(notebook)
+        return markdown
 
 
 def new_exporter():
@@ -64,39 +88,14 @@ def update_cell_metadata(cell, language, option=None):
     return cell
 
 
-def convert(notebook, output='markdown'):
+def execute(notebook, timeout=600):
     """
-    Convert a notebook into markdown string.
-
-    Parameters
-    ----------
-    notebook : str or Notebook object
-        if str, it is a filename
-    output : str
-        Output format. If `notebook`, notebook object is returned
-        before converting. This is useful for debugging.
-
-    Returns
-    -------
-    str or Notebook object
+    Execute a notebook
     """
-    exporter = new_exporter()
-    if isinstance(notebook, str):
-        with open(notebook) as f:
-            notebook = nbformat.read(f, as_version=config['format_version'])
-
-    # For 'native' notebook, add language info to each code-cell.
-    if 'kernelspec' in notebook.metadata:
-        language = notebook.metadata.kernelspec.language
-        for cell in notebook.cells:
-            if cell.cell_type == 'code':
-                update_cell_metadata(cell, language)
-
-    if output == 'notebook':
-        return notebook
-    else:
-        markdown, resources = exporter.from_notebook_node(notebook)
-        return markdown
+    timeout = config['timeout']
+    ep = ExecutePreprocessor(timeout=timeout)
+    ep.preprocess(notebook, {})  # Execute
+    # ep.preprocess_cell(cell, resources, index)
 
 # def convert(notebook):
 #     """

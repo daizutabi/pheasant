@@ -1,6 +1,5 @@
 import logging
 import os
-from pprint import pprint
 
 import click
 import pheasant

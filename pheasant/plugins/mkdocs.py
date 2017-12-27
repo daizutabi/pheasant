@@ -1,20 +1,24 @@
 import logging
 from html import escape
 
-import nbformat
-
+from mkdocs import utils
+from mkdocs.config import config_options
+from mkdocs.plugins import BasePlugin
 from pheasant.config import config as pheasant_config
 from pheasant.core.markdown import convert as convert_markdown
 from pheasant.core.notebook import convert as convert_notebook
-from pheasant.mkdocs.defaults import DEFAULT_SCHEMA
-
-try:
-    from mkdocs.plugins import BasePlugin
-except ImportError:
-    BasePlugin = object
-
 
 logger = logging.getLogger('mkdocs')
+
+
+DEFAULT_SCHEMA = (
+    ('output_format', config_options.Type(
+        utils.string_types, default='html')),
+    ('template_file', config_options.Type(
+        utils.string_types, default='')),
+    ('kernel_name', config_options.Type(
+        dict, default={'python', 'python3'})),
+)
 
 
 class PheasantPlugin(BasePlugin):
@@ -23,6 +27,7 @@ class PheasantPlugin(BasePlugin):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self._pheasant_source = None
+        self._pheasant_output = None
 
     def on_config(self, config):
         """
@@ -48,25 +53,9 @@ class PheasantPlugin(BasePlugin):
         pheasant_config['jupyter']['kernel_name'].update(
             plugin_config['kernel_name'])
 
+        self._pheasant_output = plugin_config['output_format']
+
         return config
-
-    def on_serve(self, server, config):
-        """
-        The serve event is only called when the serve command is used during
-        development. It is passed the Server instance which can be modified
-        before it is activated. For example, additional files or directories
-        could be added to the list of "watched" filed for auto-reloading.
-
-        Parameters
-        ----------
-        server: livereload.Server instance
-        config: global configuration object
-
-        Return
-        -------
-        livereload.Server instance
-        """
-        return server
 
     def on_page_read_source(self, source, page, config):
         """
@@ -87,10 +76,11 @@ class PheasantPlugin(BasePlugin):
         notebook = page.abs_input_path
         if not notebook.endswith('.ipynb'):
             return
+
         logger.info(f'[pheasant] Converting notebook: {notebook}')
-        plugin_config = config['plugins']['pheasant'].config
-        output = plugin_config['output_format']
-        source = convert_notebook(notebook, output=output)
+        source = convert_notebook(notebook, output=self._pheasant_output)
+        if not isinstance(source, str):
+            source = str(source)
         self._pheasant_source = source
         return source
 
@@ -119,9 +109,9 @@ class PheasantPlugin(BasePlugin):
 
         msg = f'[pheasant] Converting markdown: {path}'
         logger.info(msg)
-        plugin_config = config['plugins']['pheasant'].config
-        output = plugin_config['output_format']
-        source = convert_markdown(markdown, output=output)
+        source = convert_markdown(markdown, output=self._pheasant_output)
+        if not isinstance(source, str):
+            source = str(source)
         self._pheasant_source = source
         return source
 
@@ -142,11 +132,8 @@ class PheasantPlugin(BasePlugin):
         -------
         HTML rendered from Markdown source as string
         """
-        plugin_config = config['plugins']['pheasant'].config
-        output = plugin_config['output_format']
-
-        if output != 'html' and self._pheasant_source:
-            html = escape(str(self._pheasant_source))
+        if self._pheasant_output != 'html' and self._pheasant_source:
+            html = escape(self._pheasant_source)
             html = f'<h1>DEBUG MODE</h1><pre>{html}</pre>'
 
         return html

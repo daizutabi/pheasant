@@ -111,7 +111,7 @@ def run_cell(kernel_name, cell):
     kernel_client = get_kernel_client(kernel_name)
     msg_id = kernel_client.execute(cell.source)
     logger.info(f'Executing cell:\n{cell.source}')
-    exec_reply = _wait_for_reply(kernel_name, msg_id)
+    _wait_for_reply(kernel_name, msg_id)
 
     outs = cell.outputs = []
 
