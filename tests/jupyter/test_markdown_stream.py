@@ -1,5 +1,5 @@
 import pytest
-from pheasant.core.markdown import (cell_generator, cell_runner,
+from pheasant.jupyter.markdown import (cell_generator, cell_runner,
                                     fenced_code_splitter, convert)
 from pheasant.utils import read
 

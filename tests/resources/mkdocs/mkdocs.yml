@@ -10,9 +10,9 @@ extra_javascript:
 
 plugins:
   - pheasant:
-      output_format: html
-      template_file: ''
-      kernel_name: {'python': 'python3'}
+      jupyter:
+        output_format: html
+        kernel_name: {'python': 'python3'}
 
 pages:
   - Home: index.md

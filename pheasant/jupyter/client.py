@@ -4,9 +4,8 @@ from queue import Empty
 import jupyter_client
 from nbformat.v4 import output_from_msg
 
-from pheasant.config import config
+from .config import config
 
-config = config['jupyter']
 logger = logging.getLogger(__name__)
 kernel_managers = {}
 kernel_clients = {}

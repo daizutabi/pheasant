@@ -4,19 +4,13 @@ import os
 import click
 import pheasant
 
-from pheasant.core.markdown import convert as convert_markdown
-from pheasant.core.notebook import convert as convert_notebook
-from pheasant.core.client import find_kernel_names
+from pheasant.jupyter.markdown import convert as convert_markdown
+from pheasant.jupyter.notebook import convert as convert_notebook
+from pheasant.jupyter.client import find_kernel_names
 
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-
-# @click.argument('content', nargs=-1, type=click.Path(exists=True))
-# @click.option('--host', '-h', default='localhost', help='Host name.')
-# @click.option('--port', '-p', default='8000', help='Port number.')
-# @click.option('--open_url', '-o', is_flag=True, help='Open default browser.')
-# @click.option('--absolute', '-a', is_flag=True, help='Set absolute URLs.')
 
 
 @click.group(invoke_without_command=True)

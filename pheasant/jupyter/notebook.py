@@ -3,12 +3,10 @@ from nbconvert import MarkdownExporter
 from nbconvert.preprocessors import ExecutePreprocessor
 from traitlets.config import Config
 
-from pheasant.config import config
-
-config = config['jupyter']
+from .config import config
 
 
-def convert(notebook, output='markdown'):
+def convert(notebook, output_format='markdown'):
     """
     Convert a notebook into a markdown string.
 
@@ -16,7 +14,7 @@ def convert(notebook, output='markdown'):
     ----------
     notebook : str or Notebook object
         If str, it is a filename.
-    output : str
+    output_format : str
         Output format. If `notebook`, a notebook object is returned
         before converting.
 
@@ -36,7 +34,7 @@ def convert(notebook, output='markdown'):
             if cell.cell_type == 'code':
                 update_cell_metadata(cell, language)
 
-    if output == 'notebook':
+    if output_format == 'notebook':
         return notebook
     else:
         markdown, resources = exporter.from_notebook_node(notebook)
@@ -58,7 +56,7 @@ def new_exporter():
     }})
 
     exporter = MarkdownExporter(config=c)
-    exporter.template_file = config['template']
+    exporter.template_file = config['template_file']
     return exporter
 
 

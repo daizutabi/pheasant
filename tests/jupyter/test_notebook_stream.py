@@ -3,7 +3,7 @@ import os
 import nbformat
 
 import pytest
-from pheasant.core.notebook import convert, execute
+from pheasant.jupyter.notebook import convert, execute
 from pheasant.utils import read
 
 

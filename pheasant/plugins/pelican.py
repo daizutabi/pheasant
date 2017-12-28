@@ -15,7 +15,7 @@ class PheasantReader(MarkdownReader):
         if '.ipynb_checkpoints' in source_path:
             return None, {}
 
-        text = convert(source_path, output='html')
+        text = convert(source_path)
 
         self._source_path = source_path
         self._md = Markdown(**self.settings['MARKDOWN'])

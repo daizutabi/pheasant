@@ -3,15 +3,12 @@ import re
 
 import nbformat
 
-from pheasant.config import config
-from pheasant.core.client import run_cell, select_kernel_name
-from pheasant.core.notebook import convert as convert_notebook
-from pheasant.core.notebook import update_cell_metadata
-
-config = config['jupyter']
+from .client import run_cell, select_kernel_name
+from .notebook import convert as convert_notebook
+from .notebook import update_cell_metadata
 
 
-def convert(source: str, output='markdown'):
+def convert(source: str, output_format='markdown'):
     """
     Convert markdown string or file into markdown with running results.
 
@@ -19,7 +16,7 @@ def convert(source: str, output='markdown'):
     ----------
     source : str
         Markdown source string or filename
-    output : str
+    output_format : str
         Output format. If `notebook`, notebook object is returned
         after running but before converting into markdown.
         This is useful for debugging.
@@ -36,7 +33,7 @@ def convert(source: str, output='markdown'):
     cells = list(cell_runner(source))
     notebook = nbformat.v4.new_notebook(cells=cells, metadata={})
 
-    if output == 'notebook':
+    if output_format == 'notebook':
         return notebook
     else:
         markdown = convert_notebook(notebook)
