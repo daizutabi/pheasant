@@ -40,18 +40,18 @@ def cli(context, version):
 #     print(markdown)
 
 
-@cli.command(help='Show language:kernel_name infomation.')
-def kernelname():
-    language_kernels = find_kernel_names()
-    language_len = max(len(language) for language in language_kernels) + 1
-    for language in language_kernels:
-        for k, kernel_name in enumerate(language_kernels[language]):
-            if k == 0:
-                print('- ' + language + ':' +
-                      ' ' * (language_len - len(language)),
-                      kernel_name)
-            else:
-                print(' ' * (language_len + 3), kernel_name)
+# @cli.command(help='Show language:kernel_name infomation.')
+# def kernelname():
+#     language_kernels = find_kernel_names()
+#     language_len = max(len(language) for language in language_kernels) + 1
+#     for language in language_kernels:
+#         for k, kernel_name in enumerate(language_kernels[language]):
+#             if k == 0:
+#                 print('- ' + language + ':' +
+#                       ' ' * (language_len - len(language)),
+#                       kernel_name)
+#             else:
+#                 print(' ' * (language_len + 3), kernel_name)
 
 
 def main():
