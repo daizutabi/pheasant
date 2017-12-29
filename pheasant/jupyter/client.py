@@ -106,7 +106,7 @@ def _wait_for_reply(kernel_name, msg_id, timeout=300):
             continue
 
 
-def run_cell(kernel_name, cell):
+def run_cell(cell, kernel_name):
     kernel_client = get_kernel_client(kernel_name)
     msg_id = kernel_client.execute(cell.source)
     logger.info(f'Executing cell:\n{cell.source}')

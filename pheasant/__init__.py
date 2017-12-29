@@ -1,8 +1,6 @@
 __version__ = '0.1.0'
 
-
-from pheasant.config import config
-from pheasant.core import convert, set_config
+from .converters import convert
 
 try:
     from .plugins.pelican import register

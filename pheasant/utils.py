@@ -1,6 +1,15 @@
+import codecs
 import os
 
 import nbformat
+
+
+def read_source(source):
+    if os.path.exists(source):
+        with codecs.open(source, 'r', 'utf8') as file:
+            source = file.read()
+            source = source.replace('\r\n', '\n').replace('\r', '\n')
+    return source
 
 
 def read(root, filename):

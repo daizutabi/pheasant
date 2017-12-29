@@ -64,7 +64,6 @@
       {%- endif -%}{{ '```' }}{# for syntax highlight #}
     {%- endif -%}
     {%- for output in cell.outputs -%}
-    {# {%- for output in cell.outputs if output.output_type == 'display_data' -%} #}
       {%- if output.output_type == 'display_data' or (output.output_type == 'execute_result' and 'text/html' in output.data) -%}
         {{ '\n\n' }}
         {%- block data_priority scoped -%}
@@ -76,8 +75,7 @@
 {%- endblock codecell -%}
 
 
-{%- block data_html scoped %}
-{# blank line for cell separation #}
+{%- block data_html scoped -%}
   {%- for line in output.data['text/html'].split('\n') -%}
     {%- if line %}
 {{ line | trim }}

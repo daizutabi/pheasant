@@ -2,9 +2,21 @@ import os
 
 import pytest
 from mkdocs.config import load_config
-from pheasant.jupyter.config import config as pheasant_config
+
+from pheasant import jupyter
+from pheasant.converters import set_converters, get_converters
 from pheasant.plugins.mkdocs import PheasantPlugin
 from pheasant.utils import read
+
+
+@pytest.fixture(scope='function')
+def plugin():
+    return PheasantPlugin()
+
+
+def test_converters():
+    set_converters([jupyter])
+    assert get_converters() == [jupyter]
 
 
 @pytest.fixture
@@ -33,25 +45,16 @@ def config(root):
 
 
 @pytest.fixture(scope='function')
-def plugin():
-    return PheasantPlugin()
+def jupyter_config(config):
+    return config['plugins']['pheasant'].config['jupyter']
 
 
-def test_on_config(plugin, config):
-    plugin_config = config['plugins']['pheasant'].config['jupyter']
-    assert plugin_config['output_format'] == 'html'
-    assert plugin_config['kernel_name'] == {'python': 'python3'}
-    assert pheasant_config['kernel_name'] == {'python': 'python3'}
-    plugin_config['output_format'] = 'markdown'
-    plugin_config['template_file'] = 'template.jinja2'
-    plugin_config['kernel_name'] = {'julia': 'julia'}
-    template = pheasant_config['template_file']
-    plugin.on_config(config)
-    assert pheasant_config['output_format'] == 'markdown'
-    assert pheasant_config['template_file'] == 'template.jinja2'
-    assert pheasant_config['kernel_name'] == {'julia': 'julia',
-                                              'python': 'python3'}
-    pheasant_config['template_file'] = template
+def test_config(jupyter_config):
+    assert isinstance(jupyter_config, dict)
+
+
+def test_plugin(plugin):
+    assert plugin.config_scheme[0][0] == 'jupyter'
 
 
 class Page:
@@ -62,15 +65,16 @@ class Page:
 paths = ['docs/markdown_stream_input.md', 'docs/notebook_stream_input.ipynb']
 
 
-@pytest.mark.parametrize('output_format', ['notebook', 'markdown', 'html'])
+@pytest.mark.parametrize('output_format', ['notebook', 'markdown'])
 @pytest.mark.parametrize('path', paths)
-def test_on_page_read_source(plugin, config, root, stream_output,
-                             output_format, path):
+def test_on_page_read_source(plugin, config, jupyter_config, root,
+                             stream_output, output_format, path):
     page = Page(os.path.join(root, path))
-    pheasant_config['output_format'] = output_format
+    jupyter_config['output_format'] = output_format
     source = plugin.on_page_read_source(None, page, config)
+    jupyter._configured = False
 
-    if output_format != 'notebook':
+    if output_format == 'markdown':
         assert source == stream_output
-    else:
-        assert source.startswith('<h1>DEBUG MODE</h1><pre>{')
+    elif output_format == 'notebook':
+        assert source.startswith('{')

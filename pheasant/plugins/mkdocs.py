@@ -1,29 +1,19 @@
 import logging
 
+from mkdocs.config import config_options
 from mkdocs.plugins import BasePlugin
-from pheasant import convert, set_config
+
+from ..converters import convert, get_converter_name, get_converters
 
 logger = logging.getLogger('mkdocs')
 
+DEFAULT_SCHEMA = tuple([(get_converter_name(converter),
+                         config_options.Type(dict, default={'enabled': False}))
+                        for converter in get_converters()])
+
 
 class PheasantPlugin(BasePlugin):
-
-    def on_config(self, config):
-        """
-        The config event is the first event called on build and is run
-        immediately after the user configuration is loaded and validated.
-        Any alterations to the config should be made here.
-
-        Parameters
-        ----------
-        config: global configuration object
-
-        Returns
-        -------
-        global configuration object
-        """
-        set_config(config['plugins']['pheasant'].config)
-        return config
+    config_scheme = DEFAULT_SCHEMA
 
     def on_page_read_source(self, source, page, config):
         """
@@ -42,4 +32,5 @@ class PheasantPlugin(BasePlugin):
         default loading from a file will be performed.
         """
         logger.info(f'[pheasant] Converting: {page.abs_input_path}')
-        return convert(page.abs_input_path)
+        return convert(page.abs_input_path,
+                       config['plugins']['pheasant'].config)

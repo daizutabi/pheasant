@@ -1,9 +1,8 @@
-import jupyter_client
-
 import pytest
+
 from pheasant.jupyter.client import (find_kernel_names, get_kernel_client,
-                                  get_kernel_manager, kernel_clients,
-                                  kernel_managers)
+                                     get_kernel_manager, kernel_clients,
+                                     kernel_managers)
 
 
 def test_find_kernel_names():

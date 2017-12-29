@@ -1,6 +1,7 @@
 import pytest
-from pheasant.jupyter.markdown import (cell_generator, cell_runner,
-                                    fenced_code_splitter, convert)
+
+from pheasant.jupyter.markdown import (cell_generator, cell_runner, convert,
+                                       fenced_code_splitter)
 from pheasant.utils import read
 
 
@@ -97,8 +98,13 @@ def test_cell_runner_stream(stream_input):
     assert cell.source == 'Text3'
 
 
-def test_execute_and_export_stream(stream_input, stream_output):
-    markdown = convert(stream_input)
-    for markdown_line, stream_output_line in zip(markdown.split('\n'),
-                                                 stream_output.split('\n')):
-        assert markdown_line == stream_output_line
+@pytest.mark.parametrize('output_format', ['notebook', 'markdown', None])
+def test_execute_and_export_stream(stream_input, stream_output, output_format):
+    output = convert(stream_input, output_format=output_format)
+    if output_format != 'notebook':
+        assert isinstance(output, str)
+        lines = zip(output.split('\n'), stream_output.split('\n'))
+        for markdown_line, stream_output_line in lines:
+            assert markdown_line == stream_output_line
+    else:
+        assert hasattr(output, 'cells')

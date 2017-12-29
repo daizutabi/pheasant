@@ -11,8 +11,9 @@ extra_javascript:
 plugins:
   - pheasant:
       jupyter:
-        output_format: html
+        output_format: markdown
         kernel_name: {'python': 'python3'}
+
 
 pages:
   - Home: index.md

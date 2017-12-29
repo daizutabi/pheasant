@@ -1,3 +1,4 @@
+import re
 import nbformat
 from nbconvert import MarkdownExporter
 from nbconvert.preprocessors import ExecutePreprocessor
@@ -6,7 +7,7 @@ from traitlets.config import Config
 from .config import config
 
 
-def convert(notebook, output_format='markdown'):
+def convert(notebook, output_format=None):
     """
     Convert a notebook into a markdown string.
 
@@ -14,7 +15,7 @@ def convert(notebook, output_format='markdown'):
     ----------
     notebook : str or Notebook object
         If str, it is a filename.
-    output_format : str
+    output_format : str, optional
         Output format. If `notebook`, a notebook object is returned
         before converting.
 
@@ -22,7 +23,6 @@ def convert(notebook, output_format='markdown'):
     -------
     str or Notebook object
     """
-    exporter = new_exporter()
     if isinstance(notebook, str):
         with open(notebook) as f:
             notebook = nbformat.read(f, as_version=config['format_version'])
@@ -34,14 +34,29 @@ def convert(notebook, output_format='markdown'):
             if cell.cell_type == 'code':
                 update_cell_metadata(cell, language)
 
-    if output_format == 'notebook':
+    delete_dataframe_style(notebook)
+
+    if (output_format or config['output_format']) == 'notebook':
         return notebook
     else:
+        exporter = new_exporter()
         markdown, resources = exporter.from_notebook_node(notebook)
         return markdown
 
 
-def new_exporter():
+def delete_dataframe_style(notebook):
+    re_compile = re.compile(r'<style scoped>.+?</style>',
+                            re.DOTALL | re.MULTILINE)
+
+    for cell in notebook.cells:
+        if cell.cell_type == 'code':
+            for output in cell.outputs:
+                if 'data' in output and 'text/html' in output.data:
+                    html = re_compile.sub('', output.data['text/html'])
+                    output.data['text/html'] = html
+
+
+def new_exporter(template_file=None):
     c = Config({'NbConvertBase': {
         'display_data_priority': ['application/vnd.jupyter.widget-state+json',
                                   'application/vnd.jupyter.widget-view+json',
@@ -56,7 +71,7 @@ def new_exporter():
     }})
 
     exporter = MarkdownExporter(config=c)
-    exporter.template_file = config['template_file']
+    exporter.template_file = template_file or config['template_file']
     return exporter
 
 
@@ -82,10 +97,10 @@ def update_cell_metadata(cell, language, option=None):
     return cell
 
 
-def execute(notebook, timeout=600):
+def execute(notebook, timeout=None):
     """
     Execute a notebook
     """
-    timeout = config['timeout']
+    timeout = timeout or config['timeout']
     ep = ExecutePreprocessor(timeout=timeout)
     ep.preprocess(notebook, {})

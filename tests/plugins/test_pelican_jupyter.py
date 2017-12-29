@@ -1,10 +1,16 @@
 import os
 
 import pytest
-from pelican import Pelican
 from pelican.settings import read_settings
+
+from pheasant import jupyter
+from pheasant.converters import set_converters, get_converters
 from pheasant.plugins.pelican import PheasantReader, register
-from pheasant.utils import read
+
+
+def test_converters():
+    set_converters([jupyter])
+    assert get_converters() == [jupyter]
 
 
 @pytest.fixture(scope='module')

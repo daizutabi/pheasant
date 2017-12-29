@@ -1,7 +1,3 @@
-import os
-
-import nbformat
-
 import pytest
 from pheasant.jupyter.notebook import convert, execute
 from pheasant.utils import read
@@ -48,10 +44,15 @@ def test_new_notebook_stream(stream_input, stream_output):
     assert cell.source == 'Text3'
 
 
-def test_execute_and_export_stream(stream_input, stream_output):
+@pytest.mark.parametrize('output_format', ['notebook', 'markdown', None])
+def test_execute_and_export_stream(stream_input, stream_output, output_format):
     notebook = stream_input
     execute(notebook)
-    markdown = convert(notebook)
-    for markdown_line, stream_output_line in zip(markdown.split('\n'),
-                                                 stream_output.split('\n')):
-        assert markdown_line == stream_output_line
+    output = convert(notebook, output_format=output_format)
+    if output_format != 'notebook':
+        assert isinstance(output, str)
+        lines = zip(output.split('\n'), stream_output.split('\n'))
+        for markdown_line, stream_output_line in lines:
+            assert markdown_line == stream_output_line
+    else:
+        assert hasattr(output, 'cells')

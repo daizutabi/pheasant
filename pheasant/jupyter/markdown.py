@@ -3,12 +3,13 @@ import re
 
 import nbformat
 
+from ..utils import read_source
 from .client import run_cell, select_kernel_name
 from .notebook import convert as convert_notebook
 from .notebook import update_cell_metadata
 
 
-def convert(source: str, output_format='markdown'):
+def convert(source: str, **kwargs):
     """
     Convert markdown string or file into markdown with running results.
 
@@ -26,18 +27,11 @@ def convert(source: str, output_format='markdown'):
     results : str
         Markdown source
     """
-    if os.path.exists(source):
-        with open(source) as f:
-            source = f.read()
-
+    source = read_source(source)
     cells = list(cell_runner(source))
     notebook = nbformat.v4.new_notebook(cells=cells, metadata={})
 
-    if output_format == 'notebook':
-        return notebook
-    else:
-        markdown = convert_notebook(notebook)
-        return markdown
+    return convert_notebook(notebook, **kwargs)
 
 
 def cell_runner(source: str):
@@ -63,7 +57,7 @@ def cell_runner(source: str):
         pheasant_metadata = cell.metadata.get('pheasant', {})
         language = pheasant_metadata.get('language', 'python')
         kernel_name = select_kernel_name(language)
-        cell = run_cell(kernel_name, cell)
+        cell = run_cell(cell, kernel_name)
         yield cell
 
 
