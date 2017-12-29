@@ -18,7 +18,7 @@ def get_converter_name(converter):
 
 
 def update_config(converter, config):
-    if hasattr(converter, '_configured') and converter._configured:
+    if converter.config.get('configured', False):
         return
     converter.config['enabled'] = True
     converter_config = config.get(get_converter_name(converter),
@@ -28,7 +28,7 @@ def update_config(converter, config):
             converter.config[key].update(value)
         else:
             converter.config[key] = value
-    converter._configured = True
+    converter.config['configured'] = True
 
 
 def convert(source, config):

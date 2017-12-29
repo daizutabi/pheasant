@@ -72,7 +72,7 @@ def test_on_page_read_source(plugin, config, jupyter_config, root,
     page = Page(os.path.join(root, path))
     jupyter_config['output_format'] = output_format
     source = plugin.on_page_read_source(None, page, config)
-    jupyter._configured = False
+    jupyter.config['configured'] = False
 
     if output_format == 'markdown':
         assert source == stream_output

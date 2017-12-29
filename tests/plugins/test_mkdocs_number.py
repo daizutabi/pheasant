@@ -46,34 +46,11 @@ def plugin():
 
 
 def test_config(number_config):
-    assert isinstance(number_config, dict)
+    assert number_config == {'enabled': False}
 
 
 def test_pages(site_navigation, config):
+    number.config.update({'enabled': True, 'configured': True})
     for k, page in enumerate(site_navigation.walk_pages()):
         source = convert(page.abs_input_path, config)
         assert number.config['pages'][k] == page.abs_input_path
-
-    # class Page:
-    #     def __init__(self, abs_input_path):
-    #         self.abs_input_path = abs_input_path
-    #
-    #
-    # paths = ['docs/markdown_stream_input.md', 'docs/notebook_stream_input.ipynb']
-    #
-    #
-    # @pytest.mark.parametrize('output_format', ['notebook', 'markdown', 'html'])
-    # @pytest.mark.parametrize('path', paths)
-    # def test_on_page_read_source(plugin, config, jupyter_config, root,
-    #                              stream_output, output_format, path):
-    #     page = Page(os.path.join(root, path))
-    #     jupyter_config['output_format'] = output_format
-    #     source = plugin.on_page_read_source(None, page, config)
-    #     jupyter._configured = False
-    #
-    #     if output_format == 'html':
-    #         assert source == stream_output
-    #     elif output_format == 'markdown':
-    #         assert source.startswith('<pre># Title')
-    #     elif output_format == 'notebook':
-    #         assert source.startswith('<pre>{')
