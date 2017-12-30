@@ -32,5 +32,6 @@ class PheasantPlugin(BasePlugin):
         default loading from a file will be performed.
         """
         logger.info(f'[pheasant] Converting: {page.abs_input_path}')
-        return convert(page.abs_input_path,
-                       config['plugins']['pheasant'].config)
+        pheasant_config = config['plugins']['pheasant'].config
+        logger.info(f'[pheasant] DEBUG: {pheasant_config}')
+        return convert(page.abs_input_path, pheasant_config)

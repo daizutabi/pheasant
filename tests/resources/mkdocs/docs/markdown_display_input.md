@@ -2,6 +2,8 @@
 
 ## Matplotlib
 
+#Fig Figure example
+
 ```python hide-input
 %matplotlib inline
 import matplotlib.pyplot as plt

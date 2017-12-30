@@ -1,0 +1,22 @@
+{%- set header_prefix -%}
+{%- for k in number -%}#{%- endfor -%}
+{%- endset -%}
+
+{%- set number_string -%}
+{%- for k in number -%}{{ k }}.{%- endfor -%}
+{%- endset -%}
+
+
+{%- if name == 'header' -%}
+{{ header_prefix }} {{ number_string }} {{ title }}
+{%- elif name == 'figure' -%}
+<div class="{{ config.kind.figure.class}}">
+{{ body }}
+<p>{{ config.kind.figure.prefix }} {{ number_string }} {{ title }}</p>
+</div>
+{%- elif name == 'table' -%}
+<div class="{{ config.kind.table.class}}">
+<p>{{ config.kind.table.prefix }} {{ number_string }} {{ title }}</p>
+{{ body }}
+</div>
+{%- endif -%}

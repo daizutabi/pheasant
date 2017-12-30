@@ -30,7 +30,7 @@
 {%- block codecell -%}
   {%- set ns = namespace(found=false) -%}
   {%- set options = cell.metadata.get('pheasant', {}).get('options', []) -%}
-  {%- for output in cell.outputs if output.output_type != 'display_data' -%}
+  {%- for output in cell.outputs if output.output_type != 'display_data' and 'text/html' not in output.data -%}
     {%- set ns.found = true -%}
   {%- endfor -%}
   {%- if 'hide' not in options -%}
@@ -103,7 +103,7 @@
 
 
 {%- block data_png -%}
-<img src="data:image/png;base64,{{ output.data['image/png'][:-1] }}"/>
+![png](data:image/png;base64,{{ output.data['image/png'].replace('\n', '') }})
 {%- endblock data_png -%}
 
 
