@@ -1,22 +1,23 @@
-{%- set header_prefix -%}
-{%- for k in number -%}#{%- endfor -%}
-{%- endset -%}
+{% extends 'base.jinja2' %}
 
-{%- set number_string -%}
-{%- for k in number -%}{{ k }}.{%- endfor -%}
-{%- endset -%}
+{%- block number_string -%}
+{%- for number in number_list -%}{{ number }}.{%- endfor -%}
+{%- endblock -%}
 
+{%- block header -%}
+{{ number_string }} {{ title }}
+{%- endblock -%}
 
-{%- if name == 'header' -%}
-{{ header_prefix }} {{ number_string }} {{ title }}
-{%- elif name == 'figure' -%}
-<div class="{{ config.kind.figure.class}}">
+{%- block figure -%}
 {{ body }}
-<p>{{ config.kind.figure.prefix }} {{ number_string }} {{ title }}</p>
-</div>
-{%- elif name == 'table' -%}
-<div class="{{ config.kind.table.class}}">
-<p>{{ config.kind.table.prefix }} {{ number_string }} {{ title }}</p>
+<p>Figure {{ number_string }} {{ title }}</p>
+{%- endblock -%}
+
+{%- block table -%}
+<p>Table {{ number_string }} {{ title }}</p>
 {{ body }}
-</div>
-{%- endif -%}
+{%- endblock -%}
+
+{%- block reference -%}
+[{{ number_string }}]({{ ref }})
+{%- endblock -%}

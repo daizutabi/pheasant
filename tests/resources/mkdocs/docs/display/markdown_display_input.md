@@ -1,6 +1,6 @@
 # Display
 
-## Matplotlib
+## Matplotlib {#matplotlib#}
 
 #Fig Figure example
 

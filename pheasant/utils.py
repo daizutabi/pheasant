@@ -1,5 +1,6 @@
 import codecs
 import os
+import re
 
 import nbformat
 
@@ -10,6 +11,25 @@ def read_source(source):
             source = file.read()
             source = source.replace('\r\n', '\n').replace('\r', '\n')
     return source
+
+
+def splitter(pattern: str, source: str, option=re.MULTILINE):
+    """
+    Generate splitted text from `source` by `pattern`.
+    """
+    re_compile = re.compile(pattern, option)
+
+    while True:
+        m = re_compile.search(source)
+        if m:
+            start, end = m.span()
+            if start:
+                yield source[:start]
+            yield m
+            source = source[end:]
+        else:
+            yield source
+            break
 
 
 def read(root, filename):

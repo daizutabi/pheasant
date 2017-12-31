@@ -1,2 +1,2 @@
 from .config import config
-from .converter import convert
+from .converter import convert, initialize

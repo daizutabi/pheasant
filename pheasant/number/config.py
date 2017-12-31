@@ -1,9 +1,8 @@
-import os
-
-template_file = os.path.join(os.path.dirname(__file__),
-                             'templates/number.jinja2')
-config = {'pages': [], 'template_file': template_file,
-          'kind': {'figure': {'prefix': 'Figure', 'class': 'pheasant-figure'},
-                   'table': {'prefix': 'Table', 'class': 'pheasant-table'}
-                   }
+config = {'template_file': 'number.jinja2',
+          'kind': ['header', 'figure', 'table'],
+          'tag_file': '.pheasant-number.json',
+          'tag_pattern': r'\{#(\S+)#\}',
+          'class': 'pheasant-{kind}',
+          'id': 'pheasant-{tag}',
+          'relpath_function': None,
           }

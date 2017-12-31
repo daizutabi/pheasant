@@ -7,6 +7,6 @@ def convert(source):
                             re.DOTALL | re.MULTILINE)
     source = re_compile.sub(r'\1"/>', source)
     source = html.escape(source)
-    source = source.replace('```', ' ```')
+    source = source.replace('```', '```` ```')
     source = f'<pre>{source}</pre>'
     return source

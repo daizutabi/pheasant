@@ -28,6 +28,8 @@ def update_config(converter, config):
             converter.config[key].update(value)
         else:
             converter.config[key] = value
+    if hasattr(converter, 'initialize'):
+        converter.initialize()  # invoke converter's initializer
     converter.config['configured'] = True
 
 

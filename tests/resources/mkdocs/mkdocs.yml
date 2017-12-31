@@ -2,6 +2,9 @@ site_name: MkDocs Example
 
 theme: readthedocs
 
+extra_css:
+  - css/pheasant.css
+
 markdown_extensions:
   - pymdownx.arithmatex
 
@@ -23,5 +26,5 @@ pages:
   - Home: index.md
   - Markdown Stream: markdown_stream_input.md
   - Notebook Stream: notebook_stream_input.ipynb
-  - Markdown Display: markdown_display_input.md
+  - Markdown Display: display/markdown_display_input.md
   - Notebook Display: notebook_display_input.ipynb

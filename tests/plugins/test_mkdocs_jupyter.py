@@ -60,6 +60,7 @@ def test_plugin(plugin):
 class Page:
     def __init__(self, abs_input_path):
         self.abs_input_path = abs_input_path
+        self.input_path = abs_input_path  # for log
 
 
 paths = ['docs/markdown_stream_input.md', 'docs/notebook_stream_input.ipynb']

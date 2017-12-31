@@ -1,6 +1,5 @@
+import os
 import re
-
-from jinja2 import Environment, PackageLoader, Template, select_autoescape
 
 from markdown import Markdown
 
@@ -8,14 +7,14 @@ from ..utils import read_source
 from .config import config
 
 
-def convert(source: str, page_index=None):
+def convert(source: str, tag=None, page_index=None):
     """
-    Convert markdown string or file into markdown with section numbering.
+    Convert markdown string or file into markdown with section number_listing.
 
     Parameters
     ----------
     source : str
-        Markdown source string or filename
+        Markdown source string or filekind
     page_index : list of int
         Page index.
 
@@ -24,35 +23,34 @@ def convert(source: str, page_index=None):
     results : str
         Markdown source
     """
-    tag_dictionary = {}
+    tag = {} if tag is None else tag
     source = read_source(source)
-    source = '\n\n'.join(renderer(source, tag_dictionary,
-                                  page_index=page_index))
-    return source, tag_dictionary
+    source = '\n\n'.join(renderer(source, tag, page_index=page_index))
+    return source, tag
 
 
-def renderer(source: str, tag_dictionary, page_index=None):
-    # env = Environment(
-    #     loader=PackageLoader('pheasant.number', 'templates'),
-    #     autoescape=select_autoescape(['html', 'xml', 'jinja2'])
-    # )
-    # template = env.get_template(config['template_file'])
-
-    template = Template(read_source(config['template_file']))
-
+def renderer(source: str, tag: dict, page_index=None):
     splitter = header_splitter(source)
     for splitted in splitter:
         if isinstance(splitted, str):
             yield splitted
         else:
-            splitted['number'] = number_list(splitted['name'],
-                                             splitted['number'],
-                                             page_index)
-            tag_dictionary[splitted['tag']] = (splitted['name'],
-                                               splitted['number'])
+            if splitted['kind'] == 'header':
+                splitted['prefix'] = '#' * len(splitted['number_list'])
+            number_list = normalize_number_list(splitted['kind'],
+                                                splitted['number_list'],
+                                                page_index)
+            splitted['number_list'] = number_list
+            if splitted['tag']:
+                splitted['id'] = config['id'].format(tag=splitted['tag'])
+                cls = config['class'].format(kind=splitted['kind'])
+                splitted['class'] = cls
+                tag[splitted['tag']] = {'kind': splitted['kind'],
+                                        'number_list': splitted['number_list'],
+                                        'id': splitted['id']}
 
-            if splitted['name'] == 'header':
-                yield template.render(**splitted, config=config)
+            if splitted['kind'] == 'header':
+                yield config['template'].render(**splitted, config=config)
             else:
                 next_source = next(splitter)
                 index = next_source.find('\n\n')
@@ -65,20 +63,20 @@ def renderer(source: str, tag_dictionary, page_index=None):
                                           'markdown.extensions.fenced_code'])
                 body = md.convert(body)
 
-                yield template.render(**splitted, body=body, config=config)
+                yield config['template'].render(**splitted, body=body,
+                                                config=config)
+
                 if rest:
                     yield rest
 
-    return tag_dictionary
 
-
-def number_list(name, number, page_index=None):
+def normalize_number_list(kind, number_list, page_index=None):
     if page_index:
-        if name == 'header':
-            number = page_index + number[1:]
+        if kind == 'header':
+            number_list = page_index + number_list[1:]
         else:
-            number = page_index + number
-    return number
+            number_list = page_index + number_list
+    return number_list
 
 
 def split_tag(text):
@@ -92,17 +90,16 @@ def split_tag(text):
 
     Examples
     --------
-    >>> split_tag('{tag} text')
+    >>> split_tag('{#tag#} text')
     ('text', 'tag')
     >>> split_tag('text')
     ('text', '')
     """
-    m = re.search('\{.+?\}', text)
+    m = re.search(config['tag_pattern'], text)
     if not m:
         return text, ''
     else:
-        tag = m.group()
-        return text.replace(tag, '').strip(), tag[1:-1]
+        return text.replace(m.group(), '').strip(), m.group(1)
 
 
 def header_splitter(source: str):
@@ -124,11 +121,14 @@ def header_splitter(source: str):
     splitted source : str or dict
     """
     re_compile = re.compile(r'^(#+)(\S*?) (.+?)$', re.MULTILINE)
-    number = {'header': [0] * 6}
-    header_name = {'': 'header'}
-    for key in config['kind']:
-        number[key] = [0] * 6
-        header_name[key[:3].lower()] = key
+    number_list = {}
+    header_kind = {}
+    for kind in config['kind']:
+        number_list[kind] = [0] * 6
+        if kind == 'header':
+            header_kind[''] = 'header'
+        else:
+            header_kind[kind[:3].lower()] = kind
     cursor = 0
 
     while True:
@@ -140,12 +140,13 @@ def header_splitter(source: str):
                 markdown = source[:start].strip()
                 if markdown:
                     yield markdown
-            name = header_name[m.group(2)[:3].lower()]
+            kind = header_kind[m.group(2)[:3].lower()]
             depth = len(m.group(1)) - 1
-            number[name][depth] += 1
-            number[name][depth + 1:] = [0] * (len(number[name]) - depth)
+            number_list[kind][depth] += 1
+            number_list[kind][depth + 1:] = [0] * \
+                (len(number_list[kind]) - depth)
             title, tag = split_tag(m.group(3))
-            yield {'name': name, 'number': number[name][:depth + 1],
+            yield {'kind': kind, 'number_list': number_list[kind][:depth + 1],
                    'title': title, 'tag': tag, 'cursor': cursor}
             source = source[end:]
             cursor += end

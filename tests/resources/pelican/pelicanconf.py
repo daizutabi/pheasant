@@ -1,4 +1,7 @@
 SITENAME = 'Pelican Example'
+SITEURL = 'https://example.com'
+TIMEZONE = 'Asia/Tokyo'
+
 RELATIVE_URLS = True
 PLUGINS = ['pheasant']
 
