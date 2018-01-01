@@ -1,4 +1,4 @@
-from ..utils import read_source, splitter
+from ..utils import splitter
 from .config import config
 
 
