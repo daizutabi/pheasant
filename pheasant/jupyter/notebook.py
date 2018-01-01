@@ -39,8 +39,8 @@ def convert(notebook, output_format=None):
     if (output_format or config['output_format']) == 'notebook':
         return notebook
     else:
-        exporter = new_exporter()
-        markdown, resources = exporter.from_notebook_node(notebook)
+        # exporter = new_exporter()
+        markdown, resources = config['exporter'].from_notebook_node(notebook)
         return markdown
 
 

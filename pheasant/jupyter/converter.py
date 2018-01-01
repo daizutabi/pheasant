@@ -1,8 +1,13 @@
 import os
 
+
 from .config import config
 from .markdown import convert as convert_markdown
-from .notebook import convert as convert_notebook
+from .notebook import convert as convert_notebook, new_exporter
+
+
+def initialize():
+    config['exporter'] = new_exporter()
 
 
 def convert(source):

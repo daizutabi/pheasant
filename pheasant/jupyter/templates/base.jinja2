@@ -1,0 +1,168 @@
+{% extends 'display_priority.tpl' %}
+
+{#-
+{%- block header -%}
+<script type="text/javascript" src="https://unpkg.com/@jupyter-widgets/html-manager@^0.10.0/dist/embed.js"></script>
+{%- endblock -%}
+-#}
+
+
+{%- block body -%}
+{%- for cell in nb.cells -%}
+  {%- block any_cell scoped -%}
+    {{ super() }}
+  {%- endblock any_cell -%}
+  {%- if not (cell.cell_type == 'code' and 'hide' in cell.metadata.pheasant.options) -%}
+    {{ '\n' }}{{ '\n' if not loop.last }}
+  {%- endif -%}
+{%- endfor -%}
+{%- endblock body -%}
+
+
+{%- block in_prompt -%}
+{%- endblock in_prompt -%}
+
+
+{%- block output_prompt -%}
+{%- endblock output_prompt -%}
+
+
+{%- block codecell -%}
+  {%- set ns = namespace(found=false) -%}
+  {%- set options = cell.metadata.get('pheasant', {}).get('options', []) -%}
+  {%- for output in cell.outputs if output.output_type != 'display_data' and 'text/html' not in output.data -%}
+    {%- set ns.found = true -%}
+  {%- endfor -%}
+  {%- set language -%}
+    {%- if 'magics_language' in cell.metadata -%}
+      {{ cell.metadata.magics_language}}
+    {%- elif 'language' in cell.metadata.get('pheasant', {}) -%}
+      {{ cell.metadata.pheasant.language }}
+    {%- elif 'name' in nb.metadata.get('language_info', {}) -%}
+      {{ nb.metadata.language_info.name }}
+    {%- endif -%}
+  {%- endset -%}
+  {%- if 'hide' not in options -%}
+    {%- if 'hide-input' not in options or ns.found -%}
+      {{ '```' + language + '\n'}}
+      {%- if not cell.outputs or 'hide-output' in options -%}
+        {{ cell.source + '\n' }}
+      {%- else -%}
+        {%- if 'hide-input' not in options -%}
+          {%- for line in cell.source.split('\n') -%}
+            {%- if line.startswith(' ') %}...{% else %}>>>{% endif %} {{ line + '\n'}}
+          {%- endfor -%}
+        {%- endif -%}
+        {%- for output in cell.outputs if output.output_type != 'display_data' -%}
+          {%- if output.output_type == 'execute_result' -%}
+            {%- if 'text/html' not in output.data -%}
+              {{ output.data['text/plain'] + '\n' }}
+            {%- endif -%}
+          {%- elif output.output_type == 'stream' -%}
+            {{ output.text }}{%- if output.text[-1] != '\n' -%}{{ '\n' }}{%- endif -%}
+          {%- elif output.output_type == 'error' -%}
+            {{ output.traceback[-1] | strip_ansi + '\n'}}
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endif -%}{{ '```' }}{# for syntax highlight #}
+    {%- endif -%}
+    {%- for output in cell.outputs -%}
+      {%- if output.output_type == 'display_data' or (output.output_type == 'execute_result' and 'text/html' in output.data) -%}
+        {{ '\n\n' }}
+        {%- block data_priority scoped -%}
+          {{ super() }}
+        {%- endblock data_priority -%}
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endif -%}
+{%- endblock codecell -%}
+
+
+{%- block data_html scoped -%}
+  {%- for line in output.data['text/html'].split('\n') -%}
+    {%- if line %}
+{{ line | trim }}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endblock data_html -%}
+
+{# from nbconvert/templates/html/basic.tpl #}
+{%- block data_javascript scoped -%}
+{% set div_id = uuid4() %}
+<div id="{{ div_id }}"></div>
+<div class="output_subarea output_javascript {{ extra_class }}">
+  <script type="text/javascript">
+    var element = $('#{{ div_id }}');
+   {{ output.data['application/javascript'] }}
+  </script>
+</div>
+{%- endblock data_javascript -%}
+
+
+{# from nbconvert/templates/markdown.tpl #}
+{% block data_svg -%}
+![svg]({{ output.metadata.filenames['image/svg+xml'] | path2url }})
+{%- endblock data_svg %}
+
+
+{%- block data_png -%}
+![png](data:image/png;base64,{{ output.data['image/png'].replace('\n', '') }})
+{%- endblock data_png -%}
+
+
+{% block data_jpg -%}
+![jpeg]({{ output.metadata.filenames['image/jpeg'] | path2url }})
+{%- endblock data_jpg %}
+
+
+{% block data_latex -%}
+{{ output.data['text/latex'] }}
+{%- endblock data_latex %}
+
+
+{%- block data_markdown scoped -%}
+{{ output.data['text/markdown'] }}
+{%- endblock data_markdown -%}
+
+
+{% block data_text scoped -%}
+{{ output.data['text/plain'] | indent }}
+{%- endblock data_text %}
+
+
+{%- block markdowncell scoped -%}
+{{ cell.source }}
+{%- endblock markdowncell -%}
+
+
+{% block unknowncell scoped -%}
+unknown type  {{ cell.type }}
+{%- endblock unknowncell %}
+
+
+{#-
+{%- block data_widget_state scoped %}
+{% set div_id = uuid4() %}
+{% set datatype_list = output.data | filter_data_type %}
+{% set datatype = datatype_list[0]%}
+<div id="{{ div_id }}"></div>
+<div class="output_subarea output_widget_state {{ extra_class }}">
+<script type="text/javascript">
+var element = $('#{{ div_id }}');
+</script>
+<script type="{{ datatype }}">
+{{ output.data['application/vnd.jupyter.widget-state+json'] }}
+</script>
+</div>
+{%- endblock data_widget_state -%}
+
+{%- block data_widget_view scoped %}
+{% set datatype_list = output.data | filter_data_type %}
+{% set datatype = datatype_list[0] %}
+<div class="output_subarea output_widget_view {{ extra_class }}">
+<script type="{{ datatype }}">
+{{ output.data['application/vnd.jupyter.widget-view+json'] }}
+</script>
+</div>
+{%- endblock data_widget_view -%}
+-#}

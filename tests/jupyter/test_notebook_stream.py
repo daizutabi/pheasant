@@ -1,4 +1,5 @@
 import pytest
+from pheasant.jupyter.converter import initialize
 from pheasant.jupyter.notebook import convert, execute
 from pheasant.utils import read
 
@@ -47,6 +48,7 @@ def test_new_notebook_stream(stream_input, stream_output):
 @pytest.mark.parametrize('output_format', ['notebook', 'markdown', None])
 def test_execute_and_export_stream(stream_input, stream_output, output_format):
     notebook = stream_input
+    initialize()
     execute(notebook)
     output = convert(notebook, output_format=output_format)
     if output_format != 'notebook':

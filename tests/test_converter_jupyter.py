@@ -2,6 +2,7 @@ import os
 
 import pytest
 from pheasant import jupyter
+from pheasant.jupyter.converter import initialize
 from pheasant.converters import (convert, get_converter_name, get_converters,
                                  set_converters, update_config)
 from pheasant.utils import read
@@ -58,6 +59,7 @@ paths = ['markdown_stream_input.md', 'notebook_stream_input.ipynb']
 @pytest.mark.parametrize('output_format', ['notebook', 'markdown'])
 @pytest.mark.parametrize('path', paths)
 def test_convert(root, stream_output, output_format, path):
+    initialize()
     config = {'jupyter': {'output_format': output_format}}
     source = convert(os.path.join(root, path), config)
     assert jupyter.config['output_format'] == output_format

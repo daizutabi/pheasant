@@ -12,6 +12,10 @@ x = 31
 println(3x)
 ```
 
+``` python
+print(1)
+```
+
 #Fig Figure example {#fig1#}
 
 ```python hide-input

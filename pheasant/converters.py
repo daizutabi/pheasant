@@ -18,8 +18,12 @@ def get_converter_name(converter):
 
 
 def update_config(converter, config):
+    if not hasattr(converter, 'config'):
+        converter.config = {}
+
     if converter.config.get('configured', False):
         return
+
     converter.config['enabled'] = True
     converter_config = config.get(get_converter_name(converter),
                                   {'enabled': False})

@@ -1,5 +1,6 @@
 import pytest
 
+from pheasant.jupyter.converter import initialize
 from pheasant.jupyter.markdown import (cell_generator, cell_runner, convert,
                                        fenced_code_splitter)
 from pheasant.utils import read
@@ -100,6 +101,7 @@ def test_cell_runner_stream(stream_input):
 
 @pytest.mark.parametrize('output_format', ['notebook', 'markdown', None])
 def test_execute_and_export_stream(stream_input, stream_output, output_format):
+    initialize()
     output = convert(stream_input, output_format=output_format)
     if output_format != 'notebook':
         assert isinstance(output, str)

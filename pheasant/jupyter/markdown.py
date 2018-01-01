@@ -126,39 +126,3 @@ def fenced_code_splitter(source: str):
             if markdown:
                 yield markdown
             break
-
-# def new_notebook(source: str,  metadata=None):
-#     """
-#     Convert a markdown source with `jupyter` fenced code into a markdown
-#     source with `python` fenced code after executing the jupyter codes.
-#
-#     Parameters
-#     ----------
-#     source : str
-#         Markdown source string.
-#     language : str, optional
-#         Fenced code language
-#     metadata: dict, optional
-#         Notebook metadata.
-#     """
-#     cells = []
-#     for cell in fenced_code_splitter(source, 'jupyter'):
-#         if isinstance(cell, str):
-#             cell = nbformat.v4.new_markdown_cell(cell)
-#             cells.append(cell)
-#         else:
-#             code, option = cell
-#             cell = nbformat.v4.new_code_cell(code)
-#             if option:
-#                 options = [option.strip() for option in option.split(',')]
-#             else:
-#                 options = []
-#             cell.metadata['pheasant'] = options
-#             cells.append(cell)
-#
-#     if metadata is None:
-#         metadata = {'language_info': {'name': language}}
-#
-#     metadata = NotebookNode()
-#
-#     return nbformat.v4.new_notebook(cells=cells, metadata=metadata)
