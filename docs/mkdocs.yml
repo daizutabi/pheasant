@@ -1,7 +1,7 @@
 site_name: Pheasant
 site_url: https://pheasant.daizutabi.net/
 repo_url: https://github.com/daizutabi/pheasant/
-repo_url: https://github.com/daizutabi/pheasant/
+edit_uri: https://github.com/daizutabi/pheasant/docs
 
 theme:
   name: readthedocs
@@ -33,7 +33,3 @@ plugins:
 
 pages:
   - Home: index.md
-  - Markdown Stream: markdown_stream_input.md
-  - Notebook Stream: notebook_stream_input.ipynb
-  - Markdown Display: display/markdown_display_input.md
-  - Notebook Display: notebook_display_input.ipynb

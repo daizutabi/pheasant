@@ -60,13 +60,13 @@ print(1)
 
 def test_fenced_code_splitter(stream):
     for k, output in enumerate(fenced_code_splitter(stream)):
-        if k == 0:
+        if k in [0, 5]:
             assert output == 'text'
-        elif k in [1, 3, 5]:
+        elif k in [1, 3, 6]:
             assert isinstance(output, tuple)
         elif k == 2:
             assert output == '``` python\nprint(1)\n```\n\ntext'
         elif k == 4:
-            assert output == '~~~\n```python\nprint(1)\n```\n~~~\n\ntext'
-        elif k == 6:
+            assert output == '~~~\n```python\nprint(1)\n```\n~~~'
+        elif k == 7:
             assert output == '~~~\n``` python\nprint(1)\n```\n~~~'

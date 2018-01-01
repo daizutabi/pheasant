@@ -2,7 +2,7 @@ import re
 
 from markdown import Markdown
 
-from ..utils import read_source
+from ..utils import read_source, splitter
 from .config import config
 
 
@@ -40,10 +40,10 @@ def renderer(source: str, tag: dict, page_index=None):
                                                 splitted['number_list'],
                                                 page_index)
             splitted['number_list'] = number_list
+            cls = config['class'].format(kind=splitted['kind'])
+            splitted['class'] = cls
             if splitted['tag']:
                 splitted['id'] = config['id'].format(tag=splitted['tag'])
-                cls = config['class'].format(kind=splitted['kind'])
-                splitted['class'] = cls
                 tag[splitted['tag']] = {'kind': splitted['kind'],
                                         'number_list': splitted['number_list'],
                                         'id': splitted['id']}
@@ -119,7 +119,6 @@ def header_splitter(source: str):
     ------
     splitted source : str or dict
     """
-    re_compile = re.compile(r'^(#+)(\S*?) (.+?)$', re.MULTILINE)
     number_list = {}
     header_kind = {}
     for kind in config['kind']:
@@ -130,27 +129,29 @@ def header_splitter(source: str):
             header_kind[kind[:3].lower()] = kind
     cursor = 0
 
-    while True:
-        m = re_compile.search(source)
-        if m:
-            start, end = m.span()
-            cursor += start
-            if start:
-                markdown = source[:start].strip()
+    pattern_fenced_code = r'(^```(.*?)^```$)|(~~~(.*?)^~~~)'
+    option_fenced_code = re.DOTALL | re.MULTILINE
+    pattern_header = r'^(#+)(\S*?) (.+?)$'
+
+    for splitted in splitter(pattern_fenced_code, source, option_fenced_code):
+        if not isinstance(splitted, str):
+            yield splitted.group().strip()
+            continue
+        for splitted in splitter(pattern_header, splitted):
+            if isinstance(splitted, str):
+                markdown = splitted.strip()
                 if markdown:
                     yield markdown
-            kind = header_kind[m.group(2)[:3].lower()]
-            depth = len(m.group(1)) - 1
-            number_list[kind][depth] += 1
-            number_list[kind][depth + 1:] = [0] * \
-                (len(number_list[kind]) - depth)
-            title, tag = split_tag(m.group(3))
-            yield {'kind': kind, 'number_list': number_list[kind][:depth + 1],
-                   'title': title, 'tag': tag, 'cursor': cursor}
-            source = source[end:]
-            cursor += end
-        else:
-            markdown = source.strip()
-            if markdown:
-                yield markdown
-            break
+            else:
+                start, end = splitted.span()
+                cursor += start
+                kind = header_kind[splitted.group(2)[:3].lower()]
+                depth = len(splitted.group(1)) - 1
+                number_list[kind][depth] += 1
+                reset = [0] * (len(number_list[kind]) - depth)
+                number_list[kind][depth + 1:] = reset
+                title, tag = split_tag(splitted.group(3))
+                yield {'kind': kind, 'title': title, 'tag': tag,
+                       'cursor': cursor,
+                       'number_list': number_list[kind][:depth + 1]}
+                cursor += end

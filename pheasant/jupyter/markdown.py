@@ -108,24 +108,21 @@ def fenced_code_splitter(source: str):
     ------
     cell_string : str or tuple
     """
-    pattern = r'(?<!~~~)\n^```(\S+)([^\n.]*)\n(.*?)\n^```$'
-    # re_compile = re.compile(pattern, re.DOTALL | re.MULTILINE)
-    option = re.DOTALL | re.MULTILINE
+    pattern_escape = r'^~~~.*?^~~~$'
+    pattern_code = r'^```(\S+)([^\n.]*)\n(.*?)\n^```$'
+    re_option = re.DOTALL | re.MULTILINE
 
-    generator = splitter(pattern, source, option)
-    for splitted in generator:
-        if isinstance(splitted, str):
-            markdown = splitted.strip()
-            # if markdown.endswith('~~~'):
-            #     pre_code = next(generator)
-            #     if not isinstance(pre_code, str):
-            #         pre_code = pre_code.group() + next(generator)
-            #     yield '\n'.join([markdown, pre_code.strip()])
-            # elif markdown:
-            if markdown:
-                yield markdown
-        else:
-            language = splitted.group(1)
-            code = splitted.group(3).strip()
-            option = splitted.group(2).strip()
-            yield language, code, option
+    for splitted in splitter(pattern_escape, source, re_option):
+        if not isinstance(splitted, str):
+            yield splitted.group().strip()
+            continue
+        for splitted in splitter(pattern_code, splitted, re_option):
+            if isinstance(splitted, str):
+                markdown = splitted.strip()
+                if markdown:
+                    yield markdown
+            else:
+                language = splitted.group(1)
+                code = splitted.group(3).strip()
+                option = splitted.group(2).strip()
+                yield language, code, option

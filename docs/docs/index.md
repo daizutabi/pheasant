@@ -2,12 +2,14 @@
 
 ## Overview
 
-Pheasant is a Markdown converter which can be used as a plugin for static site generators such as [MkDocs](http://www.mkdocs.org/) or [Pelican](http://docs.getpelican.com/en/stable/). Highlights include:
+Pheasant is a Markdown converter which can be used as a plugin for static site generators such as [MkDocs](http://www.mkdocs.org/) or [Pelican](http://docs.getpelican.com/en/stable/).
 
-+ Auto generation of outputs for a fenced code block in Markdown using [Jupyter client](https://jupyter-client.readthedocs.io/en/stable/). The code language is not restricted to Python.
-+ Auto numbering of headers, figures, and tables. Numbered objects can be linked in Markdown source.
-+ Simple interface to use Pheasant with other site generators.
-+ Easy to install any extensions you want to Pheasant.
+Highlights include:
+
++ Auto generation of outputs for a fenced code block in Markdown source using [Jupyter client](https://jupyter-client.readthedocs.io/en/stable/). The code language is not restricted to Python.
++ Auto numbering of headers, figures, and tables. Numbered objects can be linked from Markdown source.
++ Simple interface to use Pheasant as a plugin for other site generators.
++ Easy to introduce any extensions you want to Pheasant.
 
 
 ## How to install
@@ -49,7 +51,7 @@ PHEASANT = {'jupyter': {'enabled': True}}
 ~~~
 
 !!! Note
-    Auto numbering feature is not suitable for articles (such as blog) written in Pelican.
+    In general, auto numbering feature is not suitable for articles (such as blog) written in Pelican.
 
 ## Examples
 
@@ -72,7 +74,7 @@ is converted into:
 ```
 ~~~
 
-after execution of `print` function and finally the output becomes
+after execution of `print` function via Jupyter client and finally the output becomes
 
 ```python
 print(1)
@@ -88,7 +90,7 @@ plt.plot([1, 3, 2]);
 ```
 ~~~
 
-The above Markdown creates a PNG image:
+The above Markdown source creates an input Python code block and a PNG image:
 
 ```python
 %matplotlib inline
@@ -96,7 +98,7 @@ import matplotlib.pyplot as plt
 plt.plot([1, 3, 2]);
 ```
 
-You may want not to display Python code itself. You can use `hide-input` option after a ```` ```python ```` statement.
+You may want not to display a code block itself. You can use `hide-input` option after a ```` ```python ```` statement.
 
 ~~~
 ```python hide-input
@@ -104,11 +106,14 @@ plt.plot([1, 3, 2]);
 ```
 ~~~
 
-This creates only a PNG image without Python code like below:
+This creates only a PNG image without a code block like below:
 
 ```python hide-input
 plt.plot([1, 3, 2]);
 ```
+
+!!! Note
+    Matplotlib package already has been imported in the previous code block so that we don't need install it again here.
 
 Pheasant also supports Bokeh's HTML output.
 
@@ -134,7 +139,7 @@ p.circle([1, 2, 3, 4, 5], [1, 2, 3, 4, 5], size=10)
 show(p)
 ```
 
-The language executed in Jupyter is not restricted to Python. For example,
+The language executed in Pheasant is not restricted to Python. For example,
 if you install Julia kernel, you can write:
 
 ~~~
@@ -156,27 +161,80 @@ println(3x)
 
 As you can see, all of headers are numbered in this document. This is done by Pheasant automatically. In addition, Pheasant can count the number of figures and tables and give the identical number to each figure or table.
 
+You can use a special *header* statement for figure (`#Figure`) and table (`#Table`) to number them like below:
+
 ~~~
-# abd
+#Figure This is a cat. {#cat#}
+
+![jpg](img/cat.jpg)
 ~~~
 
-#Fig Figure example {#fig1#}
+#Fig This is a cat. {#cat#}
+
+![jpg](img/cat.jpg)
+
+!!! Note
+    In the above Markdown source, `{#<tag>#}` is a tag for hyperlink described below.
+
+Off course, you can use any code to create a figure:
+
+~~~
+#Fig A Matplotlib figure
 
 ```python hide-input
-%matplotlib inline
-import matplotlib.pyplot as plt
-plt.plot([5, 13, 3]);
+plt.plot([3, 1]);
+```
+~~~
+
+#Fig A Matplotlib figure
+
+```python hide-input
+plt.plot([3, 1]);
 ```
 
-#Tab DataFrame {#tab1#}
+Like figures, tables can be numbered.
+
+~~~
+#Table A Markdown table
+
+a | b
+--|--
+0 | 1
+2 | 3
+~~~
+
+#Table A Markdown table
+
+a | b
+--|--
+0 | 1
+2 | 3
+
+Pandas DataFarme is useful to create a table programmatically.
+
+~~~
+#Table A Pandas DataFrame
 
 ```python hide-input
 import pandas as pd
-pd.DataFrame([[1, 2], [3, 4]], columns=list('ab'))
+pd.DataFrame([[1, 2], [3, 4]], columns=list('ab')) * 2
+```
+~~~
+
+
+#Table A Pandas DataFrame
+
+```python hide-input
+import pandas as pd
+pd.DataFrame([[1, 2], [3, 4]], columns=list('ab')) * 2
 ```
 
-Figure {#fig1#}, Table {#tab1#}
 
-Link {#matplotlib#}
+Numbered objects are linked from Markdown source using `{#<tag>#}`:
 
-Line {#bokeh#}
+~~~
+Go to Fig. {#cat#}
+~~~
+
+
+Go to Fig. {#cat#}
