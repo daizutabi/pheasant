@@ -1,11 +1,20 @@
-site_name: MkDocs Example
+site_name: Pheasant
+site_url: https://pheasant.daizutabi.net/
+repo_url: https://github.com/daizutabi/pheasant/
+repo_url: https://github.com/daizutabi/pheasant/
 
-theme: readthedocs
+theme:
+  name: readthedocs
+
+extra:
+  search:
+    language: 'en'
 
 extra_css:
   - css/pheasant.css
 
 markdown_extensions:
+  - admonition
   - pymdownx.arithmatex
 
 extra_javascript:
@@ -16,11 +25,11 @@ plugins:
       jupyter:
         output_format: markdown
         kernel_name: {'python': 'python3'}
+        enabled: True
       number:
-        enabled: False
+        enabled: True
       debug:
         enabled: False
-
 
 pages:
   - Home: index.md

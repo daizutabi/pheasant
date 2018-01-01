@@ -1,3 +1,9 @@
+~~~
+```python
+print(1)
+```
+~~~
+
 # MkDocs Example
 
 ## Stream {#section#}

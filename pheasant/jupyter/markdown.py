@@ -2,7 +2,7 @@ import re
 
 import nbformat
 
-from ..utils import read_source
+from ..utils import read_source, splitter
 from .client import run_cell, select_kernel_name
 from .notebook import convert as convert_notebook
 from .notebook import update_cell_metadata
@@ -108,21 +108,24 @@ def fenced_code_splitter(source: str):
     ------
     cell_string : str or tuple
     """
-    pattern = r'^```(\S+)([^\n.]*)\n(.*?)\n^```$'
-    re_compile = re.compile(pattern, re.DOTALL | re.MULTILINE)
+    pattern = r'(?<!~~~)\n^```(\S+)([^\n.]*)\n(.*?)\n^```$'
+    # re_compile = re.compile(pattern, re.DOTALL | re.MULTILINE)
+    option = re.DOTALL | re.MULTILINE
 
-    while True:
-        m = re_compile.search(source)
-        if m:
-            start, end = m.span()
-            if start:
-                markdown = source[:start].strip()
-                if markdown:
-                    yield markdown
-            yield m.group(1), m.group(3).strip(), m.group(2).strip()
-            source = source[end:]
-        else:
-            markdown = source.strip()
+    generator = splitter(pattern, source, option)
+    for splitted in generator:
+        if isinstance(splitted, str):
+            markdown = splitted.strip()
+            # if markdown.endswith('~~~'):
+            #     pre_code = next(generator)
+            #     if not isinstance(pre_code, str):
+            #         pre_code = pre_code.group() + next(generator)
+            #     yield '\n'.join([markdown, pre_code.strip()])
+            # elif markdown:
             if markdown:
                 yield markdown
-            break
+        else:
+            language = splitted.group(1)
+            code = splitted.group(3).strip()
+            option = splitted.group(2).strip()
+            yield language, code, option
