@@ -2,7 +2,7 @@ import re
 
 from markdown import Markdown
 
-from ..utils import read_source, splitter
+from ..utils import escaped_splitter, read_source
 from .config import config
 
 
@@ -52,17 +52,21 @@ def renderer(source: str, tag: dict, page_index=None):
                 yield config['template'].render(**splitted, config=config)
             else:
                 next_source = next(splitter)
-                index = next_source.find('\n\n')
-                if index == -1:
-                    body, rest = next_source, ''
+                if next_source.startswith('#begin\n'):
+                    content, rest = next_source[7:].split('#end')
                 else:
-                    body, rest = next_source[:index], next_source[index + 2:]
+                    index = next_source.find('\n\n')
+                    if index == -1:
+                        content, rest = next_source, ''
+                    else:
+                        content = next_source[:index]
+                        rest = next_source[index + 2:]
 
                 md = Markdown(extensions=['markdown.extensions.tables',
                                           'markdown.extensions.fenced_code'])
-                body = md.convert(body)
+                content = md.convert(content)
 
-                yield config['template'].render(**splitted, body=body,
+                yield config['template'].render(**splitted, content=content,
                                                 config=config)
 
                 if rest:
@@ -129,29 +133,24 @@ def header_splitter(source: str):
             header_kind[kind[:3].lower()] = kind
     cursor = 0
 
-    pattern_fenced_code = r'(^```(.*?)^```$)|(~~~(.*?)^~~~)'
-    option_fenced_code = re.DOTALL | re.MULTILINE
+    pattern_escape = r'(^```(.*?)^```$)|(^~~~(.*?)^~~~$)'
     pattern_header = r'^(#+)(\S*?) (.+?)$'
 
-    for splitted in splitter(pattern_fenced_code, source, option_fenced_code):
-        if not isinstance(splitted, str):
-            yield splitted.group().strip()
-            continue
-        for splitted in splitter(pattern_header, splitted):
-            if isinstance(splitted, str):
-                markdown = splitted.strip()
-                if markdown:
-                    yield markdown
-            else:
-                start, end = splitted.span()
-                cursor += start
-                kind = header_kind[splitted.group(2)[:3].lower()]
-                depth = len(splitted.group(1)) - 1
-                number_list[kind][depth] += 1
-                reset = [0] * (len(number_list[kind]) - depth)
-                number_list[kind][depth + 1:] = reset
-                title, tag = split_tag(splitted.group(3))
-                yield {'kind': kind, 'title': title, 'tag': tag,
-                       'cursor': cursor,
-                       'number_list': number_list[kind][:depth + 1]}
-                cursor += end
+    for splitted in escaped_splitter(pattern_header, pattern_escape, source):
+        if isinstance(splitted, str):
+            markdown = splitted.strip()
+            if markdown:
+                yield markdown
+        else:
+            start, end = splitted.span()
+            cursor += start
+            kind = header_kind[splitted.group(2)[:3].lower()]
+            depth = len(splitted.group(1)) - 1
+            number_list[kind][depth] += 1
+            reset = [0] * (len(number_list[kind]) - depth)
+            number_list[kind][depth + 1:] = reset
+            title, tag = split_tag(splitted.group(3))
+            yield {'kind': kind, 'title': title, 'tag': tag,
+                   'cursor': cursor,
+                   'number_list': number_list[kind][:depth + 1]}
+            cursor += end

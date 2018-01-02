@@ -13,6 +13,16 @@ def read_source(source):
     return source
 
 
+def escaped_splitter(pattern: str, pattern_escape: str, source: str,
+                     option=re.MULTILINE,
+                     option_escape=re.MULTILINE | re.DOTALL):
+    for splitted in splitter(pattern_escape, source, option_escape):
+        if not isinstance(splitted, str):
+            yield splitted.group()
+        else:
+            yield from splitter(pattern, splitted, option)
+
+
 def splitter(pattern: str, source: str, option=re.MULTILINE):
     """
     Generate splitted text from `source` by `pattern`.

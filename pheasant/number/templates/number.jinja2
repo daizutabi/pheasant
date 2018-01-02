@@ -9,13 +9,13 @@
 {%- endblock -%}
 
 {%- block figure -%}
-{{ body }}
+{{ content }}
 <p>Figure {{ number_string }} {{ title }}</p>
 {%- endblock -%}
 
 {%- block table -%}
 <p>Table {{ number_string }} {{ title }}</p>
-{{ body }}
+{{ content }}
 {%- endblock -%}
 
 {%- block reference -%}

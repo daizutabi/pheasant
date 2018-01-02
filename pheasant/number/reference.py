@@ -1,6 +1,6 @@
 import re
 
-from ..utils import splitter
+from ..utils import escaped_splitter
 from .config import config
 
 
@@ -24,21 +24,16 @@ def renderer(source: str, tag: dict):
     splitted source : str or dict
     """
 
-    pattern_fenced_code = r'(^```(.*?)^```$)|(~~~(.*?)^~~~)'
-    option_fenced_code = re.DOTALL | re.MULTILINE
+    pattern_escape = r'(^```(.*?)^```$)|(^~~~(.*?)^~~~$)'
+    pattern_tag = config['tag_pattern']
 
-    for splitted in splitter(pattern_fenced_code, source, option_fenced_code):
-        if not isinstance(splitted, str):
-            yield splitted.group().strip()
-            continue
-        for splitted in splitter(config['tag_pattern'], splitted):
-            if isinstance(splitted, str):
-                yield splitted
+    for splitted in escaped_splitter(pattern_tag, pattern_escape, source):
+        if isinstance(splitted, str):
+            yield splitted
+        else:
+            entity = splitted.group(1)
+            if entity in tag:
+                yield config['template'].render(reference=True, config=config,
+                                                **tag[entity])
             else:
-                entity = splitted.group(1)
-                if entity in tag:
-                    yield config['template'].render(reference=True,
-                                                    config=config,
-                                                    **tag[entity])
-                else:
-                    yield splitted.group()
+                yield splitted.group()

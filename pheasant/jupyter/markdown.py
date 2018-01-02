@@ -2,7 +2,7 @@ import re
 
 import nbformat
 
-from ..utils import read_source, splitter
+from ..utils import escaped_splitter, read_source
 from .client import run_cell, select_kernel_name
 from .notebook import convert as convert_notebook
 from .notebook import update_cell_metadata
@@ -108,21 +108,18 @@ def fenced_code_splitter(source: str):
     ------
     cell_string : str or tuple
     """
-    pattern_escape = r'^~~~.*?^~~~$'
+    pattern_escape = r'^~~~$.*?^~~~$'
     pattern_code = r'^```(\S+)([^\n.]*)\n(.*?)\n^```$'
     re_option = re.DOTALL | re.MULTILINE
 
-    for splitted in splitter(pattern_escape, source, re_option):
-        if not isinstance(splitted, str):
-            yield splitted.group().strip()
-            continue
-        for splitted in splitter(pattern_code, splitted, re_option):
-            if isinstance(splitted, str):
-                markdown = splitted.strip()
-                if markdown:
-                    yield markdown
-            else:
-                language = splitted.group(1)
-                code = splitted.group(3).strip()
-                option = splitted.group(2).strip()
-                yield language, code, option
+    for splitted in escaped_splitter(pattern_code, pattern_escape, source,
+                                     option=re_option):
+        if isinstance(splitted, str):
+            markdown = splitted.strip()
+            if markdown:
+                yield markdown
+        else:
+            language = splitted.group(1)
+            code = splitted.group(3).strip()
+            option = splitted.group(2).strip()
+            yield language, code, option

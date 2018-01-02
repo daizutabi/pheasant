@@ -89,7 +89,11 @@ A text
 
 #Fig. figure {#F2#}
 
+#begin
 ![png](figure2.png)
+
+![png](figure3.png)
+#end
 
 #Tab. table {#T1#}
 
@@ -116,6 +120,7 @@ A text
 
 <div class="pheasant-figure" id="pheasant-F2">
 <p><img alt="png" src="figure2.png" /></p>
+<p><img alt="png" src="figure3.png" /></p>
 <p>Figure 4.2. figure</p>
 </div>
 

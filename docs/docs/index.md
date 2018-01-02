@@ -2,7 +2,7 @@
 
 ## Overview
 
-Pheasant is a Markdown converter which can be used as a plugin for static site generators such as [MkDocs](http://www.mkdocs.org/) or [Pelican](http://docs.getpelican.com/en/stable/).
+Pheasant is a Markdown converter which is designed to be used as a plugin for static site generators such as [MkDocs](http://www.mkdocs.org/) or [Pelican](http://docs.getpelican.com/en/stable/).
 
 Highlights include:
 
@@ -98,7 +98,7 @@ import matplotlib.pyplot as plt
 plt.plot([1, 3, 2]);
 ```
 
-You may want not to display a code block itself. You can use `hide-input` option after a ```` ```python ```` statement.
+You may not want to display a code block itself. You can use `hide-input` option after a ```` ```python ```` statement.
 
 ~~~
 ```python hide-input
@@ -113,7 +113,7 @@ plt.plot([1, 3, 2]);
 ```
 
 !!! Note
-    Matplotlib package already has been imported in the previous code block so that we don't need install it again here.
+    Matplotlib package already has been imported in the previous code block so that we don't need to import it again here.
 
 Pheasant also supports Bokeh's HTML output.
 
@@ -149,7 +149,7 @@ println(3x)
 ```
 ~~~
 
-to get output like below:
+to get an output like below:
 
 
 ```julia
@@ -229,12 +229,32 @@ import pandas as pd
 pd.DataFrame([[1, 2], [3, 4]], columns=list('ab')) * 2
 ```
 
+A Markdown source for figures and tables is a source block separated by a blank line from following text. If a figure or table has a blank line within it, you have to explicitly show the content range with `#begin` and `#end` statement.
+
+~~~
+#Fig A Bokeh's HTML figure
+
+#begin
+```python hide-input
+show(p)
+```
+#end
+~~~
+
+#Fig A Bokeh's HTML figure
+
+#begin
+```python hide-input
+show(p)
+```
+#end
+
+### Hyperlink
 
 Numbered objects are linked from Markdown source using `{#<tag>#}`:
 
 ~~~
-Go to Fig. {#cat#}
+For example, go to Fig. {#cat#}
 ~~~
 
-
-Go to Fig. {#cat#}
+For example, go to Fig. {#cat#}
