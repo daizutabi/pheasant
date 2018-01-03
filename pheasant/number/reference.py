@@ -1,5 +1,3 @@
-import re
-
 from ..utils import escaped_splitter
 from .config import config
 

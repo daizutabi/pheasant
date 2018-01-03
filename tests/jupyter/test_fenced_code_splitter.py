@@ -58,7 +58,7 @@ print(1)
 """.strip()
 
 
-def test_fenced_code_splitter(stream):
+def test_fenced_code_splitter_stream(stream):
     for k, output in enumerate(fenced_code_splitter(stream)):
         if k in [0, 5]:
             assert output == 'text'

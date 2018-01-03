@@ -1,3 +1,3 @@
-from . import debug, jupyter, number
+from . import debug, jupyter, number, office
 
-config = {'converters': [jupyter, number, debug], 'source_file': None}
+config = {'converters': [jupyter, office, number, debug], 'source_file': None}

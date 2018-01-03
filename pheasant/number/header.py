@@ -150,7 +150,6 @@ def header_splitter(source: str):
             reset = [0] * (len(number_list[kind]) - depth)
             number_list[kind][depth + 1:] = reset
             title, tag = split_tag(splitted.group(3))
-            yield {'kind': kind, 'title': title, 'tag': tag,
-                   'cursor': cursor,
+            yield {'kind': kind, 'title': title, 'tag': tag, 'cursor': cursor,
                    'number_list': number_list[kind][:depth + 1]}
             cursor += end
