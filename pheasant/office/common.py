@@ -3,8 +3,11 @@ import io
 import os
 import tempfile
 
-import win32com.client
-from PIL import Image
+try:
+    import win32com.client
+    from PIL import Image
+except ImportError:
+    pass
 
 apps = {}
 
