@@ -1,6 +1,7 @@
 import pytest
+from conftest import is_not_windows
 from pheasant.config import config as pheasant_config
-from pheasant.office.converter import office_object_splitter, exporter, convert
+from pheasant.office.converter import convert, exporter, office_object_splitter
 
 
 @pytest.fixture
@@ -29,6 +30,7 @@ def test_office_object_splitter(source):
             assert splitted == ' Text'
 
 
+@pytest.mark.skipif(is_not_windows, reason='Windows only test')
 def test_exporter(source_file, root):
     splitter = exporter(source_file, root)
     assert next(splitter) == 'Text\n\n'
@@ -36,6 +38,7 @@ def test_exporter(source_file, root):
     assert next(splitter) == '\n\nText\n'
 
 
+@pytest.mark.skipif(is_not_windows, reason='Windows only test')
 def test_convert(source_file):
     pheasant_config['source_file'] = source_file
     source = convert(source_file)
