@@ -19,7 +19,7 @@ plugins:
       office:
         enabled: True
       number:
-        enabled: False
+        enabled: True
       debug:
         enabled: False
 

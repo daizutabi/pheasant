@@ -9,6 +9,13 @@
   color: #000066;
 }
 
+.pheasant-figure svg {
+  margin-left: auto;
+  margin-right: auto;
+  display: table !important;
+  width: auto !important;
+}
+
 .pheasant-table {
   margin-top: 24px;
 }
@@ -20,7 +27,7 @@
   color: #000066;
 }
 
-.pheasant-table table  {
+.pheasant-table table {
   margin-left: auto;
   margin-right: auto;
   display: table !important;

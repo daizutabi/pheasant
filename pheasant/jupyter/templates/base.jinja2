@@ -101,7 +101,7 @@
 
 {# from nbconvert/templates/markdown.tpl #}
 {% block data_svg -%}
-![svg]({{ output.metadata.filenames['image/svg+xml'] | path2url }})
+{{ output.data['image/svg+xml'] }}
 {%- endblock data_svg %}
 
 

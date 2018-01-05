@@ -8,6 +8,7 @@ Highlights include:
 
 + Auto generation of outputs for a fenced code block in Markdown source using [Jupyter client](https://jupyter-client.readthedocs.io/en/stable/). The code language is not restricted to Python.
 + Auto numbering of headers, figures, and tables. Numbered objects can be linked from Markdown source.
++ [Windows only] Extract shapes from Microsoft PowerPoint presentations.
 + Simple interface to use Pheasant as a plugin for other site generators.
 + Easy to introduce any extensions you want to Pheasant.
 
