@@ -16,6 +16,8 @@ plugins:
       jupyter:
         output_format: markdown
         kernel_name: {'python': 'python3'}
+      office:
+        enabled: True
       number:
         enabled: False
       debug:
@@ -28,3 +30,4 @@ pages:
   - Notebook Stream: notebook_stream_input.ipynb
   - Markdown Display: display/markdown_display_input.md
   - Notebook Display: notebook_display_input.ipynb
+  - Office: office.md

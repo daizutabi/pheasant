@@ -1,25 +1,10 @@
-import os
-import platform
-
 import pytest
+from conftest import is_not_windows
 
 try:
-    from pheasant.office import excel as xl
     from pheasant.office import common
 except ImportError:
     pass
-
-
-is_not_windows = platform.system() != 'Windows'
-
-
-@pytest.fixture(scope='module')
-def book(root):
-    path = os.path.join(root, 'workbook.xlsx')
-    book = xl.open(path)
-    yield book
-    book.Close()
-    common.quit('Excel')
 
 
 @pytest.fixture(scope='module')

@@ -1,7 +1,7 @@
 import os
-import platform
 
 import pytest
+from conftest import is_not_windows
 
 try:
     from pheasant.office import powerpoint as pp
@@ -10,19 +10,7 @@ except ImportError:
     pass
 
 
-is_not_windows = platform.system() != 'Windows'
-
-
-@pytest.fixture(scope='module')
-def prs(root):
-    path = os.path.join(root, 'presentation.pptx')
-    prs = pp.open(path)
-    yield prs
-    prs.Close()
-    common.quit('PowerPoint')
-
-
-@pytest.fixture(scope='module')
+@pytest.fixture(scope='session')
 def shape_first(prs):
     for k, shape in enumerate(common.extract_shape_with_title(prs, 'Slides')):
         if k == 0:
@@ -35,10 +23,19 @@ def test_shape_title(shape_first):
 
 
 @pytest.mark.skipif(is_not_windows, reason='Windows only test')
-def test_export_shape(root, shape_first):
+def test_get_shape_by_title(prs):
+    assert common.get_shape_by_title(prs, 'Slides', 'Group1').Title == 'Group1'
+
+
+@pytest.mark.skipif(is_not_windows, reason='Windows only test')
+def test_export_shape_file(root, shape_first):
     path = os.path.join(root, 'shape.png')
-    common.export_shape(shape_first, path)
+    pp.export_shape(shape_first, path)
     assert os.path.exists(path)
     os.remove(path)
-    base64_str = common.export_shape(shape_first)
+
+
+@pytest.mark.skipif(is_not_windows, reason='Windows only test')
+def test_export_shape_str(root, shape_first):
+    base64_str = pp.export_shape(shape_first)
     assert isinstance(base64_str, str)
