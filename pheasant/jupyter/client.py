@@ -7,12 +7,19 @@ from nbformat.v4 import output_from_msg
 from .config import config
 
 logger = logging.getLogger(__name__)
+
+kernel_names = {}
 kernel_managers = {}
 kernel_clients = {}
 
 
 def find_kernel_names():
-    kernel_names = {}
+    """
+    Find kernel names for language
+    """
+    if kernel_names:
+        return kernel_names
+
     kernel_specs = jupyter_client.kernelspec.find_kernel_specs()
     for kernel_name in kernel_specs:
         kernel_spec = jupyter_client.kernelspec.get_kernel_spec(kernel_name)
@@ -32,18 +39,17 @@ def select_kernel_name(language):
     if language in config['kernel_name']:
         return config['kernel_name'][language]
 
-    language_kernels = find_kernel_names()
-    if language not in language_kernels:
-        logger.error(f'Could not find kernel_spec for {language}.')
+    kernel_names = find_kernel_names()
+    if language not in kernel_names:
         config['kernel_name'][language] = None
         return None
 
-    kernel_names = language_kernels[language]
-    config['kernel_name'][language] = kernel_names[0]
-    if len(kernel_names) > 1:
+    kernel_name = kernel_names[language][0]
+    config['kernel_name'][language] = kernel_name
+    if len(kernel_names[language]) > 1:
         logger.warning(f'Multiple kernels are found for {language}.')
-    logger.info(f'Use kernel_name `{kernel_names[0]}` for {language}.')
-    return kernel_names[0]
+        logger.warning(f'Use kernel_name `{kernel_name}` for {language}.')
+    return kernel_name
 
 
 def get_kernel_manager(kernel_name):

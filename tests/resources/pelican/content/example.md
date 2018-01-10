@@ -11,6 +11,9 @@ print(1)
 1 + 1
 ```
 
+```html
+<h1>Header</h1>
+```
 
 ## Display
 

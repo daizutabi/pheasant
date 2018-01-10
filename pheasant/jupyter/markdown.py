@@ -120,6 +120,9 @@ def fenced_code_splitter(source: str):
                 yield markdown
         else:
             language = splitted.group(1)
-            code = splitted.group(3).strip()
-            option = splitted.group(2).strip()
-            yield language, code, option
+            if select_kernel_name(language) is None:
+                yield splitted.group()
+            else:
+                code = splitted.group(3).strip()
+                option = splitted.group(2).strip()
+                yield language, code, option

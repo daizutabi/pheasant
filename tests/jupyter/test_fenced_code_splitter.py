@@ -55,6 +55,11 @@ print(1)
 print(1)
 ```
 ~~~
+
+
+```unknown
+abc
+```
 """.strip()
 
 
@@ -70,3 +75,5 @@ def test_fenced_code_splitter_stream(stream):
             assert output == '~~~\n```python\nprint(1)\n```\n~~~'
         elif k == 7:
             assert output == '~~~\n``` python\nprint(1)\n```\n~~~'
+        elif k == 8:
+            assert output == '```unknown\nabc\n```'
