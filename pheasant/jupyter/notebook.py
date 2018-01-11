@@ -1,4 +1,6 @@
+import codecs
 import re
+
 import nbformat
 from nbconvert import MarkdownExporter
 from nbconvert.preprocessors import ExecutePreprocessor
@@ -24,8 +26,8 @@ def convert(notebook, output_format=None):
     str or Notebook object
     """
     if isinstance(notebook, str):
-        with open(notebook) as f:
-            notebook = nbformat.read(f, as_version=config['format_version'])
+        with codecs.open(notebook, 'r', 'utf8') as file:
+            notebook = nbformat.read(file, as_version=config['format_version'])
 
     # For 'native' notebook, add language info to each code-cell.
     if 'kernelspec' in notebook.metadata:
