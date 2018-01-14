@@ -7,6 +7,7 @@ extra_css:
 
 markdown_extensions:
   - pymdownx.arithmatex
+  - pymdownx.highlight
 
 extra_javascript:
   - 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML'
@@ -31,3 +32,4 @@ pages:
   - Markdown Display: display/markdown_display_input.md
   - Notebook Display: notebook_display_input.ipynb
   - Office: office.md
+  - Office: holoviews.ipynb

@@ -43,7 +43,16 @@ def convert(notebook, output_format=None):
     else:
         # exporter = new_exporter()
         markdown, resources = config['exporter'].from_notebook_node(notebook)
-        return markdown
+        return drop_new_line_from_img_data(markdown)
+
+
+def drop_new_line_from_img_data(markdown):
+    re_compile = re.compile(r'<img .+?</img>', re.DOTALL)
+
+    def replace(m):
+        return m.group().replace('\n', '')
+
+    return re_compile.sub(replace, markdown)
 
 
 def delete_dataframe_style(notebook):

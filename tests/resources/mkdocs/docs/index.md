@@ -1,9 +1,3 @@
-~~~
-```python
-print(1)
-```
-~~~
-
 # MkDocs Example
 
 ## Stream {#section#}
@@ -42,3 +36,17 @@ Figure {#fig1#}, Table {#tab1#}
 Link {#matplotlib#}
 
 Line {#bokeh#}
+
+
+## HoloViews
+
+```python hide
+import holoviews as hv
+hv.extension('bokeh')
+```
+
+あいう
+
+```python
+hv.Curve([1, 2, 3])
+```

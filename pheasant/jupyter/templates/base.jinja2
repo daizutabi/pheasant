@@ -77,14 +77,24 @@
   {%- endif -%}
 {%- endblock codecell -%}
 
-
+{#
 {%- block data_html scoped -%}
+<div class="output_html rendered_html output_subarea ">
   {%- for line in output.data['text/html'].split('\n') -%}
     {%- if line %}
-{{ line | trim }}
+{{ line }}
     {%- endif -%}
   {%- endfor -%}
+</div>
 {%- endblock data_html -%}
+#}
+
+{% block data_html scoped -%}
+<div class="output_html rendered_html output_subarea {{ extra_class }}">
+{{ output.data['text/html'] }}
+</div>
+{%- endblock data_html %}
+
 
 {# from nbconvert/templates/html/basic.tpl #}
 {%- block data_javascript scoped -%}
