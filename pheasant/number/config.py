@@ -5,4 +5,5 @@ config = {'template_file': 'number.jinja2',
           'class': 'pheasant-{kind}',
           'id': 'pheasant-{tag}',
           'relpath_function': None,
+          'page': False
           }

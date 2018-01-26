@@ -20,6 +20,7 @@ plugins:
       office:
         enabled: True
       number:
+        page: True
         enabled: True
       debug:
         enabled: False

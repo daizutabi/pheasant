@@ -11,11 +11,8 @@ class PheasantReader(MarkdownReader):
 
     def read(self, source_path):
         """Parse content and metadata of markdown and notebook files"""
-
-        if '.ipynb_checkpoints' in source_path:
-            return None, {}
-
-        text = convert(source_path, {'jupyter': {}})  # supports jupyter only
+        config = self.settings.get('PHEASANT', {'jupyter': {}})
+        text = convert(source_path, config)
 
         self._source_path = source_path
         self._md = Markdown(**self.settings['MARKDOWN'])

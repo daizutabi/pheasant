@@ -5,6 +5,7 @@ TIMEZONE = 'Asia/Tokyo'
 RELATIVE_URLS = True
 PLUGINS = ['pheasant']
 
-PHEASANT = {'jupyter': {
-    'kernel_name': {'python': 'python3'}}
+PHEASANT = {
+    'jupyter': {'kernel_name': {'python': 'python3'}},
+    'number': {'enabled': True}
 }
