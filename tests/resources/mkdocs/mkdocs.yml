@@ -20,7 +20,7 @@ plugins:
       office:
         enabled: True
       number:
-        page: True
+        level: 0
         enabled: True
       debug:
         enabled: False

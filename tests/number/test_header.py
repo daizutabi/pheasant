@@ -1,4 +1,5 @@
 import pytest
+
 from pheasant.number import initialize
 from pheasant.number.header import (convert, header_splitter,
                                     normalize_number_list, renderer, split_tag)
@@ -14,10 +15,14 @@ def test_split_tag(input, text, tag):
 
 
 @pytest.mark.parametrize('kind,number_list,page_index,output', [
-    ('header', [1], None, [1]),
+    ('header', [1], 1, [1]),
     ('header', [1, 2], [3], [3, 2]),
-    ('figure', [3], None, [3]),
+    ('header', [0, 2], 2, [2]),
+    ('header', [0, 2], 1, [0, 2]),
+    ('header', [0, 2, 1], 2, [2, 1]),
+    ('figure', [3], 1, [3]),
     ('figure', [3], [4, 2], [4, 2, 3]),
+    ('figure', [3, 1], 2, [3, 1]),
 ])
 def test_normalized_number_list(kind, number_list, page_index, output):
     assert normalize_number_list(kind, number_list, page_index) == output
@@ -77,11 +82,11 @@ def test_initialize():
 @pytest.fixture
 def source_input():
     yield """
-# header {#H1#}
+# header1 {#H1#}
 
 A text
 
-## header {#H1.1#}
+## header2 {#H1.1#}
 
 #Fig. figure {#F1#}
 
@@ -107,11 +112,11 @@ Content Cell | Content Cell
 @pytest.fixture
 def source_output():
     yield """
-# <span id="pheasant-H1">4. header</span>
+# <span id="pheasant-H1">4. header1</span>
 
 A text
 
-## <span id="pheasant-H1.1">4.1. header</span>
+## <span id="pheasant-H1.1">4.1. header2</span>
 
 <div class="pheasant-figure" id="pheasant-F1">
 <p><img alt="png" src="figure1.png" /></p>
@@ -138,9 +143,10 @@ def test_renderer(source_input):
     tag = {}
     for k, splitted in enumerate(renderer(source_input, tag)):
         if k == 0:
-            assert splitted == '# <span id="pheasant-H1">1. header</span>'
+            assert splitted == '# <span id="pheasant-H1">1. header1</span>'
         elif k == 2:
-            assert splitted == '## <span id="pheasant-H1.1">1.1. header</span>'
+            assert (splitted ==
+                    '## <span id="pheasant-H1.1">1.1. header2</span>')
     for key, value in tag.items():
         assert key == (value['kind'][0].upper() +
                        '.'.join(str(i) for i in value['number_list']))
@@ -149,10 +155,10 @@ def test_renderer(source_input):
     for k, splitted in enumerate(renderer(source_input, tag,
                                           page_index=[2, 3])):
         if k == 0:
-            assert splitted == '# <span id="pheasant-H1">2.3. header</span>'
+            assert splitted == '# <span id="pheasant-H1">2.3. header1</span>'
         elif k == 2:
             assert (splitted ==
-                    '## <span id="pheasant-H1.1">2.3.1. header</span>')
+                    '## <span id="pheasant-H1.1">2.3.1. header2</span>')
 
 
 def test_convert(source_input, source_output):

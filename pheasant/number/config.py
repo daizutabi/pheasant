@@ -5,5 +5,5 @@ config = {'template_file': 'number.jinja2',
           'class': 'pheasant-{kind}',
           'id': 'pheasant-{tag}',
           'relpath_function': None,
-          'page': False
+          'level': 2  # numbering level. 0 for multiple pages, 2 for h2 etc.
           }

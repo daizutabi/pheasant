@@ -28,10 +28,10 @@ def convert(source):
     if source_file not in config['pages']:
         config['pages'].append(source_file)
 
-    if config['page']:
+    if config['level'] == 0:
         page_index = [config['pages'].index(source_file) + 1]
     else:
-        page_index = None
+        page_index = config['level']
     logger.info(f'Page index for {source_file}: {page_index}')
 
     tag = {}

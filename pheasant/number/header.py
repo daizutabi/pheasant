@@ -6,7 +6,7 @@ from ..utils import escaped_splitter, read_source
 from .config import config
 
 
-def convert(source: str, tag=None, page_index=None):
+def convert(source: str, tag=None, page_index=1):
     """
     Convert markdown string or file into markdown with section number_listing.
 
@@ -14,8 +14,10 @@ def convert(source: str, tag=None, page_index=None):
     ----------
     source : str
         Markdown source string or filekind
-    page_index : list of int
+    page_index : list of in or int
         Page index.
+        If list, page index from parents
+        If int, it is a start level of numbering. For example, 2 for h2.
 
     Returns
     -------
@@ -28,7 +30,7 @@ def convert(source: str, tag=None, page_index=None):
     return source, tag
 
 
-def renderer(source: str, tag: dict, page_index=None):
+def renderer(source: str, tag: dict, page_index=1):
     splitter = header_splitter(source)
     for splitted in splitter:
         if isinstance(splitted, str):
@@ -74,11 +76,15 @@ def renderer(source: str, tag: dict, page_index=None):
 
 
 def normalize_number_list(kind, number_list, page_index=None):
-    if page_index:
+    if isinstance(page_index, list):
         if kind == 'header':
             number_list = page_index + number_list[1:]
         else:
             number_list = page_index + number_list
+    else:
+        if kind == 'header':
+            number_list = number_list[page_index - 1:]
+
     return number_list
 
 
