@@ -1,7 +1,7 @@
 Title: Pelican Example
 Date: 2017-12-27
 
-# Stream
+## Stream
 
 ```python
 print(1)
@@ -15,7 +15,7 @@ print(1)
 <h1>Header</h1>
 ```
 
-# Display
+## Display
 
 #Fig Matplotlib figure example
 
@@ -25,7 +25,7 @@ import matplotlib.pyplot as plt
 plt.plot([1, 2]);
 ```
 
-# Pandas DataFrame
+## Pandas DataFrame
 
 ```python
 import pandas as pd

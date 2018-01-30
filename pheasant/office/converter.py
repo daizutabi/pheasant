@@ -1,9 +1,10 @@
 import logging
 import os
 
-from ..office import powerpoint
+from . import powerpoint
 from ..utils import escaped_splitter, read_source
 from .common import get_shape_by_title
+from .config import config
 
 logger = logging.getLogger(__name__)
 
@@ -15,28 +16,48 @@ def initialize():
 def convert(source):
     from ..converters import get_source_file
     source_file = get_source_file()
+    return ''.join(exporter(source_file))
+
+
+def exporter(source_file: str):
     directory = os.path.dirname(source_file)
-    return ''.join(exporter(source, directory))
-
-
-def exporter(source: str, directory):
-    for splitted in office_object_splitter(source):
+    for splitted in office_object_splitter(source_file):
         if isinstance(splitted, str):
             yield splitted
         else:
             alt = splitted['alt']
-            path = os.path.join(directory, splitted['path'])
-            path = os.path.abspath(path)
-            data = export_shape(path, splitted['tag'])
+            abspath = get_abspath(directory, splitted['path'])
+            data = export_shape(abspath, splitted['tag'])
             yield f'![{alt}]({data})'
 
 
-def export_shape(path, tag, format='png'):
+def get_abspath(root, path):
+    abspath = os.path.abspath(os.path.join(root, path))
+    if os.path.exists(abspath):
+        return abspath
+
+    for directory in config['file_dirs']:
+        abspath = os.path.abspath(os.path.join(root, directory, path))
+        if os.path.exists(abspath):
+            return abspath
+        abspath = os.path.abspath(os.path.join(directory, path))
+        if os.path.exists(abspath):
+            return abspath
+    else:
+        raise OSError(f'File not found: {path}')
+
+
+def export_shape(path, tag, format='png', use_cache=True):
+    if use_cache and (path, tag) in config['shape_data']:
+        return config['shape_data'][(path, tag)]
+
     # PowerPoint
     prs = powerpoint.open(path)
     shape = get_shape_by_title(prs, 'Slides', tag)
     data = powerpoint.export_shape(shape, format=format)
     data = f'data:image/{format};base64,{data}'
+
+    config['shape_data'][(path, tag)] = data
     return data
 
 

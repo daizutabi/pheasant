@@ -7,5 +7,5 @@ PLUGINS = ['pheasant']
 
 PHEASANT = {
     'jupyter': {'kernel_name': {'python': 'python3'}},
-    'number': {'enabled': True}
+    'number': {'enabled': True, 'level': 2}
 }

@@ -1,7 +1,19 @@
+import os
+
 import pytest
+
 from conftest import is_not_windows
 from pheasant.config import config as pheasant_config
-from pheasant.office.converter import convert, exporter, office_object_splitter
+from pheasant.office import config
+from pheasant.office.converter import (convert, exporter, get_abspath,
+                                       office_object_splitter)
+
+
+@pytest.mark.skipif(is_not_windows, reason='Windows only test')
+def test_get_abspath(root):
+    config['file_dirs'] = [root]
+    path = 'presentation.pptx'
+    assert get_abspath('dummy', path) == os.path.join(root, path)
 
 
 @pytest.fixture
@@ -31,8 +43,8 @@ def test_office_object_splitter(source):
 
 
 @pytest.mark.skipif(is_not_windows, reason='Windows only test')
-def test_exporter(source_file, root):
-    splitter = exporter(source_file, root)
+def test_exporter(source_file):
+    splitter = exporter(source_file)
     assert next(splitter) == 'Text\n\n'
     assert next(splitter).startswith('![png](data:image/png;base64,iVB')
     assert next(splitter) == '\n\nText\n'
@@ -46,3 +58,11 @@ def test_convert(source_file):
     assert splitted[0] == 'Text'
     assert splitted[1].startswith('![png](data:image/png;base64,iVB')
     assert splitted[2] == 'Text\n'
+
+
+@pytest.mark.skipif(is_not_windows, reason='Windows only test')
+def test_config_shape_data(root):
+    path = 'presentation.pptx'
+    abspath = os.path.join(root, path)
+    data = config['shape_data'][(abspath, 'Group1')]
+    assert data.startswith('data:image/png;base64,iVB')

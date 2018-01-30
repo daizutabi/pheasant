@@ -12,9 +12,10 @@ except ImportError:
 
 @pytest.fixture(scope='session')
 def shape_first(prs):
-    for k, shape in enumerate(common.extract_shape_with_title(prs, 'Slides')):
+    gen = common.extract_shape_with_title(prs, 'Slides')
+    for k, (title, i, js) in enumerate(gen):
         if k == 0:
-            return shape
+            return prs.Slides(i).Shapes(js[0])
 
 
 @pytest.mark.skipif(is_not_windows, reason='Windows only test')
@@ -23,8 +24,12 @@ def test_shape_title(shape_first):
 
 
 @pytest.mark.skipif(is_not_windows, reason='Windows only test')
-def test_get_shape_by_title(prs):
+def test_get_shape_by_title(prs, root):
+    assert prs.FullName == os.path.join(root, 'presentation.pptx')
+    assert prs.Slides(1).Shapes.Count == 8
     assert common.get_shape_by_title(prs, 'Slides', 'Group1').Title == 'Group1'
+    assert common.get_shape_by_title(prs, 'Slides', 'Rect1').Title == 'Rect1'
+    assert prs.Slides(1).Shapes(8).GroupItems.Count == 3
 
 
 @pytest.mark.skipif(is_not_windows, reason='Windows only test')
