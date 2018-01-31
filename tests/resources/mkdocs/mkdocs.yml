@@ -16,7 +16,7 @@ plugins:
   - pheasant:
       jupyter:
         output_format: markdown
-        kernel_name: {'python': 'doc'}
+        kernel_name: {'python': 'python3'}
         template_file: 'output_text_inside.jinja2'
       office:
         enabled: True
