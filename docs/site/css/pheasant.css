@@ -2,17 +2,18 @@
   margin-bottom: 24px;
 }
 
-.pheasant-figure .bk-root {
-  margin: 0 auto;
-  display: table !important;
-  width: auto !important;
-}
-
 .pheasant-figure p {
   text-align: center;
   margin: 0px;
   font-weight: bold;
   color: #000066;
+}
+
+.pheasant-figure svg {
+  margin-left: auto;
+  margin-right: auto;
+  display: table !important;
+  width: auto !important;
 }
 
 .pheasant-table {
