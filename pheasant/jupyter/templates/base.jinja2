@@ -59,7 +59,8 @@
     {%- for output in cell.outputs -%}
       {%- if output.output_type != 'display_data' -%}
         {%- block output_text_outside scoped -%}{%- endblock -%}
-      {%- elif output.output_type == 'display_data' or (output.output_type == 'execute_result' and 'text/html' in output.data) -%}
+      {%- endif -%}
+      {%- if output.output_type == 'display_data' or (output.output_type == 'execute_result' and 'text/html' in output.data) -%}
         {{ '\n\n' }}
         {%- block data_priority scoped -%}
           {{ super() }}

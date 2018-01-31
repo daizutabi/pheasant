@@ -24,7 +24,7 @@ plugins:
   - pheasant:
       jupyter:
         output_format: markdown
-        kernel_name: {'python': 'python3'}
+        kernel_name: {'python': 'doc'}
         enabled: True
       number:
         enabled: True
