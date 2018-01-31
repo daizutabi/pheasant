@@ -9,8 +9,10 @@
 {%- endblock -%}
 
 {%- block output_text_outside -%}
-  {{ '\n\n' }}
-  <div class="output-text">
-    <pre><code>{{ output_text(output) }}</code></pre>
-  </div>
+{{ '\n\n' }}
+<div class="output-text"></div>
+
+{{ '```' + language + '\n'}}
+{{ output_text(output) }}
+{{ '```' }}
 {%- endblock -%}
