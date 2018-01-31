@@ -41,7 +41,6 @@ def convert(notebook, output_format=None):
     if (output_format or config['output_format']) == 'notebook':
         return notebook
     else:
-        # exporter = new_exporter()
         markdown, resources = config['exporter'].from_notebook_node(notebook)
         return drop_new_line_from_img_data(markdown)
 
@@ -67,7 +66,7 @@ def delete_dataframe_style(notebook):
                     output.data['text/html'] = html
 
 
-def new_exporter(template_file=None):
+def new_exporter(loader=None, template_file=None):
     c = Config({'NbConvertBase': {
         'display_data_priority': ['application/vnd.jupyter.widget-state+json',
                                   'application/vnd.jupyter.widget-view+json',
@@ -81,8 +80,9 @@ def new_exporter(template_file=None):
                                   'text/plain']
     }})
 
-    exporter = MarkdownExporter(config=c)
-    exporter.template_file = template_file or config['template_file']
+    exporter = MarkdownExporter(config=c,
+                                extra_loaders=[loader] if loader else None)
+    exporter.template_file = template_file
     return exporter
 
 

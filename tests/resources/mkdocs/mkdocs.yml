@@ -16,21 +16,22 @@ plugins:
   - pheasant:
       jupyter:
         output_format: markdown
-        kernel_name: {'python': 'python3'}
+        kernel_name: {'python': 'doc'}
+        template_file: 'output_text_inside.jinja2'
       office:
         enabled: True
       number:
-        level: 0
         enabled: True
       debug:
         enabled: False
 
 
 pages:
-  - Home: index.md
-  - Markdown Stream: markdown_stream_input.md
-  - Notebook Stream: notebook_stream_input.ipynb
-  - Markdown Display: display/markdown_display_input.md
-  - Notebook Display: notebook_display_input.ipynb
-  - Office: office.md
-  - Office: holoviews.ipynb
+  - Home: test.md
+  # - Home: index.md
+  # - Markdown Stream: markdown_stream_input.md
+  # - Notebook Stream: notebook_stream_input.ipynb
+  # - Markdown Display: display/markdown_display_input.md
+  # - Notebook Display: notebook_display_input.ipynb
+  # - Office: office.md
+  # - Office: holoviews.ipynb

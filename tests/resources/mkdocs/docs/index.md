@@ -4,7 +4,7 @@
 
 ```python
 x = 10
-print(2*x)
+print(3*x)
 ```
 
 ```julia

@@ -1,0 +1,16 @@
+{% extends 'base.jinja2' %}
+
+{%- block input -%}
+  {{ cell.source + '\n' }}
+{%- endblock -%}
+
+{%- block input_with_output -%}
+  {{ cell.source + '\n' }}
+{%- endblock -%}
+
+{%- block output_text_outside -%}
+  {{ '\n\n' }}
+  <div class="output-text">
+    <pre><code>{{ output_text(output) }}</code></pre>
+  </div>
+{%- endblock -%}

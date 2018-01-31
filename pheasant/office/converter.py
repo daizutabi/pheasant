@@ -16,17 +16,20 @@ def initialize():
 def convert(source):
     from ..converters import get_source_file
     source_file = get_source_file()
-    return ''.join(exporter(source_file))
+    root = os.path.dirname(source_file)
+    return ''.join(exporter(source, root))
 
 
-def exporter(source_file: str):
-    directory = os.path.dirname(source_file)
-    for splitted in office_object_splitter(source_file):
+def exporter(source, root=None):
+    if root is None:
+        root = os.path.dirname(source)
+
+    for splitted in office_object_splitter(source):
         if isinstance(splitted, str):
             yield splitted
         else:
             alt = splitted['alt']
-            abspath = get_abspath(directory, splitted['path'])
+            abspath = get_abspath(root, splitted['path'])
             data = export_shape(abspath, splitted['tag'])
             yield f'![{alt}]({data})'
 

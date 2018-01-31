@@ -46,28 +46,20 @@
     {%- if 'hide-input' not in options or ns.found -%}
       {{ '```' + language + '\n'}}
       {%- if not cell.outputs or 'hide-output' in options -%}
-        {{ cell.source + '\n' }}
+        {%- block input -%}{%- endblock -%}
       {%- else -%}
         {%- if 'hide-input' not in options -%}
-          {%- for line in cell.source.split('\n') -%}
-            {%- if line.startswith(' ') %}...{% else %}>>>{% endif %} {{ line + '\n'}}
-          {%- endfor -%}
+          {%- block input_with_output -%}{%- endblock -%}
         {%- endif -%}
         {%- for output in cell.outputs if output.output_type != 'display_data' -%}
-          {%- if output.output_type == 'execute_result' -%}
-            {%- if 'text/html' not in output.data -%}
-              {{ output.data['text/plain'] + '\n' }}
-            {%- endif -%}
-          {%- elif output.output_type == 'stream' -%}
-            {{ output.text }}{%- if output.text[-1] != '\n' -%}{{ '\n' }}{%- endif -%}
-          {%- elif output.output_type == 'error' -%}
-            {{ output.traceback[-1] | strip_ansi + '\n'}}
-          {%- endif -%}
+          {%- block output_text_inside scoped -%}{%- endblock -%}
         {%- endfor -%}
       {%- endif -%}{{ '```' }}{# for syntax highlight #}
     {%- endif -%}
     {%- for output in cell.outputs -%}
-      {%- if output.output_type == 'display_data' or (output.output_type == 'execute_result' and 'text/html' in output.data) -%}
+      {%- if output.output_type != 'display_data' -%}
+        {%- block output_text_outside scoped -%}{%- endblock -%}
+      {%- elif output.output_type == 'display_data' or (output.output_type == 'execute_result' and 'text/html' in output.data) -%}
         {{ '\n\n' }}
         {%- block data_priority scoped -%}
           {{ super() }}
@@ -76,6 +68,18 @@
     {%- endfor -%}
   {%- endif -%}
 {%- endblock codecell -%}
+
+{%- macro output_text(output) -%}
+  {%- if output.output_type == 'execute_result' -%}
+    {%- if 'text/html' not in output.data -%}
+      {{ output.data['text/plain'] + '\n' }}
+    {%- endif -%}
+  {%- elif output.output_type == 'stream' -%}
+    {{ output.text }}{%- if output.text[-1] != '\n' -%}{{ '\n' }}{%- endif -%}
+  {%- elif output.output_type == 'error' -%}
+    {{ output.traceback[-1] | strip_ansi + '\n'}}
+  {%- endif -%}
+{%- endmacro -%}
 
 {#
 {%- block data_html scoped -%}
