@@ -5,7 +5,23 @@ import re
 import nbformat
 
 
-def read_source(source):
+def read_source(source: str):
+    """
+    Read markdown source string from file system, if `source` is an
+    existing filename. If not, `source` itself is returned, assuming
+    it is a markdown string.
+
+    File encoding must be UTF-8. New line character is converted into '\n'.
+
+    Parameters
+    ----------
+    source : str
+        Markdown source filename or markdown string.
+
+    Return
+    ------
+    str : Markdown string.
+    """
     if len(source) < 256 and os.path.exists(source):
         with codecs.open(source, 'r', 'utf8') as file:
             source = file.read()
@@ -13,7 +29,9 @@ def read_source(source):
     return source
 
 
-def escaped_splitter(pattern: str, pattern_escape: str, source: str,
+def escaped_splitter(pattern: str,
+                     pattern_escape: str,
+                     source: str,
                      option=re.MULTILINE,
                      option_escape=re.MULTILINE | re.DOTALL):
     for splitted in splitter(pattern_escape, source, option_escape):
@@ -42,7 +60,10 @@ def splitter(pattern: str, source: str, option=re.MULTILINE):
             break
 
 
-def read(root, filename):
+def read(root: str, filename: str):
+    """
+    Utility function to read a file under `tests` directory.
+    """
     root = os.path.dirname(os.path.abspath(root))
 
     basename = None

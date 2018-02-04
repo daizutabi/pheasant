@@ -9,3 +9,4 @@ dist/
 .coverage*
 **/pelican/output/
 **/mkdocs/site/
+__pycache__/
