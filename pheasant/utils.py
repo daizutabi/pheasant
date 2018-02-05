@@ -7,18 +7,19 @@ import nbformat
 
 def read_source(source: str):
     """
-    Read markdown source string from file system, if `source` is an
-    existing filename. If not, `source` itself is returned, assuming
-    it is a markdown string.
+    Read markdown source string from file system.
 
-    File encoding must be UTF-8. New line character is converted into '\n'.
+    If `source` is not an existing filename, `source` itself is
+    returned, assuming it is a markdown string.
+
+    File encoding must be UTF-8. New line character is converted into LF.
 
     Parameters
     ----------
     source : str
         Markdown source filename or markdown string.
 
-    Return
+    Returns
     ------
     str : Markdown string.
     """

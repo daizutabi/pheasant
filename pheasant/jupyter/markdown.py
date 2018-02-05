@@ -4,6 +4,7 @@ import nbformat
 
 from ..utils import escaped_splitter, read_source
 from .client import run_cell, select_kernel_name
+from .config import config
 from .notebook import convert as convert_notebook
 from .notebook import update_cell_metadata
 
@@ -77,11 +78,37 @@ def cell_generator(source: str):
     """
     for cell in fenced_code_splitter(source):
         if isinstance(cell, str):
+            cell = evaluate_markdown(cell)
             yield nbformat.v4.new_markdown_cell(cell)
         else:
             language, code, option = cell
             cell = nbformat.v4.new_code_cell(code)
             yield update_cell_metadata(cell, language, option)
+
+
+def evaluate_markdown(source: str):
+    """Evaluate {{expr}} in Markdown source."""
+    def replace(m):
+        code = m.group()
+
+        # {{{xxx}}} -> {{xxx}}
+        if code.startswith('{{{') and code.endswith('}}}'):
+            return code[1:-1]
+
+        cell = nbformat.v4.new_code_cell(code[2:-2].strip())
+        run_cell(cell, config['python_kernel'])
+
+        # TODO: other formats than text/plain
+        for output in cell['outputs']:
+            if 'data' in output and 'text/plain' in output['data']:
+                text = output['data']['text/plain']
+                if text.startswith('\'') and text.endswith('\''):
+                    text = text[1:-1]
+                return text
+        else:
+            return ''
+
+    return re.sub(r'\{{2,3}(.+?)\}{2,3}', replace, source)
 
 
 def fenced_code_splitter(source: str):

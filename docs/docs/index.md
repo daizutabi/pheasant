@@ -6,7 +6,7 @@ Pheasant is a Markdown converter which is designed to be used as a plugin for st
 
 Highlights include:
 
-+ Auto generation of outputs for a fenced code block in Markdown source using [Jupyter client](https://jupyter-client.readthedocs.io/en/stable/). The code language is not restricted to Python.
++ Auto generation of outputs for a fenced code block or inline code in Markdown source using [Jupyter client](https://jupyter-client.readthedocs.io/en/stable/). The code language is not restricted to Python.
 + Auto numbering of headers, figures, and tables. Numbered objects can be linked from Markdown source.
 + [Windows only] Extract shapes from Microsoft PowerPoint presentations.
 + Simple interface to use Pheasant as a plugin for other site generators.
@@ -48,11 +48,8 @@ In your `pelicanconf.py`, add lines below:
 
 ~~~
 PLUGINS = ['pheasant']
-PHEASANT = {'jupyter': {'enabled': True}}
+PHEASANT = {'jupyter': {'enabled': True}, 'number': {'enabled': True}}
 ~~~
-
-!!! Note
-    In general, auto numbering feature is not suitable for articles (such as blog) written in Pelican.
 
 ## Examples
 
@@ -80,6 +77,20 @@ after execution of `print` function via Jupyter client and finally the output be
 ```python
 print(1)
 ```
+
+"Inline code" can also be converted. For example:
+
+~~~
+```python
+name = 'Pheasant'
+```
+~~~
+
+```python hide
+name = 'Pheasant'
+```
+
+Then, `"My name is {{{name}}}."` becomes "My name is {{name}}." You can assign a variable in an inline code. `"{{{a=5}}}$2a$ is equal to {{{2*a}}}."` becomes "{{a=5}}$2a$ is equal to {{2*a}}." Note that an inline code without outputs is not shown after conversion.
 
 Pheasant supports various output formats other than standard stream. For example, you can create a PNG image from Matplotlib.
 
@@ -154,8 +165,9 @@ to get an output like below:
 
 
 ```julia
-x = 2
-println(3x)
+>>> x = 2
+>>> println(3x)
+6
 ```
 
 ### Auto numbering of headers, figures, and tables.
