@@ -72,7 +72,7 @@ is converted into:
 ```
 ~~~
 
-after execution of `print` function via Jupyter client and finally the output becomes
+after execution of `print` function via Jupyter client and finally rendered as:
 
 ```python
 print(1)
@@ -98,7 +98,7 @@ Pheasant supports various output formats other than standard stream. For example
 ```python
 %matplotlib inline
 import matplotlib.pyplot as plt
-plt.plot([1, 3, 2]);
+plt.plot([1, 3, 2])
 ```
 ~~~
 
@@ -107,21 +107,21 @@ The above Markdown source creates an input Python code block and a PNG image:
 ```python
 %matplotlib inline
 import matplotlib.pyplot as plt
-plt.plot([1, 3, 2]);
+plt.plot([1, 3, 2])
 ```
 
-You may not want to display a code block itself. You can use `hide-input` option after a ```` ```python ```` statement.
+You may want to display only graphics. You can use `hide` option after a ```` ```python ```` statement.
 
 ~~~
-```python hide-input
-plt.plot([1, 3, 2]);
+```python hide
+plt.plot([1, 3, 2])
 ```
 ~~~
 
 This creates only a PNG image without a code block like below:
 
-```python hide-input
-plt.plot([1, 3, 2]);
+```python hide
+plt.plot([1, 3, 2])
 ```
 
 !!! Note
@@ -130,7 +130,7 @@ plt.plot([1, 3, 2]);
 Pheasant also supports Bokeh's HTML output.
 
 ~~~
-```python hide-input
+```python hide
 from bokeh.plotting import figure
 from bokeh.io import output_notebook
 from bokeh.io import show
@@ -141,7 +141,7 @@ show(p)
 ```
 ~~~
 
-```python hide-input
+```python hide
 from bokeh.plotting import figure
 from bokeh.io import output_notebook
 from bokeh.io import show
@@ -194,15 +194,15 @@ Off course, you can use any code to create a figure:
 ~~~
 #Fig A Matplotlib figure
 
-```python hide-input
-plt.plot([3, 1]);
+```python hide
+plt.plot([3, 1])
 ```
 ~~~
 
 #Fig A Matplotlib figure
 
-```python hide-input
-plt.plot([3, 1]);
+```python hide
+plt.plot([3, 1])
 ```
 
 Like figures, tables can be numbered.
@@ -228,7 +228,7 @@ Pandas DataFarme is useful to create a table programmatically.
 ~~~
 #Table A Pandas DataFrame
 
-```python hide-input
+```python hide
 import pandas as pd
 pd.DataFrame([[1, 2], [3, 4]], columns=list('ab')) * 2
 ```
@@ -237,7 +237,7 @@ pd.DataFrame([[1, 2], [3, 4]], columns=list('ab')) * 2
 
 #Table A Pandas DataFrame
 
-```python hide-input
+```python hide
 import pandas as pd
 pd.DataFrame([[1, 2], [3, 4]], columns=list('ab')) * 2
 ```
@@ -248,7 +248,7 @@ A Markdown source for figures and tables is a source block separated by a blank 
 #Fig A Bokeh's HTML figure
 
 #begin
-```python hide-input
+```python hide
 show(p)
 ```
 #end
@@ -257,7 +257,7 @@ show(p)
 #Fig A Bokeh's HTML figure
 
 #begin
-```python hide-input
+```python hide
 show(p)
 ```
 #end

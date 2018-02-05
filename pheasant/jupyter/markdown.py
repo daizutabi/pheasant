@@ -86,8 +86,10 @@ def cell_generator(source: str):
             yield update_cell_metadata(cell, language, option)
 
 
-def evaluate_markdown(source: str):
+def evaluate_markdown(source: str, kernel_name=None):
     """Evaluate {{expr}} in Markdown source."""
+    kernel_name = kernel_name or config['python_kernel']
+
     def replace(m):
         code = m.group()
 
@@ -96,7 +98,7 @@ def evaluate_markdown(source: str):
             return code[1:-1]
 
         cell = nbformat.v4.new_code_cell(code[2:-2].strip())
-        run_cell(cell, config['python_kernel'])
+        run_cell(cell, kernel_name)
 
         # TODO: other formats than text/plain
         for output in cell['outputs']:

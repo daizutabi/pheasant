@@ -10,11 +10,11 @@
 
 {%- block figure -%}
 {{ content }}
-<p>{%- block figure_prefix -%}Figure{%- endblock -%} {{ number_string }} {{ title }}</p>
+<p>{% block figure_prefix %}Figure{% endblock %} {{ number_string }} {{ title }}</p>
 {%- endblock -%}
 
 {%- block table -%}
-<p>{%- block table_prefix -%}Table{%- endblock -%} {{ number_string }} {{ title }}</p>
+<p>{% block table_prefix %}Table{% endblock %} {{ number_string }} {{ title }}</p>
 {{ content }}
 {%- endblock -%}
 
