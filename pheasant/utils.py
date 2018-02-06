@@ -30,6 +30,25 @@ def read_source(source: str):
     return source
 
 
+def escaped_splitter_join(pattern: str,
+                          pattern_escape: str,
+                          source: str,
+                          option=re.MULTILINE,
+                          option_escape=re.MULTILINE | re.DOTALL):
+    """Join escaped string with normal string."""
+    text = ''
+    for splitted in escaped_splitter(pattern, pattern_escape, source,
+                                     option, option_escape):
+        if isinstance(splitted, str):
+            text += splitted
+        else:
+            yield text
+            yield splitted
+            text = ''
+    if text:
+        yield text
+
+
 def escaped_splitter(pattern: str,
                      pattern_escape: str,
                      source: str,
@@ -43,9 +62,7 @@ def escaped_splitter(pattern: str,
 
 
 def splitter(pattern: str, source: str, option=re.MULTILINE):
-    """
-    Generate splitted text from `source` by `pattern`.
-    """
+    """Generate splitted text from `source` by `pattern`."""
     re_compile = re.compile(pattern, option)
 
     while True:
@@ -62,9 +79,7 @@ def splitter(pattern: str, source: str, option=re.MULTILINE):
 
 
 def read(root: str, filename: str):
-    """
-    Utility function to read a file under `tests` directory.
-    """
+    """Utility function to read a file under `tests` directory."""
     root = os.path.dirname(os.path.abspath(root))
 
     basename = None

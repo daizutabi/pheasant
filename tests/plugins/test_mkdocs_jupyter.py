@@ -53,10 +53,6 @@ def test_config(jupyter_config):
     assert isinstance(jupyter_config, dict)
 
 
-def test_plugin(plugin):
-    assert plugin.config_scheme[0][0] == 'jupyter'
-
-
 class Page:
     def __init__(self, abs_input_path):
         self.abs_input_path = abs_input_path

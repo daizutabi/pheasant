@@ -1,7 +1,6 @@
 .cache
 build/
 dist/
-.idea/
 *.pyc
 .ipynb_checkpoints/
 *.lnk
@@ -10,3 +9,4 @@ dist/
 **/pelican/output/
 **/mkdocs/site/
 __pycache__/
+.ropeproject/

@@ -22,6 +22,8 @@ extra_javascript:
 
 plugins:
   - pheasant:
+      macro:
+        enabled: True
       jupyter:
         output_format: markdown
         kernel_name: {'python': 'doc'}

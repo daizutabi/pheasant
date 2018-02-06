@@ -18,11 +18,6 @@
 {{ content }}
 {%- endblock -%}
 
-{%- block code -%}
-<p>{% block code_prefix %}Code{% endblock %} {{ number_string }} {{ title }}</p>
-{{ content }}
-{%- endblock -%}
-
 {%- block reference -%}
 [{{ number_string }}]({{ ref }})
 {%- endblock -%}

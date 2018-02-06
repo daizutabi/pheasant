@@ -17,5 +17,9 @@
 <div class="{{ class }}"{{ ' id="' + id + '"' if id }}>
 {% block table -%}{%- endblock %}
 </div>
+{%- elif kind == 'code' -%}
+<div class="{{ class }}"{{ ' id="' + id + '"' if id }}>
+{% block code -%}{%- endblock %}
+</div>
 {%- endif -%}
 {%- endif -%}

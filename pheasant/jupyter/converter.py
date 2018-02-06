@@ -21,7 +21,7 @@ def initialize():
     config['python_kernel'] = kernel_name
 
     # TODO: run only if needed
-    cell = nbformat.v4.new_code_cell('import sys, importlib')
+    cell = nbformat.v4.new_code_cell('import sys, importlib, inspect')
     run_cell(cell, kernel_name)
 
     sys_path_insert()

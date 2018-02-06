@@ -2,7 +2,7 @@ import re
 
 from markdown import Markdown
 
-from ..utils import escaped_splitter, read_source
+from ..utils import escaped_splitter_join, read_source
 from .config import config
 
 
@@ -64,9 +64,17 @@ def renderer(source: str, tag: dict, page_index=1):
                         content = next_source[:index]
                         rest = next_source[index + 2:]
 
-                md = Markdown(extensions=['markdown.extensions.tables',
-                                          'markdown.extensions.fenced_code'])
+                extensions = ['markdown.extensions.tables',
+                              'markdown.extensions.fenced_code']
+                md = Markdown(extensions=extensions +
+                              config['markdown_extensions'])
                 content = md.convert(content)
+
+                if 'title' in splitted:  # for Math in title
+                    title = md.convert(splitted['title'])
+                    if title.startswith('<p>') and title.endswith('</p>'):
+                        title = title[3:-4]
+                    splitted['title'] = title
 
                 yield config['template'].render(**splitted, content=content,
                                                 config=config)
@@ -142,7 +150,8 @@ def header_splitter(source: str):
     pattern_escape = r'(^```(.*?)^```$)|(^~~~(.*?)^~~~$)'
     pattern_header = r'^(#+)(\S*?) (.+?)$'
 
-    for splitted in escaped_splitter(pattern_header, pattern_escape, source):
+    for splitted in escaped_splitter_join(pattern_header, pattern_escape,
+                                          source):
         if isinstance(splitted, str):
             markdown = splitted.strip()
             if markdown:
