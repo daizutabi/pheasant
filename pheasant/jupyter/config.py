@@ -5,6 +5,9 @@ config = {
     # Jinja2 template file for Notebook conversion.
     'template_file': 'output_text_inside.jinja2',
 
+    # Jinja2 template file for inline code.
+    'inline_template_file': 'inline.jinja2',
+
     # Jupyter kernel time-out period in second.
     'timeout': 600,
 
@@ -12,6 +15,12 @@ config = {
     'kernel_name': {
         'python': 'python3'
     },
+
+    # Inline code pattern for inline evaluation.
+    'inline_pattern': r'\{\{(.+?)\}\}',
+
+    # Source code pattern for quotation of code from file.
+    'code_pattern': r'^#Code (.+?)$',
 
     # Output format: markdown or notebook.
     'output_format': 'markdown',

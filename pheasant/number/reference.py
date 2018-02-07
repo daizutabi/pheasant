@@ -2,11 +2,11 @@ from ..utils import escaped_splitter
 from .config import config
 
 
-def convert(source: str, tag: dict):
-    return ''.join(renderer(source, tag))
+def convert(source: str, label: dict):
+    return ''.join(renderer(source, label))
 
 
-def renderer(source: str, tag: dict):
+def renderer(source: str, label: dict):
     """
     Generate splitted reference and body text from `source`.
 
@@ -23,15 +23,15 @@ def renderer(source: str, tag: dict):
     """
 
     pattern_escape = r'(^```(.*?)^```$)|(^~~~(.*?)^~~~$)'
-    pattern_tag = config['tag_pattern']
+    pattern_label = config['label_pattern']
 
-    for splitted in escaped_splitter(pattern_tag, pattern_escape, source):
+    for splitted in escaped_splitter(pattern_label, pattern_escape, source):
         if isinstance(splitted, str):
             yield splitted
         else:
             entity = splitted.group(1)
-            if entity in tag:
+            if entity in label:
                 yield config['template'].render(reference=True, config=config,
-                                                **tag[entity])
+                                                **label[entity])
             else:
                 yield splitted.group()

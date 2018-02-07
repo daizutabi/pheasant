@@ -1,11 +1,31 @@
 config = {
+    # Jinja2 template file for numbering.
     'template_file': 'basic.jinja2',
+
+    # List of numbered objects
     'kind': ['header', 'figure', 'table', 'code'],
-    'tag_file': '.pheasant-number.json',
-    'tag_pattern': r'\{#(\S+?)#\}',
+
+    # Numbering level. 0 for multiple pages, 2 for h2 etc.
+    'level': 2,
+
+    # Prefix for numbered object.
+    'kind_prefix': {},
+
+    # Label file of reference to record reference infomation.
+    'label_file': '.pheasant-number.json',
+
+    # Label pattern.
+    'label_pattern': r'\{#(\S+?)#\}',
+
+    # <div> class name for numbered object.
     'class': 'pheasant-{kind}',
-    'id': 'pheasant-{tag}',
+
+    # <div> id name for numbered object.
+    'id': 'pheasant-{label}',
+
+    # relpath
     'relpath_function': None,
-    'level': 2,  # numbering level. 0 for multiple pages, 2 for h2 etc.
+
+    # Markdown Extension to render header title.
     'markdown_extensions': [],
 }

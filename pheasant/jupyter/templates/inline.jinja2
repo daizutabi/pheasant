@@ -1,0 +1,32 @@
+{% extends 'base.jinja2' %}
+
+
+{%- block body -%}
+  {%- for cell in nb.cells -%}
+    {%- block any_cell scoped -%}
+      {{ super() }}
+    {%- endblock any_cell -%}
+  {%- endfor -%}
+{%- endblock body -%}
+
+
+{%- block codecell -%}
+  {%- for output in cell.outputs -%}
+    {%- if output.output_type == 'execute_result' -%}
+      {%- block display_data scoped -%}
+        {%- block data_priority scoped -%}
+          {{ super() }}
+        {%- endblock data_priority -%}
+      {%- endblock display_data -%}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endblock codecell -%}
+
+
+{% block data_text -%}
+  {%- if output.data['text/plain'].0 == "'" -%}
+    {{ output.data['text/plain'][1:-1] | e}}
+  {%- else -%}
+    {{ output.data['text/plain'] | e }}
+  {%- endif -%}
+{%- endblock data_text %}

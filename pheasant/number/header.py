@@ -6,7 +6,7 @@ from ..utils import escaped_splitter_join, read_source
 from .config import config
 
 
-def convert(source: str, tag=None, page_index=1):
+def convert(source: str, label=None, page_index=1):
     """
     Convert markdown string or file into markdown with section number_listing.
 
@@ -24,63 +24,73 @@ def convert(source: str, tag=None, page_index=1):
     results : str
         Markdown source
     """
-    tag = {} if tag is None else tag
+    label = {} if label is None else label
     source = read_source(source)
-    source = '\n\n'.join(renderer(source, tag, page_index=page_index))
-    return source, tag
+    source = '\n\n'.join(renderer(source, label, page_index=page_index))
+    return source, label
 
 
-def renderer(source: str, tag: dict, page_index=1):
+def renderer(source: str, label: dict, page_index=1):
+    extensions = ['tables', 'fenced_code']
+    md = Markdown(extensions=extensions + config['markdown_extensions'])
+
     splitter = header_splitter(source)
     for splitted in splitter:
         if isinstance(splitted, str):
             yield splitted
+            continue
+
+        kind = splitted['kind']
+        if kind == 'header':
+            splitted['prefix'] = '#' * len(splitted['number_list'])
         else:
-            if splitted['kind'] == 'header':
-                splitted['prefix'] = '#' * len(splitted['number_list'])
-            number_list = normalize_number_list(splitted['kind'],
-                                                splitted['number_list'],
-                                                page_index)
-            splitted['number_list'] = number_list
-            cls = config['class'].format(kind=splitted['kind'])
-            splitted['class'] = cls
-            if splitted['tag']:
-                splitted['id'] = config['id'].format(tag=splitted['tag'])
-                tag[splitted['tag']] = {'kind': splitted['kind'],
-                                        'number_list': splitted['number_list'],
-                                        'id': splitted['id']}
+            default_prefix = kind[0].upper() + kind[1:] + ' '
+            prefix = config['kind_prefix'].get(kind, default_prefix)
+            splitted['prefix'] = prefix
 
-            if splitted['kind'] == 'header':
-                yield config['template'].render(**splitted, config=config)
+        number_list = normalize_number_list(kind, splitted['number_list'],
+                                            page_index)
+        splitted['number_list'] = number_list
+
+        cls = config['class'].format(kind=kind)
+        splitted['class'] = cls
+
+        if splitted['label']:
+            splitted['id'] = config['id'].format(label=splitted['label'])
+            label[splitted['label']] = {
+                'kind': kind,
+                'number_list': splitted['number_list'],
+                'id': splitted['id']
+            }
+
+        if kind == 'header':
+            yield config['template'].render(**splitted, config=config)
+        else:
+            # Detect the range of numbered object.
+            next_source = next(splitter)
+            if next_source.startswith('#begin\n'):
+                content, rest = next_source[7:].split('#end')
             else:
-                next_source = next(splitter)
-                if next_source.startswith('#begin\n'):
-                    content, rest = next_source[7:].split('#end')
+                index = next_source.find('\n\n')
+                if index == -1:
+                    content, rest = next_source, ''
                 else:
-                    index = next_source.find('\n\n')
-                    if index == -1:
-                        content, rest = next_source, ''
-                    else:
-                        content = next_source[:index]
-                        rest = next_source[index + 2:]
+                    content = next_source[:index]
+                    rest = next_source[index + 2:]
 
-                extensions = ['markdown.extensions.tables',
-                              'markdown.extensions.fenced_code']
-                md = Markdown(extensions=extensions +
-                              config['markdown_extensions'])
-                content = md.convert(content)
+            content = md.convert(content)
 
-                if 'title' in splitted:  # for Math in title
-                    title = md.convert(splitted['title'])
-                    if title.startswith('<p>') and title.endswith('</p>'):
-                        title = title[3:-4]
-                    splitted['title'] = title
+            if 'title' in splitted:  # for Math in title
+                title = md.convert(splitted['title'])
+                if title.startswith('<p>') and title.endswith('</p>'):
+                    title = title[3:-4]
+                splitted['title'] = title
 
-                yield config['template'].render(**splitted, content=content,
-                                                config=config)
+            yield config['template'].render(
+                **splitted, content=content, config=config)
 
-                if rest:
-                    yield rest
+            if rest:
+                yield rest
 
 
 def normalize_number_list(kind, number_list, page_index=None):
@@ -96,9 +106,9 @@ def normalize_number_list(kind, number_list, page_index=None):
     return number_list
 
 
-def split_tag(text):
+def split_label(text):
     """
-    Split a tag from `text`. Tag is
+    Split a label from `text`. Label
 
     Parameters
     ----------
@@ -107,12 +117,12 @@ def split_tag(text):
 
     Examples
     --------
-    >>> split_tag('{#tag#} text')
-    ('text', 'tag')
-    >>> split_tag('text')
+    >>> split_label('{#label#} text')
+    ('text', 'label')
+    >>> split_label('text')
     ('text', '')
     """
-    m = re.search(config['tag_pattern'], text)
+    m = re.search(config['label_pattern'], text)
     if not m:
         return text, ''
     else:
@@ -164,7 +174,12 @@ def header_splitter(source: str):
             number_list[kind][depth] += 1
             reset = [0] * (len(number_list[kind]) - depth)
             number_list[kind][depth + 1:] = reset
-            title, tag = split_tag(splitted.group(3))
-            yield {'kind': kind, 'title': title, 'tag': tag, 'cursor': cursor,
-                   'number_list': number_list[kind][:depth + 1]}
+            title, label = split_label(splitted.group(3))
+            yield {
+                'kind': kind,
+                'title': title,
+                'label': label,
+                'cursor': cursor,
+                'number_list': number_list[kind][:depth + 1]
+            }
             cursor += end

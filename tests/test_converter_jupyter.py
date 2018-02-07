@@ -61,6 +61,7 @@ paths = ['markdown_stream_input.md', 'notebook_stream_input.ipynb']
 def test_convert(root, stream_output, output_format, path):
     initialize()
     config = {'jupyter': {'output_format': output_format}}
+    print(config)
     source = convert(os.path.join(root, path), config)
     assert jupyter.config['output_format'] == output_format
     jupyter.config['configured'] = False

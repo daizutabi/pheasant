@@ -20,32 +20,26 @@ def evaluate_markdown(source: str, kernel_name=None):
     """
     Evaluate {{expr}} in Markdown source.
 
-    For `{{` or `}}` iteself, use `{{{` or `}}}`.
+    If expr starts with '#', expr is not evaluated: {{#abc}} -> {{abc}}
 
     """
     kernel_name = kernel_name or config['python_kernel']
 
     def replace(m):
-        code = m.group()
+        code = m.group(1)
 
-        # {{{xxx}}} -> {{xxx}}
-        if code.startswith('{{{') and code.endswith('}}}'):
-            return code[1:-1]
+        # {{#abc}} -> {{abc}}
+        if code.startswith('#'):
+            return m.group().replace(code, code[1:])
 
-        cell = nbformat.v4.new_code_cell(code[2:-2].strip())
+        cell = nbformat.v4.new_code_cell(code.strip())
         run_cell(cell, kernel_name)
 
-        # TODO: other formats than text/plain
-        for output in cell['outputs']:
-            if 'data' in output and 'text/plain' in output['data']:
-                text = output['data']['text/plain']
-                if text.startswith('\'') and text.endswith('\''):
-                    text = text[1:-1]
-                return text
-        else:
-            return ''
+        notebook = nbformat.v4.new_notebook(cells=[cell], metadata={})
+        markdown = config['inline_exporter'].from_notebook_node(notebook)[0]
+        return markdown
 
-    return re.sub(r'\{{2,3}(.+?)\}{2,3}', replace, source)
+    return re.sub(config['inline_pattern'], replace, source)
 
 
 def inspect_markdown(source, kernel_name=None):
@@ -73,4 +67,4 @@ def inspect_markdown(source, kernel_name=None):
         source = m.group() + f'\n\n#begin\n``` python\n{source}```\n#end'
         return source
 
-    return re.sub(r'^#Code (.+)$', replace, source, flags=re.MULTILINE)
+    return re.sub(config['code_pattern'], replace, source, flags=re.MULTILINE)

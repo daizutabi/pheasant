@@ -1,11 +1,5 @@
 {% extends 'display_priority.tpl' %}
 
-{#-
-{%- block header -%}
-<script type="text/javascript" src="https://unpkg.com/@jupyter-widgets/html-manager@^0.10.0/dist/embed.js"></script>
-{%- endblock -%}
--#}
-
 
 {%- block body -%}
 {%- for cell in nb.cells -%}
@@ -61,7 +55,7 @@
     {%- if output.output_type != 'display_data' and 'hide' not in options -%}
       {%- block output_text_outside scoped -%}{%- endblock -%}
     {%- endif -%}
-    {%- if output.output_type == 'display_data' or 'text/html' in output.data -%}
+    {%- if output.output_type == 'display_data' or 'text/html' in output.data -%} 
       {{ '\n\n' }}
       {%- block data_priority scoped -%}
         {{ super() }}
@@ -83,19 +77,8 @@
   {%- endif -%}
 {%- endmacro -%}
 
-{#
-{%- block data_html scoped -%}
-<div class="output_html rendered_html output_subarea ">
-  {%- for line in output.data['text/html'].split('\n') -%}
-    {%- if line %}
-{{ line }}
-    {%- endif -%}
-  {%- endfor -%}
-</div>
-{%- endblock data_html -%}
-#}
 
-{% block data_html scoped -%}
+{% block data_html -%}
 <div class="output_html rendered_html output_subarea {{ extra_class }}">
 {{ output.data['text/html'] }}
 </div>
@@ -103,7 +86,7 @@
 
 
 {# from nbconvert/templates/html/basic.tpl #}
-{%- block data_javascript scoped -%}
+{%- block data_javascript -%}
 {% set div_id = uuid4() %}
 <div id="{{ div_id }}"></div>
 <div class="output_subarea output_javascript {{ extra_class }}">
@@ -136,49 +119,21 @@
 {%- endblock data_latex %}
 
 
-{%- block data_markdown scoped -%}
+{%- block data_markdown -%}
 {{ output.data['text/markdown'] }}
 {%- endblock data_markdown -%}
 
 
-{% block data_text scoped -%}
+{% block data_text -%}
 {{ output.data['text/plain'] | indent }}
 {%- endblock data_text %}
 
 
-{%- block markdowncell scoped -%}
+{%- block markdowncell -%}
 {{ cell.source }}
 {%- endblock markdowncell -%}
 
 
-{% block unknowncell scoped -%}
+{% block unknowncell -%}
 unknown type  {{ cell.type }}
 {%- endblock unknowncell %}
-
-
-{#-
-{%- block data_widget_state scoped %}
-{% set div_id = uuid4() %}
-{% set datatype_list = output.data | filter_data_type %}
-{% set datatype = datatype_list[0]%}
-<div id="{{ div_id }}"></div>
-<div class="output_subarea output_widget_state {{ extra_class }}">
-<script type="text/javascript">
-var element = $('#{{ div_id }}');
-</script>
-<script type="{{ datatype }}">
-{{ output.data['application/vnd.jupyter.widget-state+json'] }}
-</script>
-</div>
-{%- endblock data_widget_state -%}
-
-{%- block data_widget_view scoped %}
-{% set datatype_list = output.data | filter_data_type %}
-{% set datatype = datatype_list[0] %}
-<div class="output_subarea output_widget_view {{ extra_class }}">
-<script type="{{ datatype }}">
-{{ output.data['application/vnd.jupyter.widget-view+json'] }}
-</script>
-</div>
-{%- endblock data_widget_view -%}
--#}

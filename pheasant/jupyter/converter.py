@@ -12,10 +12,16 @@ from .notebook import new_exporter
 
 def initialize():
     default_directory = os.path.join(os.path.dirname(__file__), 'templates')
+
     abspath = os.path.abspath(config['template_file'])
     template_directory, template_file = os.path.split(abspath)
     loader = FileSystemLoader([template_directory, default_directory])
     config['exporter'] = new_exporter(loader, template_file)
+
+    abspath = os.path.abspath(config['inline_template_file'])
+    inline_template_directory, inline_template_file = os.path.split(abspath)
+    loader = FileSystemLoader([inline_template_directory, default_directory])
+    config['inline_exporter'] = new_exporter(loader, inline_template_file)
 
     kernel_name = select_kernel_name(language='python')
     config['python_kernel'] = kernel_name

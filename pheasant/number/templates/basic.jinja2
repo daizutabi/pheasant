@@ -1,7 +1,13 @@
 {% extends 'base.jinja2' %}
 
 {%- block number_string -%}
-{%- for number in number_list -%}{{ number }}.{%- endfor -%}
+  {%- for number in number_list -%}
+    {%- if loop.last -%}
+      {{ number }}
+    {%- else -%}
+      {{ number }}{% if kind == 'header' %}.{% else %}.{% endif %}
+    {%- endif -%}
+  {%- endfor -%}
 {%- endblock -%}
 
 {%- block header -%}
@@ -10,16 +16,16 @@
 
 {%- block figure -%}
 {{ content }}
-<p>{% block figure_prefix %}Figure{% endblock %} {{ number_string }} {{ title }}</p>
+<p>{% block figure_prefix %}{{ prefix }}{% endblock %}{{ number_string }} {{ title }}</p>
 {%- endblock -%}
 
 {%- block table -%}
-<p>{% block table_prefix %}Table{% endblock %} {{ number_string }} {{ title }}</p>
+<p>{% block table_prefix %}{{ prefix }}{% endblock %}{{ number_string }} {{ title }}</p>
 {{ content }}
 {%- endblock -%}
 
 {%- block code -%}
-<p>{% block code_prefix %}Code{% endblock %} {{ number_string }} {{ title }}</p>
+<p>{% block code_prefix %}{{ prefix }}{% endblock %}{{ number_string }} {{ title }}</p>
 {{ content }}
 {%- endblock -%}
 

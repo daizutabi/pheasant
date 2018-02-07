@@ -22,15 +22,15 @@ A Text {#b#}
 @pytest.fixture
 def source_output():
     yield """
-[1.1.](#pheasant-b)
+[1.1](#pheasant-b)
 
-# <span id="pheasant-a">1. header</span>
+# <span id="pheasant-a">1 header</span>
 
-A Text [1.1.](#pheasant-b)
+A Text [1.1](#pheasant-b)
 
-## <span id="pheasant-b">1.1. header</span>
+## <span id="pheasant-b">1.1 header</span>
 
-[1.](#pheasant-a), [1.1.](#pheasant-b)
+[1](#pheasant-a), [1.1](#pheasant-b)
 """.strip()
 
 

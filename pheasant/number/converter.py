@@ -14,7 +14,9 @@ logger = logging.getLogger(__name__)
 def initialize():
     config['pages'] = []
     default_directory = os.path.join(os.path.dirname(__file__), 'templates')
-    template_directory, template_file = os.path.split(config['template_file'])
+
+    abspath = os.path.abspath(config['template_file'])
+    template_directory, template_file = os.path.split(abspath)
     env = Environment(
         loader=FileSystemLoader([template_directory, default_directory]),
         autoescape=False
@@ -34,34 +36,34 @@ def convert(source):
         page_index = config['level']
     logger.info(f'Page index for {source_file}: {page_index}')
 
-    tag = {}
-    source, tag = convert_header(source, tag, page_index)
-    for key in tag:
-        tag[key].update(path=source_file)
+    label = {}
+    source, label = convert_header(source, label, page_index)
+    for key in label:
+        label[key].update(path=source_file)
 
-    if os.path.exists(config['tag_file']):
-        with open(config['tag_file'], 'r') as file:
-            tag_all = json.load(file)
+    if os.path.exists(config['label_file']):
+        with open(config['label_file'], 'r') as file:
+            label_all = json.load(file)
     else:
-        tag_all = {}
+        label_all = {}
 
-    tag_all.update(tag)
+    label_all.update(label)
 
-    if os.path.exists(config['tag_file']):
-        os.remove(config['tag_file'])
-    with open(config['tag_file'], 'w') as file:
-        json.dump(tag_all, file)
+    if os.path.exists(config['label_file']):
+        os.remove(config['label_file'])
+    with open(config['label_file'], 'w') as file:
+        json.dump(label_all, file)
 
-    for key in tag_all:
-        id = tag_all[key]
+    for key in label_all:
+        id = label_all[key]
         relpath = os.path.relpath(id['path'], os.path.dirname(source_file))
         relpath = relpath.replace('\\', '/')
         if config['relpath_function']:
             relpath = config['relpath_function'](relpath)
         else:
             relpath = relpath.replace('.ipynb', '')  # for MkDocs
-        id['ref'] = '#'.join([relpath, tag_all[key]['id']])
+        id['ref'] = '#'.join([relpath, label_all[key]['id']])
 
-    source = convert_reference(source, tag_all)
+    source = convert_reference(source, label_all)
 
     return source

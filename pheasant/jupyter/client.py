@@ -127,7 +127,7 @@ def run_cell(cell, kernel_name):
             # in certain CI systems, waiting < 1 second might miss messages.
             # So long as the kernel sends a status:idle message when it
             # finishes, we won't actually have to wait this long, anyway.
-            msg = kernel_client.iopub_channel.get_msg(timeout=4)
+            msg = kernel_client.iopub_channel.get_msg(timeout=10)
         except Empty:
             logger.warn('Timeout waiting for IOPub output')
             raise RuntimeError('Timeout waiting for IOPub output')
