@@ -15,6 +15,13 @@ DEFAULT_SCHEMA = tuple([(get_converter_name(converter),
 class PheasantPlugin(BasePlugin):
     config_scheme = DEFAULT_SCHEMA
 
+    # def on_config(self, config):
+    #     path = os.path.join(os.path.dirname(pheasant.__file__),
+    #                         'static/pheasant.css')
+    #     css = os.path.abspath(path)
+    #     config['extra_css'].insert(0, css)
+    #     return config
+
     def on_page_read_source(self, source, page, config):
         """
         The on_page_read_source event can replace the default mechanism

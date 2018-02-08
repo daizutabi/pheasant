@@ -19,10 +19,16 @@ config = {
     # Inline code pattern for inline evaluation.
     'inline_pattern': r'\{\{(.+?)\}\}',
 
+    # Character to convert markdown into html in an inline code.
+    'inline_html_character': '^',
+
+    # Character to ignore an inline code.
+    'inline_ignore_character': '#',
+
     # Source code pattern for quotation of code from file.
     'code_pattern': r'^#Code (.+?)$',
 
-    # Output format: markdown or notebook.
+    # Output format: markdown or notebook. ('notebook' for debug)
     'output_format': 'markdown',
 
     # Extra package directories that will be added to sys.path.
@@ -31,12 +37,21 @@ config = {
     # Extra modules that will be imported.
     'import_modules': [],
 
+    # Markdown Extension to render header title and inline code.
+    'markdown_extensions': [],
+
     # Initializing code
     'init_codes': [],
 
     # Modules imported programmatically by jupyter converter.
+    # Dont't Edit.
     'modules': {},
 
-    # Markdown Extension to render header title.
-    'markdown_extensions': [],
+    # Cache for source code to run.
+    # Dont't Edit.
+    'cell_source_cache': {},
+
+    # Time that module was imported. (Not implemented.)
+    # Dont't Edit.
+    'module_imported_time': {}
 }

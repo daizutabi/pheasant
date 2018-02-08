@@ -5,6 +5,7 @@ from markdown import Markdown
 
 from .client import run_cell
 from .config import config
+from .inline import inline_export
 
 
 def preprocess_code(source: str):
@@ -14,11 +15,10 @@ def preprocess_code(source: str):
     def replace(m):
         code = m.group(1)
 
-        if code.startswith('#'):  # {{#abc}} -> {{abc}}
+        if code.startswith(config['inline_ignore_character']):
             return m.group().replace(code, code[1:])
-        elif code.startswith('!'):
-            code = code[1:]
-            return f'{func}({code}, output="html")'
+        elif code.startswith(config['inline_html_character']):
+            return f'{func}({code[1:]}, output="html")'
         else:
             return f'{func}({code}, output="markdown")'
 
@@ -41,7 +41,7 @@ def evaluate_markdown(source: str, kernel_name=None):
 
     If expr starts with '#', expr is not evaluated: {{#abc}} -> {{abc}}
 
-    If expr starts with '!', expr is converted into HTML after execution.
+    If expr starts with '^', expr is converted into HTML after execution.
     """
     kernel_name = kernel_name or config['python_kernel']
 
@@ -51,41 +51,23 @@ def evaluate_markdown(source: str, kernel_name=None):
     def replace(m):
         code = m.group(1)
 
-        # {{#abc}} -> {{abc}}
-        if code.startswith('#'):
+        if code.startswith(config['inline_ignore_character']):
             return m.group().replace(code, code[1:])
 
-        # Markdown -> HTML
-        to_html = False
-        if code.startswith('!'):
+        to_html = code.startswith(config['inline_html_character'])
+        if to_html:
             code = code[1:]
-            to_html = True
 
         cell = nbformat.v4.new_code_cell(code.strip())
         run_cell(cell, kernel_name)
-
         markdown = inline_export(cell)
 
         if to_html:
-            markdown = md.convert(markdown)
-
-        return markdown
+            return md.convert(markdown)
+        else:
+            return markdown
 
     return re.sub(config['inline_pattern'], replace, source)
-
-
-def inline_export(cell, escape=False):
-    """Convert a cell into markdown with `inline_template`."""
-    notebook = nbformat.v4.new_notebook(cells=[cell], metadata={})
-    markdown = config['inline_exporter'].from_notebook_node(notebook)[0]
-
-    if escape:
-        # FIXME
-        markdown = f'{markdown}'
-    elif markdown.startswith("'") and markdown.endswith("'"):
-        markdown = str(eval(markdown))
-
-    return markdown
 
 
 def inspect_markdown(source, kernel_name=None):

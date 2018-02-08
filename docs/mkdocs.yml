@@ -4,10 +4,7 @@ repo_url: https://github.com/daizutabi/pheasant/
 edit_uri: https://github.com/daizutabi/pheasant/docs/docs/
 
 theme:
-  name: material
-  font: none
-  feature:
-    tabs: true
+  name: readthedocs
 
 extra:
   search:
@@ -31,6 +28,11 @@ plugins:
       jupyter:
         output_format: markdown
         kernel_name: {'python': 'doc'}
+        sys_paths: ['scripts']
+        import_modules: ['hello']
+        init_codes: ['import matplotlib as mpl',
+                     'import matplotlib.pyplot as plt',
+                     'import pandas as pd']
         enabled: True
       number:
         enabled: True
@@ -39,5 +41,5 @@ plugins:
         enabled: False
 
 pages:
-  - Home: index.md
+  # - Home: index.md
   - Test: test.md

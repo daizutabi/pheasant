@@ -4,7 +4,8 @@ import nbformat
 
 from ..utils import escaped_splitter, read_source
 from .client import run_cell, select_kernel_name
-from .preprocess import preprocess_code, preprocess_markdown, inline_export
+from .preprocess import preprocess_code, preprocess_markdown
+from .inline import inline_export
 from .notebook import convert as convert_notebook
 from .notebook import update_cell_metadata
 
@@ -60,11 +61,11 @@ def cell_runner(source: str):
 
             if 'inline' in cell.metadata['pheasant']['options']:
                 cell.source = preprocess_code(cell.source)
-                cell = run_cell(cell, kernel_name)
+                run_cell(cell, kernel_name)
                 markdown = inline_export(cell)
                 yield nbformat.v4.new_markdown_cell(markdown)
             else:
-                cell = run_cell(cell, kernel_name)
+                run_cell(cell, kernel_name)
                 yield cell
 
 

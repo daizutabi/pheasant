@@ -40,6 +40,11 @@ def initialize():
 def convert(source):
     reload_modules()
 
+    # from ..converters import get_source_file
+    # source_file = get_source_file()
+    # config['current_source_file'] = source_file
+    # config['current_cell_source'] = []
+
     if not isinstance(source, str) or (os.path.exists(source) and
                                        source.endswith('.ipynb')):
         source = convert_notebook(source)
@@ -48,6 +53,8 @@ def convert(source):
 
     if config['output_format'] == 'notebook':
         source = str(source)
+
+    # config['cell_source_cache'][source_file] = config['current_cell_source']
 
     return source
 
@@ -78,9 +85,8 @@ def init():
 
 
 def reload_modules():
-    # TODO: check if reload is needed.
-    for package in config['import_modules']:
-        code = (f'module = importlib.import_module("{package}")\n'
+    for module in config['import_modules']:
+        code = (f'module = importlib.import_module("{module}")\n'
                 f'importlib.reload(module)')
         cell = nbformat.v4.new_code_cell(code)
         run_cell(cell, config['python_kernel'])

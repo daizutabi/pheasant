@@ -4,6 +4,7 @@ from queue import Empty
 import jupyter_client
 from nbformat.v4 import output_from_msg
 
+from .cache import memoize
 from .config import config
 
 logger = logging.getLogger(__name__)
@@ -112,6 +113,7 @@ def _wait_for_reply(kernel_name, msg_id, timeout=300):
             continue
 
 
+@memoize
 def run_cell(cell, kernel_name):
     kernel_client = get_kernel_client(kernel_name)
     msg_id = kernel_client.execute(cell.source)
