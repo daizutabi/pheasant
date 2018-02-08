@@ -1,5 +1,5 @@
 import pytest
-from pheasant.jupyter.common import evaluate_markdown
+from pheasant.jupyter.preprocess import evaluate_markdown
 
 
 @pytest.mark.parametrize('source,output',

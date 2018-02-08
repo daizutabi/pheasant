@@ -26,14 +26,17 @@ config = {
     'output_format': 'markdown',
 
     # Extra package directories that will be added to sys.path.
-    'package_dirs': [],
+    'sys_paths': [],
 
-    # Extra packages that will be imported.
-    'packages': [],
+    # Extra modules that will be imported.
+    'import_modules': [],
 
     # Initializing code
     'init_codes': [],
 
     # Modules imported programmatically by jupyter converter.
     'modules': {},
+
+    # Markdown Extension to render header title.
+    'markdown_extensions': [],
 }

@@ -4,7 +4,7 @@ import nbformat
 
 from ..utils import escaped_splitter, read_source
 from .client import run_cell, select_kernel_name
-from .common import preprocess_markdown
+from .preprocess import preprocess_code, preprocess_markdown, inline_export
 from .notebook import convert as convert_notebook
 from .notebook import update_cell_metadata
 
@@ -51,14 +51,21 @@ def cell_runner(source: str):
     """
     for cell in cell_generator(source):
         if cell.cell_type != 'code':
+            cell.source = preprocess_markdown(cell.source)
             yield cell
-            continue
+        else:
+            pheasant_metadata = cell.metadata.get('pheasant', {})
+            language = pheasant_metadata.get('language', 'python')
+            kernel_name = select_kernel_name(language)
 
-        pheasant_metadata = cell.metadata.get('pheasant', {})
-        language = pheasant_metadata.get('language', 'python')
-        kernel_name = select_kernel_name(language)
-        cell = run_cell(cell, kernel_name)
-        yield cell
+            if 'inline' in cell.metadata['pheasant']['options']:
+                cell.source = preprocess_code(cell.source)
+                cell = run_cell(cell, kernel_name)
+                markdown = inline_export(cell)
+                yield nbformat.v4.new_markdown_cell(markdown)
+            else:
+                cell = run_cell(cell, kernel_name)
+                yield cell
 
 
 def cell_generator(source: str):
@@ -76,14 +83,14 @@ def cell_generator(source: str):
     cell : Cell
         Markdown cell or code cell.
     """
-    for cell in fenced_code_splitter(source):
-        if isinstance(cell, str):
-            cell = preprocess_markdown(cell)
-            yield nbformat.v4.new_markdown_cell(cell)
+    for splitted in fenced_code_splitter(source):
+        if isinstance(splitted, str):
+            yield nbformat.v4.new_markdown_cell(splitted)
         else:
-            language, code, option = cell
+            language, code, option = splitted
             cell = nbformat.v4.new_code_cell(code)
-            yield update_cell_metadata(cell, language, option)
+            update_cell_metadata(cell, language, option)
+            yield cell
 
 
 def fenced_code_splitter(source: str):

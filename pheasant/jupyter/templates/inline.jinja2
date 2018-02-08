@@ -22,11 +22,10 @@
   {%- endfor -%}
 {%- endblock codecell -%}
 
-
 {% block data_text -%}
-  {%- if output.data['text/plain'].0 == "'" -%}
-    {{ output.data['text/plain'][1:-1] | e}}
+  {%- if escape -%}
+    {{ output.data['text/plain'] | e}}
   {%- else -%}
-    {{ output.data['text/plain'] | e }}
+    {{ output.data['text/plain'] }}
   {%- endif -%}
 {%- endblock data_text %}

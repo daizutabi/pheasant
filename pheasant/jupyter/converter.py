@@ -3,6 +3,8 @@ import os
 import nbformat
 from jinja2 import FileSystemLoader
 
+import pheasant
+
 from .client import run_cell, select_kernel_name
 from .config import config
 from .markdown import convert as convert_markdown
@@ -51,7 +53,9 @@ def convert(source):
 
 
 def sys_path_insert():
-    for directory in config['package_dirs']:
+    pheasant_dir = os.path.abspath(os.path.join(pheasant.__file__, '../..'))
+    pheasant_dir = pheasant_dir.replace('\\', '/')
+    for directory in config['sys_paths'] + [pheasant_dir]:
         code = (f'if "{directory}" not in sys.path:\n'
                 f'    sys.path.insert(0, "{directory}")')
         cell = nbformat.v4.new_code_cell(code)
@@ -59,7 +63,7 @@ def sys_path_insert():
 
 
 def import_modules():
-    for package in config['packages']:
+    for package in config['import_modules'] + ['pheasant', 'pandas']:
         code = (f'module = importlib.import_module("{package}")\n'
                 f'globals()["{package}"] = module')
         cell = nbformat.v4.new_code_cell(code)
@@ -67,14 +71,15 @@ def import_modules():
 
 
 def init():
-    for code in config['init_codes']:
+    for code in (config['init_codes'] +
+                 ['pandas.options.display.max_colwidth = 0']):
         cell = nbformat.v4.new_code_cell(code)
         run_cell(cell, config['python_kernel'])
 
 
 def reload_modules():
     # TODO: check if reload is needed.
-    for package in config['packages']:
+    for package in config['import_modules']:
         code = (f'module = importlib.import_module("{package}")\n'
                 f'importlib.reload(module)')
         cell = nbformat.v4.new_code_cell(code)

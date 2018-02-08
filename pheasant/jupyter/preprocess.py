@@ -1,9 +1,28 @@
 import re
 
 import nbformat
+from markdown import Markdown
 
 from .client import run_cell
 from .config import config
+
+
+def preprocess_code(source: str):
+
+    func = 'pheasant.jupyter.convert_inline'
+
+    def replace(m):
+        code = m.group(1)
+
+        if code.startswith('#'):  # {{#abc}} -> {{abc}}
+            return m.group().replace(code, code[1:])
+        elif code.startswith('!'):
+            code = code[1:]
+            return f'{func}({code}, output="html")'
+        else:
+            return f'{func}({code}, output="markdown")'
+
+    return re.sub(config['inline_pattern'], replace, source)
 
 
 def preprocess_markdown(source: str):
@@ -22,8 +41,12 @@ def evaluate_markdown(source: str, kernel_name=None):
 
     If expr starts with '#', expr is not evaluated: {{#abc}} -> {{abc}}
 
+    If expr starts with '!', expr is converted into HTML after execution.
     """
     kernel_name = kernel_name or config['python_kernel']
+
+    extensions = ['tables', 'fenced_code']
+    md = Markdown(extensions=extensions + config['markdown_extensions'])
 
     def replace(m):
         code = m.group(1)
@@ -32,14 +55,37 @@ def evaluate_markdown(source: str, kernel_name=None):
         if code.startswith('#'):
             return m.group().replace(code, code[1:])
 
+        # Markdown -> HTML
+        to_html = False
+        if code.startswith('!'):
+            code = code[1:]
+            to_html = True
+
         cell = nbformat.v4.new_code_cell(code.strip())
         run_cell(cell, kernel_name)
 
-        notebook = nbformat.v4.new_notebook(cells=[cell], metadata={})
-        markdown = config['inline_exporter'].from_notebook_node(notebook)[0]
+        markdown = inline_export(cell)
+
+        if to_html:
+            markdown = md.convert(markdown)
+
         return markdown
 
     return re.sub(config['inline_pattern'], replace, source)
+
+
+def inline_export(cell, escape=False):
+    """Convert a cell into markdown with `inline_template`."""
+    notebook = nbformat.v4.new_notebook(cells=[cell], metadata={})
+    markdown = config['inline_exporter'].from_notebook_node(notebook)[0]
+
+    if escape:
+        # FIXME
+        markdown = f'{markdown}'
+    elif markdown.startswith("'") and markdown.endswith("'"):
+        markdown = str(eval(markdown))
+
+    return markdown
 
 
 def inspect_markdown(source, kernel_name=None):

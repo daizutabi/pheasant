@@ -1,6 +1,9 @@
 __version__ = '0.3.0'
 
-from .converters import convert
+try:  # For import from jupyter kernel.
+    from .converters import convert
+except ImportError:
+    pass
 
 try:
     from .plugins.pelican import register
