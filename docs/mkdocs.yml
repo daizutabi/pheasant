@@ -4,7 +4,10 @@ repo_url: https://github.com/daizutabi/pheasant/
 edit_uri: https://github.com/daizutabi/pheasant/docs/docs/
 
 theme:
-  name: readthedocs
+  name: material
+  font: none
+  feature:
+    tabs: true
 
 extra:
   search:
@@ -15,6 +18,7 @@ extra_css:
 
 markdown_extensions:
   - admonition
+  - codehilite
   - pymdownx.arithmatex
 
 extra_javascript:
@@ -30,8 +34,10 @@ plugins:
         enabled: True
       number:
         enabled: True
+        level: 0
       debug:
         enabled: False
 
 pages:
   - Home: index.md
+  - Test: test.md

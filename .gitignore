@@ -10,3 +10,4 @@ dist/
 **/mkdocs/site/
 __pycache__/
 .ropeproject/
+.pytest_cache/

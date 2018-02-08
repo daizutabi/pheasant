@@ -1,3 +1,13 @@
+body {
+  font-family: sans-serif;
+}
+
+pre {
+  font-size: 100% !important;
+  font-family: monospace;
+}
+
+
 .pheasant-figure {
   margin-bottom: 24px;
 }
