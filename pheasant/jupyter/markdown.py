@@ -4,13 +4,13 @@ import nbformat
 
 from ..utils import escaped_splitter, read_source
 from .client import run_cell, select_kernel_name
-from .preprocess import preprocess_code, preprocess_markdown
-from .inline import inline_export
+from .exporter import export, inline_export
 from .notebook import convert as convert_notebook
 from .notebook import update_cell_metadata
+from .preprocess import preprocess_code, preprocess_markdown
 
 
-def convert(source: str, **kwargs):
+def convert(source: str):
     """
     Convert markdown string or file into markdown with running results.
 
@@ -18,10 +18,6 @@ def convert(source: str, **kwargs):
     ----------
     source : str
         Markdown source string or filename
-    output_format : str
-        Output format. If `notebook`, notebook object is returned
-        after running but before converting into markdown.
-        This is useful for debugging.
 
     Returns
     -------
@@ -29,15 +25,17 @@ def convert(source: str, **kwargs):
         Markdown source
     """
     source = read_source(source)
-    cells = list(cell_runner(source))
-    notebook = nbformat.v4.new_notebook(cells=cells, metadata={})
+    return '\n\n'.join(cell_runner(source))
 
-    return convert_notebook(notebook, **kwargs)
+    # cells = list(cell_runner(source))
+    # notebook = nbformat.v4.new_notebook(cells=cells, metadata={})
+
+    # return convert_notebook(notebook, **kwargs)
 
 
 def cell_runner(source: str):
     """
-    Generate cell with outputs after running the code
+    Generate markdown string with outputs after running the code
     from markdown source string.
 
     Parameters
@@ -47,13 +45,13 @@ def cell_runner(source: str):
 
     Yields
     ------
-    cell : Cell
-        Cell with outputs.
+    str
+        Markdown string.
     """
     for cell in cell_generator(source):
-        if cell.cell_type != 'code':
-            cell.source = preprocess_markdown(cell.source)
-            yield cell
+        # if cell.cell_type != 'code':
+        if isinstance(cell, str):
+            markdown = preprocess_markdown(cell).strip()
         else:
             pheasant_metadata = cell.metadata.get('pheasant', {})
             language = pheasant_metadata.get('language', 'python')
@@ -62,11 +60,15 @@ def cell_runner(source: str):
             if 'inline' in cell.metadata['pheasant']['options']:
                 cell.source = preprocess_code(cell.source)
                 run_cell(cell, kernel_name)
-                markdown = inline_export(cell)
-                yield nbformat.v4.new_markdown_cell(markdown)
+                markdown = inline_export(cell).strip()
+                # markdown = inline_export(cell)
+                # yield nbformat.v4.new_markdown_cell(markdown)
             else:
                 run_cell(cell, kernel_name)
-                yield cell
+                markdown = export(cell).strip()
+
+        if markdown:
+            yield markdown
 
 
 def cell_generator(source: str):
@@ -81,12 +83,14 @@ def cell_generator(source: str):
 
     Yields
     ------
-    cell : Cell
-        Markdown cell or code cell.
+    Cell
+ or str
+        Markdown string or code cell.
     """
     for splitted in fenced_code_splitter(source):
         if isinstance(splitted, str):
-            yield nbformat.v4.new_markdown_cell(splitted)
+            # yield nbformat.v4.new_markdown_cell(splitted)
+            yield splitted
         else:
             language, code, option = splitted
             cell = nbformat.v4.new_code_cell(code)

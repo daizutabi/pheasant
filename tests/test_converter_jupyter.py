@@ -31,42 +31,25 @@ def test_get_converter_name():
 
 def test_jupyter_config():
     assert jupyter.config['format_version'] == 4
-    assert jupyter.config['output_format'] == 'markdown'
     assert jupyter.config['kernel_name'] == {'python': 'python3'}
     assert 'configured' not in jupyter.config
 
 
 def test_jupyter_update_config():
-    config = {'jupyter': {'output_format': 'notebook',
-                          'kernel_name': {'julia': 'julia'}}}
+    config = {'jupyter': {'kernel_name': {'julia': 'julia'}}}
     update_config(jupyter, config)
-    assert jupyter.config['output_format'] == 'notebook'
     assert jupyter.config['kernel_name'] == {'python': 'python3',
                                              'julia': 'julia'}
     assert jupyter.config['configured'] is True
-    config = {'jupyter': {'output_format': 'markdown'}}
-    update_config(jupyter, config)
-    assert jupyter.config['output_format'] == 'notebook'
-    jupyter.config['configured'] = False
-    update_config(jupyter, config)
-    assert jupyter.config['output_format'] == 'markdown'
-    jupyter.config['configured'] = False
 
 
 paths = ['markdown_stream_input.md', 'notebook_stream_input.ipynb']
 
 
-@pytest.mark.parametrize('output_format', ['notebook', 'markdown'])
 @pytest.mark.parametrize('path', paths)
-def test_convert(root, stream_output, output_format, path):
+def test_convert(root, stream_output, path):
     initialize()
-    config = {'jupyter': {'output_format': output_format}}
-    print(config)
-    source = convert(os.path.join(root, path), config)
-    assert jupyter.config['output_format'] == output_format
+    source = convert(os.path.join(root, path), {})
     jupyter.config['configured'] = False
 
-    if output_format == 'markdown':
-        assert source == stream_output
-    elif output_format == 'notebook':
-        assert source.startswith('{')
+    assert source == stream_output

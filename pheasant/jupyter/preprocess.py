@@ -5,7 +5,7 @@ from markdown import Markdown
 
 from .client import run_cell
 from .config import config
-from .inline import inline_export
+from .exporter import inline_export
 
 
 def preprocess_code(source: str):

@@ -1,6 +1,11 @@
 # Test
 
-acd {{a=1}}{{a}} cde
+```python
+b = 4
+b
+```
+
+acd {{a=1}}{{a}} cde {{b}}
 
 ```python
 ## inline

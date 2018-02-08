@@ -28,9 +28,6 @@ config = {
     # Source code pattern for quotation of code from file.
     'code_pattern': r'^#Code (.+?)$',
 
-    # Output format: markdown or notebook. ('notebook' for debug)
-    'output_format': 'markdown',
-
     # Extra package directories that will be added to sys.path.
     'sys_paths': [],
 

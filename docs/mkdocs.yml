@@ -15,7 +15,7 @@ extra_css:
 
 markdown_extensions:
   - admonition
-  - codehilite
+  # - codehilite
   - pymdownx.arithmatex
 
 extra_javascript:
@@ -26,7 +26,6 @@ plugins:
       macro:
         enabled: True
       jupyter:
-        output_format: markdown
         kernel_name: {'python': 'doc'}
         sys_paths: ['scripts']
         import_modules: ['hello']

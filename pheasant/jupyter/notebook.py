@@ -2,9 +2,7 @@ import codecs
 import re
 
 import nbformat
-from nbconvert import MarkdownExporter
 from nbconvert.preprocessors import ExecutePreprocessor
-from traitlets.config import Config
 
 from .config import config
 
@@ -64,26 +62,6 @@ def delete_dataframe_style(notebook):
                 if 'data' in output and 'text/html' in output.data:
                     html = re_compile.sub('', output.data['text/html'])
                     output.data['text/html'] = html
-
-
-def new_exporter(loader=None, template_file=None):
-    c = Config({'NbConvertBase': {
-        'display_data_priority': ['application/vnd.jupyter.widget-state+json',
-                                  'application/vnd.jupyter.widget-view+json',
-                                  'application/javascript',
-                                  'text/html',
-                                  'text/markdown',
-                                  'image/svg+xml',
-                                  'text/latex',
-                                  'image/png',
-                                  'image/jpeg',
-                                  'text/plain']
-    }})
-
-    exporter = MarkdownExporter(config=c,
-                                extra_loaders=[loader] if loader else None)
-    exporter.template_file = template_file
-    return exporter
 
 
 def update_cell_metadata(cell, language, option=None):

@@ -9,7 +9,7 @@ from .client import run_cell, select_kernel_name
 from .config import config
 from .markdown import convert as convert_markdown
 from .notebook import convert as convert_notebook
-from .notebook import new_exporter
+from .exporter import new_exporter
 
 
 def initialize():
@@ -40,21 +40,11 @@ def initialize():
 def convert(source):
     reload_modules()
 
-    # from ..converters import get_source_file
-    # source_file = get_source_file()
-    # config['current_source_file'] = source_file
-    # config['current_cell_source'] = []
-
     if not isinstance(source, str) or (os.path.exists(source) and
                                        source.endswith('.ipynb')):
         source = convert_notebook(source)
     else:
         source = convert_markdown(source)
-
-    if config['output_format'] == 'notebook':
-        source = str(source)
-
-    # config['cell_source_cache'][source_file] = config['current_cell_source']
 
     return source
 

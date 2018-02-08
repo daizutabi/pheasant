@@ -4,10 +4,7 @@ This module processes inline code.
 import base64
 import io
 
-import nbformat
 from IPython.display import HTML
-
-from .config import config
 
 
 def convert_inline(obj, **kwargs):
@@ -38,17 +35,3 @@ def to_base64(fig, format='png', output='markdown'):
         return f'![{format}]({data})'
     elif output == 'html':
         return f'<img alt="{format}" src="{data}" />'
-
-
-def inline_export(cell, escape=False):
-    """Convert a cell into markdown with `inline_template`."""
-    notebook = nbformat.v4.new_notebook(cells=[cell], metadata={})
-    markdown = config['inline_exporter'].from_notebook_node(notebook)[0]
-
-    if escape:
-        # FIXME
-        markdown = f'{markdown}'
-    elif markdown.startswith("'") and markdown.endswith("'"):
-        markdown = str(eval(markdown))
-
-    return markdown
