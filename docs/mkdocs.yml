@@ -4,41 +4,48 @@ repo_url: https://github.com/daizutabi/pheasant/
 edit_uri: https://github.com/daizutabi/pheasant/docs/docs/
 
 theme:
-  name: readthedocs
+  name: material
 
 extra:
   search:
-    language: 'en'
+    language: en
 
 extra_css:
   - css/pheasant.css
+  - https://cdn.pydata.org/bokeh/release/bokeh-0.12.14.min.css
+  - https://cdn.pydata.org/bokeh/release/bokeh-widgets-0.12.14.min.css
+  - https://cdn.pydata.org/bokeh/release/bokeh-tables-0.12.14.min.css
 
 markdown_extensions:
   - admonition
-  # - codehilite
+  - codehilite
   - pymdownx.arithmatex
 
 extra_javascript:
-  - 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML'
+  - https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML
+  - https://cdn.pydata.org/bokeh/release/bokeh-0.12.14.min.js
+  - https://cdn.pydata.org/bokeh/release/bokeh-widgets-0.12.14.min.js
+  - https://cdn.pydata.org/bokeh/release/bokeh-tables-0.12.14.min.js
 
 plugins:
   - pheasant:
       macro:
-        enabled: True
+        enabled: true
       jupyter:
-        kernel_name: {'python': 'doc'}
-        sys_paths: ['scripts']
-        import_modules: ['hello']
-        init_codes: ['import matplotlib as mpl',
-                     'import matplotlib.pyplot as plt',
-                     'import pandas as pd']
-        enabled: True
+        kernel_name:
+          python: doc
+        sys_paths:
+          - scripts
+        import_modules:
+          - hello
+        init_codes:
+          - import matplotlib as mpl
+          - import matplotlib.pyplot as plt
+          - import pandas as pd
       number:
-        enabled: True
         level: 0
-      debug:
-        enabled: False
 
 pages:
   # - Home: index.md
-  - Test: test.md
+  # - Test: test.md
+  - Image: image.md
