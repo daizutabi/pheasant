@@ -1,4 +1,5 @@
 import pytest
+
 from pheasant.number import initialize
 from pheasant.number.header import (convert, header_splitter,
                                     normalize_number_list, renderer,
@@ -197,19 +198,19 @@ A text
 def test_label(source_label):
     source, label = convert(source_label)
     assert label['a'] == {'kind': 'header', 'number_list': [1],
-                        'id': 'pheasant-a'}
+                          'id': 'pheasant-a'}
     assert label['b'] == {'kind': 'header', 'number_list': [1, 1],
-                        'id': 'pheasant-b'}
+                          'id': 'pheasant-b'}
     assert label['c'] == {'kind': 'figure', 'number_list': [1],
-                        'id': 'pheasant-c'}
+                          'id': 'pheasant-c'}
     assert label['d'] == {'kind': 'figure', 'number_list': [2],
-                        'id': 'pheasant-d'}
+                          'id': 'pheasant-d'}
     source, label = convert(source_label, page_index=[5])
     assert label['a'] == {'kind': 'header', 'number_list': [5],
-                        'id': 'pheasant-a'}
+                          'id': 'pheasant-a'}
     assert label['b'] == {'kind': 'header', 'number_list': [5, 1],
-                        'id': 'pheasant-b'}
+                          'id': 'pheasant-b'}
     assert label['c'] == {'kind': 'figure', 'number_list': [5, 1],
-                        'id': 'pheasant-c'}
+                          'id': 'pheasant-c'}
     assert label['d'] == {'kind': 'figure', 'number_list': [5, 2],
-                        'id': 'pheasant-d'}
+                          'id': 'pheasant-d'}

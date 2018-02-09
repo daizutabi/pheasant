@@ -45,16 +45,12 @@ def test_new_notebook_stream(stream_input, stream_output):
     assert cell.source == 'Text3'
 
 
-@pytest.mark.parametrize('output_format', ['notebook', 'markdown', None])
-def test_execute_and_export_stream(stream_input, stream_output, output_format):
+def test_execute_and_export_stream(stream_input, stream_output):
     notebook = stream_input
     initialize()
     execute(notebook)
-    output = convert(notebook, output_format=output_format)
-    if output_format != 'notebook':
-        assert isinstance(output, str)
-        lines = zip(output.split('\n'), stream_output.split('\n'))
-        for markdown_line, stream_output_line in lines:
-            assert markdown_line == stream_output_line
-    else:
-        assert hasattr(output, 'cells')
+    output = convert(notebook)
+    assert isinstance(output, str)
+    lines = zip(output.split('\n'), stream_output.split('\n'))
+    for markdown_line, stream_output_line in lines:
+        assert markdown_line == stream_output_line

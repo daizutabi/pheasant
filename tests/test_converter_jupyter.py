@@ -49,7 +49,5 @@ paths = ['markdown_stream_input.md', 'notebook_stream_input.ipynb']
 @pytest.mark.parametrize('path', paths)
 def test_convert(root, stream_output, path):
     initialize()
-    source = convert(os.path.join(root, path), {})
-    jupyter.config['configured'] = False
-
-    assert source == stream_output
+    source = convert(os.path.join(root, path), {'jupyter': {'enabled': True}})
+    assert source.strip() == stream_output.strip()

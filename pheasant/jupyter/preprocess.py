@@ -3,12 +3,11 @@ import re
 import nbformat
 from markdown import Markdown
 
-from .client import run_cell
 from .config import config
-from .exporter import inline_export
+from .exporter import inline_export, inspect_export, run_and_export
 
 
-def preprocess_code(source: str):
+def preprocess_code(source: str) -> str:
 
     func = 'pheasant.jupyter.convert_inline'
 
@@ -25,7 +24,7 @@ def preprocess_code(source: str):
     return re.sub(config['inline_pattern'], replace, source)
 
 
-def preprocess_markdown(source: str):
+def preprocess_markdown(source: str) -> str:
     if source.startswith('```') or source.startswith('~~~'):
         return source
 
@@ -35,16 +34,16 @@ def preprocess_markdown(source: str):
     return source
 
 
-def evaluate_markdown(source: str, kernel_name=None):
+def evaluate_markdown(source: str) -> str:
     """
     Evaluate {{expr}} in Markdown source.
 
     If expr starts with '#', expr is not evaluated: {{#abc}} -> {{abc}}
 
     If expr starts with '^', expr is converted into HTML after execution.
-    """
-    kernel_name = kernel_name or config['python_kernel']
 
+    Above settings is default values and configurable.
+    """
     extensions = ['tables', 'fenced_code']
     md = Markdown(extensions=extensions + config['markdown_extensions'])
 
@@ -59,8 +58,8 @@ def evaluate_markdown(source: str, kernel_name=None):
             code = code[1:]
 
         cell = nbformat.v4.new_code_cell(code.strip())
-        run_cell(cell, kernel_name)
-        markdown = inline_export(cell)
+
+        markdown = run_and_export(cell, inline_export)
 
         if to_html:
             return md.convert(markdown)
@@ -70,29 +69,19 @@ def evaluate_markdown(source: str, kernel_name=None):
     return re.sub(config['inline_pattern'], replace, source)
 
 
-def inspect_markdown(source, kernel_name=None):
+def inspect_markdown(source):
     """
     Inspect source code.
 
     #Code <object name>
     """
-    kernel_name = kernel_name or config['python_kernel']
-
     def replace(m):
         name, *options = m.group(1).split(' ')
         name, *line_range = name.split(':')
 
         cell = nbformat.v4.new_code_cell(f'inspect.getsourcelines({name})')
-        run_cell(cell, kernel_name)
+        markdown = run_and_export(cell, inspect_export)
 
-        source = ''
-        for output in cell['outputs']:
-            if 'data' in output and 'text/plain' in output['data']:
-                lines, lineno = eval(output['data']['text/plain'])
-                break
-
-        source = ''.join(lines)
-        source = m.group() + f'\n\n#begin\n``` python\n{source}```\n#end'
-        return source
+        return m.group() + f'\n\n#begin\n``` python\n{markdown}```\n#end'
 
     return re.sub(config['code_pattern'], replace, source, flags=re.MULTILINE)

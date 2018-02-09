@@ -34,7 +34,8 @@ def convert(source):
         page_index = [config['pages'].index(source_file) + 1]
     else:
         page_index = config['level']
-    logger.info(f'Page index for {source_file}: {page_index}')
+    msg = f'Page index for {os.path.basename(source_file)}: {page_index}'
+    logger.info(msg)
 
     label = {}
     source, label = convert_header(source, label, page_index)

@@ -7,7 +7,7 @@ from nbconvert.preprocessors import ExecutePreprocessor
 from .config import config
 
 
-def convert(notebook, output_format=None):
+def convert(notebook):
     """
     Convert a notebook into a markdown string.
 
@@ -15,9 +15,6 @@ def convert(notebook, output_format=None):
     ----------
     notebook : str or Notebook object
         If str, it is a filename.
-    output_format : str, optional
-        Output format. If `notebook`, a notebook object is returned
-        before converting.
 
     Returns
     -------
@@ -36,11 +33,8 @@ def convert(notebook, output_format=None):
 
     delete_dataframe_style(notebook)
 
-    if (output_format or config['output_format']) == 'notebook':
-        return notebook
-    else:
-        markdown, resources = config['exporter'].from_notebook_node(notebook)
-        return drop_new_line_from_img_data(markdown)
+    markdown = config['exporter'].from_notebook_node(notebook)[0]
+    return drop_new_line_from_img_data(markdown)
 
 
 def drop_new_line_from_img_data(markdown):

@@ -5,7 +5,7 @@ from mkdocs.plugins import BasePlugin
 
 from ..converters import convert, get_converter_name, get_converters
 
-logger = logging.getLogger('mkdocs')
+logger = logging.getLogger('pheasant')
 
 DEFAULT_SCHEMA = tuple([(get_converter_name(converter),
                          config_options.Type(dict, default={'enabled': False}))
@@ -14,13 +14,6 @@ DEFAULT_SCHEMA = tuple([(get_converter_name(converter),
 
 class PheasantPlugin(BasePlugin):
     config_scheme = DEFAULT_SCHEMA
-
-    # def on_config(self, config):
-    #     path = os.path.join(os.path.dirname(pheasant.__file__),
-    #                         'static/pheasant.css')
-    #     css = os.path.abspath(path)
-    #     config['extra_css'].insert(0, css)
-    #     return config
 
     def on_page_read_source(self, source, page, config):
         """
@@ -38,6 +31,6 @@ class PheasantPlugin(BasePlugin):
         The raw source for a page as unicode string. If None is returned, the
         default loading from a file will be performed.
         """
-        logger.info(f'[pheasant] Converting: {page.input_path}')
+        logger.info(f'Converting: {page.input_path}')
         pheasant_config = config['plugins']['pheasant'].config
         return convert(page.abs_input_path, pheasant_config)

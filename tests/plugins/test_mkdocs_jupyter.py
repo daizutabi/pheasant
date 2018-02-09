@@ -62,16 +62,11 @@ class Page:
 paths = ['docs/markdown_stream_input.md', 'docs/notebook_stream_input.ipynb']
 
 
-@pytest.mark.parametrize('output_format', ['notebook', 'markdown'])
 @pytest.mark.parametrize('path', paths)
 def test_on_page_read_source(plugin, config, jupyter_config, root,
-                             stream_output, output_format, path):
+                             stream_output, path):
     page = Page(os.path.join(root, path))
-    jupyter_config['output_format'] = output_format
     source = plugin.on_page_read_source(None, page, config)
     jupyter.config['configured'] = False
 
-    if output_format == 'markdown':
-        assert source == stream_output
-    elif output_format == 'notebook':
-        assert source.startswith('{')
+    assert source.strip() == stream_output.strip()

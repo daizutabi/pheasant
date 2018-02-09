@@ -1,13 +1,13 @@
+"""This module provide jupyter client interface."""
 import logging
 from queue import Empty
 
 import jupyter_client
 from nbformat.v4 import output_from_msg
 
-from .cache import memoize
 from .config import config
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('pheasant')
 
 kernel_names = {}
 kernel_managers = {}
@@ -93,6 +93,7 @@ def get_kernel_client(kernel_name):
 
 # From nbconvert.preprocessors.execute.ExecutePreprocessor
 
+
 def _wait_for_reply(kernel_name, msg_id, timeout=300):
     # wait for finish, with timeout
     kernel_client = get_kernel_client(kernel_name)
@@ -113,11 +114,12 @@ def _wait_for_reply(kernel_name, msg_id, timeout=300):
             continue
 
 
-@memoize
-def run_cell(cell, kernel_name):
+def run_cell(cell, kernel_name=None):
+    kernel_name = kernel_name or config.setdefault(
+        'default_kernel', select_kernel_name(language='python'))
     kernel_client = get_kernel_client(kernel_name)
     msg_id = kernel_client.execute(cell.source)
-    logger.info(f'Executing cell:\n{cell.source}')
+    logger.debug(f'Executing cell:\n{cell.source}')
     _wait_for_reply(kernel_name, msg_id)
 
     outs = cell.outputs = []
@@ -139,7 +141,7 @@ def run_cell(cell, kernel_name):
             continue
 
         msg_type = msg['msg_type']
-        logger.info(f'output: {msg_type}')
+        logger.debug(f'output: {msg_type}')
         content = msg['content']
 
         # set the prompt number for the input and the output

@@ -5,39 +5,34 @@ from jinja2 import FileSystemLoader
 
 import pheasant
 
-from .client import run_cell, select_kernel_name
+from .client import run_cell
 from .config import config
+from .exporter import new_exporter
 from .markdown import convert as convert_markdown
 from .notebook import convert as convert_notebook
-from .exporter import new_exporter
 
 
 def initialize():
-    default_directory = os.path.join(os.path.dirname(__file__), 'templates')
+    set_template()
+    set_template('inline_')
 
-    abspath = os.path.abspath(config['template_file'])
-    template_directory, template_file = os.path.split(abspath)
-    loader = FileSystemLoader([template_directory, default_directory])
-    config['exporter'] = new_exporter(loader, template_file)
-
-    abspath = os.path.abspath(config['inline_template_file'])
-    inline_template_directory, inline_template_file = os.path.split(abspath)
-    loader = FileSystemLoader([inline_template_directory, default_directory])
-    config['inline_exporter'] = new_exporter(loader, inline_template_file)
-
-    kernel_name = select_kernel_name(language='python')
-    config['python_kernel'] = kernel_name
-
-    # TODO: run only if needed
+    # TODO: run only if needed, only if the default language is Python.
     cell = nbformat.v4.new_code_cell('import sys, importlib, inspect')
-    run_cell(cell, kernel_name)
-
+    run_cell(cell)
     sys_path_insert()
     import_modules()
-    init()
+    run_init_codes()
 
 
-def convert(source):
+def set_template(prefix=''):
+    default_directory = os.path.join(os.path.dirname(__file__), 'templates')
+    abspath = os.path.abspath(config[prefix + 'template_file'])
+    template_directory, template_file = os.path.split(abspath)
+    loader = FileSystemLoader([template_directory, default_directory])
+    config[prefix + 'exporter'] = new_exporter(loader, template_file)
+
+
+def convert(source) -> str:
     reload_modules()
 
     if not isinstance(source, str) or (os.path.exists(source) and
@@ -56,7 +51,7 @@ def sys_path_insert():
         code = (f'if "{directory}" not in sys.path:\n'
                 f'    sys.path.insert(0, "{directory}")')
         cell = nbformat.v4.new_code_cell(code)
-        run_cell(cell, config['python_kernel'])
+        run_cell(cell)
 
 
 def import_modules():
@@ -64,14 +59,14 @@ def import_modules():
         code = (f'module = importlib.import_module("{package}")\n'
                 f'globals()["{package}"] = module')
         cell = nbformat.v4.new_code_cell(code)
-        run_cell(cell, config['python_kernel'])
+        run_cell(cell)
 
 
-def init():
+def run_init_codes():
     for code in (config['init_codes'] +
                  ['pandas.options.display.max_colwidth = 0']):
         cell = nbformat.v4.new_code_cell(code)
-        run_cell(cell, config['python_kernel'])
+        run_cell(cell)
 
 
 def reload_modules():
@@ -79,4 +74,4 @@ def reload_modules():
         code = (f'module = importlib.import_module("{module}")\n'
                 f'importlib.reload(module)')
         cell = nbformat.v4.new_code_cell(code)
-        run_cell(cell, config['python_kernel'])
+        run_cell(cell)

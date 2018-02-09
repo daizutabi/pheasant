@@ -1,6 +1,5 @@
-"""
-This module processes inline code.
-"""
+"""This module processes inline code."""
+
 import base64
 import io
 

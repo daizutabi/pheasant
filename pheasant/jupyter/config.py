@@ -44,10 +44,6 @@ config = {
     # Dont't Edit.
     'modules': {},
 
-    # Cache for source code to run.
-    # Dont't Edit.
-    'cell_source_cache': {},
-
     # Time that module was imported. (Not implemented.)
     # Dont't Edit.
     'module_imported_time': {}
