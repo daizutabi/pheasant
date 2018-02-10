@@ -1,21 +1,60 @@
 # Image
 
+
+``` python
+print(1)
+```
+
 ## Matplotlib
 
-```python
-plt.plot([1,2,3])[0]
-```
-{{'d'}}
+First, `figsize` of `figure` is temporally set to `[2, 2]` to show small figures for saving space.
 
+```python
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+figsize = mpl.rcParams['figure.figsize']
+mpl.rcParams['figure.figsize'] = [2, 1.6]
+```
+
+Normal usage of `plt.plot` generates a standard output (a list of `Line` object in this example) and a PNG image:
+
+```python
+plt.plot([1, 2, 3], marker='o')
+```
+
+If you want to hide the input source and standard output, you can use a `hide` option which only shows the display data such as an image or html:
+
+~~~
+```python hide
+plt.plot([4, 2, 3], marker='o')
+```
+~~~
+
+```python hide
+plt.plot([4, 2, 3], marker='o')
+```
+
+Inline code is useful to display plots in shorthand notation. ```{{#plt.plot([1, 2, 4]);plt.gcf()}}``` or ```{{#plt.plot([5, 2, 1])[0]}}``` generates:
+
+{{plt.plot([1, 2, 4]);plt.gcf()}}
+{{plt.plot([5, 2, 1])[0]}}
+
+In the first code, the object between `{{#` and `}}` is a `Figure` of matplotlib. In the second, that is a `Line`. These objects are automatically converted into
+
+
+```python
+# mpl.rcParams['figure.figsize'] = figsize
+```
+
+
+~~~
 ```python
 ## inline
 plt.plot([1, 2, 4])
 {{plt.gcf()}}
 ```
+~~~
 
-{{plt.plot([1, 2, 4]);plt.gca()}}
-
-{{pd.DataFrame([[1,3]])}}
 
 ## Bokeh
 

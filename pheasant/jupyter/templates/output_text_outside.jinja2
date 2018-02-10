@@ -9,10 +9,7 @@
 {%- endblock -%}
 
 {%- block output_text_outside -%}
-{{ '\n\n' }}
-<div class="output-text"></div>
-
-{{ '```' + language + '\n'}}
+{{ '\n\n```' + language + ' .pheasant-jupyter-output\n'}}
 {{ output_text(output) }}
 {{ '```' }}
 {%- endblock -%}

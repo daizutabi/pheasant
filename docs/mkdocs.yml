@@ -13,7 +13,9 @@ extra:
 markdown_extensions:
   - admonition
   - codehilite
+  - attr_list
   - pymdownx.arithmatex
+  - pymdownx.superfences
 
 extra_css:
   - css/pheasant.css
@@ -42,6 +44,7 @@ plugins:
           - import matplotlib as mpl
           - import matplotlib.pyplot as plt
           - import pandas as pd
+        template_file: output_text_outside.jinja2
       number:
         level: 0
 

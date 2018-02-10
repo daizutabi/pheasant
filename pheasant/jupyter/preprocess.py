@@ -21,8 +21,14 @@ def replace(match) -> str:
 
     if source.startswith(config['inline_ignore_character']):
         return match.group().replace(source, source[1:])
-    if '=' in source:
+    elif '=' in source:
         return source
+
+    if source.startswith(config['inline_html_character']):
+        source = source[1:]
+        output = 'html'
+    else:
+        output = 'markdown'
 
     if ';' in source:
         sources = source.split(';')
@@ -32,10 +38,7 @@ def replace(match) -> str:
         cell = nbformat.v4.new_code_cell(sources)
         run_and_export(cell, inline_export)
 
-    if source.startswith(config['inline_html_character']):
-        return f'{convert}({source[1:]}, output="html")'
-    else:
-        return f'{convert}({source}, output="markdown")'
+    return f'{convert}({source}, output="{output}")'
 
 
 def preprocess_code(source: str) -> str:
@@ -43,7 +46,7 @@ def preprocess_code(source: str) -> str:
 
 
 def preprocess_markdown(source: str) -> str:
-    if source.startswith('```') or source.startswith('~~~'):
+    if source[:3] in ['```', '~~~', '<di']:  # escaped or already converted.
         return source
 
     def replace_and_run(match):

@@ -9,46 +9,54 @@ from markdown import Markdown
 from .config import config
 
 extensions = ['tables', 'fenced_code']
-md = Markdown(extensions=extensions + config['markdown_extensions'])
+markdown = Markdown(extensions=extensions + config['markdown_extensions'])
 
 
 def convert_inline(obj, **kwargs):
-    if not hasattr(obj, '__module__'):
-        obj = str(obj)
+    # FIXME: how to determine the function for conversion.
+    if hasattr(obj, '__module__'):
+        module = obj.__module__
+        if module.startswith('matplotlib.'):
+            return to_base64(obj, **kwargs)
+        elif module.startswith('pandas.'):
+            return to_html(obj)
+        elif module.startswith('bokeh.'):
+            return to_script_and_div(obj)
+    else:
+        is_str = isinstance(obj, str)
+        if not is_str:
+            obj = str(obj)
+
         if 'html' == kwargs.get('output'):
-            return md.convert(obj)
+            return markdown.convert(obj)
+        elif is_str:
+            return obj
         else:
             return html.escape(obj)
 
-    # FIXME: how to determine the function for conversion.
-    module = obj.__module__
-    if module.startswith('matplotlib.'):
-        return to_base64(obj, **kwargs)
-    elif module.startswith('pandas.'):
-        return to_html(obj)
-    elif module.startswith('bokeh.'):
-        return to_script_and_div(obj)
-
 
 def to_html(df):
-    from IPython.display import HTML
-    return HTML(df.to_html(escape=False))
+    """Convert a pandas.DataFrame into a <table> tag."""
+    # from IPython.display import HTML
+    # return HTML(df.to_html(escape=False))
+    return df.to_html(escape=False)
 
 
 def to_script_and_div(fig):
+    """Convert a Bokeh's figure into <script> and <div> tags."""
     from bokeh.embed import components
     script, div = components(fig)
     return script + div
 
 
-def to_base64(fig, format='png', output='markdown'):
+def to_base64(obj, format='png', output='markdown'):
     """Convert a Matplotlib's figure into base64 string."""
     buf = io.BytesIO()
 
-    if not hasattr(fig, 'savefig'):
-        fig = fig.figure  # fig is axes.
+    if not hasattr(obj, 'savefig'):
+        obj = obj.figure  # obj is axes.
 
-    fig.savefig(buf, format=format, bbox_inches='tight', transparent=True)
+    obj.savefig(buf, format=format, bbox_inches='tight', transparent=True)
     buf.seek(0)
 
     data = base64.b64encode(buf.getvalue()).decode('utf8')
@@ -57,30 +65,4 @@ def to_base64(fig, format='png', output='markdown'):
     if output == 'markdown':
         return f'![{format}]({data})'
     elif output == 'html':
-        return f'<img alt="{format}" src="{data}" />'
-
-
-# def preprocess_markdown(source: str) -> str:
-#     extensions = ['tables', 'fenced_code']
-#     md = Markdown(extensions=extensions + config['markdown_extensions'])
-#
-#     def replace(m):
-#         code = m.group(1)
-#
-#         if code.startswith(config['inline_ignore_character']):
-#             return m.group().replace(code, code[1:])
-#
-#         to_html = code.startswith(config['inline_html_character'])
-#         if to_html:
-#             code = code[1:]
-#
-#         cell = nbformat.v4.new_code_cell(code.strip())
-#
-#         markdown = run_and_export(cell, inline_export)
-#
-#         if to_html:
-#             return md.convert(markdown)
-#         else:
-#             return markdown
-#
-#     return re.sub(config['inline_pattern'], replace, source)
+        return f'<img alt="{format}" src="{data}"/>'

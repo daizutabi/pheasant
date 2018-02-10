@@ -38,7 +38,7 @@
   {%- endset -%}
   {%- if 'hide' not in options -%}
     {%- if 'hide-input' not in options or ns.found -%}
-      {{ '```' + language + '\n'}}
+      {{ '```' + language + ' .pheasant-jupyter-input\n' }}
       {%- if not cell.outputs or 'hide-output' in options -%}
         {%- block input -%}{%- endblock -%}
       {%- else -%}
@@ -55,7 +55,7 @@
     {%- if output.output_type != 'display_data' and 'hide' not in options -%}
       {%- block output_text_outside scoped -%}{%- endblock -%}
     {%- endif -%}
-    {%- if output.output_type == 'display_data' or 'text/html' in output.data -%} 
+    {%- if output.output_type == 'display_data' or 'text/html' in output.data -%}
       {{ '\n\n' }}
       {%- block data_priority scoped -%}
         {{ super() }}

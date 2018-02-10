@@ -45,55 +45,122 @@
 }
 
 table.dataframe {
-    border-collapse: collapse;
-    border: none;
-    font-size: 12px;
+  border-collapse: collapse;
+  border: none;
+  font-size: 12px;
 }
 
-.dataframe thead tr,
-.dataframe thead th,
-.dataframe tbody tr,
-.dataframe tbody th,
-.dataframe tbody td {
-    border: none;
-    text-align: center;
-    padding-left: 4px;
-    padding-right: 4px;
-    padding-top: 0px;
-    padding-bottom: 0px;
+.dataframe thead tr, .dataframe thead th, .dataframe tbody tr, .dataframe tbody th, .dataframe tbody td {
+  border: none;
+  text-align: center;
+  padding-left: 4px;
+  padding-right: 4px;
+  padding-top: 0px;
+  padding-bottom: 0px;
 }
 
 .dataframe thead th {
-    color: darkblue;
-    background-color: lightcyan;
-    border: 1px solid #333366;
+  color: darkblue;
+  background-color: lightcyan;
+  border: 1px solid #333366;
 }
 
 .dataframe tbody th {
-    color: black;
-    background-color: #ffffee;
-    border: 1px solid #666633;
+  color: black;
+  background-color: #ffffee;
+  border: 1px solid #666633;
 }
 
 .dataframe tbody td {
-    color: black;
-    background-color: #fcfcfc;
-    border-bottom: 1px solid #b9b9b9;
-    border-right: 1px solid #b9b9b9;
+  color: black;
+  background-color: #fcfcfc;
+  border-bottom: 1px solid #b9b9b9;
+  border-right: 1px solid #b9b9b9;
 }
 
-.dataframe tr th:last-child,
-.dataframe tr td:last-child {
-    border-right: 1px solid #555544;
-    box-shadow: 2px 2px 6px rgba(0,0,0,0.1);
+.dataframe tr th:last-child, .dataframe tr td:last-child {
+  border-right: 1px solid #555544;
+  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.1);
 }
 
-.dataframe tr:last-child td,
-.dataframe tr:last-child th {
-    border-bottom: 1px solid #555544;
-    box-shadow: 2px 2px 6px rgba(0,0,0,0.1);
+.dataframe tr:last-child td, .dataframe tr:last-child th {
+  border-bottom: 1px solid #555544;
+  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.1);
 }
 
 .dataframe tbody tr:nth-child(2n+1) td {
-    background: #f1f6fc;
+  background: #f1f6fc;
+}
+
+.pheasant-jupyter-input {
+  margin-bottom: 3px !important;
+  margin-left: 2.0em !important;
+  background-color: transparent !important;
+}
+
+.pheasant-jupyter-input:before {
+  content: "In:";
+  position: absolute;
+  left: -2.5em;
+  font-size: 90%;
+  color: #669;
+  width: 2.3em;
+  text-align: right;
+  margin-top: 5px;
+}
+
+.pheasant-jupyter-input>pre {
+  background-color: #eef !important;
+  border: 1px solid #bdd;
+  border-radius: 6px;
+}
+
+.pheasant-jupyter-output {
+  margin-top: 3px !important;
+  margin-left: 2.0em !important;
+  background-color: transparent !important;
+}
+
+.pheasant-jupyter-output:before {
+  content: "Out:";
+  position: absolute;
+  left: -2.5em;
+  font-size: 90%;
+  color: #669;
+  width: 2.3em;
+  text-align: right;
+  margin-top: 5px;
+}
+
+.pheasant-jupyter-output>pre {
+  background-color: #ffd !important;
+  border: 1px solid #ddb;
+  border-radius: 6px;
+}
+
+.pheasant-jupyter-source {
+  margin-bottom: 3px !important;
+  margin-left: 2.0em !important;
+  background-color: transparent !important;
+}
+
+.pheasant-jupyter-source:before {
+  content: "Src:";
+  position: absolute;
+  left: -2.5em;
+  font-size: 90%;
+  color: #669;
+  width: 2.3em;
+  text-align: right;
+  margin-top: 5px;
+}
+
+.pheasant-jupyter-source>pre {
+  background-color: #efd !important;
+  border: 1px solid #bdb;
+  border-radius: 6px;
+}
+
+.codehilite pre {
+  padding: 6px 8px !important;
 }

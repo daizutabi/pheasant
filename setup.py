@@ -35,7 +35,7 @@ setup(
     license='MIT',
     packages=find_packages(exclude=['tests', 'docs']),
     include_package_data=True,
-    install_requires=['click', 'jupyter', 'markdown', 'pillow'],
+    install_requires=['click', 'jupyter', 'markdown', 'pillow', 'pygments'],
     entry_points={
         'console_scripts': [
            'pheasant = pheasant.main:cli',
