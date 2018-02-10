@@ -102,6 +102,7 @@ def fenced_code_splitter(source: str):
             else:
                 source = splitted.group(3).strip()
                 option = splitted.group(2).strip()
+
                 # Phesant's special option syntax.
                 if source.startswith('## '):
                     extra_option = source[3:source.find('\n')]

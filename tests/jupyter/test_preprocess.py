@@ -1,5 +1,5 @@
 import pytest
-from pheasant.jupyter.preprocess import evaluate_markdown
+from pheasant.jupyter.preprocess import preprocess_markdown
 from pheasant.jupyter.converter import initialize
 
 
@@ -10,4 +10,4 @@ from pheasant.jupyter.converter import initialize
                           ('a{{^a}}b', 'a<p>1</p>b')])
 def test_evaluate_markdown(source, output):
     initialize()
-    assert evaluate_markdown(source) == output
+    assert preprocess_markdown(source) == output

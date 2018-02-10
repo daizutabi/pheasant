@@ -25,9 +25,6 @@ config = {
     # Character to ignore an inline code.
     'inline_ignore_character': '#',
 
-    # Source code pattern for quotation of code from file.
-    'code_pattern': r'^#Code (.+?)$',
-
     # Extra package directories that will be added to sys.path.
     'sys_paths': [],
 

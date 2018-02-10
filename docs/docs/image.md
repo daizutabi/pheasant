@@ -1,5 +1,22 @@
 # Image
 
+## Matplotlib
+
+```python
+plt.plot([1,2,3])[0]
+```
+{{'d'}}
+
+```python
+## inline
+plt.plot([1, 2, 4])
+{{plt.gcf()}}
+```
+
+{{plt.plot([1, 2, 4]);plt.gca()}}
+
+{{pd.DataFrame([[1,3]])}}
+
 ## Bokeh
 
 You can embed plots into MkDocs HTML documents. Following [User Guide "Embedding Plots and Apps"](https://bokeh.pydata.org/en/latest/docs/user_guide/embed.html) from official Bokeh documents, configure your `mkdocs.yml` as below:
@@ -41,4 +58,4 @@ A short cut to this functionality is prepared.
 
 {{plot}}
 
-END
+#Code hello.func

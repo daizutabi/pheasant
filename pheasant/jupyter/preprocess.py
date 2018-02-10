@@ -1,26 +1,44 @@
+"""Evaluate {{expr}} in Markdown source and fenced code.
+
+If expr starts with '#', expr is not evaluated: {{#abc}} -> {{abc}}
+
+If expr starts with '^', expr is converted into HTML after execution.
+
+Above settings is default values and configurable.
+"""
+
 import re
 
 import nbformat
-from markdown import Markdown
 
 from .config import config
-from .exporter import inline_export, inspect_export, run_and_export
+from .exporter import inline_export, run_and_export
+
+
+def replace(match) -> str:
+    convert = 'pheasant.jupyter.convert_inline'
+    source = match.group(1)
+
+    if source.startswith(config['inline_ignore_character']):
+        return match.group().replace(source, source[1:])
+    if '=' in source:
+        return source
+
+    if ';' in source:
+        sources = source.split(';')
+        source = '_pheasant_dummy'
+        sources[-1] = f'{source} = {sources[-1]}'
+        sources = '\n'.join(sources)
+        cell = nbformat.v4.new_code_cell(sources)
+        run_and_export(cell, inline_export)
+
+    if source.startswith(config['inline_html_character']):
+        return f'{convert}({source[1:]}, output="html")'
+    else:
+        return f'{convert}({source}, output="markdown")'
 
 
 def preprocess_code(source: str) -> str:
-
-    func = 'pheasant.jupyter.convert_inline'
-
-    def replace(m):
-        code = m.group(1)
-
-        if code.startswith(config['inline_ignore_character']):
-            return m.group().replace(code, code[1:])
-        elif code.startswith(config['inline_html_character']):
-            return f'{func}({code[1:]}, output="html")'
-        else:
-            return f'{func}({code}, output="markdown")'
-
     return re.sub(config['inline_pattern'], replace, source)
 
 
@@ -28,60 +46,13 @@ def preprocess_markdown(source: str) -> str:
     if source.startswith('```') or source.startswith('~~~'):
         return source
 
-    source = evaluate_markdown(source)
-    source = inspect_markdown(source)
+    def replace_and_run(match):
+        source = match.group(1)
+        if source.startswith(config['inline_ignore_character']):
+            return match.group().replace(source, source[1:])
 
-    return source
+        source = replace(match)
+        cell = nbformat.v4.new_code_cell(source)
+        return run_and_export(cell, inline_export)
 
-
-def evaluate_markdown(source: str) -> str:
-    """
-    Evaluate {{expr}} in Markdown source.
-
-    If expr starts with '#', expr is not evaluated: {{#abc}} -> {{abc}}
-
-    If expr starts with '^', expr is converted into HTML after execution.
-
-    Above settings is default values and configurable.
-    """
-    extensions = ['tables', 'fenced_code']
-    md = Markdown(extensions=extensions + config['markdown_extensions'])
-
-    def replace(m):
-        code = m.group(1)
-
-        if code.startswith(config['inline_ignore_character']):
-            return m.group().replace(code, code[1:])
-
-        to_html = code.startswith(config['inline_html_character'])
-        if to_html:
-            code = code[1:]
-
-        cell = nbformat.v4.new_code_cell(code.strip())
-
-        markdown = run_and_export(cell, inline_export)
-
-        if to_html:
-            return md.convert(markdown)
-        else:
-            return markdown
-
-    return re.sub(config['inline_pattern'], replace, source)
-
-
-def inspect_markdown(source):
-    """
-    Inspect source code.
-
-    #Code <object name>
-    """
-    def replace(m):
-        name, *options = m.group(1).split(' ')
-        name, *line_range = name.split(':')
-
-        cell = nbformat.v4.new_code_cell(f'inspect.getsourcelines({name})')
-        markdown = run_and_export(cell, inspect_export)
-
-        return m.group() + f'\n\n#begin\n``` python\n{markdown}```\n#end'
-
-    return re.sub(config['code_pattern'], replace, source, flags=re.MULTILINE)
+    return re.sub(config['inline_pattern'], replace_and_run, source)

@@ -10,16 +10,16 @@ extra:
   search:
     language: en
 
+markdown_extensions:
+  - admonition
+  - codehilite
+  - pymdownx.arithmatex
+
 extra_css:
   - css/pheasant.css
   - https://cdn.pydata.org/bokeh/release/bokeh-0.12.14.min.css
   - https://cdn.pydata.org/bokeh/release/bokeh-widgets-0.12.14.min.css
   - https://cdn.pydata.org/bokeh/release/bokeh-tables-0.12.14.min.css
-
-markdown_extensions:
-  - admonition
-  - codehilite
-  - pymdownx.arithmatex
 
 extra_javascript:
   - https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML
