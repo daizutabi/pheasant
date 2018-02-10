@@ -160,15 +160,13 @@ def header_splitter(source: str):
             header_kind[kind[:3].lower()] = kind
     cursor = 0
 
-    pattern_escape = r'(^```(.*?)^```$)|(^~~~(.*?)^~~~$)'
+    pattern_escape = r'```(.*?)```'
     pattern_header = r'^(#+)(\S*?) (.+?)$'
 
     for splitted in escaped_splitter_join(pattern_header, pattern_escape,
                                           source):
         if isinstance(splitted, str):
-            markdown = splitted.strip()
-            if markdown:
-                yield markdown
+            yield splitted.strip()
         else:
             start, end = splitted.span()
             cursor += start
