@@ -8,7 +8,7 @@ from .config import config
 from .header import convert as convert_header
 from .reference import convert as convert_reference
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('pheasant')
 
 
 def initialize():
@@ -35,7 +35,7 @@ def convert(source):
     else:
         page_index = config['level']
     msg = f'Page index for {os.path.basename(source_file)}: {page_index}'
-    logger.info(msg)
+    logger.debug(msg)
 
     label = {}
     source, label = convert_header(source, label, page_index)

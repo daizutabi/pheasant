@@ -12,6 +12,7 @@ acd {{a=3}}{{a}} cde {{b}}
 
 ```python inline
 plt.plot([1, 3, 4])
+
 {{plt.gca()}}
 ```
 ~~~
@@ -28,4 +29,17 @@ def func(x):
 {{df.applymap(func)}}
 ```
 
-#Code hello.func
+#Code [hello.func]
+
+#Coded a.py
+
+#begin
+~~~
+print(1)
+
+print(2)
+
+def func(x):
+    return 2 * x
+~~~
+#end

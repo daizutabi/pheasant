@@ -146,15 +146,7 @@ def fenced_code_splitter(source: str, comment_option=True):
 
 
 def escaped_code(match):
-    source = ''.join(escaped_code_splitter(match))
-    cls = 'pheasant-jupyter-source'
-    source = f'<div class="codehilite {cls}"><pre>{source}</pre></div>'
-    return source
-
-
-def escaped_code_splitter(match):
-    """Convert escaped fenced code into fenced code with codehilite.
-
+    """
     Input:
     ~~~
     ```<language> <options>
@@ -165,8 +157,14 @@ def escaped_code_splitter(match):
     Outut:
     <div class="codehilite pheasant-jupyter-source"><pre> ... </pre></div>
     """
-    re_comiple = re.compile(r'.*?<pre>(.*?)</pre>', flags=re.DOTALL)
+    source = ''.join(escaped_code_splitter(match))
+    cls = 'pheasant-fenced-code pheasant-jupyter-source'
+    source = f'<div class="codehilite {cls}"><pre>{source}</pre></div>'
+    return source
 
+
+def escaped_code_splitter(match):
+    """Yield source wth codehilite from escaped fenced code."""
     for splitted in fenced_code_splitter(match.group(1), comment_option=False):
         if isinstance(splitted, str):
             yield splitted
@@ -174,9 +172,7 @@ def escaped_code_splitter(match):
 
         language, source, options = splitted
         source = f'```{language}\n{source}\n```'
-        source = fenced_code_convert(source)
-        source = re_comiple.match(source).group(1)
+        source = fenced_code_convert(source, only_code=True)
         source = (f'<span>```</span>{language} {options}\n'
                   f'{source}<span>```</span>')
-        print(source)
         yield source

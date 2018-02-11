@@ -64,7 +64,7 @@ def memoize(func):
             if cell.source == source:
                 return markdown
 
-        logger.info(
+        logger.debug(
             f'Running cell: {os.path.basename(source_file)}:{counter}')
         markdown = func(cell, *args, **kwargs)
 

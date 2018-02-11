@@ -92,15 +92,14 @@ table.dataframe {
   background: #f1f6fc;
 }
 
-.pheasant-jupyter-input {
+.pheasant-fenced-code {
   position: relative;
-  margin-bottom: 3px !important;
   margin-left: 2.0em !important;
   background-color: transparent !important;
 }
 
-.pheasant-jupyter-input:before {
-  content: "In:";
+.pheasant-fenced-code:before {
+  content: "";
   position: absolute;
   left: -2.5em;
   font-size: 90%;
@@ -108,60 +107,49 @@ table.dataframe {
   width: 2.3em;
   text-align: right;
   margin-top: 5px;
+}
+
+.pheasant-fenced-code>pre {
+  border-radius: 6px;
+}
+
+.pheasant-jupyter-input {
+  margin-bottom: 3px !important;
+}
+
+.pheasant-jupyter-input:before {
+  content: "In:";
 }
 
 .pheasant-jupyter-input>pre {
   background-color: #eef !important;
   border: 1px solid #bdd;
-  border-radius: 6px;
 }
 
 .pheasant-jupyter-output {
-  position: relative;
   margin-top: 3px !important;
-  margin-left: 2.0em !important;
-  background-color: transparent !important;
 }
 
 .pheasant-jupyter-output:before {
   content: "Out:";
-  position: absolute;
-  left: -2.5em;
-  font-size: 90%;
-  color: #669;
-  width: 2.3em;
-  text-align: right;
-  margin-top: 5px;
 }
 
 .pheasant-jupyter-output>pre {
   background-color: #ffd !important;
   border: 1px solid #ddb;
-  border-radius: 6px;
 }
 
 .pheasant-jupyter-source {
-  position: relative;
   margin-bottom: 3px !important;
-  margin-left: 2.0em !important;
-  background-color: transparent !important;
 }
 
 .pheasant-jupyter-source:before {
   content: "Src:";
-  position: absolute;
-  left: -2.5em;
-  font-size: 90%;
-  color: #669;
-  width: 2.3em;
-  text-align: right;
-  margin-top: 5px;
 }
 
 .pheasant-jupyter-source>pre {
   background-color: #efd !important;
   border: 1px solid #bdb;
-  border-radius: 6px;
 }
 
 .codehilite pre {

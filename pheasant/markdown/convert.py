@@ -1,3 +1,5 @@
+import re
+
 from markdown import Markdown
 
 markdown_converter = Markdown(extensions=['fenced_code', 'tables'])
@@ -18,6 +20,10 @@ def markdown_convert(source, extensions=None):
         return converter.convert(source)
 
 
-def fenced_code_convert(source, cls='codehilite'):
+def fenced_code_convert(source, cls='codehilite', only_code=False):
     source = fenced_code_converter.convert(source)
-    return source.replace(CLASS, cls)
+    source = source.replace(CLASS, cls)
+    if only_code:
+        re_comiple = re.compile(r'.*?<pre>(.*?)</pre>', flags=re.DOTALL)
+        source = re_comiple.match(source).group(1)
+    return source
