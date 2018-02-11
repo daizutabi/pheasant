@@ -18,10 +18,10 @@ config = {
     'label_pattern': r'\{#(\S+?)#\}',
 
     # <div> class name for numbered objects.
-    'class': 'pheasant-{kind}',
+    'class': 'pheasant-number-{kind}',
 
     # <div> id name for numbered objects.
-    'id': 'pheasant-{label}',
+    'id': 'pheasant-number-{label}',
 
     # relpath
     'relpath_function': None,

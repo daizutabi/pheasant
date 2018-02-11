@@ -38,7 +38,7 @@
   {%- endset -%}
   {%- if 'hide' not in options -%}
     {%- if 'hide-input' not in options or ns.found -%}
-      {{ '```' + language + ' .pheasant-fenced-code .pheasant-jupyter-input\n' }}
+      {{ '```' + language + ' .pheasant-markdown .pheasant-jupyter-input\n' }}
       {%- if not cell.outputs or 'hide-output' in options -%}
         {%- block input -%}{%- endblock -%}
       {%- else -%}

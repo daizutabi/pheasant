@@ -72,8 +72,8 @@ def test_fenced_code_splitter_stream(stream):
         elif k == 2:
             assert output == '``` python\nprint(1)\n```\n\ntext'
         elif k == 4:
-            assert output == '~~~\n```python\nprint(1)\n```\n~~~'
+            assert output.startswith('<div class')
         elif k == 7:
-            assert output == '~~~\n``` python\nprint(1)\n```\n~~~'
+            assert output.startswith('<div class')
         elif k == 8:
             assert output == '```unknown\nabc\n```'

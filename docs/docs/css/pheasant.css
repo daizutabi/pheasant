@@ -1,46 +1,54 @@
-.pheasant-figure {
+article table {
+  margin-left: 2.0em !important;
+  margin-right: auto;
+  display: table !important;
+  width: auto !important;
+}
+
+.pheasant-number-figure {
   margin-bottom: 24px;
 }
 
-.pheasant-figure p {
+.pheasant-number-figure p {
   text-align: center;
   margin: 0px;
   font-weight: bold;
   color: #000066;
 }
 
-.pheasant-figure svg {
+.pheasant-number-figure svg {
   margin-left: auto;
   margin-right: auto;
   display: table !important;
   width: auto !important;
 }
 
-.pheasant-table {
+.pheasant-number-table {
   margin-top: 24px;
 }
 
-.pheasant-table p {
+.pheasant-number-table p {
   text-align: center;
   margin-bottom: 2px;
   font-weight: bold;
   color: #000066;
 }
 
-.pheasant-table table {
+.pheasant-number-table table {
   margin-left: auto;
   margin-right: auto;
   display: table !important;
   width: auto !important;
 }
 
-.pheasant-code p {
+.pheasant-number-code p {
+  margin-left: 2.0em !important;
   margin-bottom: 0px;
   font-weight: bold;
   color: #000066;
 }
 
-.pheasant-code pre {
+.pheasant-number-code pre {
   margin-top: 3px;
 }
 
@@ -92,13 +100,13 @@ table.dataframe {
   background: #f1f6fc;
 }
 
-.pheasant-fenced-code {
+.pheasant-markdown {
   position: relative;
   margin-left: 2.0em !important;
   background-color: transparent !important;
 }
 
-.pheasant-fenced-code:before {
+.pheasant-markdown:before {
   content: "";
   position: absolute;
   left: -2.5em;
@@ -109,7 +117,7 @@ table.dataframe {
   margin-top: 5px;
 }
 
-.pheasant-fenced-code>pre {
+.pheasant-markdown>pre {
   border-radius: 6px;
 }
 
@@ -139,15 +147,30 @@ table.dataframe {
   border: 1px solid #ddb;
 }
 
-.pheasant-jupyter-source {
-  margin-bottom: 3px !important;
+.pheasant-source {
+  margin-top: 3px !important;
+  margin-bottom: 20px !important;
 }
 
-.pheasant-jupyter-source:before {
+.pheasant-source:before {
   content: "Src:";
 }
 
-.pheasant-jupyter-source>pre {
+.pheasant-source>pre {
+  background-color: #efc !important;
+  border: 1px solid #bdb;
+}
+
+.pheasant-code {
+  margin-top: 3px !important;
+  margin-bottom: 20px !important;
+}
+
+.pheasant-code:before {
+  content: "";
+}
+
+.pheasant-code>pre {
   background-color: #efd !important;
   border: 1px solid #bdb;
 }

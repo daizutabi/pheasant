@@ -126,7 +126,9 @@ def fenced_code_splitter(source: str, comment_option=True):
             if match:
                 yield escaped_code(match)
             else:
-                yield splitted
+                splitted = splitted.strip()
+                if splitted:
+                    yield splitted
         else:
             language = splitted.group(1)
             if select_kernel_name(language) is None:
@@ -155,10 +157,10 @@ def escaped_code(match):
     ~~~
 
     Outut:
-    <div class="codehilite pheasant-jupyter-source"><pre> ... </pre></div>
+    <div class="... pheasant-source"><pre> ... </pre></div>
     """
     source = ''.join(escaped_code_splitter(match))
-    cls = 'pheasant-fenced-code pheasant-jupyter-source'
+    cls = 'pheasant-markdown pheasant-source'
     source = f'<div class="codehilite {cls}"><pre>{source}</pre></div>'
     return source
 

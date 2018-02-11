@@ -33,8 +33,7 @@ def func(x):
 
 #Coded a.py
 
-#begin
-~~~
+~~~python
 print(1)
 
 print(2)
@@ -42,4 +41,5 @@ print(2)
 def func(x):
     return 2 * x
 ~~~
-#end
+
+abcde

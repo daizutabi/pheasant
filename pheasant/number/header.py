@@ -2,6 +2,7 @@ import re
 
 from ..markdown.convert import markdown_convert
 from ..utils import escaped_splitter_join, read_source
+from .code import code_splitter
 from .code import convert as convert_code
 from .config import config
 
@@ -93,6 +94,73 @@ def renderer(source: str, label: dict, page_index=1):
                 yield rest
 
 
+def header_splitter(source: str):
+    """
+    Generate splitted markdown header and body text from `source`.
+
+    # normal header.
+
+    #Figure, #FIG., etc for figure
+    #Table, #tab, etc for table
+    #Code, #code, etc for code
+
+    Parameters
+    ----------
+    source : str
+        Markdown source string.
+
+    Yields
+    ------
+    splitted source : str or dict
+    """
+    number_list = {}
+    header_kind = {}
+    for kind in config['kind']:
+        number_list[kind] = [0] * 6
+        if kind == 'header':
+            header_kind[''] = 'header'
+        else:
+            header_kind[kind[:3].lower()] = kind
+    cursor = 0
+
+    pattern_escape = r'(```(.*?)```)|(~~~(.*?)~~~)'
+    pattern_header = r'^(#+)(\S*?) (.+?)$'
+
+    splitter = escaped_splitter_join(pattern_header, pattern_escape, source)
+    for splitted in splitter:
+        if isinstance(splitted, str):
+            yield splitted.strip()
+        else:
+            start, end = splitted.span()
+            cursor += start
+            kind = header_kind[splitted.group(2)[:3].lower()]
+            depth = len(splitted.group(1)) - 1
+            number_list[kind][depth] += 1
+            reset = [0] * (len(number_list[kind]) - depth)
+            number_list[kind][depth + 1:] = reset
+            title, label = split_label(splitted.group(3))
+
+            context = {
+                'kind': kind,
+                'title': title,
+                'label': label,
+                'cursor': cursor,
+                'number_list': number_list[kind][:depth + 1]
+            }
+            cursor += end
+
+            if kind == 'code':
+                context['title'], content = convert_code(title)
+                yield context
+                if content:
+                    yield content
+                else:
+                    source = next(splitter)
+                    yield from code_splitter(source)
+            else:
+                yield context
+
+
 def normalize_number_list(kind, number_list, page_index=None):
     if isinstance(page_index, list):
         if kind == 'header':
@@ -127,69 +195,3 @@ def split_label(text):
         return text, ''
     else:
         return text.replace(m.group(), '').strip(), m.group(1)
-
-
-def header_splitter(source: str):
-    """
-    Generate splitted markdown header and body text from `source`.
-
-    # normal header.
-
-    #Figure, #FIG., etc for figure
-    #Table, #tab, etc for table
-    #Code, #code, etc for code
-
-    Parameters
-    ----------
-    source : str
-        Markdown source string.
-
-    Yields
-    ------
-    splitted source : str or dict
-    """
-    number_list = {}
-    header_kind = {}
-    for kind in config['kind']:
-        number_list[kind] = [0] * 6
-        if kind == 'header':
-            header_kind[''] = 'header'
-        else:
-            header_kind[kind[:3].lower()] = kind
-    cursor = 0
-
-    pattern_escape = r'(```(.*?)```)|(~~~(.*?)~~~)'
-    pattern_header = r'^(#+)(\S*?) (.+?)$'
-
-    for splitted in escaped_splitter_join(pattern_header, pattern_escape,
-                                          source):
-        if isinstance(splitted, str):
-            yield splitted.strip()
-        else:
-            start, end = splitted.span()
-            cursor += start
-            kind = header_kind[splitted.group(2)[:3].lower()]
-            depth = len(splitted.group(1)) - 1
-            number_list[kind][depth] += 1
-            reset = [0] * (len(number_list[kind]) - depth)
-            number_list[kind][depth + 1:] = reset
-            title, label = split_label(splitted.group(3))
-
-            context = {
-                'kind': kind,
-                'title': title,
-                'label': label,
-                'cursor': cursor,
-                'number_list': number_list[kind][:depth + 1]
-            }
-            cursor += end
-
-            if kind == 'code':
-                context['title'], content = convert_code(title)
-                print(context, content)
-                yield context
-                if content:
-                    yield content
-            else:
-                print(context)
-                yield context
