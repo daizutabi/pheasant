@@ -1,6 +1,6 @@
-from . import debug, jupyter, macro, number, office
+from . import jupyter, macro, number, office
 
 config = {
-    'converters': [macro, jupyter, office, number, debug],
+    'converters': [macro, jupyter, office, number],
     'source_file': None,
 }
