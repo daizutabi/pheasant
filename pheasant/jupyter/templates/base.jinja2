@@ -1,0 +1,139 @@
+{% extends 'display_priority.tpl' %}
+
+
+{%- block body -%}
+{%- for cell in nb.cells -%}
+  {%- block any_cell scoped -%}
+    {{ super() }}
+  {%- endblock any_cell -%}
+  {%- if not (cell.cell_type == 'code' and 'hide' in cell.metadata.pheasant.options) -%}
+    {{ '\n' }}{{ '\n' if not loop.last }}
+  {%- endif -%}
+{%- endfor -%}
+{%- endblock body -%}
+
+
+{%- block in_prompt -%}
+{%- endblock in_prompt -%}
+
+
+{%- block output_prompt -%}
+{%- endblock output_prompt -%}
+
+
+{%- block codecell -%}
+  {%- set ns = namespace(found=false) -%}
+  {%- set options = cell.metadata.get('pheasant', {}).get('options', []) -%}
+  {%- for output in cell.outputs if output.output_type != 'display_data' and 'text/html' not in output.data -%}
+    {%- set ns.found = true -%}
+  {%- endfor -%}
+  {%- set language -%}
+    {%- if 'magics_language' in cell.metadata -%}
+      {{ cell.metadata.magics_language}}
+    {%- elif 'language' in cell.metadata.get('pheasant', {}) -%}
+      {{ cell.metadata.pheasant.language }}
+    {%- elif 'name' in nb.metadata.get('language_info', {}) -%}
+      {{ nb.metadata.language_info.name }}
+    {%- endif -%}
+  {%- endset -%}
+  {%- if 'hide' not in options -%}
+    {%- if 'hide-input' not in options or ns.found -%}
+      {{ '```' + language + ' .pheasant-markdown .pheasant-jupyter-input\n' }}
+      {%- if not cell.outputs or 'hide-output' in options -%}
+        {%- block input -%}{%- endblock -%}
+      {%- else -%}
+        {%- if 'hide-input' not in options -%}
+          {%- block input_with_output -%}{%- endblock -%}
+        {%- endif -%}
+        {%- for output in cell.outputs if output.output_type != 'display_data' -%}
+          {%- block output_text_inside scoped -%}{%- endblock -%}
+        {%- endfor -%}
+      {%- endif -%}{{ '```' }}{# for syntax highlight #}
+    {%- endif -%}
+  {%- endif -%}
+  {%- for output in cell.outputs -%}
+    {%- if output.output_type != 'display_data' and 'hide' not in options -%}
+      {%- block output_text_outside scoped -%}{%- endblock -%}
+    {%- endif -%}
+    {%- if output.output_type == 'display_data' or 'text/html' in output.data -%}
+      {{ '\n\n' }}
+      {%- block data_priority scoped -%}
+        {{ super() }}
+      {%- endblock data_priority -%}
+      {%- if 'hide' in options -%}{{ '\n\n' }}{%- endif -%}{# for separation #}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endblock codecell -%}
+
+{%- macro output_text(output) -%}
+  {%- if output.output_type == 'execute_result' -%}
+    {%- if 'text/html' not in output.data -%}
+      {{ output.data['text/plain'] + '\n' }}
+    {%- endif -%}
+  {%- elif output.output_type == 'stream' -%}
+    {{ output.text }}{%- if output.text[-1] != '\n' -%}{{ '\n' }}{%- endif -%}
+  {%- elif output.output_type == 'error' -%}
+    {{ output.traceback[-1] | strip_ansi + '\n'}}
+  {%- endif -%}
+{%- endmacro -%}
+
+
+{% block data_html -%}
+<div class="output_html rendered_html output_subarea {{ extra_class }}">
+{{ output.data['text/html'] }}
+</div>
+{%- endblock data_html %}
+
+
+{# from nbconvert/templates/html/basic.tpl #}
+{%- block data_javascript -%}
+{% set div_id = uuid4() %}
+<div id="{{ div_id }}"></div>
+<div class="output_subarea output_javascript {{ extra_class }}">
+  <script type="text/javascript">
+    var element = $('#{{ div_id }}');
+   {{ output.data['application/javascript'] }}
+  </script>
+</div>
+{%- endblock data_javascript -%}
+
+
+{# from nbconvert/templates/markdown.tpl #}
+{% block data_svg -%}
+{{ output.data['image/svg+xml'] }}
+{%- endblock data_svg %}
+
+
+{%- block data_png -%}
+![png](data:image/png;base64,{{ output.data['image/png'].replace('\n', '') }})
+{%- endblock data_png -%}
+
+
+{% block data_jpg -%}
+![jpeg]({{ output.metadata.filenames['image/jpeg'] | path2url }})
+{%- endblock data_jpg %}
+
+
+{% block data_latex -%}
+{{ output.data['text/latex'] }}
+{%- endblock data_latex %}
+
+
+{%- block data_markdown -%}
+{{ output.data['text/markdown'] }}
+{%- endblock data_markdown -%}
+
+
+{% block data_text -%}
+{{ output.data['text/plain'] | indent }}
+{%- endblock data_text %}
+
+
+{%- block markdowncell -%}
+{{ cell.source }}
+{%- endblock markdowncell -%}
+
+
+{% block unknowncell -%}
+unknown type  {{ cell.type }}
+{%- endblock unknowncell %}

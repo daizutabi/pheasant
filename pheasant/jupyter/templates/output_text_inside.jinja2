@@ -1,0 +1,15 @@
+{% extends 'base.jinja2' %}
+
+{%- block input -%}
+  {{ cell.source + '\n' }}
+{%- endblock -%}
+
+{%- block input_with_output -%}
+  {%- for line in cell.source.split('\n') -%}
+    {%- if line.startswith(' ') %}...{% else %}>>>{% endif %} {{ line + '\n'}}
+  {%- endfor -%}
+{%- endblock -%}
+
+{%- block output_text_inside -%}
+  {{ output_text(output) }}
+{%- endblock -%}

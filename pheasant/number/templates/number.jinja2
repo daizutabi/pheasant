@@ -1,0 +1,23 @@
+{% extends 'base.jinja2' %}
+
+{%- block number_string -%}
+{%- for number in number_list -%}{{ number }}.{%- endfor -%}
+{%- endblock -%}
+
+{%- block header -%}
+{{ number_string }} {{ title }}
+{%- endblock -%}
+
+{%- block figure -%}
+{{ content }}
+<p>Figure {{ number_string }} {{ title }}</p>
+{%- endblock -%}
+
+{%- block table -%}
+<p>Table {{ number_string }} {{ title }}</p>
+{{ content }}
+{%- endblock -%}
+
+{%- block reference -%}
+[{{ number_string }}]({{ ref }})
+{%- endblock -%}

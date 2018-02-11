@@ -1,0 +1,25 @@
+{%- set number_string -%}
+  {%- block number_string -%}{%- endblock -%}
+{%- endset -%}
+
+{%- if reference -%}
+  {%- block reference -%}{%- endblock -%}
+{%- else -%}
+{%- if kind == 'header' -%}
+  {{ prefix }} {{ '<span id="' + id + '">' if id }}
+    {%- block header -%}{%- endblock -%}
+  {{ '</span>' if id }}
+{%- elif kind == 'figure' -%}
+<div class="{{ class }}"{{ ' id="' + id + '"' if id }}>
+{% block figure -%}{%- endblock %}
+</div>
+{%- elif kind == 'table' -%}
+<div class="{{ class }}"{{ ' id="' + id + '"' if id }}>
+{% block table -%}{%- endblock %}
+</div>
+{%- elif kind == 'code' -%}
+<div class="{{ class }}"{{ ' id="' + id + '"' if id }}>
+{% block code -%}{%- endblock %}
+</div>
+{%- endif -%}
+{%- endif -%}
