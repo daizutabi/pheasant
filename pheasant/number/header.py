@@ -1,11 +1,10 @@
 import re
 import nbformat
 
-from markdown import Markdown
-
 from ..utils import escaped_splitter_join, read_source
 from .config import config
 from ..jupyter.exporter import run_and_export
+from ..markdown.convert import markdown_convert
 
 
 def convert(source: str, label=None, page_index=1):
@@ -33,9 +32,6 @@ def convert(source: str, label=None, page_index=1):
 
 
 def renderer(source: str, label: dict, page_index=1):
-    extensions = ['tables', 'fenced_code']
-    md = Markdown(extensions=extensions + config['markdown_extensions'])
-
     splitter = header_splitter(source)
     for splitted in splitter:
         if isinstance(splitted, str):
@@ -80,10 +76,13 @@ def renderer(source: str, label: dict, page_index=1):
                     content = next_source[:index]
                     rest = next_source[index + 2:]
 
-            content = md.convert(content)
+            extensions = config['markdown_extensions']
+            content = markdown_convert(content, extensions=extensions)
 
             if 'title' in splitted:  # for Math in title
-                title = md.convert(splitted['title'])
+                # title = md.convert(splitted['title'])
+                title = markdown_convert(splitted['title'],
+                                         extensions=extensions)
                 if title.startswith('<p>') and title.endswith('</p>'):
                     title = title[3:-4]
                 splitted['title'] = title
@@ -160,7 +159,7 @@ def header_splitter(source: str):
             header_kind[kind[:3].lower()] = kind
     cursor = 0
 
-    pattern_escape = r'```(.*?)```'
+    pattern_escape = r'(```(.*?)```)|(~~~(.*?)~~~)'
     pattern_header = r'^(#+)(\S*?) (.+?)$'
 
     for splitted in escaped_splitter_join(pattern_header, pattern_escape,
@@ -186,10 +185,10 @@ def header_splitter(source: str):
             cursor += end
 
             if kind == 'code':
-                yield inspect_markdown(title)
+                yield inspect_source(title)
 
 
-def inspect_markdown(source: str) -> str:
+def inspect_source(source: str) -> str:
     """Inspect source code."""
     name, *options = source.split(' ')
     name, *line_range = name.split(':')

@@ -90,13 +90,12 @@ name = 'Pheasant'
 name = 'Pheasant'
 ```
 
-Then, `"My name is {{#name}}."` becomes "My name is {{name}}." You can assign a variable in an inline code. `"{{#a=5}}$2a$ is equal to {{{2*a}}}."` becomes "{{a=5}}$2a$ is equal to {{2*a}}." Note that an inline code without outputs is not shown after conversion.
+Then, `"My name is {{#name}}."` becomes "My name is {{name}}." You can assign a variable in an inline code. `"{{#a=5}}$2a$ is equal to {{#2*a}}."` becomes "{{a=5}}$2a$ is equal to {{2*a}}." Note that an inline code without outputs is not shown after conversion.
 
 Pheasant supports various output formats other than standard stream. For example, you can create a PNG image from Matplotlib.
 
 ~~~
 ```python
-%matplotlib inline
 import matplotlib.pyplot as plt
 plt.plot([1, 3, 2])
 ```
@@ -105,7 +104,6 @@ plt.plot([1, 3, 2])
 The above Markdown source creates an input Python code block and a PNG image:
 
 ```python
-%matplotlib inline
 import matplotlib.pyplot as plt
 plt.plot([1, 3, 2])
 ```

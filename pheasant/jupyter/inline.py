@@ -4,12 +4,7 @@ import base64
 import html
 import io
 
-from markdown import Markdown
-
-from .config import config
-
-extensions = ['tables', 'fenced_code']
-markdown = Markdown(extensions=extensions + config['markdown_extensions'])
+from ..markdown.convert import markdown_convert
 
 
 def convert_inline(obj, **kwargs):
@@ -28,7 +23,7 @@ def convert_inline(obj, **kwargs):
             obj = str(obj)
 
         if 'html' == kwargs.get('output'):
-            return markdown.convert(obj)
+            return markdown_convert.convert(obj)
         elif is_str:
             return obj
         else:

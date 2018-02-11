@@ -1,17 +1,20 @@
-# Test
+# Test $a$
 
 ```python
 b = 9
 b
 ```
 
-acd {{a=1}}{{a}} cde {{b}}
+acd {{a=3}}{{a}} cde {{b}}
 
-```python
-## inline
+~~~
+#Fig abc $f(x)$
+
+```python inline
 plt.plot([1, 3, 4])
 {{plt.gca()}}
 ```
+~~~
 
 ```python
 ## inline

@@ -15,7 +15,6 @@ markdown_extensions:
   - codehilite
   - attr_list
   - pymdownx.arithmatex
-  - pymdownx.superfences
 
 extra_css:
   - css/pheasant.css
@@ -47,8 +46,10 @@ plugins:
         template_file: output_text_outside.jinja2
       number:
         level: 0
+        markdown_extensions:
+          - pymdownx.arithmatex
 
 pages:
-  # - Home: index.md
-  # - Test: test.md
+  - Home: index.md
+  - Test: test.md
   - Image: image.md

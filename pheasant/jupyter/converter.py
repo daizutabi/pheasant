@@ -9,7 +9,8 @@ from .client import run_cell
 from .config import config
 from .exporter import new_exporter
 from .markdown import convert as convert_markdown
-from .notebook import convert as convert_notebook
+
+# from .notebook import convert as convert_notebook
 
 
 def initialize():
@@ -34,14 +35,13 @@ def set_template(prefix=''):
 
 def convert(source) -> str:
     reload_modules()
+    return convert_markdown(source)
 
-    if not isinstance(source, str) or (os.path.exists(source) and
-                                       source.endswith('.ipynb')):
-        source = convert_notebook(source)
-    else:
-        source = convert_markdown(source)
-
-    return source
+    # if not isinstance(source, str) or (os.path.exists(source) and
+    #                                    source.endswith('.ipynb')):
+    #     source = convert_notebook(source)
+    # else:
+    #     source = convert_markdown(source)
 
 
 def sys_path_insert():

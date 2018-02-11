@@ -2,13 +2,12 @@ import re
 
 import nbformat
 
-from markdown import Markdown
-
 from ..utils import escaped_splitter, read_source
 from .client import select_kernel_name
 from .config import config
 from .exporter import export, inline_export, run_and_export
 from .preprocess import preprocess_code, preprocess_markdown
+from ..markdown.convert import fenced_code_convert
 
 
 def convert(source: str):
@@ -80,22 +79,21 @@ def fenced_code_splitter_with_class(source: str):
             cls = ' '.join(option[1:] for option in options
                            if option.startswith('.'))
             if not cls:
-                return source
+                yield source
             else:
                 cls += ' codehilite'  # gives original 'codehilite' class.
 
-            markdown = Markdown(extensions=['fenced_code', 'codehilite'],
-                                extension_configs={'codehilite':
-                                                   {'css_class': cls}})
-            yield markdown.convert(source)
+            yield fenced_code_convert(source, cls)
 
 
-def fenced_code_splitter(source: str):
+def fenced_code_splitter(source: str, comment_option=True):
     """Generate splitted markdown and jupyter notebook cell from `source`.
 
     The type of generated value is str or tuple.
     If str, it is markdown.
     If tuple, it is (language, source, option). See below:
+    If `comment_option` is True, the first line starting with `##` is
+    assumed extra option.
 
     source:
         <markdown>
@@ -126,7 +124,7 @@ def fenced_code_splitter(source: str):
         if isinstance(splitted, str):
             match = re.match(pattern_escape, splitted, flags=re_option)
             if match:
-                yield escaped_fenced_code(match)
+                yield escaped_code(match)
             else:
                 yield splitted
         else:
@@ -135,18 +133,26 @@ def fenced_code_splitter(source: str):
                 yield splitted.group()
             else:
                 source = splitted.group(3).strip()
-                option = splitted.group(2).strip()
+                options = splitted.group(2).strip()
 
                 # Phesant's special option syntax.
-                if source.startswith('## '):
-                    extra_option = source[3:source.find('\n')]
-                    option = ' '.join([option, extra_option])
-                options = [option.strip() for option in option.split(' ')]
-                options = [option for option in options if option]
+                if comment_option:
+                    if source.startswith('## '):
+                        extra_options = source[3:source.find('\n')]
+                        options = ' '.join([options, extra_options])
+                    options = [option.strip() for option in options.split(' ')]
+                    options = [option for option in options if option]
                 yield language, source, options
 
 
-def escaped_fenced_code(match) -> str:
+def escaped_code(match):
+    source = ''.join(escaped_code_splitter(match))
+    cls = 'pheasant-jupyter-source'
+    source = f'<div class="codehilite {cls}"><pre>{source}</pre></div>'
+    return source
+
+
+def escaped_code_splitter(match):
     """Convert escaped fenced code into fenced code with codehilite.
 
     Input:
@@ -159,16 +165,18 @@ def escaped_fenced_code(match) -> str:
     Outut:
     <div class="codehilite pheasant-jupyter-source"><pre> ... </pre></div>
     """
-    language, source, options = next(fenced_code_splitter(match.group(1)))
-    source = f'```{language}\n{source}\n```'
-    markdown = Markdown(extensions=['fenced_code', 'codehilite'])
-    source = markdown.convert(source)
-    first_line = match.group(1).split('\n')[0]
+    re_comiple = re.compile(r'.*?<pre>(.*?)</pre>', flags=re.DOTALL)
 
-    def replace(match):
-        return f'<pre>{first_line}\n' + match.group(1) + '```</pre>'
+    for splitted in fenced_code_splitter(match.group(1), comment_option=False):
+        if isinstance(splitted, str):
+            yield splitted
+            continue
 
-    source = re.sub(r'<pre>(.*?)</pre>', replace, source, flags=re.DOTALL)
-    source = source.replace('<div class="codehilite">',
-                            '<div class="codehilite pheasant-jupyter-source">')
-    return source
+        language, source, options = splitted
+        source = f'```{language}\n{source}\n```'
+        source = fenced_code_convert(source)
+        source = re_comiple.match(source).group(1)
+        source = (f'<span>```</span>{language} {options}\n'
+                  f'{source}<span>```</span>')
+        print(source)
+        yield source

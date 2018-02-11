@@ -3,7 +3,7 @@ config = {
     'format_version': 4,
 
     # Jinja2 template file for Notebook conversion.
-    'template_file': 'output_text_inside.jinja2',
+    'template_file': 'output_text_outside.jinja2',
 
     # Jinja2 template file for inline code.
     'inline_template_file': 'inline.jinja2',
