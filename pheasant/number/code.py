@@ -20,13 +20,14 @@ def convert(title: str) -> tuple:
         return title, None
 
 
-def inspect_source(reference: str) -> str:
+def inspect_source(reference: str, func='inspect.getsourcelines') -> str:
     """Inspect source code."""
     name, *options = reference.split(' ')  # `Options` is not implemented.
     name, *line_range = name.split(':')  # `line_range` is not implemented.
 
-    cell = nbformat.v4.new_code_cell(f'inspect.getsourcelines({name})')
+    cell = nbformat.v4.new_code_cell(f'{func}({name})')
     source = run_and_export(cell, inspect_export)
+    print(cell)
     return format_source(source)
 
 
