@@ -2,8 +2,7 @@ import os
 
 import pytest
 from pheasant import jupyter
-from pheasant.jupyter.converter import initialize
-from pheasant.converters import (convert, get_converter_name, get_converters,
+from pheasant.converters import (get_converter_name, get_converters,
                                  set_converters, update_config)
 from pheasant.utils import read
 
