@@ -21,12 +21,12 @@ def test_convert_inline():
     assert convert_inline(df).startswith('<table')
     assert convert_inline(df, output='html').startswith('<table')
 
-    plt.plot([1, 2])
-    fig = plt.gcf()
+    fig = plt.figure(figsize=(2, 2))
+    ax = fig.add_subplot(1, 1, 1)
+    ax.plot([1, 2])
     assert convert_inline(fig).startswith('![png](data:image/png;base64,iVBOR')
     assert convert_inline(fig, output='html').startswith(
         '<img alt="png" src="data:image/png;base64,iVBOR')
-    ax = plt.gca()
     assert convert_inline(ax).startswith('![png](data:image/png;base64,iVBOR')
 
     plot = figure(plot_width=250, plot_height=250)
