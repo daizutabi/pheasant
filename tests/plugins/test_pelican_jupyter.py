@@ -39,10 +39,3 @@ def test_read_markdown(reader, root):
     print(content)
     assert content.startswith('<h2>Stream</h2>')
     assert metadata['title'] == 'Pelican Example'
-
-
-def test_read_notebook(reader, root):
-    source_path = os.path.join(root, 'content/example.ipynb')
-    content, metadata = reader.read(source_path)
-    assert content.startswith('<h2>Stream</h2>')
-    assert metadata['title'] == 'Pelican Example (Notebook)'

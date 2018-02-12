@@ -41,13 +41,3 @@ def test_jupyter_update_config():
     assert jupyter.config['kernel_name'] == {'python': 'python3',
                                              'julia': 'julia'}
     assert jupyter.config['configured'] is True
-
-
-paths = ['markdown_stream_input.md', 'notebook_stream_input.ipynb']
-
-
-@pytest.mark.parametrize('path', paths)
-def test_convert(root, stream_output, path):
-    initialize()
-    source = convert(os.path.join(root, path), {'jupyter': {'enabled': True}})
-    assert source.strip() == stream_output.strip()

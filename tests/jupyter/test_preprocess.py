@@ -1,6 +1,11 @@
 import pytest
 from pheasant.jupyter.preprocess import preprocess_markdown
 from pheasant.jupyter.converter import initialize
+from pheasant.jupyter.config import config
+
+
+def test_inline_pattern():
+    assert config['inline_pattern'] == r'\{\{(.+?)\}\}'
 
 
 @pytest.mark.parametrize('source,output',

@@ -113,24 +113,24 @@ Content Cell | Content Cell
 @pytest.fixture
 def source_output():
     return """
-# <span id="pheasant-H1">4 header1</span>
+# <span id="pheasant-number-H1">4 header1</span>
 
 A text
 
-## <span id="pheasant-H1.1">4.1 header2</span>
+## <span id="pheasant-number-H1.1">4.1 header2</span>
 
-<div class="pheasant-figure" id="pheasant-F1">
+<div class="pheasant-number-figure" id="pheasant-number-F1">
 <p><img alt="png" src="figure1.png" /></p>
 <p>Figure 4.1 figure</p>
 </div>
 
-<div class="pheasant-figure" id="pheasant-F2">
+<div class="pheasant-number-figure" id="pheasant-number-F2">
 <p><img alt="png" src="figure2.png" /></p>
 <p><img alt="png" src="figure3.png" /></p>
 <p>Figure 4.2 figure</p>
 </div>
 
-<div class="pheasant-table" id="pheasant-T1">
+<div class="pheasant-number-table" id="pheasant-number-T1">
 <p>Table 4.1 table</p>
 First Header | Second Header
 ------------ | -------------
@@ -144,10 +144,11 @@ def test_renderer(source_input):
     label = {}
     for k, splitted in enumerate(renderer(source_input, label)):
         if k == 0:
-            assert splitted == '# <span id="pheasant-H1">1 header1</span>'
+            answer = '# <span id="pheasant-number-H1">1 header1</span>'
+            assert splitted == answer
         elif k == 2:
             assert (splitted ==
-                    '## <span id="pheasant-H1.1">1.1 header2</span>')
+                    '## <span id="pheasant-number-H1.1">1.1 header2</span>')
     for key, value in label.items():
         assert key == (value['kind'][0].upper() +
                        '.'.join(str(i) for i in value['number_list']))
@@ -156,10 +157,11 @@ def test_renderer(source_input):
     for k, splitted in enumerate(renderer(source_input, label,
                                           page_index=[2, 3])):
         if k == 0:
-            assert splitted == '# <span id="pheasant-H1">2.3 header1</span>'
+            answer = '# <span id="pheasant-number-H1">2.3 header1</span>'
+            assert splitted == answer
         elif k == 2:
             assert (splitted ==
-                    '## <span id="pheasant-H1.1">2.3.1 header2</span>')
+                    '## <span id="pheasant-number-H1.1">2.3.1 header2</span>')
 
 
 def test_convert(source_input, source_output):
@@ -198,19 +200,19 @@ A text
 def test_label(source_label):
     source, label = convert(source_label)
     assert label['a'] == {'kind': 'header', 'number_list': [1],
-                          'id': 'pheasant-a'}
+                          'id': 'pheasant-number-a'}
     assert label['b'] == {'kind': 'header', 'number_list': [1, 1],
-                          'id': 'pheasant-b'}
+                          'id': 'pheasant-number-b'}
     assert label['c'] == {'kind': 'figure', 'number_list': [1],
-                          'id': 'pheasant-c'}
+                          'id': 'pheasant-number-c'}
     assert label['d'] == {'kind': 'figure', 'number_list': [2],
-                          'id': 'pheasant-d'}
+                          'id': 'pheasant-number-d'}
     source, label = convert(source_label, page_index=[5])
     assert label['a'] == {'kind': 'header', 'number_list': [5],
-                          'id': 'pheasant-a'}
+                          'id': 'pheasant-number-a'}
     assert label['b'] == {'kind': 'header', 'number_list': [5, 1],
-                          'id': 'pheasant-b'}
+                          'id': 'pheasant-number-b'}
     assert label['c'] == {'kind': 'figure', 'number_list': [5, 1],
-                          'id': 'pheasant-c'}
+                          'id': 'pheasant-number-c'}
     assert label['d'] == {'kind': 'figure', 'number_list': [5, 2],
-                          'id': 'pheasant-d'}
+                          'id': 'pheasant-number-d'}

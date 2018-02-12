@@ -23,7 +23,7 @@ def convert_inline(obj, **kwargs):
             obj = str(obj)
 
         if 'html' == kwargs.get('output'):
-            return markdown_convert.convert(obj)
+            return markdown_convert(obj)
         elif is_str:
             return obj
         else:

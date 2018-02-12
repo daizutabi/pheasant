@@ -76,7 +76,7 @@ def renderer(source: str, label: dict, page_index=1):
                     content = next_source[:index]
                     rest = next_source[index + 2:]
 
-            extensions = config['markdown_extensions']
+            extensions = ['tables'] + config['markdown_extensions']
             content = markdown_convert(content, extensions=extensions)
 
             if 'title' in splitted:  # for Math in title
@@ -129,7 +129,9 @@ def header_splitter(source: str):
     splitter = escaped_splitter_join(pattern_header, pattern_escape, source)
     for splitted in splitter:
         if isinstance(splitted, str):
-            yield splitted.strip()
+            splitted = splitted.strip()
+            if splitted:
+                yield splitted
         else:
             start, end = splitted.span()
             cursor += start

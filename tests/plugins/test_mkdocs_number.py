@@ -7,6 +7,7 @@ from mkdocs.config import load_config
 from pheasant import number
 from pheasant.converters import get_converters, set_converters, convert
 from pheasant.plugins.mkdocs import PheasantPlugin
+from pheasant.number.converter import initialize
 
 
 def test_converters():
@@ -50,6 +51,7 @@ def test_config(number_config):
 
 
 def test_pages(site_navigation, config):
+    initialize()
     for k, page in enumerate(site_navigation.walk_pages()):
         convert(page.abs_input_path, config)
         assert number.config['pages'][k] == page.abs_input_path
