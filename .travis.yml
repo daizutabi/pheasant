@@ -7,7 +7,7 @@ before_install:
 
 install:
   - pip install click jupyter coveralls pytest-cov coverage
-  - pip install flake8 mkdocs pelican
+  - pip install flake8 mkdocs pelican matplotlib pandas bokeh
   - pip install -e .
   # - which jupyter
   # - julia -e 'Pkg.build("IJulia")'
