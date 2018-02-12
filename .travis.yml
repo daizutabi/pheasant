@@ -19,9 +19,9 @@ script:
   - jupyter kernelspec list
   - pheasant --version
   # - pheasant kernelname
-  - pytest
+  # - pytest
   # - pheasant convert tests/resources/mkdocs/docs/markdown_stream_input.md
   # - pheasant convert tests/resources/mkdocs/docs/notebook_stream_input.ipynb
 
 after_success:
-  - coveralls
+  #- coveralls
