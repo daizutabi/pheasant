@@ -178,4 +178,11 @@ print(html[:132] + '...\n\n', info)
 
 `{{#html}}`
 
+
+#Fig a
+
+#begin
 {{html}}
+#end
+
+ad

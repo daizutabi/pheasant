@@ -108,7 +108,7 @@ import matplotlib.pyplot as plt
 plt.plot([1, 3, 2])
 ```
 
-You may want to display only graphics. You can use `hide` option after a ```` ```python ```` statement.
+You may want to display only graphics. You can use `hide` option for a fenced code.
 
 ~~~
 ```python hide
@@ -127,30 +127,35 @@ plt.plot([1, 3, 2])
 
 Pheasant also supports Bokeh's HTML output.
 
+
+
 ~~~
 ```python hide
 from bokeh.plotting import figure
-from bokeh.io import output_notebook
-from bokeh.io import show
-output_notebook()
-p = figure(plot_width=250, plot_height=250)
-p.circle([1, 2, 3, 4, 5], [1, 2, 3, 4, 5], size=10)
-show(p)
+from bokeh.embed import components
+
+plot = figure(plot_width=250, plot_height=250)
+plot.circle([1, 2, 3, 4, 5], [1, 2, 3, 4, 5], size=10)
+{{plot}}
 ```
 ~~~
 
+
+
 ```python hide
 from bokeh.plotting import figure
-from bokeh.io import output_notebook
-from bokeh.io import show
-output_notebook()
-p = figure(plot_width=250, plot_height=250)
-p.circle([1, 2, 3, 4, 5], [1, 2, 3, 4, 5], size=10)
-show(p)
+from bokeh.embed import components
+
+plot = figure(plot_width=250, plot_height=250)
+plot.circle([1, 2, 3, 4, 5], [1, 2, 3, 4, 5], size=10)
+{{plot}}
 ```
+
+{{plot}}
 
 The language executed in Pheasant is not restricted to Python. For example,
 if you install Julia kernel, you can write:
+
 
 ~~~
 ```julia
@@ -175,7 +180,7 @@ As you can see, all of headers are numbered in this document. This is done by Ph
 You can use a special *header* statement for figure (`#Figure`) and table (`#Table`) to number them like below:
 
 ~~~
-#Figure This is a cat. {#cat#}
+#Figure This is a cat. {#cat#} <= BUG!
 
 ![jpg](img/cat.jpg)
 ~~~
