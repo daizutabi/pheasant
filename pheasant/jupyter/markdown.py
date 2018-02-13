@@ -159,7 +159,7 @@ def escaped_code(match):
     Outut:
     <div class="... pheasant-source"><pre> ... </pre></div>
     """
-    source = ''.join(escaped_code_splitter(match))
+    source = '\n\n'.join(escaped_code_splitter(match))
     cls = 'pheasant-markdown pheasant-source'
     source = f'<div class="codehilite {cls}"><pre>{source}</pre></div>'
     return source

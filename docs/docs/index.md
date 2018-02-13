@@ -198,7 +198,7 @@ Off course, you can use any code to create a figure:
 #Fig A Matplotlib figure
 
 ```python hide
-plt.plot([3, 1])
+plt.plot([3, 2])
 ```
 ~~~
 
