@@ -56,4 +56,11 @@ def run_and_export(cell, export: Callable[..., str], kernel_name=None) -> str:
     source and outputs to avoid rerunning the cell unnecessarily.
     """
     run_cell(cell, kernel_name)
+    # print('++++++++++++++++++++++++')
+    # if 'outputs' in cell:
+    #     for output in cell['outputs']:
+    #         print('------------------------')
+    #         print(output['output_type'])
+    #         if 'data' in output:
+    #             print(list(output['data'].keys()))
     return export(cell)

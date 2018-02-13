@@ -115,7 +115,7 @@ extra_javascript:
 
 Here, `0.12.14` is a version number of Bokeh and you can choose other version number you want to use.
 
-In order to embed a plot in your document, `bokeh.embed.components` function can be used. This function returns `<script>`  and `<div>` tags. For example:
+In order to embed plots in your documents, `bokeh.embed.components` function can be used. This function returns `<script>`  and `<div>` tags in HTML format. For example:
 
 ```python
 from bokeh.plotting import figure
@@ -123,6 +123,10 @@ from bokeh.embed import components
 
 plot = figure(plot_width=250, plot_height=250)
 plot.circle([1, 2, 3, 4, 5], [1, 2, 3, 4, 5], size=10)
+type(plot)
+```
+
+```python
 script, div = components(plot)
 print(script[:132] + '...\n', div)
 ```
@@ -137,3 +141,41 @@ A shortcut to this functionality is prepared.
 `{{#plot}}`
 
 {{plot}}
+
+
+# HoloViews
+
+```python
+import holoviews as hv
+# hv.extension('bokeh')
+renderer = hv.renderer('bokeh')
+```
+
+```python
+curve = hv.Curve(([1, 2, 3], [2, 3, 1]))
+type(curve)
+```
+
+```python
+hv.Store.registry['bokeh'][hv.Curve]
+plot = renderer.get_plot(curve)
+type(plot.state)
+```
+
+```python
+script, div = components(plot.state)
+print(script[:132] + '...\n', div)
+```
+
+`{{#plot.state}}`
+
+{{plot.state}}
+
+```python
+html, info = renderer(curve, fmt='html')
+print(html[:132] + '...\n\n', info)
+```
+
+`{{#html}}`
+
+{{html}}
