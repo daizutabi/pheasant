@@ -86,7 +86,7 @@ def fenced_code_splitter_with_class(source: str):
             yield fenced_code_convert(source, cls)
 
 
-def fenced_code_splitter(source: str, comment_option=True):
+def fenced_code_splitter(source: str, comment_option=True, strip=True):
     """Generate splitted markdown and jupyter notebook cell from `source`.
 
     The type of generated value is str or tuple.
@@ -126,7 +126,8 @@ def fenced_code_splitter(source: str, comment_option=True):
             if match:
                 yield escaped_code(match)
             else:
-                splitted = splitted.strip()
+                if strip:
+                    splitted = splitted.strip()
                 if splitted:
                     yield splitted
         else:
@@ -159,7 +160,7 @@ def escaped_code(match):
     Outut:
     <div class="... pheasant-source"><pre> ... </pre></div>
     """
-    source = '\n\n'.join(escaped_code_splitter(match))
+    source = ''.join(escaped_code_splitter(match))
     cls = 'pheasant-markdown pheasant-source'
     source = f'<div class="codehilite {cls}"><pre>{source}</pre></div>'
     return source
@@ -167,7 +168,8 @@ def escaped_code(match):
 
 def escaped_code_splitter(match):
     """Yield source wth codehilite from escaped fenced code."""
-    for splitted in fenced_code_splitter(match.group(1), comment_option=False):
+    for splitted in fenced_code_splitter(match.group(1), comment_option=False,
+                                         strip=False):
         if isinstance(splitted, str):
             yield splitted
             continue

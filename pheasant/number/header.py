@@ -67,7 +67,8 @@ def renderer(source: str, label: dict, page_index=1):
             # Detect the range of numbered object.
             next_source = next(splitter)
             if next_source.startswith('#begin\n'):
-                content, rest = next_source[7:].split('#end')
+                content, *rest = next_source[7:].split('#end')
+                rest = '#end'.join(rest)
             else:
                 index = next_source.find('\n\n')
                 if index == -1:

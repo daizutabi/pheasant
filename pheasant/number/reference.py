@@ -22,7 +22,7 @@ def renderer(source: str, label: dict):
     splitted source : str or dict
     """
 
-    pattern_escape = r'(^```(.*?)^```$)|(^~~~(.*?)^~~~$)'
+    pattern_escape = r'(^```(.*?)^```$)|(^~~~(.*?)^~~~$)|(<pre>(.*?)</pre>)'
     pattern_label = config['label_pattern']
 
     for splitted in escaped_splitter(pattern_label, pattern_escape, source):

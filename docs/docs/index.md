@@ -136,8 +136,9 @@ from bokeh.embed import components
 
 plot = figure(plot_width=250, plot_height=250)
 plot.circle([1, 2, 3, 4, 5], [1, 2, 3, 4, 5], size=10)
-{{plot}}
 ```
+
+{{plot}}
 ~~~
 
 
@@ -148,7 +149,6 @@ from bokeh.embed import components
 
 plot = figure(plot_width=250, plot_height=250)
 plot.circle([1, 2, 3, 4, 5], [1, 2, 3, 4, 5], size=10)
-{{plot}}
 ```
 
 {{plot}}
@@ -240,10 +240,12 @@ pd.DataFrame([[1, 2], [3, 4]], columns=list('ab')) * 2
 
 #Table A Pandas DataFrame
 
+#begin
 ```python hide
 import pandas as pd
 pd.DataFrame([[1, 2], [3, 4]], columns=list('ab')) * 2
 ```
+#end
 
 A Markdown source for figures and tables is a source block separated by a blank line from following text. If a figure or table has a blank line within it, you have to explicitly show the content range with `#begin` and `#end` statement.
 
@@ -251,8 +253,8 @@ A Markdown source for figures and tables is a source block separated by a blank 
 #Fig A Bokeh's HTML figure
 
 #begin
-```python hide
-show(p)
+```python inline
+{{plot}}
 ```
 #end
 ~~~
@@ -260,8 +262,8 @@ show(p)
 #Fig A Bokeh's HTML figure
 
 #begin
-```python hide
-show(p)
+```python inline
+{{plot}}
 ```
 #end
 
