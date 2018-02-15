@@ -1,0 +1,57 @@
+{%- macro output_text(output) -%}
+  {%- if output.output_type == 'execute_result' -%}
+    {%- if 'text/html' not in output.data -%}
+      {{ output.data['text/plain'] + '\n' }}
+    {%- endif -%}
+  {%- elif output.output_type == 'stream' -%}
+    {{ output.text }}{%- if output.text[-1] != '\n' -%}{{ '\n' }}{%- endif -%}
+  {%- elif output.output_type == 'error' -%}
+    {{ output.traceback[-1] + '\n'}}
+  {%- endif -%}
+{%- endmacro -%}
+
+
+{%- macro data_png(output) -%}
+![png](data:image/png;base64,{{ output.data['image/png'].replace('\n', '') }})
+{%- endmacro -%}
+
+{%- macro data_html(output) -%}
+<div class="output_html rendered_html output_subarea {{ extra_class }}">
+{{ output.data['text/html'] }}
+</div>
+{%- endmacro -%}
+
+{%- macro data_plain(output) -%}
+AAA{{ output.data['text/plain'] }}
+{%- endmacro -%}
+
+
+{%- macro output_display(output) -%}
+  {%- for type in output.data -%}
+    {%- if type == 'application/pdf' -%}
+        {%- block data_pdf -%}{%- endblock -%}
+    {%- elif type == 'image/svg+xml' -%}
+        {%- block data_svg -%}{%- endblock -%}
+    {%- elif type == 'image/png' -%}
+        {{ data_png(output) }}
+    {%- elif type == 'text/html' -%}
+        {{ data_html(output) }}
+    {%- elif type == 'text/markdown' -%}
+        {%- block data_markdown -%}{%- endblock -%}
+    {%- elif type == 'image/jpeg' -%}
+        {%- block data_jpg -%}{%- endblock -%}
+    {%- elif type == 'text/plain' -%}
+        {{ data_plain(output) }}
+    {%- elif type == 'text/latex' -%}
+        {%- block data_latex -%}{%- endblock -%}
+    {%- elif type == 'application/javascript' -%}
+        {%- block data_javascript -%}{%- endblock -%}
+    {%- elif type == 'application/vnd.jupyter.widget-state+json' -%}
+        {%- block data_widget_state -%}{%- endblock -%}
+    {%- elif type == 'application/vnd.jupyter.widget-view+json' -%}
+        {%- block data_widget_view -%}{%- endblock -%}
+    {%- else -%}
+        {%- block data_other -%}{%- endblock -%}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endmacro -%}

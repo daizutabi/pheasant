@@ -1,7 +1,7 @@
 import os
 
 import nbformat
-from jinja2 import FileSystemLoader
+from jinja2 import Environment, FileSystemLoader
 
 import pheasant
 
@@ -31,17 +31,13 @@ def set_template(prefix=''):
     template_directory, template_file = os.path.split(abspath)
     loader = FileSystemLoader([template_directory, default_directory])
     config[prefix + 'exporter'] = new_exporter(loader, template_file)
+    env = Environment(loader=loader, autoescape=False)
+    config[prefix + 'template'] = env.get_template(template_file)
 
 
 def convert(source) -> str:
     reload_modules()
     return convert_markdown(source)
-
-    # if not isinstance(source, str) or (os.path.exists(source) and
-    #                                    source.endswith('.ipynb')):
-    #     source = convert_notebook(source)
-    # else:
-    #     source = convert_markdown(source)
 
 
 def sys_path_insert():

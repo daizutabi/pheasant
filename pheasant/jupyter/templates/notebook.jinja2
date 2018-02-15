@@ -65,18 +65,6 @@
   {%- endfor -%}
 {%- endblock codecell -%}
 
-{%- macro output_text(output) -%}
-  {%- if output.output_type == 'execute_result' -%}
-    {%- if 'text/html' not in output.data -%}
-      {{ output.data['text/plain'] + '\n' }}
-    {%- endif -%}
-  {%- elif output.output_type == 'stream' -%}
-    {{ output.text }}{%- if output.text[-1] != '\n' -%}{{ '\n' }}{%- endif -%}
-  {%- elif output.output_type == 'error' -%}
-    {{ output.traceback[-1] | strip_ansi + '\n'}}
-  {%- endif -%}
-{%- endmacro -%}
-
 
 {% block data_html -%}
 <div class="output_html rendered_html output_subarea {{ extra_class }}">

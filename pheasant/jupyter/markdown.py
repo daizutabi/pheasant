@@ -172,11 +172,10 @@ def escaped_code_splitter(match):
                                          strip=False):
         if isinstance(splitted, str):
             yield splitted
-            continue
-
-        language, source, options = splitted
-        source = f'```{language}\n{source}\n```'
-        source = fenced_code_convert(source, only_code=True)
-        source = (f'<span>```</span>{language} {options}\n'
-                  f'{source}<span>```</span>')
-        yield source
+        else:
+            language, source, options = splitted
+            source = f'```{language}\n{source}\n```'
+            source = fenced_code_convert(source, only_code=True)
+            source = (f'<span>```</span>{language} {options}\n'
+                      f'{source}<span>```</span>')
+            yield source
