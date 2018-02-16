@@ -1,7 +1,8 @@
 import re
 
-from ..markdown.convert import markdown_convert
-from ..utils import escaped_splitter_join, read_source
+from ..markdown.converter import markdown_convert
+from ..markdown.splitter import escaped_splitter_join
+from ..utils import read_source
 from .code import code_splitter
 from .code import convert as convert_code
 from .config import config

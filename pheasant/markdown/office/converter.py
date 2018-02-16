@@ -2,7 +2,8 @@ import logging
 import os
 
 from . import powerpoint
-from ..utils import escaped_splitter, read_source
+from ...markdown.splitter import escaped_splitter
+from ...utils import read_source
 from .common import get_shape_by_title
 from .config import config
 
@@ -14,7 +15,7 @@ def initialize():
 
 
 def convert(source):
-    from ..converters import get_source_file
+    from ...converters import get_source_file
     source_file = get_source_file()
     root = os.path.dirname(source_file)
     return ''.join(exporter(source, root))

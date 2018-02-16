@@ -4,7 +4,7 @@ import base64
 import html
 import io
 
-from ..markdown.convert import markdown_convert
+from ..markdown.converter import markdown_convert
 
 
 def convert_inline(obj, **kwargs):

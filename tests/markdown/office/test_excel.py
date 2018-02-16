@@ -3,7 +3,7 @@ import pytest
 from conftest import is_not_windows
 
 try:
-    from pheasant.office import common
+    from pheasant.markdown.office import common
 except ImportError:
     pass
 

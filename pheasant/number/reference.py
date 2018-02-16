@@ -1,4 +1,4 @@
-from ..utils import escaped_splitter
+from ..markdown.splitter import escaped_splitter
 from .config import config
 
 

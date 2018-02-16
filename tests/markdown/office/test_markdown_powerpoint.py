@@ -4,13 +4,13 @@ import pytest
 from conftest import is_not_windows
 
 try:
-    from pheasant.office import powerpoint as pp
-    from pheasant.office import common
+    from pheasant.markdown.office import powerpoint as pp
+    from pheasant.markdown.office import common
 except ImportError:
     pass
 
 
-@pytest.fixture(scope='session')
+@pytest.fixture(scope='module')
 def shape_first(prs):
     gen = common.extract_shape_with_title(prs, 'Slides')
     for k, (title, i, js) in enumerate(gen):

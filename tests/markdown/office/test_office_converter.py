@@ -4,9 +4,9 @@ import pytest
 
 from conftest import is_not_windows
 from pheasant.config import config as pheasant_config
-from pheasant.office import config
-from pheasant.office.converter import (convert, exporter, get_abspath,
-                                       office_object_splitter)
+from pheasant.markdown.office import config
+from pheasant.markdown.office.converter import (convert, exporter, get_abspath,
+                                                office_object_splitter)
 
 
 @pytest.mark.skipif(is_not_windows, reason='Windows only test')

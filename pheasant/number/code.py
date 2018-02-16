@@ -4,8 +4,8 @@ from typing import Optional
 import nbformat
 
 from ..jupyter.exporter import run_and_export
-from ..markdown.convert import fenced_code_convert
-from ..utils import splitter
+from ..markdown.converter import fenced_code_convert
+from ..markdown.splitter import splitter
 
 
 def convert(title: str) -> tuple:
@@ -27,7 +27,6 @@ def inspect_source(reference: str, func='inspect.getsourcelines') -> str:
 
     cell = nbformat.v4.new_code_cell(f'{func}({name})')
     source = run_and_export(cell, inspect_render)
-    print(cell)
     return format_source(source)
 
 
