@@ -1,10 +1,19 @@
 from itertools import product
+
 import numpy as np
-import pandas as pd
-from win32com.client import constants
 
 from .format import CellContainer, ContainerStyle
 from .style import set_border, set_border_cell, set_fill
+
+try:
+    import pandas as pd
+except ImportError:
+    pd = None
+try:
+    from win32com.client import constants
+except ImportError:
+    constants = None
+
 
 
 def empty_frame(index, columns, columns_name, index_name):
