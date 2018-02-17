@@ -22,8 +22,11 @@ platform = 'win' if sys.platform.startswith('win') else 'mac'
 
 if platform == 'win':
     import pywintypes
-    import win32com.client
-    from win32com.client import constants
+    from win32com.client import constants, gencache
+    gencache.EnsureModule('{2DF8D04C-5BFA-101B-BDE5-00AA0044DE52}',
+                          0, 2, 1, bForDemand=True) # Office 9
+    gencache.EnsureModule('{00020813-0000-0000-C000-000000000046}',
+                          0, 1, 3, bForDemand=True) # Excel 9
 else:
     pass
 
@@ -88,8 +91,7 @@ class Element:
 
 class PowerPoint:
     def __init__(self):
-        self.api = win32com.client.Dispatch('PowerPoint.Application')
-        # win32com.client.gencache.EnsureDispatch('PowerPoint.Application')
+        self.api = gencache.EnsureDispatch('PowerPoint.Application')
 
     def __repr__(self):
         return f'<PowerPoint App ({id(self)})>'
