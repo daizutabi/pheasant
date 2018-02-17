@@ -1,4 +1,8 @@
-from win32com.client import constants
+try:
+    from win32com.client import constants
+except Exception:
+    constants = None
+
 
 from .utils import rgb
 
