@@ -15,7 +15,6 @@ except ImportError:
     constants = None
 
 
-
 def empty_frame(index, columns, columns_name, index_name):
 
     def multiindex(index):
