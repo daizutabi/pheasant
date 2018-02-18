@@ -115,8 +115,14 @@ def _wait_for_reply(kernel_name, msg_id, timeout=300):
 
 
 def run_cell(cell, kernel_name=None):
-    kernel_name = kernel_name or config.setdefault(
-        'default_kernel', select_kernel_name(language='python'))
+    if kernel_name is None:
+        if ('pheasant' in cell.metadata and
+                'kernel_name' in cell.metadata['pheasant']):
+            kernel_name = cell.metadata['pheasant']['kernel_name']
+        else:
+            kernel_name = select_kernel_name(language='python')
+            kernel_name = config.setdefault('default_kernel', kernel_name)
+
     kernel_client = get_kernel_client(kernel_name)
     msg_id = kernel_client.execute(cell.source)
     logger.debug(f'Executing cell:\n{cell.source}')

@@ -1,4 +1,5 @@
 from .config import config as pheasant_config
+from .utils import read_source
 
 
 def get_converters():
@@ -39,6 +40,7 @@ def update_config(converter, config):
 
 def convert(source, config):
     pheasant_config['source_file'] = source
+    source = read_source(source)
     for converter in pheasant_config['converters']:
         update_config(converter, config)
         if converter.config['enabled']:

@@ -1,29 +1,24 @@
-import nbformat
-
 from ..markdown.splitter import (fenced_code_splitter,
                                  fenced_code_splitter_with_class)
-from ..utils import read_source
-from .client import select_kernel_name
 from .config import config
-from .exporter import export, inline_export, run_and_export
+from .exporter import export, inline_export, new_code_cell, run_and_export
 from .preprocess import preprocess_code, preprocess_markdown
 
 
 def convert(source: str):
-    """Convert markdown string or file into markdown with running results.
+    """Convert markdown string into markdown with running results.
 
     Parameters
     ----------
     source : str
-        Markdown source string or filename
+        Markdown source string.
 
     Returns
     -------
     results : str
         Markdown source
     """
-    config['run_counter'] = 0  # used in the cache module.
-    source = read_source(source)
+    config['run_counter'] = 0  # used in the cache module. MOVE!!
     sources = [source.strip() for source in cell_runner(source)]
     return '\n\n'.join(source for source in sources if source)
 
@@ -46,14 +41,11 @@ def cell_runner(source: str):
             yield preprocess_markdown(splitted)
         else:
             language, source, options = splitted
-            kernel_name = select_kernel_name(language)
-            cell = nbformat.v4.new_code_cell(source)
-            cell.metadata['pheasant'] = {'options': options,
-                                         'language': language}
+            cell = new_code_cell(source, language=language, options=options)
 
             if 'inline' in options:
                 cell.source = preprocess_code(cell.source)
-                yield run_and_export(cell, inline_export, kernel_name)
+                yield run_and_export(cell, inline_export)
             else:
-                source = run_and_export(cell, export, kernel_name)
+                source = run_and_export(cell, export)
                 yield from fenced_code_splitter_with_class(source)

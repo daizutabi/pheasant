@@ -1,7 +1,7 @@
-from . import jupyter, macro, number
+from . import jupyter, macro, number, code
 from .markdown import office
 
 config = {
-    'converters': [macro, jupyter, office, number],
+    'converters': [macro, jupyter, code, office, number],
     'source_file': None,
 }

@@ -29,9 +29,7 @@ def func(x):
 {{df.applymap(func)}}
 ```
 
-#Code [hello.func]
-
-#Coded a.py
+![python](hello.func)
 
 ~~~python
 print(1)
@@ -53,10 +51,10 @@ Content Cell | Content Cell
 
 #Tab. a DataFrame table
 
-#begin
+<!-- begin -->
 ```python
 ## inline
 df = pd.DataFrame([[1, 2]])
 {{df}}
 ```
-#end
+<!-- end -->

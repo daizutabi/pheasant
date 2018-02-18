@@ -2,9 +2,6 @@ import re
 
 from ..markdown.converter import markdown_convert
 from ..markdown.splitter import escaped_splitter_join
-from ..utils import read_source
-from .code import code_splitter
-from .code import convert as convert_code
 from .config import config
 
 
@@ -15,7 +12,7 @@ def convert(source: str, label=None, page_index=1):
     Parameters
     ----------
     source : str
-        Markdown source string or filekind
+        Markdown source string.
     page_index : list of in or int
         Page index.
         If list, page index from parents
@@ -27,7 +24,6 @@ def convert(source: str, label=None, page_index=1):
         Markdown source
     """
     label = {} if label is None else label
-    source = read_source(source)
     source = '\n\n'.join(renderer(source, label, page_index=page_index))
     return source, label
 
@@ -67,9 +63,10 @@ def renderer(source: str, label: dict, page_index=1):
         else:
             # Detect the range of numbered object.
             next_source = next(splitter)
-            if next_source.startswith('#begin\n'):
-                content, *rest = next_source[7:].split('#end')
-                rest = '#end'.join(rest)
+            if next_source.startswith(config['begin_pattern'] + '\n'):
+                next_source = next_source[len(config['begin_pattern']):]
+                content, *rest = next_source.split(config['end_pattern'])
+                rest = config['end_pattern'].join(rest)
             else:
                 index = next_source.find('\n\n')
                 if index == -1:
@@ -82,7 +79,6 @@ def renderer(source: str, label: dict, page_index=1):
             content = markdown_convert(content, extensions=extensions)
 
             if 'title' in splitted:  # for Math in title
-                # title = md.convert(splitted['title'])
                 title = markdown_convert(splitted['title'],
                                          extensions=extensions)
                 if title.startswith('<p>') and title.endswith('</p>'):
@@ -153,16 +149,7 @@ def header_splitter(source: str):
             }
             cursor += end
 
-            if kind == 'code':
-                context['title'], content = convert_code(title)
-                yield context
-                if content:
-                    yield content
-                else:
-                    source = next(splitter)
-                    yield from code_splitter(source)
-            else:
-                yield context
+            yield context
 
 
 def normalize_number_list(kind, number_list, page_index=None):

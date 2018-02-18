@@ -2,10 +2,11 @@ from typing import Callable
 
 import nbformat
 from nbconvert import MarkdownExporter
+from nbformat import NotebookNode
 from traitlets.config import Config
 
 from .cache import abort, memoize
-from .client import run_cell
+from .client import run_cell, select_kernel_name
 from .config import config
 
 
@@ -27,6 +28,20 @@ def new_exporter(loader=None, template_file=None):
                                 extra_loaders=[loader] if loader else None)
     exporter.template_file = template_file
     return exporter
+
+
+def new_code_cell(source: str, language=None, options=None) -> NotebookNode:
+    """Create a new code cell for evaluation."""
+    cell = nbformat.v4.new_code_cell(source)
+    metadata = {}
+    if language is not None:
+        metadata['language'] = language
+        kernel_name = select_kernel_name(language)
+        metadata['kernel_name'] = kernel_name
+    if options is not None:
+        metadata['options'] = options
+    cell.metadata['pheasant'] = metadata
+    return cell
 
 
 def export(cell) -> str:

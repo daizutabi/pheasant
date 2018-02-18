@@ -48,6 +48,9 @@ plugins:
         level: 0
         markdown_extensions:
           - pymdownx.arithmatex
+      code:
+        enabled: true
+
 
 pages:
   - Home: index.md

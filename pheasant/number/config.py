@@ -14,6 +14,12 @@ config = {
     # Label file of reference to record reference infomation.
     'label_file': '.pheasant-number.json',
 
+    # Begin patter
+    'begin_pattern': '<!-- begin -->',
+
+    # End patter
+    'end_pattern': '<!-- end -->',
+
     # Label pattern.
     'label_pattern': r'\{#(\S+?)#\}',
 

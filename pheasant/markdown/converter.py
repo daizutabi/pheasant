@@ -24,6 +24,8 @@ def fenced_code_convert(source, cls='codehilite', only_code=False):
     source = fenced_code_converter.convert(source)
     source = source.replace(CLASS, cls)
     if only_code:
-        re_comiple = re.compile(r'.*?<pre>(.*?)</pre>', flags=re.DOTALL)
-        source = re_comiple.match(source).group(1)
+        re_compile = re.compile(r'.*?<pre>(.*?)</pre>', flags=re.DOTALL)
+        match = re_compile.match(source)
+        if match:
+            source = match.group(1)
     return source
