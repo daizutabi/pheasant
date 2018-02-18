@@ -1,16 +1,16 @@
 import os
 
+from nbconvert.filters import strip_ansi
 import nbformat
 from jinja2 import Environment, FileSystemLoader
 
 import pheasant
 
+from ..markdown.splitter import fenced_code_splitter
 from .client import run_cell
 from .config import config
-from .exporter import new_exporter
-from .markdown import convert as convert_markdown
-
-# from .notebook import convert as convert_notebook
+from .preprocess import preprocess_code, preprocess_markdown
+from .renderer import inline_render, new_code_cell, render, run_and_render
 
 
 def initialize():
@@ -25,19 +25,60 @@ def initialize():
     run_init_codes()
 
 
+def convert(source) -> str:
+    """Convert markdown string into markdown with running results.
+
+    Parameters
+    ----------
+    source : str
+        Markdown source string.
+
+    Returns
+    -------
+    results : str
+        Markdown source
+    """
+    reload_modules()
+
+    config['run_counter'] = 0  # used in the cache module. MOVE!!
+    return ''.join(cell_runner(source))
+
+
+def cell_runner(source: str):
+    """Generate markdown string with outputs after running the source.
+
+    Parameters
+    ----------
+    source : str
+        Markdown source string.
+
+    Yields
+    ------
+    str
+        Markdown string.
+    """
+    for splitted in fenced_code_splitter(source):
+        if isinstance(splitted, str):
+            yield preprocess_markdown(splitted)
+        else:
+            language, source, options = splitted
+            cell = new_code_cell(source, language=language, options=options)
+
+            if 'inline' in options:
+                cell.source = preprocess_code(cell.source)
+                yield run_and_render(cell, inline_render) + '\n\n'
+            else:
+                yield run_and_render(cell, render)
+
+
 def set_template(prefix=''):
     default_directory = os.path.join(os.path.dirname(__file__), 'templates')
     abspath = os.path.abspath(config[prefix + 'template_file'])
     template_directory, template_file = os.path.split(abspath)
     loader = FileSystemLoader([template_directory, default_directory])
-    config[prefix + 'exporter'] = new_exporter(loader, template_file)
     env = Environment(loader=loader, autoescape=False)
+    env.filters['strip_ansi'] = strip_ansi
     config[prefix + 'template'] = env.get_template(template_file)
-
-
-def convert(source) -> str:
-    reload_modules()
-    return convert_markdown(source)
 
 
 def sys_path_insert():

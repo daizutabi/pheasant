@@ -1,31 +1,8 @@
-{% extends 'notebook.jinja2' %}
-
-
-{%- block body -%}
-  {%- for cell in nb.cells -%}
-    {%- block any_cell scoped -%}
-      {{ super() }}
-    {%- endblock any_cell -%}
-  {%- endfor -%}
-{%- endblock body -%}
-
+{% extends 'cell.jinja2' %}
+{% from 'macro.jinja2' import output_text with context %}
 
 {%- block codecell -%}
   {%- for output in cell.outputs -%}
-    {%- if output.output_type == 'execute_result' -%}
-      {%- block display_data scoped -%}
-        {%- block data_priority scoped -%}
-          {{ super() }}
-        {%- endblock data_priority -%}
-      {%- endblock display_data -%}
-    {%- endif -%}
+    {{ output_text(output) }}
   {%- endfor -%}
 {%- endblock codecell -%}
-
-{% block data_text -%}
-  {%- if escape -%}
-    {{ output.data['text/plain'] | e}}
-  {%- else -%}
-    {{ output.data['text/plain'] }}
-  {%- endif -%}
-{%- endblock data_text %}

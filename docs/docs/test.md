@@ -1,22 +1,3 @@
-# Test $a$
-
-```python
-b = 9
-b
-```
-
-acd {{a=3}}{{a}} cde {{b}}
-
-~~~
-#Fig abc $f(x)$
-
-```python inline
-plt.plot([1, 3, 4])
-
-{{plt.gca()}}
-```
-~~~
-
 ```python
 ## inline
 df = pd.DataFrame([[5, 0], [3, 4]], columns=['a', 'b'])

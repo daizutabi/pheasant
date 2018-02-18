@@ -1,6 +1,6 @@
 import nbformat
 
-from ..jupyter.exporter import run_and_export
+from ..jupyter.renderer import run_and_render
 from ..markdown.splitter import escaped_splitter_join
 from ..number import config as config_number
 from .config import config
@@ -34,7 +34,7 @@ def inspect(language: str, reference: str,
     name, *line_range = name.split(':')  # `line_range` is not implemented.
 
     cell = nbformat.v4.new_code_cell(f'{func}({name})')
-    return run_and_export(cell, lambda cell: inspect_render(cell, language))
+    return run_and_render(cell, lambda cell: inspect_render(cell, language))
 
 
 def inspect_render(cell, language) -> str:

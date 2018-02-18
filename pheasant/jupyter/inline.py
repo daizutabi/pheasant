@@ -5,6 +5,7 @@ import html
 import io
 
 from ..markdown.converter import markdown_convert
+from ..number import config as config_number
 
 
 def convert_inline(obj, **kwargs):
@@ -12,22 +13,28 @@ def convert_inline(obj, **kwargs):
     if hasattr(obj, '__module__'):
         module = obj.__module__
         if module.startswith('matplotlib.'):
-            return to_base64(obj, **kwargs)
+            source = to_base64(obj, **kwargs)
         elif module.startswith('pandas.'):
-            return to_html(obj)
+            source = to_html(obj)
         elif module.startswith('bokeh.'):
-            return to_script_and_div(obj)
+            source = to_script_and_div(obj)
+        else:
+            print('!!!!!!!!!!!!!!!', module)
     else:
         is_str = isinstance(obj, str)
         if not is_str:
             obj = str(obj)
 
         if 'html' == kwargs.get('output'):
-            return markdown_convert(obj)
+            source = markdown_convert(obj)
         elif is_str:
-            return obj
+            source = obj
         else:
-            return html.escape(obj)
+            source = html.escape(obj)
+
+    begin = config_number['begin_pattern']
+    end = config_number['end_pattern']
+    return f'{begin}{source}{end}'
 
 
 def to_html(df):

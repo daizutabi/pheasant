@@ -53,6 +53,7 @@ plugins:
 
 
 pages:
-  - Home: index.md
-  - Test: test.md
-  - Image: image.md
+  - Home: test2.md
+  # - Home: index.md
+  # - Test: test.md
+  # - Image: image.md

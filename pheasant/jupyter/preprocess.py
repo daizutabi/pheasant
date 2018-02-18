@@ -12,7 +12,7 @@ import re
 import nbformat
 
 from .config import config
-from .exporter import inline_export, run_and_export
+from .renderer import inline_render, run_and_render
 
 
 def replace(match) -> str:
@@ -36,7 +36,7 @@ def replace(match) -> str:
         sources[-1] = f'{source} = {sources[-1]}'
         sources = '\n'.join(sources)
         cell = nbformat.v4.new_code_cell(sources)
-        run_and_export(cell, inline_export)
+        run_and_render(cell, inline_render)
 
     return f'{convert}({source}, output="{output}")'
 
@@ -56,6 +56,6 @@ def preprocess_markdown(source: str) -> str:
 
         source = replace(match)
         cell = nbformat.v4.new_code_cell(source)
-        return run_and_export(cell, inline_export)
+        return run_and_render(cell, inline_render)
 
     return re.sub(config['inline_pattern'], replace_and_run, source)

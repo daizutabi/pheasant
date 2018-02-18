@@ -14,15 +14,17 @@
         {%- for output in cell.outputs if output.output_type != 'display_data' -%}
           {%- block output_text_inside scoped -%}{%- endblock -%}
         {%- endfor -%}
-      {%- endif -%}{{ '```' }}
+      {%- endif -%}{{ '```\n\n' }}
     {%- endif -%}
   {%- endif -%}
   {%- if 'hide' not in options and 'hide-output' not in options -%}
-    {%- for output in cell.outputs if output.output_type != 'display_data' -%}
-      {{ '\n\n' }}{%- block output_text_outside scoped -%}{%- endblock -%}
+    {%- for output in cell.outputs if output.output_type != 'display_data' and 'text/html' not in output.data -%}
+      {%- if output.name != 'stderr' -%}
+        {%- block output_text_outside scoped -%}{%- endblock -%}
+      {%- endif -%}
+    {%- endfor -%}
+    {%- for output in cell.outputs if output.output_type == 'display_data' or 'text/html' in output.data -%}
+      {{ output_display(output) }}
     {%- endfor -%}
   {%- endif -%}
-  {%- for output in cell.outputs -%}
-    {{ '\n\n' }}{{ output_display(output) }}
-  {%- endfor -%}
 {%- endblock codecell -%}
