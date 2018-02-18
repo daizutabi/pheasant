@@ -181,8 +181,8 @@ print(html[:132] + '...\n\n', info)
 
 #Fig a
 
-#begin
+<!-- begin -->
 {{html}}
-#end
+<!-- end -->
 
 ad

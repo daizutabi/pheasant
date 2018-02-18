@@ -33,7 +33,6 @@ def func(x):
 
 ~~~python
 print(1)
-
 print(2)
 
 def func(x):

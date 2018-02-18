@@ -95,11 +95,11 @@ A text
 
 #Fig. figure {#F2#}
 
-#begin
+<!-- begin -->
 ![png](figure2.png)
 
 ![png](figure3.png)
-#end
+<!-- end -->
 
 #Tab. table {#T1#}
 

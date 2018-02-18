@@ -1,5 +1,4 @@
-from ..markdown.splitter import (fenced_code_splitter,
-                                 fenced_code_splitter_with_class)
+from ..markdown.splitter import fenced_code_splitter
 from .config import config
 from .exporter import export, inline_export, new_code_cell, run_and_export
 from .preprocess import preprocess_code, preprocess_markdown
@@ -47,5 +46,4 @@ def cell_runner(source: str):
                 cell.source = preprocess_code(cell.source)
                 yield run_and_export(cell, inline_export)
             else:
-                source = run_and_export(cell, export)
-                yield from fenced_code_splitter_with_class(source)
+                yield run_and_export(cell, export)
