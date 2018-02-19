@@ -1,45 +1,32 @@
-
 # HoloViews
-<!--
+
 ```python
+## holoviews_backend=matplotlib
 import holoviews as hv
-renderer = hv.renderer('bokeh')
+renderer = hv.renderer('matplotlib')
+curve = hv.Curve(([1, 2, 3], [5, 1, 3]))
+png, info = renderer(curve, fmt='png')
+
+from IPython.display import display_png
+display_png(png, raw=True)
 ```
 
 ```python
-curve = hv.Curve(([1, 2, 3], [2, 3, 1]))
-type(curve)
+from pheasant.jupyter.display import display
+
+display(curve)
 ```
+
+{{ display(curve) }}
+
+{{ renderer(curve, fmt='svg')[0]}}
+
+{{ curve }}
 
 ```python
-hv.Store.registry['bokeh'][hv.Curve]
-plot = renderer.get_plot(curve)
-type(plot.state)
+df = pd.DataFrame([[1 ,2]])
 ```
 
-```python
-from bokeh.embed import components
-script, div = components(plot.state)
-print(script[:131] + '...\n', div)
-```
+{{df}}
 
-`{{#plot.state}}`
-
-{{plot.state}}
-
-
-{{script}}{{div}}
-
-
-
-```python
-html, info = renderer(curve, fmt='html')
-print(html[:132] + '...\n\n', info)
-```
-
-`{{#html}}`
-
-
-#Fig a
-
-<!-- begin --> <!-- {{html}} --> <!-- end -->
+![python](hello.func)

@@ -5,6 +5,7 @@ edit_uri: https://github.com/daizutabi/pheasant/docs/docs/
 
 theme:
   name: material
+  font: none
 
 extra:
   search:

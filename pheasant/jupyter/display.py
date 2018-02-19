@@ -10,7 +10,7 @@ from .config import config
 # from ..number import config as config_number
 
 
-def convert_inline(obj, **kwargs):
+def display(obj, **kwargs):
     # FIXME: how to determine the function for conversion.
     if hasattr(obj, '__module__'):
         module = obj.__module__
@@ -44,11 +44,11 @@ def convert_inline(obj, **kwargs):
 
 
 def to_html(obj, **kwargs):
-    return convert_inline(obj, output='html')
+    return display(obj, output='html')
 
 
 def to_markdown(obj, **kwargs):
-    return convert_inline(obj, output='markdown')
+    return display(obj, output='markdown')
 
 
 def pandas_to_html(dataframe) -> str:
@@ -74,8 +74,10 @@ def matplotlib_to_base64(obj, output='markdown') -> str:
         obj = obj.figure  # obj is axes.
 
     obj.savefig(buf, format=format, bbox_inches='tight', transparent=True)
+    buf.seek(0)
+    binary = buf.getvalue()
 
-    return base64image(buf, format, output)
+    return base64image(binary, format, output)
 
 
 def holoviews_to_html(figure, output='markdown') -> str:
@@ -91,14 +93,8 @@ def holoviews_to_html(figure, output='markdown') -> str:
         return html
 
 
-def base64image(buf, format, output):
-    if isinstance(buf, bytes):
-        source = buf
-    else:
-        buf.seek(0)
-        source = buf.getvalue()
-
-    data = base64.b64encode(source).decode('utf8')
+def base64image(binary, format, output):
+    data = base64.b64encode(binary).decode('utf8')
     data = f'data:image/{format};base64,{data}'
 
     if output == 'markdown':

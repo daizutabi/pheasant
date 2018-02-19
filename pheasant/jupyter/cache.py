@@ -55,13 +55,14 @@ def memoize(func):
         counter = config.setdefault('run_counter', 0)
         config['run_counter'] += 1
 
-        if 'clear' in pheasant_options(cell):
+        options = pheasant_options(cell)
+        if 'clear' in options:
             cache[source_file] = []
 
         source_markdown = cache.get(source_file, [])
         if len(source_markdown) >= counter + 1:
-            source, markdown = source_markdown[counter]
-            if cell.source == source:
+            source, options_prev, markdown = source_markdown[counter]
+            if cell.source == source and options == options_prev:
                 return markdown
 
         if source_file:
@@ -70,7 +71,7 @@ def memoize(func):
         markdown = func(cell, *args, **kwargs)
 
         cache[source_file] = (source_markdown[:counter] +
-                              [(cell.source, markdown)])
+                              [(cell.source, options, markdown)])
         return markdown
 
     return decorator

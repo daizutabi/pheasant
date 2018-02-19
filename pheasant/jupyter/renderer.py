@@ -24,19 +24,14 @@ def new_code_cell(source: str, language=None, options=None) -> NotebookNode:
 
 
 def render(cell: NotebookNode) -> str:
-    """Convert a cell into markdown with `template`."""
+    """Convert a cell into markdown or html with `template`."""
     return config['template'].render(cell=cell)
 
 
 def inline_render(cell: NotebookNode) -> str:
-    """Convert a cell into markdown with `inline_template`."""
+    """Convert a cell into markdown or html with `inline_template`."""
     strip_text(cell)
-    markdown = config['inline_template'].render(cell=cell)
-
-    if markdown.startswith("'") and markdown.endswith("'"):
-        markdown = str(eval(markdown))
-
-    return markdown
+    return config['inline_template'].render(cell=cell)
 
 
 def pheasant_options(cell: NotebookNode) -> list:
@@ -57,12 +52,8 @@ def run_and_render(cell: NotebookNode, render: Callable[..., str],
     source and outputs to avoid rerunning the cell unnecessarily.
     """
     run_cell(cell, kernel_name)
-    # print(cell)
-
     select_display_data(cell)
-    source = render(cell)
-    # print(f'>>{source}<<')
-    return source
+    return render(cell)
 
 
 display_data_priority = ['application/vnd.jupyter.widget-state+json',
@@ -78,13 +69,13 @@ display_data_priority = ['application/vnd.jupyter.widget-state+json',
 
 
 def select_display_data(cell: NotebookNode) -> None:
-    re_compile = re.compile(r'<style scoped>.*?</style>', flags=re.DOTALL)
+    """Select display data with the highest priority."""
     for output in cell.outputs:
         for data_type in display_data_priority:
             if 'data' in output and data_type in output['data']:
                 text = output['data'][data_type]
-                if data_type == 'text/html':  # for Pandas DataFrame
-                    text = re_compile.sub('', text)
+                if data_type == 'text/html' and '"dataframe"' in text:
+                    text = delete_style(text)
                 output['data'] = {data_type: text}
                 break
 
@@ -98,3 +89,13 @@ def strip_text(cell: NotebookNode) -> None:
                     text = eval(text)
                 output['data'] = {'text/plain': text}
                 break
+
+
+pandas_pattern = (r'(<style scoped>.*?</style>)|( border="1")|'
+                  r'( style="text-align: right;")')
+pandas_re_compile = re.compile(pandas_pattern, flags=re.DOTALL)
+
+
+def delete_style(html: str) -> str:
+    """Delete style from Pandas DataFrame html."""
+    return pandas_re_compile.sub('', html)

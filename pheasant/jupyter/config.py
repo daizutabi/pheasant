@@ -43,5 +43,9 @@ config = {
 
     # Time that module was imported. (Not implemented.)
     # Dont't Edit.
-    'module_imported_time': {}
+    'module_imported_time': {},
+
+    'matplotlib_format': 'png',
+    'bokeh_format': 'html',
+    'holoviews_backend': 'bokeh',
 }

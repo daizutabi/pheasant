@@ -15,16 +15,15 @@ from .config import config
 from .renderer import inline_render, run_and_render
 
 
-def replace(match) -> str:
+def replace(match, ignore_equal=False) -> str:
     convert = 'pheasant.jupyter.convert_inline'
     source = match.group(1)
 
     if source.startswith(config['inline_ignore_character']):
         return match.group().replace(source, source[1:])
-    elif '=' in source:
+    elif '=' in source and not ignore_equal:
         return source
-
-    if source.startswith(config['inline_html_character']):
+    elif source.startswith(config['inline_html_character']):
         source = source[1:]
         output = 'html'
     else:
@@ -42,7 +41,10 @@ def replace(match) -> str:
 
 
 def preprocess_code(source: str) -> str:
-    return re.sub(config['inline_pattern'], replace, source)
+    def replace_(match):
+        return replace(match, ignore_equal=True)
+
+    return re.sub(config['inline_pattern'], replace_, source)
 
 
 def preprocess_markdown(source: str) -> str:

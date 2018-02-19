@@ -3,12 +3,7 @@ from ..markdown.splitter import fenced_code_splitter
 
 
 def convert(source: str):
-    # print('===========================')
-    # print(f'>>>{source}<<<')
-    source = ''.join(render(source))
-    # print('===========================')
-    # print(f'>>>>{source}<<<<')
-    return source
+    return ''.join(render(source))
 
 
 def render(source: str):

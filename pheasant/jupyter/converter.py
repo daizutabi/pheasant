@@ -1,8 +1,8 @@
 import os
 
-from nbconvert.filters import strip_ansi
 import nbformat
 from jinja2 import Environment, FileSystemLoader
+from nbconvert.filters import strip_ansi
 
 import pheasant
 
@@ -62,6 +62,7 @@ def cell_runner(source: str):
             yield preprocess_markdown(splitted)
         else:
             language, source, options = splitted
+            set_config(options)
             cell = new_code_cell(source, language=language, options=options)
 
             if 'inline' in options:
@@ -69,6 +70,23 @@ def cell_runner(source: str):
                 yield run_and_render(cell, inline_render) + '\n\n'
             else:
                 yield run_and_render(cell, render)
+
+
+def set_config(options):
+    sources = ['from pheasant.jupyter.config import config']
+    for option in options:
+        if '=' in option:
+            keyword, value = option.split('=')
+            if keyword in config:
+                if isinstance(config[keyword], str):
+                    source = f'config["{keyword}"] = "{value}"'
+                else:
+                    source = f'config["{keyword}"] = {value}'
+                sources.append(source)
+    if len(sources) > 1:
+        source = '\n'.join(sources)
+        cell = nbformat.v4.new_code_cell(source)
+        run_cell(cell)
 
 
 def set_template(prefix=''):

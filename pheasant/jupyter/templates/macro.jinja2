@@ -3,7 +3,7 @@
     {%- if 'text/html' not in output.data -%}
       {{ output.data['text/plain'] }}
     {%- endif -%}
-  {%- elif output.output_type == 'stream' -%}
+  {%- elif output.output_type == 'stream' and output.name != 'stderr' -%}
     {%- if output.text[-1] == '\n' -%}
       {{ output.text[:-1] }}
     {%- else -%}

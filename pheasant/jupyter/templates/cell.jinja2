@@ -4,7 +4,7 @@
 {%- block codecell -%}
   {%- set options = cell.metadata.get('pheasant', {}).get('options', []) -%}
   {%- set language = cell.metadata.get('pheasant', {}).get('language', '') -%}
-  {%- if 'hide' not in options -%}
+  {%- if 'hide' not in options and 'display' not in options -%}
     {%- if 'hide-input' not in options -%}
       {{ '```' + language + ' .pheasant-markdown .pheasant-jupyter-input\n' }}
       {%- if not cell.outputs or 'hide-output' in options -%}
@@ -17,14 +17,16 @@
       {%- endif -%}{{ '```\n\n' }}
     {%- endif -%}
   {%- endif -%}
-  {%- if 'hide' not in options and 'hide-output' not in options -%}
+  {%- if 'hide' not in options and 'hide-output' not in options and 'display' not in options -%}
     {%- for output in cell.outputs if output.output_type != 'display_data' and 'text/html' not in output.data -%}
       {%- if output.name != 'stderr' -%}
         {%- block output_text_outside scoped -%}{%- endblock -%}
       {%- endif -%}
     {%- endfor -%}
+  {%- endif -%}
+  {%- if 'hide' not in options and 'hide-output' not in options -%}
     {%- for output in cell.outputs if output.output_type == 'display_data' or 'text/html' in output.data -%}
-      {{ output_display(output) }}
+      {{ output_display(output) + '\n\n' }}
     {%- endfor -%}
   {%- endif -%}
 {%- endblock codecell -%}

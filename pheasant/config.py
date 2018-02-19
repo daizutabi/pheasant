@@ -1,4 +1,4 @@
-from . import jupyter, macro, number, code
+from . import code, jupyter, macro, number
 from .markdown import office
 
 config = {
