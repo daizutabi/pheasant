@@ -11,3 +11,4 @@ dist/
 __pycache__/
 .ropeproject/
 .pytest_cache/
+.mypy_cache/
