@@ -1,4 +1,5 @@
 import re
+from typing import Optional
 
 from markdown import Markdown
 
@@ -13,7 +14,7 @@ fenced_code_converter = Markdown(
     }})
 
 
-def markdown_convert(source, extensions=None):
+def markdown_convert(source: str, extensions: Optional[str] = None) -> str:
     if extensions is None:
         return markdown_converter.convert(source)
     else:
@@ -24,7 +25,9 @@ def markdown_convert(source, extensions=None):
 pre_pattern = re.compile(r'.*?<pre>(.*?)</pre>', flags=re.DOTALL)
 
 
-def fenced_code_convert(source, cls='codehilite', only_code=False):
+def fenced_code_convert(source: str,
+                        cls: str = 'codehilite',
+                        only_code: bool = False) -> str:
     source = fenced_code_converter.convert(source)
     source = source.replace(CLASS, cls)
     if only_code:

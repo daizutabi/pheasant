@@ -1,9 +1,11 @@
 import re
+from typing import Generator, List, Match, Tuple, Union
 
-from ..jupyter.client import select_kernel_name
+from pheasant.jupyter.client import select_kernel_name
 
 
-def splitter(pattern: str, source: str, option=re.MULTILINE):
+def splitter(pattern: str, source: str,
+             option=re.MULTILINE) -> Generator[Union[str, Match], None, None]:
     """Generate splitted text from `source` by `pattern`."""
     re_compile = re.compile(pattern, option)
 
@@ -25,7 +27,8 @@ def escaped_splitter(pattern: str,
                      pattern_escape: str,
                      source: str,
                      option=re.MULTILINE,
-                     option_escape=re.MULTILINE | re.DOTALL):
+                     option_escape=re.MULTILINE | re.DOTALL
+                     ) -> Generator[Union[str, Match], None, None]:
     for splitted in splitter(pattern_escape, source, option_escape):
         if not isinstance(splitted, str):
             yield splitted.group()
@@ -37,11 +40,12 @@ def escaped_splitter_join(pattern: str,
                           pattern_escape: str,
                           source: str,
                           option=re.MULTILINE,
-                          option_escape=re.MULTILINE | re.DOTALL):
+                          option_escape=re.MULTILINE | re.DOTALL
+                          ) -> Generator[Union[str, Match], None, None]:
     """Join escaped string with normal string."""
     text = ''
-    for splitted in escaped_splitter(pattern, pattern_escape, source,
-                                     option, option_escape):
+    for splitted in escaped_splitter(pattern, pattern_escape, source, option,
+                                     option_escape):
         if isinstance(splitted, str):
             text += splitted
         else:
@@ -52,7 +56,9 @@ def escaped_splitter_join(pattern: str,
         yield text
 
 
-def fenced_code_splitter(source: str, comment_option=True, escape=None):
+def fenced_code_splitter(
+        source: str, comment_option: bool = True, escape=None
+) -> Generator[Union[str, Tuple[str, str, List[str]]], None, None]:
     """Generate splitted markdown and jupyter notebook cell from `source`.
 
     The type of generated value is str or tuple.
@@ -81,14 +87,12 @@ def fenced_code_splitter(source: str, comment_option=True, escape=None):
         Splitted str.
         If tuple, it is (language: str, source: str, options: list)
     """
-    # pattern_escape = r'^~~~\n(.*?)\n^~~~$'
-    # pattern_source = r'^```(\S+)([^\n]*)\n(.*?)\n^```\n'
     pattern_escape = r'^~~~(\S*)(.*?)\n(.*?\n)~~~\n'
     pattern_source = r'^```(\S+)(.*?)\n(.*?\n)```\n'
     re_option = re.DOTALL | re.MULTILINE
 
-    for splitted in escaped_splitter(pattern_source, pattern_escape, source,
-                                     option=re_option):
+    for splitted in escaped_splitter(
+            pattern_source, pattern_escape, source, option=re_option):
         if isinstance(splitted, str):
             if escape:
                 match = re.match(pattern_escape, splitted, flags=re_option)
@@ -104,7 +108,8 @@ def fenced_code_splitter(source: str, comment_option=True, escape=None):
                 yield language, source, options
 
 
-def from_match(match, comment_option):
+def from_match(match: Match,
+               comment_option: bool) -> Tuple[str, str, List[str]]:
     language = match.group(1)
     source = match.group(3)
     options = match.group(2)
