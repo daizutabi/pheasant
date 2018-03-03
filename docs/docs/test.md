@@ -1,5 +1,4 @@
-```python
-## inline
+```python inline
 df = pd.DataFrame([[5, 0], [3, 4]], columns=['a', 'b'])
 
 def func(x):

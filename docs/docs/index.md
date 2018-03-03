@@ -108,17 +108,17 @@ import matplotlib.pyplot as plt
 plt.plot([1, 3, 2])
 ```
 
-You may want to display only graphics. You can use `hide` option for a fenced code.
+You may want to display only graphics. You can use `display` option for a fenced code.
 
 ~~~
-```python hide
+```python display
 plt.plot([1, 3, 2])
 ```
 ~~~
 
 This creates only a PNG image without a code block like below:
 
-```python hide
+```python display
 plt.plot([1, 3, 2])
 ```
 

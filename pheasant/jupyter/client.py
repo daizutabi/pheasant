@@ -1,4 +1,5 @@
 """This module provide jupyter client interface."""
+from typing import Any, Dict
 import logging
 from queue import Empty
 
@@ -9,9 +10,9 @@ from .config import config
 
 logger = logging.getLogger('pheasant')
 
-kernel_names = {}
-kernel_managers = {}
-kernel_clients = {}
+kernel_names: Dict[str, Any] = {}
+kernel_managers: Dict[str, Any] = {}
+kernel_clients: Dict[str, Any] = {}
 
 
 def find_kernel_names():

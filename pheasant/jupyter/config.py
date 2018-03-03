@@ -1,4 +1,6 @@
-config = {
+from typing import Any, Dict
+
+config: Dict[str, Any] = {
     # Notebook format version as argument of nbformat.read function.
     'format_version': 4,
 
@@ -44,7 +46,6 @@ config = {
     # Time that module was imported. (Not implemented.)
     # Dont't Edit.
     'module_imported_time': {},
-
     'matplotlib_format': 'png',
     'bokeh_format': 'html',
     'holoviews_backend': 'bokeh',

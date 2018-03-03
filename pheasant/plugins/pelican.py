@@ -1,7 +1,7 @@
 from markdown import Markdown
 from pelican import signals
 from pelican.readers import MarkdownReader
-from pheasant import convert
+from pheasant.converters import convert
 
 
 class PheasantReader(MarkdownReader):

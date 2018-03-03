@@ -19,15 +19,15 @@ import matplotlib.pyplot as plt
 plt.plot([1, 2, 3], marker='o')
 ```
 
-If you want to hide the input source and standard output, you can use a `hide` option which only shows the display data such as an image or html:
+If you want to hide the input source and standard output, you can use a `display` option which only shows the display data such as an image or html:
 
 ~~~
-```python hide
+```python display
 plt.plot([4, 2, 3], marker='o')
 ```
 ~~~
 
-```python hide
+```python display
 plt.plot([4, 2, 3], marker='o')
 ```
 

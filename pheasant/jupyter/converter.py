@@ -5,8 +5,8 @@ from jinja2 import Environment, FileSystemLoader
 from nbconvert.filters import strip_ansi
 
 import pheasant
+from pheasant.markdown.splitter import fenced_code_splitter
 
-from ..markdown.splitter import fenced_code_splitter
 from .client import run_cell
 from .config import config
 from .preprocess import preprocess_code, preprocess_markdown

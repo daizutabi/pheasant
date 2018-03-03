@@ -54,7 +54,7 @@ plugins:
 
 
 pages:
-  - Home: test2.md
-  # - Home: index.md
-  # - Test: test.md
-  # - Image: image.md
+  - Home: index.md
+  - Test: test.md
+  - Image: image.md
+  - HoloViews: holoviews.md

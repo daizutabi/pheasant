@@ -23,10 +23,12 @@ platform = 'win' if sys.platform.startswith('win') else 'mac'
 if platform == 'win':
     import pywintypes
     from win32com.client import constants, gencache
-    gencache.EnsureModule('{2DF8D04C-5BFA-101B-BDE5-00AA0044DE52}',
-                          0, 2, 1, bForDemand=True)  # Office 9
-    gencache.EnsureModule('{00020813-0000-0000-C000-000000000046}',
-                          0, 1, 3, bForDemand=True)  # Excel 9
+    gencache.EnsureModule(
+        '{2DF8D04C-5BFA-101B-BDE5-00AA0044DE52}', 0, 2, 1,
+        bForDemand=True)  # Office 9
+    gencache.EnsureModule(
+        '{00020813-0000-0000-C000-000000000046}', 0, 1, 3,
+        bForDemand=True)  # Excel 9
 else:
     pass
 
@@ -146,11 +148,13 @@ class Presentations(Collection):
     def __init__(self, parent):
         super().__init__(parent, Presentation)
 
-    def open(self, filename, read_only=True, untitled=False,
-             with_window=True):
+    def open(self, filename, read_only=True, untitled=False, with_window=True):
         filename = os.path.abspath(filename)
-        prs = self.api.Open(filename, ReadOnly=read_only, Untitled=untitled,
-                            WithWindow=with_window)
+        prs = self.api.Open(
+            filename,
+            ReadOnly=read_only,
+            Untitled=untitled,
+            WithWindow=with_window)
         return Presentation(prs, parent=self.parent)
 
     def add(self, with_window=True):
@@ -162,8 +166,8 @@ class Presentations(Collection):
 
     @property
     def active(self):
-        return Presentation(self.parent.api.ActiveWindow.Presentation,
-                            parent=self.parent)
+        return Presentation(
+            self.parent.api.ActiveWindow.Presentation, parent=self.parent)
 
 
 class Presentation(Element):
@@ -243,7 +247,12 @@ class Shapes(Collection):
         super().__init__(parent, Shape)
 
     # for matplotlib
-    def add_picture(self, fig=None, left=0, top=0, width=None, scale=1,
+    def add_picture(self,
+                    fig=None,
+                    left=0,
+                    top=0,
+                    width=None,
+                    scale=1,
                     dpi=None):
         if fig is None:
             fig = plt.gcf()
@@ -264,9 +273,14 @@ class Shapes(Collection):
                 size = image.size
             height_ = width_ * size[1] / size[0]
 
-            shape = self.api.AddPicture(FileName=path, LinkToFile=False,
-                                        SaveWithDocument=True, Left=left,
-                                        Top=top, Width=width_, Height=height_)
+            shape = self.api.AddPicture(
+                FileName=path,
+                LinkToFile=False,
+                SaveWithDocument=True,
+                Left=left,
+                Top=top,
+                Width=width_,
+                Height=height_)
 
             if scale_:
                 shape.ScaleWidth(scale, 1)
@@ -310,8 +324,13 @@ class Shapes(Collection):
         #
         # return shape
 
-    def add_range(self, range_, data_type=2, left=None, top=None,
-                  width=None, height=None):
+    def add_range(self,
+                  range_,
+                  data_type=2,
+                  left=None,
+                  top=None,
+                  width=None,
+                  height=None):
         """
 
         Parameters
@@ -370,9 +389,12 @@ class Shapes(Collection):
             top_ = charts[0].top
             shapes = []
             for chart in charts:
-                shape = self.add_chart(chart, left=chart.left - left_ + left,
-                                       top=chart.top - top_ + top,
-                                       width=width, height=height)
+                shape = self.add_chart(
+                    chart,
+                    left=chart.left - left_ + left,
+                    top=chart.top - top_ + top,
+                    width=width,
+                    height=height)
                 shapes.append(shape)
             return shapes
 
@@ -405,10 +427,23 @@ class Shapes(Collection):
         shape.set_style(**kwargs)
         return shape
 
-    def add_table(self, df, left=None, top=None, width=None, height=None,
-                  merge=True, **kwargs):
-        table = create_table(self, df, left=100, top=100, width=300,
-                             height=300, merge=merge, **kwargs)
+    def add_table(self,
+                  df,
+                  left=None,
+                  top=None,
+                  width=None,
+                  height=None,
+                  merge=True,
+                  **kwargs):
+        table = create_table(
+            self,
+            df,
+            left=100,
+            top=100,
+            width=300,
+            height=300,
+            merge=merge,
+            **kwargs)
         shape = table.table
         if width:
             table.width = width
@@ -551,8 +586,14 @@ class Shape(Element):
     def line_weight(self, value):
         self.api.Line.Weight = value
 
-    def set_style(self, size=None, bold=None, italic=None, color=None,
-                  fill_color=None, line_color=None, line_weight=None):
+    def set_style(self,
+                  size=None,
+                  bold=None,
+                  italic=None,
+                  color=None,
+                  fill_color=None,
+                  line_color=None,
+                  line_weight=None):
         if size is not None:
             self.size = size
         if bold is not None:
@@ -691,8 +732,8 @@ class Table(Element):
 
         value = self.value
         column_labels = value[row - 1] if row else [None] * len(value[0])
-        row_labels = ([row_value[column - 1] for row_value in value] if column
-                      else [None] * len(value))
+        row_labels = ([row_value[column - 1] for row_value in value]
+                      if column else [None] * len(value))
 
         for i, row in enumerate(self):
             if i < start[0] - 1:
@@ -778,10 +819,6 @@ class Table(Element):
     def width(self):
         return [column.width for column in self.columns]
 
-    @property
-    def height(self):
-        return [row.height for row in self.rows]
-
     @width.setter
     def width(self, value):
         if isinstance(value, list):
@@ -789,6 +826,10 @@ class Table(Element):
                 column.width = width
         else:
             self.parent.width = value
+
+    @property
+    def height(self):
+        return [row.height for row in self.rows]
 
     @height.setter
     def height(self, value):
@@ -883,8 +924,8 @@ class Cell(Element):
 
     def add_picture(self, fig=None, scale=0.98, pos=(0, 0), **kwargs):
         slide = self.parent.parent.parent
-        shape = slide.shapes.add_picture(fig=fig, width=self.width * scale,
-                                         **kwargs)
+        shape = slide.shapes.add_picture(
+            fig=fig, width=self.width * scale, **kwargs)
         self.align(shape, pos=pos)
 
     def add_frame(self, df, pos=(0, 0), font_size=7, **kwargs):

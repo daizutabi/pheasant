@@ -1,4 +1,6 @@
-config = {
+from typing import Any, Dict
+
+config: Dict[str, Any] = {
     # Jinja2 template file for numbering.
     'template_file': 'basic.jinja2',
 

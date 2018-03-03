@@ -1,4 +1,5 @@
 import itertools
+from typing import Any, Dict
 
 from pandas.io.formats.excel import ExcelFormatter
 
@@ -60,23 +61,42 @@ class ContainerStyle:
     COLUMNS_NAME = 3
     COLUMNS = 4
 
-    style = {}
-    style['bold'] = {VALUE: False, INDEX: True, INDEX_NAME: True,
-                     COLUMNS_NAME: True, COLUMNS: True}
-    style['fill'] = {VALUE: rgb(255, 255, 255),
-                     INDEX: rgb(255, 255, 230),
-                     INDEX_NAME: rgb(255, 255, 180),
-                     COLUMNS: rgb(230, 255, 255),
-                     COLUMNS_NAME: rgb(180, 255, 255)}
-    style['inside_border'] = {VALUE: True, INDEX: True, INDEX_NAME: True,
-                              COLUMNS_NAME: True, COLUMNS: True}
-    style['around_border'] = {VALUE: True, INDEX: True, INDEX_NAME: True,
-                              COLUMNS_NAME: True, COLUMNS: True}
-    style['horizontal_alignment'] = {VALUE: 'center',
-                                     INDEX: 'center',
-                                     INDEX_NAME: 'center',
-                                     COLUMNS_NAME: 'center',
-                                     COLUMNS: 'center'}
+    style: Dict[str, Any] = {}
+    style['bold'] = {
+        VALUE: False,
+        INDEX: True,
+        INDEX_NAME: True,
+        COLUMNS_NAME: True,
+        COLUMNS: True
+    }
+    style['fill'] = {
+        VALUE: rgb(255, 255, 255),
+        INDEX: rgb(255, 255, 230),
+        INDEX_NAME: rgb(255, 255, 180),
+        COLUMNS: rgb(230, 255, 255),
+        COLUMNS_NAME: rgb(180, 255, 255)
+    }
+    style['inside_border'] = {
+        VALUE: True,
+        INDEX: True,
+        INDEX_NAME: True,
+        COLUMNS_NAME: True,
+        COLUMNS: True
+    }
+    style['around_border'] = {
+        VALUE: True,
+        INDEX: True,
+        INDEX_NAME: True,
+        COLUMNS_NAME: True,
+        COLUMNS: True
+    }
+    style['horizontal_alignment'] = {
+        VALUE: 'center',
+        INDEX: 'center',
+        INDEX_NAME: 'center',
+        COLUMNS_NAME: 'center',
+        COLUMNS: 'center'
+    }
 
     @classmethod
     def get_style(cls, type):
@@ -97,7 +117,11 @@ class Container:
 
 
 class CellContainer:
-    def __init__(self, df, merge_cells=True, index=True, index_name=True,
+    def __init__(self,
+                 df,
+                 merge_cells=True,
+                 index=True,
+                 index_name=True,
                  columns_name=True):
         self.nrows = 0
         self.ncols = 0
@@ -120,8 +144,8 @@ class CellContainer:
                 cell.row += index_name_offset
                 if cell.merge_row is not None:
                     cell.merge_row += index_name_offset
-            elif (cell.type == ContainerStyle.INDEX or
-                  cell.type == ContainerStyle.VALUE):
+            elif (cell.type == ContainerStyle.INDEX
+                  or cell.type == ContainerStyle.VALUE):
                 cell.row += index_offset
                 if cell.merge_row is not None:
                     cell.merge_row += index_offset
@@ -134,8 +158,8 @@ class CellContainer:
     def groupby(self):
         self.containers = []
         self.cells = sorted(self.cells, key=lambda cell: cell.type)
-        for type, group in itertools.groupby(self.cells,
-                                             key=lambda cell: cell.type):
+        for type, group in itertools.groupby(
+                self.cells, key=lambda cell: cell.type):
             row_min = 1e8
             row_max = 0
             col_min = 1e8

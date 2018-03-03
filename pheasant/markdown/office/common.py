@@ -1,9 +1,11 @@
+from typing import Any, Dict
+
 try:
     import win32com.client
 except ImportError:
     pass
 
-apps = {}
+apps: Dict[str, Any] = {}
 
 
 def get_application(name):
@@ -35,6 +37,7 @@ def extract_shape_with_title(obj, collection_name):
         js : list of index of shape from shapes collection.
              if len(js) > 1, shape is grouped.
     """
+
     def extract(shape, i, js):
         if len(js) == 1:  # top-level shape, not grouped.
             # TODO: cache shape's dimension (left, top, left+width, top+height)
