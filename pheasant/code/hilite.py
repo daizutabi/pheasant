@@ -1,12 +1,14 @@
-from ..markdown.converter import fenced_code_convert
-from ..markdown.splitter import fenced_code_splitter
+from typing import Generator, List
+
+from pheasant.markdown.converter import fenced_code_convert
+from pheasant.markdown.splitter import fenced_code_splitter
 
 
-def convert(source: str):
+def convert(source: str) -> str:
     return ''.join(render(source))
 
 
-def render(source: str):
+def render(source: str) -> Generator[str, None, None]:
     """Add class to <div> of fenced code block using codehilite extension.
 
     - Input:
@@ -23,10 +25,12 @@ def render(source: str):
             yield hilite(*splitted)
 
 
-def hilite(language, source, options, escaped=False):
+def hilite(language: str,
+           source: str,
+           options: List[str],
+           escaped: bool = False) -> str:
     source = f'```{language}\n{source}\n```'
-    cls = ' '.join(option[1:] for option in options
-                   if option.startswith('.'))
+    cls = ' '.join(option[1:] for option in options if option.startswith('.'))
     cls += ' codehilite'  # gives original 'codehilite' class.
     source = fenced_code_convert(source, cls=cls, only_code=escaped)
     if escaped:
@@ -36,7 +40,7 @@ def hilite(language, source, options, escaped=False):
     return source
 
 
-def escaped_code(language, source, options):
+def escaped_code(language: str, source: str, options: List[str]) -> str:
     """
     Input:
     ~~~
@@ -58,7 +62,7 @@ def escaped_code(language, source, options):
     return source
 
 
-def escaped_code_splitter(source):
+def escaped_code_splitter(source: str) -> Generator[str, None, None]:
     """Yield source wth codehilite from escaped fenced code."""
     for splitted in fenced_code_splitter(source, comment_option=False):
         if isinstance(splitted, str):

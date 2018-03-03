@@ -1,7 +1,9 @@
 import logging
 import re
+from typing import Dict, Generator
 
-from ..utils import read_source
+from pheasant.utils import read_source
+
 from .config import config
 
 logger = logging.getLogger(__name__)
@@ -11,17 +13,17 @@ def initialize():
     pass
 
 
-def convert(source):
+def convert(source: str) -> str:
     source = read_source(source)
     return convert_macro(source)
 
 
-def convert_macro(source):
+def convert_macro(source: str) -> str:
     return '\n'.join(renderer(source))
 
 
-def renderer(source):
-    macros = {}
+def renderer(source: str) -> Generator[str, None, None]:
+    macros: Dict[str, str] = {}
 
     def replace(m):
         macro = m.group(1)
