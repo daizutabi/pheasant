@@ -1,8 +1,16 @@
 {% extends 'cell.jinja2' %}
-{% from 'macro.jinja2' import output_text with context %}
+{% from 'macro.jinja2' import output_display with context %}
 
 {%- block codecell -%}
+  {%- set ns = namespace(found=false) -%}
+  {%- for output in cell.outputs if output.output_type == 'display_data' -%}
+    {%- set ns.found = true -%}
+  {%- endfor -%}
   {%- for output in cell.outputs -%}
-    {{ output_text(output) }}
+    {%- if ns.found and output.output_type == 'display_data' -%}
+      {{ output_display(output) }}
+    {%- elif not ns.found and output.output_type != 'display_data' -%}
+      {{ output_display(output) }}
+    {%- endif -%}
   {%- endfor -%}
 {%- endblock codecell -%}

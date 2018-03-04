@@ -56,7 +56,7 @@ def escaped_code(language: str, source: str, options: List[str]) -> str:
         options += ['.pheasant-markdown', '.pheasant-code']
         return hilite(language, source, options)
 
-    source = ''.join(escaped_code_splitter(source))
+    source = '\n'.join(escaped_code_splitter(source))
     cls = 'pheasant-markdown pheasant-source'
     source = f'<div class="codehilite {cls}"><pre>{source}</pre></div>'
     return source

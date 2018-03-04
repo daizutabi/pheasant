@@ -17,13 +17,13 @@ Highlights include:
 
 You can install Pheasant from PyPI.
 
-~~~
+~~~bash
 $ pip install pheasant
 ~~~
 
 If you use Pheasant as a plugin for MkDocs or Pelican, you also need to instal them.
 
-~~~
+~~~bash
 $ pip install mkdocs pelican
 ~~~
 
@@ -33,20 +33,20 @@ $ pip install mkdocs pelican
 
 In your `mkdocs.yml`, add lines below:
 
-~~~
+~~~yaml
 plugins:
   - pheasant:
       jupyter:
-        enabled: True
+        enabled: true
       number:
-        enabled: True
+        enabled: true
 ~~~
 
 ### Pelican
 
 In your `pelicanconf.py`, add lines below:
 
-~~~
+~~~python
 PLUGINS = ['pheasant']
 PHEASANT = {'jupyter': {'enabled': True}, 'number': {'enabled': True}}
 ~~~
@@ -127,8 +127,6 @@ plt.plot([1, 3, 2])
 
 Pheasant also supports Bokeh's HTML output.
 
-
-
 ~~~
 ```python hide
 from bokeh.plotting import figure
@@ -143,7 +141,7 @@ plot.circle([1, 2, 3, 4, 5], [1, 2, 3, 4, 5], size=10)
 
 
 
-```python hide
+```python
 from bokeh.plotting import figure
 from bokeh.embed import components
 
@@ -158,19 +156,18 @@ if you install Julia kernel, you can write:
 
 
 ~~~
-```julia
-x = 2
-println(3x)
+```javascript
+var a = 1
+a
 ```
 ~~~
 
 to get an output like below:
 
 
-```julia
->>> x = 2
->>> println(3x)
-6
+```javascript
+var a = 1
+a
 ```
 
 ### Auto numbering of headers, figures, and tables.
@@ -197,14 +194,14 @@ Off course, you can use any code to create a figure:
 ~~~
 #Fig A Matplotlib figure
 
-```python hide
+```python display
 plt.plot([3, 2])
 ```
 ~~~
 
 #Fig A Matplotlib figure
 
-```python hide
+```python display
 plt.plot([3, 1])
 ```
 
@@ -231,7 +228,7 @@ Pandas DataFarme is useful to create a table programmatically.
 ~~~
 #Table A Pandas DataFrame
 
-```python hide
+```python display
 import pandas as pd
 pd.DataFrame([[1, 2], [3, 4]], columns=list('ab')) * 2
 ```
@@ -240,38 +237,34 @@ pd.DataFrame([[1, 2], [3, 4]], columns=list('ab')) * 2
 
 #Table A Pandas DataFrame
 
-#begin
-```python hide
+```python display
 import pandas as pd
 pd.DataFrame([[1, 2], [3, 4]], columns=list('ab')) * 2
 ```
-#end
 
-A Markdown source for figures and tables is a source block separated by a blank line from following text. If a figure or table has a blank line within it, you have to explicitly show the content range with `#begin` and `#end` statement.
+A Markdown source for figures and tables is a source block separated by a blank line from following text. If a figure or table has a blank line within it, you have to explicitly show the content range with `<!-- begin -->` and `<!-- end -->` statement.
 
 ~~~
 #Fig A Bokeh's HTML figure
 
-#begin
+<!-- begin -->
 ```python inline
 {{plot}}
 ```
-#end
+<!-- end -->
 ~~~
 
 #Fig A Bokeh's HTML figure
 
-#begin
-```python inline
+<!-- begin -->
 {{plot}}
-```
-#end
+<!-- end -->
 
 ### Hyperlink
 
 Numbered objects are linked from Markdown source using `{#<tag>#}`:
 
-~~~
+~~~markdown
 For example, go to Fig. {#cat#}
 ~~~
 
