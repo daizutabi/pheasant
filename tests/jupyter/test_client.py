@@ -12,10 +12,10 @@ def test_find_kernel_names():
 
 
 kernel_names = find_kernel_names()
-kernel_names = [kernel_names[language][0] for language in kernel_names]
+kernel_names_list = [kernel_names[language][0] for language in kernel_names]
 
 
-@pytest.mark.parametrize('kernel_name', kernel_names)
+@pytest.mark.parametrize('kernel_name', kernel_names_list)
 def test_get_kernel_magager(kernel_name):
     kernel_manager = get_kernel_manager(kernel_name)
     assert kernel_name in kernel_managers
@@ -23,7 +23,7 @@ def test_get_kernel_magager(kernel_name):
     assert kernel_manager is get_kernel_manager(kernel_name)
 
 
-@pytest.mark.parametrize('kernel_name', kernel_names)
+@pytest.mark.parametrize('kernel_name', kernel_names_list)
 def test_get_kernel_client(kernel_name):
     kernel_client = get_kernel_client(kernel_name)
     assert kernel_name in kernel_clients

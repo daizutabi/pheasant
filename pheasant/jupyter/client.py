@@ -1,7 +1,7 @@
 """This module provide jupyter client interface."""
-from typing import Any, Dict
 import logging
 from queue import Empty
+from typing import Any, Dict, Optional
 
 import jupyter_client
 from nbformat.v4 import output_from_msg
@@ -15,7 +15,7 @@ kernel_managers: Dict[str, Any] = {}
 kernel_clients: Dict[str, Any] = {}
 
 
-def find_kernel_names():
+def find_kernel_names() -> dict:
     """
     Find kernel names for language
     """
@@ -34,7 +34,7 @@ def find_kernel_names():
     return kernel_names
 
 
-def select_kernel_name(language):
+def select_kernel_name(language: str) -> str:
     """
     Select one kernelspec per language.
     """
@@ -54,7 +54,7 @@ def select_kernel_name(language):
     return kernel_name
 
 
-def get_kernel_manager(kernel_name):
+def get_kernel_manager(kernel_name: str):
     if kernel_name in kernel_managers:
         kernel_manager = kernel_managers[kernel_name]
     else:
@@ -72,7 +72,7 @@ def get_kernel_manager(kernel_name):
     return kernel_manager
 
 
-def get_kernel_client(kernel_name):
+def get_kernel_client(kernel_name: str):
     kernel_manager = get_kernel_manager(kernel_name)
     if kernel_name in kernel_clients:
         return kernel_clients[kernel_name]
@@ -95,7 +95,7 @@ def get_kernel_client(kernel_name):
 # From nbconvert.preprocessors.execute.ExecutePreprocessor
 
 
-def _wait_for_reply(kernel_name, msg_id, timeout=300):
+def _wait_for_reply(kernel_name: str, msg_id, timeout: int = 300):
     # wait for finish, with timeout
     kernel_client = get_kernel_client(kernel_name)
     while True:
@@ -115,10 +115,10 @@ def _wait_for_reply(kernel_name, msg_id, timeout=300):
             continue
 
 
-def run_cell(cell, kernel_name=None):
+def run_cell(cell, kernel_name: Optional[str] = None):
     if kernel_name is None:
-        if ('pheasant' in cell.metadata and
-                'kernel_name' in cell.metadata['pheasant']):
+        if ('pheasant' in cell.metadata
+                and 'kernel_name' in cell.metadata['pheasant']):
             kernel_name = cell.metadata['pheasant']['kernel_name']
         else:
             kernel_name = select_kernel_name(language='python')

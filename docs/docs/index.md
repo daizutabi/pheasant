@@ -247,11 +247,11 @@ A Markdown source for figures and tables is a source block separated by a blank 
 ~~~
 #Fig A Bokeh's HTML figure
 
-<!-- begin -->
+&lt;!-- begin --&gt;
 ```python inline
 {{plot}}
 ```
-<!-- end -->
+&lt;!-- end --&gt;
 ~~~
 
 #Fig A Bokeh's HTML figure

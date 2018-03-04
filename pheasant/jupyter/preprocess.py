@@ -8,6 +8,7 @@ Above settings is default values and configurable.
 """
 
 import re
+from typing import Match
 
 import nbformat
 
@@ -15,8 +16,8 @@ from .config import config
 from .renderer import inline_render, run_and_render
 
 
-def replace(match, ignore_equal=False) -> str:
-    convert = 'pheasant.jupyter.convert_inline'
+def replace(match: Match, ignore_equal: bool = False) -> str:
+    convert = 'pheasant.jupyter.display'
     source = match.group(1)
 
     if source.startswith(config['inline_ignore_character']):
@@ -51,7 +52,7 @@ def preprocess_markdown(source: str) -> str:
     if source[:3] in ['```', '~~~', '<di']:  # escaped or already converted.
         return source
 
-    def replace_and_run(match):
+    def replace_and_run(match: Match) -> str:
         source = match.group(1)
         if source.startswith(config['inline_ignore_character']):
             return match.group().replace(source, source[1:])

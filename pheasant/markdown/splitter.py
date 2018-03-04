@@ -1,5 +1,5 @@
 import re
-from typing import Generator, List, Match, Tuple, Union
+from typing import Callable, Generator, List, Match, Optional, Tuple, Union
 
 from pheasant.jupyter.client import select_kernel_name
 
@@ -57,7 +57,9 @@ def escaped_splitter_join(pattern: str,
 
 
 def fenced_code_splitter(
-        source: str, comment_option: bool = True, escape=None
+        source: str,
+        comment_option: bool = True,
+        escape: Optional[Callable[[str, str, list], str]] = None
 ) -> Generator[Union[str, Tuple[str, str, List[str]]], None, None]:
     """Generate splitted markdown and jupyter notebook cell from `source`.
 

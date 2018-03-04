@@ -1,4 +1,5 @@
 import os
+from typing import Generator
 
 import nbformat
 from jinja2 import Environment, FileSystemLoader
@@ -13,7 +14,7 @@ from .preprocess import preprocess_code, preprocess_markdown
 from .renderer import inline_render, new_code_cell, render, run_and_render
 
 
-def initialize():
+def initialize() -> None:
     set_template()
     set_template('inline_')
 
@@ -25,7 +26,7 @@ def initialize():
     run_init_codes()
 
 
-def convert(source) -> str:
+def convert(source: str) -> str:
     """Convert markdown string into markdown with running results.
 
     Parameters
@@ -44,7 +45,7 @@ def convert(source) -> str:
     return ''.join(cell_runner(source))
 
 
-def cell_runner(source: str):
+def cell_runner(source: str) -> Generator[str, None, None]:
     """Generate markdown string with outputs after running the source.
 
     Parameters
@@ -72,7 +73,7 @@ def cell_runner(source: str):
                 yield run_and_render(cell, render)
 
 
-def set_config(options):
+def set_config(options: list) -> None:
     sources = ['from pheasant.jupyter.config import config']
     for option in options:
         if '=' in option:
@@ -99,7 +100,7 @@ def set_template(prefix=''):
     config[prefix + 'template'] = env.get_template(template_file)
 
 
-def sys_path_insert():
+def sys_path_insert() -> None:
     pheasant_dir = os.path.abspath(os.path.join(pheasant.__file__, '../..'))
     pheasant_dir = pheasant_dir.replace('\\', '/')
     for directory in config['sys_paths'] + [pheasant_dir]:
@@ -109,7 +110,7 @@ def sys_path_insert():
         run_cell(cell)
 
 
-def import_modules():
+def import_modules() -> None:
     for package in config['import_modules'] + ['pheasant', 'pandas']:
         code = (f'module = importlib.import_module("{package}")\n'
                 f'globals()["{package}"] = module')
@@ -117,14 +118,14 @@ def import_modules():
         run_cell(cell)
 
 
-def run_init_codes():
+def run_init_codes() -> None:
     for code in (config['init_codes'] +
                  ['pandas.options.display.max_colwidth = 0']):
         cell = nbformat.v4.new_code_cell(code)
         run_cell(cell)
 
 
-def reload_modules():
+def reload_modules() -> None:
     for module in config['import_modules']:
         code = (f'module = importlib.import_module("{module}")\n'
                 f'importlib.reload(module)')

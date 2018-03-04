@@ -1,5 +1,5 @@
 import re
-from typing import Callable
+from typing import Any, Callable, Dict, Optional
 
 import nbformat
 from nbformat import NotebookNode
@@ -9,10 +9,12 @@ from .client import run_cell, select_kernel_name
 from .config import config
 
 
-def new_code_cell(source: str, language=None, options=None) -> NotebookNode:
+def new_code_cell(source: str,
+                  language: Optional[str] = None,
+                  options: Optional[list] = None) -> NotebookNode:
     """Create a new code cell for evaluation."""
     cell = nbformat.v4.new_code_cell(source)
-    metadata = {}
+    metadata: Dict[str, Any] = {}
     if language is not None:
         metadata['language'] = language
         kernel_name = select_kernel_name(language)
@@ -44,28 +46,24 @@ def pheasant_options(cell: NotebookNode) -> list:
 
 @abort
 @memoize
-def run_and_render(cell: NotebookNode, render: Callable[..., str],
-                   kernel_name=None) -> str:
-    """Run a code cell and render the source and outputs into markdown.
+def run_and_render(cell: NotebookNode,
+                   render: Callable[[NotebookNode], str],
+                   kernel_name: Optional[str] = None) -> str:
+    """Run a code cell and render the source and outputs into markdown."""
 
-    These two functions are defined in this function in order to cache the
-    source and outputs to avoid rerunning the cell unnecessarily.
-    """
+    # These two functions are defined in this function in order to cache the
+    # source and outputs to avoid rerunning the cell unnecessarily.
     run_cell(cell, kernel_name)
     select_display_data(cell)
     return render(cell)
 
 
-display_data_priority = ['application/vnd.jupyter.widget-state+json',
-                         'application/vnd.jupyter.widget-view+json',
-                         'application/javascript',
-                         'text/html',
-                         'text/markdown',
-                         'image/svg+xml',
-                         'text/latex',
-                         'image/png',
-                         'image/jpeg',
-                         'text/plain']
+display_data_priority = [
+    'application/vnd.jupyter.widget-state+json',
+    'application/vnd.jupyter.widget-view+json', 'application/javascript',
+    'text/html', 'text/markdown', 'image/svg+xml', 'text/latex', 'image/png',
+    'image/jpeg', 'text/plain'
+]
 
 
 def select_display_data(cell: NotebookNode) -> None:
