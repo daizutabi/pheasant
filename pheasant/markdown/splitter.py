@@ -1,8 +1,6 @@
 import re
 from typing import Callable, Generator, List, Match, Optional, Tuple, Union
 
-from pheasant.jupyter.client import select_kernel_name
-
 
 def splitter(pattern: str, source: str,
              option=re.MULTILINE) -> Generator[Union[str, Match], None, None]:
@@ -89,6 +87,8 @@ def fenced_code_splitter(
         Splitted str.
         If tuple, it is (language: str, source: str, options: list)
     """
+
+    from pheasant.jupyter.client import select_kernel_name
     pattern_escape = r'^~~~(\S*)(.*?)\n(.*?\n)~~~\n'
     pattern_source = r'^```(\S+)(.*?)\n(.*?\n)```\n'
     re_option = re.DOTALL | re.MULTILINE

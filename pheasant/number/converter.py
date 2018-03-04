@@ -1,6 +1,7 @@
 import json
 import logging
 import os
+from typing import Any, Dict
 
 from jinja2 import Environment, FileSystemLoader
 
@@ -19,13 +20,12 @@ def initialize():
     template_directory, template_file = os.path.split(abspath)
     env = Environment(
         loader=FileSystemLoader([template_directory, default_directory]),
-        autoescape=False
-    )
+        autoescape=False)
     config['template'] = env.get_template(template_file)
 
 
-def convert(source):
-    from ..converters import get_source_file
+def convert(source: str) -> str:
+    from pheasant.converters import get_source_file
     source_file = get_source_file()
     if source_file not in config['pages']:
         config['pages'].append(source_file)
@@ -37,7 +37,7 @@ def convert(source):
     msg = f'Page index for {os.path.basename(source_file)}: {page_index}'
     logger.debug(msg)
 
-    label = {}
+    label: Dict[str, Any] = {}
     source, label = convert_header(source, label, page_index)
     for key in label:
         label[key].update(path=source_file)

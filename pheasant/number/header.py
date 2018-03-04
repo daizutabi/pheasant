@@ -1,11 +1,14 @@
 import re
+from typing import Generator, Tuple, Union
 
-from ..markdown.converter import markdown_convert
-from ..markdown.splitter import escaped_splitter_join
+from pheasant.markdown.converter import markdown_convert
+from pheasant.markdown.splitter import escaped_splitter_join
+
 from .config import config
 
 
-def convert(source: str, label=None, page_index=1):
+def convert(source: str, label=None,
+            page_index: Union[int, list] = 1) -> Tuple[str, dict]:
     """
     Convert markdown string or file into markdown with section number_listing.
 
@@ -20,7 +23,7 @@ def convert(source: str, label=None, page_index=1):
 
     Returns
     -------
-    results : str
+    tuple
         Markdown source
     """
     label = {} if label is None else label
@@ -28,7 +31,8 @@ def convert(source: str, label=None, page_index=1):
     return source, label
 
 
-def renderer(source: str, label: dict, page_index=1):
+def renderer(source: str, label: dict,
+             page_index: Union[int, list] = 1) -> Generator[str, None, None]:
     splitter = header_splitter(source)
     for splitted in splitter:
         if isinstance(splitted, str):
@@ -63,7 +67,9 @@ def renderer(source: str, label: dict, page_index=1):
         else:
             # Detect the range of numbered object.
             next_source = next(splitter)
-            if next_source.startswith(config['begin_pattern']):
+            if not isinstance(next_source, str):
+                raise ValueError('Invalid source')
+            elif next_source.startswith(config['begin_pattern']):
                 next_source = next_source[len(config['begin_pattern']):]
                 content, *rest = next_source.split(config['end_pattern'])
                 rest = config['end_pattern'].join(rest)
@@ -79,8 +85,8 @@ def renderer(source: str, label: dict, page_index=1):
             content = markdown_convert(content, extensions=extensions)
 
             if 'title' in splitted:  # for Math in title
-                title = markdown_convert(splitted['title'],
-                                         extensions=extensions)
+                title = markdown_convert(
+                    splitted['title'], extensions=extensions)
                 if title.startswith('<p>') and title.endswith('</p>'):
                     title = title[3:-4]
                 splitted['title'] = title
@@ -92,7 +98,7 @@ def renderer(source: str, label: dict, page_index=1):
                 yield rest
 
 
-def header_splitter(source: str):
+def header_splitter(source: str) -> Generator[Union[str, dict], None, None]:
     """
     Generate splitted markdown header and body text from `source`.
 

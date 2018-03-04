@@ -2,16 +2,15 @@
 import base64
 import html
 import io
+from typing import Any
 
 from pheasant.markdown.converter import markdown_convert
 
 from .config import config
 from .renderer import delete_style
 
-# from ..number import config as config_number
 
-
-def display(obj, **kwargs):
+def display(obj: Any, **kwargs: Any) -> str:
     # FIXME: how to determine the function for conversion.
     if hasattr(obj, '__module__'):
         module = obj.__module__
@@ -44,11 +43,11 @@ def display(obj, **kwargs):
     # return f'{begin}{source}{end}'
 
 
-def to_html(obj, **kwargs):
+def to_html(obj: Any, **kwargs: Any) -> str:
     return display(obj, output='html')
 
 
-def to_markdown(obj, **kwargs):
+def to_markdown(obj: Any, **kwargs: Any) -> str:
     return display(obj, output='markdown')
 
 
@@ -94,7 +93,7 @@ def holoviews_to_html(figure, output='markdown') -> str:
         return html
 
 
-def base64image(binary, format, output):
+def base64image(binary, format: str, output: str) -> str:
     data = base64.b64encode(binary).decode('utf8')
     data = f'data:image/{format};base64,{data}'
 
@@ -102,3 +101,5 @@ def base64image(binary, format, output):
         return f'![{format}]({data})'
     elif output == 'html':
         return f'<img alt="{format}" src="{data}"/>'
+    else:
+        raise ValueError(f'Unknown output: {output}')
