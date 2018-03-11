@@ -71,8 +71,8 @@ def renderer(source: str, label: dict,
                 raise ValueError('Invalid source')
             elif next_source.startswith(config['begin_pattern']):
                 next_source = next_source[len(config['begin_pattern']):]
-                content, *rest = next_source.split(config['end_pattern'])
-                rest = config['end_pattern'].join(rest)
+                content, *rests = next_source.split(config['end_pattern'])
+                rest = config['end_pattern'].join(rests)
             else:
                 index = next_source.find('\n\n')
                 if index == -1:
