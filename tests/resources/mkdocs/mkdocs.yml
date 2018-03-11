@@ -22,8 +22,6 @@ plugins:
         enabled: True
       number:
         enabled: True
-      debug:
-        enabled: False
 
 
 pages:
