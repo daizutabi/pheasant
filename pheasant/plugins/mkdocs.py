@@ -3,7 +3,7 @@ import logging
 from mkdocs.config import config_options
 from mkdocs.plugins import BasePlugin
 
-from ..converters import convert, get_converter_name, get_converters
+from pheasant.converters import convert, get_converter_name, get_converters
 
 logger = logging.getLogger('pheasant')
 
