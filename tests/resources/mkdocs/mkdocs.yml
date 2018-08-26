@@ -24,7 +24,7 @@ plugins:
         enabled: True
 
 
-pages:
+nav:
   - Home: test.md
   # - Home: index.md
   # - Markdown Stream: markdown_stream_input.md
