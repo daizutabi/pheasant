@@ -3,7 +3,7 @@ import logging
 import os
 
 import click
-import pypandoc
+# import pypandoc
 from pheasant.converters import convert
 
 logging.basicConfig(level=logging.INFO)
@@ -21,11 +21,11 @@ def cli(inputs, format, output, to):
     for path in get_file(inputs):
         markdown += convert(path, config)
 
-    pdoc_args = ['--self-contained']  # ['--mathjax', '--smart']
-    html = pypandoc.convert_text(markdown, 'md', format='html',
-                                 extra_args=pdoc_args)
-
-    print(html)
+    # pdoc_args = ['--self-contained']  # ['--mathjax', '--smart']
+    # html = pypandoc.convert_text(markdown, 'md', format='html',
+    #                              extra_args=pdoc_args)
+    #
+    # print(html)
 
 
 def get_file(inputs):
