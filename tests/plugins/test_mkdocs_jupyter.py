@@ -49,8 +49,8 @@ def jupyter_config(config):
     return config['plugins']['pheasant'].config['jupyter']
 
 
-def test_config(jupyter_config):
-    assert isinstance(jupyter_config, dict)
+# def test_config(jupyter_config):
+#     assert isinstance(jupyter_config, dict)
 
 
 class Page:
