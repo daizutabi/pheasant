@@ -22,7 +22,7 @@ before_script:
 
 script:
   - jupyter kernelspec list
-  - pheasant --version
+  # - pheasant --version
   - pytest
 
 after_success:
