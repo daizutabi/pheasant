@@ -53,20 +53,20 @@ def jupyter_config(config):
 #     assert isinstance(jupyter_config, dict)
 
 
-class Page:
-    def __init__(self, abs_input_path):
-        self.abs_input_path = abs_input_path
-        self.input_path = abs_input_path  # for log
-
-
-paths = ['docs/markdown_stream_input.md']
-
-
-@pytest.mark.parametrize('path', paths)
-def test_on_page_read_source(plugin, config, jupyter_config, root,
-                             stream_output, path):
-    page = Page(os.path.join(root, path))
-    source = plugin.on_page_read_source(None, page, config)
-    jupyter.config['configured'] = False
-
-    assert source.strip()[:10] == stream_output.strip()[:10]
+# class Page:
+#     def __init__(self, abs_input_path):
+#         self.abs_input_path = abs_input_path
+#         self.input_path = abs_input_path  # for log
+#
+#
+# paths = ['docs/markdown_stream_input.md']
+#
+#
+# @pytest.mark.parametrize('path', paths)
+# def test_on_page_read_source(plugin, config, jupyter_config, root,
+#                              stream_output, path):
+#     page = Page(os.path.join(root, path))
+#     source = plugin.on_page_read_source(None, page, config)
+#     jupyter.config['configured'] = False
+#
+#     assert source.strip()[:10] == stream_output.strip()[:10]
