@@ -1,23 +1,25 @@
-# from pheasant.code import convert, code_splitter
+# from pheasant.code import convert
+# from pheasant.code.hilite import escaped_code_splitter
 # from pheasant.jupyter.converter import initialize
 #
 #
 # def test_convert():
 #     initialize()
-#     assert convert('abc') == ('abc', None)
-#     title, content = convert('[pheasant] Pheasant')
+#     assert convert('abc') == 'abc'
+#     content = convert('[pheasant] Pheasant')
+#     content
 #     assert title == 'Pheasant'
 #     assert content.startswith('#begin\n<div class="codehilite pheasant-')
 #
 #
 # def test_code_splitter():
-#     splitter = code_splitter('a\nb')
+#     splitter = escaped_code_splitter('a\nb')
 #     for k, splited in enumerate(splitter):
 #         if k == 0:
 #             assert splited == 'a\nb'
 #     assert k == 0
 #
-#     splitter = code_splitter('~~~python\nprint(1)\n~~~\n\nabc')
+#     splitter = escaped_code_splitter('~~~python\nprint(1)\n~~~\n\nabc')
 #     for k, splited in enumerate(splitter):
 #         if k == 0:
 #             assert splited.startswith('#begin\n<div class="codehilite')

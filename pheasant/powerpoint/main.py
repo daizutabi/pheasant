@@ -19,6 +19,7 @@ except ImportError:
     Image = None
 
 platform = 'win' if sys.platform.startswith('win') else 'mac'
+platform = 'mac'
 
 if platform == 'win':
     import pywintypes

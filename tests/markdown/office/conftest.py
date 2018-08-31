@@ -3,15 +3,16 @@ import platform
 
 import pytest
 
+is_not_windows = platform.system() != 'Windows'
+is_not_windows = True
+
 try:
-    from pheasant.markdown.office import common
-    from pheasant.markdown.office import excel as xl
-    from pheasant.markdown.office import powerpoint as pp
+    if not is_not_windows:
+        from pheasant.markdown.office import common
+        from pheasant.markdown.office import excel as xl
+        from pheasant.markdown.office import powerpoint as pp
 except ImportError:
     pass
-
-
-is_not_windows = platform.system() != 'Windows'
 
 
 @pytest.fixture(scope='module')

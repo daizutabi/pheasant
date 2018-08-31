@@ -49,7 +49,7 @@ def escaped_code(language: str, source: str, options: List[str]) -> str:
     ```
     ~~~
 
-    Outut:
+    Output:
     <div class="... pheasant-source"><pre> ... </pre></div>
     """
     if language:

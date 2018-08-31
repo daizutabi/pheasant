@@ -3,13 +3,14 @@ import platform
 
 import pytest
 
+is_not_windows = platform.system() != 'Windows'
+is_not_windows = True
+
 try:
-    from pheasant.powerpoint import PowerPoint
+    if not is_not_windows:
+        from pheasant.powerpoint import PowerPoint
 except ImportError:
     pass
-
-
-is_not_windows = platform.system() != 'Windows'
 
 
 @pytest.fixture(scope='module')

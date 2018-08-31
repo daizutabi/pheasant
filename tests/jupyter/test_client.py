@@ -16,7 +16,7 @@ kernel_names_list = [kernel_names[language][0] for language in kernel_names]
 
 
 @pytest.mark.parametrize('kernel_name', kernel_names_list)
-def test_get_kernel_magager(kernel_name):
+def test_get_kernel_manager(kernel_name):
     kernel_manager = get_kernel_manager(kernel_name)
     assert kernel_name in kernel_managers
     assert kernel_manager.is_alive()
