@@ -1,360 +1,220 @@
-
-
-
-
 <!DOCTYPE html>
-<html lang="en" class="no-js">
-  <head>
-    
-      <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width,initial-scale=1">
-      <meta http-equiv="x-ua-compatible" content="ie=edge">
-      
-      
-        <link rel="canonical" href="https://pheasant.daizutabi.net/test/">
-      
-      
-      
-        <meta name="lang:clipboard.copy" content="Copy to clipboard">
-      
-        <meta name="lang:clipboard.copied" content="Copied to clipboard">
-      
-        <meta name="lang:search.language" content="en">
-      
-        <meta name="lang:search.pipeline.stopwords" content="True">
-      
-        <meta name="lang:search.pipeline.trimmer" content="True">
-      
-        <meta name="lang:search.result.none" content="No matching documents">
-      
-        <meta name="lang:search.result.one" content="1 matching document">
-      
-        <meta name="lang:search.result.other" content="# matching documents">
-      
-        <meta name="lang:search.tokenizer" content="[\s\-]+">
-      
-      <link rel="shortcut icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-0.17.2, mkdocs-material-2.6.0">
-    
-    
-      
-        <title>Test - Pheasant</title>
-      
-    
-    
-      <link rel="stylesheet" href="../assets/stylesheets/application.aa3de92b.css">
-      
-    
-    
-      <script src="../assets/javascripts/modernizr.1aa3b519.js"></script>
-    
-    
-      
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=:300,400,400i,700|">
-        <style>body,input{font-family:"","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"","Courier New",Courier,monospace}</style>
-      
-      <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    
-    
-      <link rel="stylesheet" href="../css/pheasant.css">
-    
-    
-  </head>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-    <body dir="ltr">
   
-    <svg class="md-svg">
-      <defs>
-        
-        
-          <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448"
-    viewBox="0 0 416 448" id="github">
-  <path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19-18.125
-        8.5-18.125-8.5-10.75-19-3.125-20.5 3.125-20.5 10.75-19 18.125-8.5
-        18.125 8.5 10.75 19 3.125 20.5zM320 304q0 10-3.125 20.5t-10.75
-        19-18.125 8.5-18.125-8.5-10.75-19-3.125-20.5 3.125-20.5 10.75-19
-        18.125-8.5 18.125 8.5 10.75 19 3.125 20.5zM360
-        304q0-30-17.25-51t-46.75-21q-10.25 0-48.75 5.25-17.75 2.75-39.25
-        2.75t-39.25-2.75q-38-5.25-48.75-5.25-29.5 0-46.75 21t-17.25 51q0 22 8
-        38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0
-        37.25-1.75t35-7.375 30.5-15 20.25-25.75 8-38.375zM416 260q0 51.75-15.25
-        82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5-41.75
-        1.125q-19.5 0-35.5-0.75t-36.875-3.125-38.125-7.5-34.25-12.875-30.25-20.25-21.5-28.75q-15.5-30.75-15.5-82.75
-        0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25
-        30.875q36.75-8.75 77.25-8.75 37 0 70 8 26.25-20.5
-        46.75-30.25t47.25-9.75q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34
-        99.5z" />
-</svg>
-        
-      </defs>
-    </svg>
-    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="drawer">
-    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="search">
-    <label class="md-overlay" data-md-component="overlay" for="drawer"></label>
-    
-      <a href="#2-test" tabindex="1" class="md-skip">
-        Skip to content
-      </a>
-    
-    
-      <header class="md-header" data-md-component="header">
-  <nav class="md-header-nav md-grid">
-    <div class="md-flex">
-      <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="https://pheasant.daizutabi.net/" title="Pheasant" class="md-header-nav__button md-logo">
-          
-            <i class="md-icon"></i>
-          
-        </a>
-      </div>
-      <div class="md-flex__cell md-flex__cell--shrink">
-        <label class="md-icon md-icon--menu md-header-nav__button" for="drawer"></label>
-      </div>
-      <div class="md-flex__cell md-flex__cell--stretch">
-        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
-          
-            
-              <span class="md-header-nav__topic">
-                Pheasant
-              </span>
-              <span class="md-header-nav__topic">
-                Test
-              </span>
-            
-          
-        </div>
-      </div>
-      <div class="md-flex__cell md-flex__cell--shrink">
-        
-          
-        
-      </div>
-      
-        <div class="md-flex__cell md-flex__cell--shrink">
-          <div class="md-header-nav__source">
-            
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Test - Pheasant</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
-
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+  <link href="../css/pheasant.css" rel="stylesheet">
+  <link href="https://cdn.pydata.org/bokeh/release/bokeh-0.12.14.min.css" rel="stylesheet">
+  <link href="https://cdn.pydata.org/bokeh/release/bokeh-widgets-0.12.14.min.css" rel="stylesheet">
+  <link href="https://cdn.pydata.org/bokeh/release/bokeh-tables-0.12.14.min.css" rel="stylesheet">
   
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Test";
+    var mkdocs_page_input_path = "test.md";
+    var mkdocs_page_url = "/test/";
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
 
+<body class="wy-body-for-nav" role="document">
 
-  <a href="https://github.com/daizutabi/pheasant/" title="Go to repository" class="md-source" data-md-source="github">
+  <div class="wy-grid-for-nav">
+
     
-      <div class="md-source__icon">
-        <svg viewBox="0 0 24 24" width="24" height="24">
-          <use xlink:href="#github" width="24" height="24"></use>
-        </svg>
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> Pheasant</a>
+        
       </div>
-    
-    <div class="md-source__repository">
-      GitHub
-    </div>
-  </a>
 
-          </div>
-        </div>
-      
-    </div>
-  </nav>
-</header>
-    
-    <div class="md-container">
-      
-        
-      
-      
-        
-
-<nav class="md-tabs" data-md-component="tabs">
-  <div class="md-tabs__inner md-grid">
-    <ul class="md-tabs__list">
-      
-        
-  <li class="md-tabs__item">
-    
-      <a href=".." title="Home" class="md-tabs__link md-tabs__link--active">
-        Home
-      </a>
-    
-  </li>
-
-      
-        
-      
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="..">Home</a>
+	    </li>
+          
+            <li class="toctree-l1 current">
+		
+    <a class="current" href="./">Test</a>
+    <ul class="subnav">
+            
     </ul>
-  </div>
-</nav>
-      
-      <main class="md-main">
-        <div class="md-main__inner md-grid" data-md-component="container">
+	    </li>
           
-            
-              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
-                <div class="md-sidebar__scrollwrap">
-                  <div class="md-sidebar__inner">
-                    <nav class="md-nav md-nav--primary" data-md-level="0">
-  <label class="md-nav__title md-nav__title--site" for="drawer">
-    <span class="md-nav__button md-logo">
-      
-        <i class="md-icon"></i>
-      
-    </span>
-    Pheasant
-  </label>
-  
-    <div class="md-nav__source">
-      
-
-
-  
-
-
-  <a href="https://github.com/daizutabi/pheasant/" title="Go to repository" class="md-source" data-md-source="github">
-    
-      <div class="md-source__icon">
-        <svg viewBox="0 0 24 24" width="24" height="24">
-          <use xlink:href="#github" width="24" height="24"></use>
-        </svg>
+            <li class="toctree-l1">
+		
+    <a class="" href="../image/">Image</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../holoviews/">HoloViews</a>
+	    </li>
+          
+        </ul>
       </div>
-    
-    <div class="md-source__repository">
-      GitHub
-    </div>
-  </a>
+      &nbsp;
+    </nav>
 
-    </div>
-  
-  <ul class="md-nav__list" data-md-scrollfix>
-    
-      
-      
-      
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
-
-  <li class="md-nav__item">
-    <a href=".." title="Home" class="md-nav__link">
-      Home
-    </a>
-  </li>
-
-    
       
-      
-      
-
-  
-
-
-  <li class="md-nav__item md-nav__item--active">
-    
-    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="toc">
-    
-      
-    
-    
-    <a href="./" title="Test" class="md-nav__link md-nav__link--active">
-      Test
-    </a>
-    
-  </li>
-
-    
-  </ul>
-</nav>
-                  </div>
-                </div>
-              </div>
-            
-            
-              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
-                <div class="md-sidebar__scrollwrap">
-                  <div class="md-sidebar__inner">
-                    
-<nav class="md-nav md-nav--secondary">
-  
-  
-    
-  
-  
-</nav>
-                  </div>
-                </div>
-              </div>
-            
-          
-          <div class="md-content">
-            <article class="md-content__inner md-typeset">
-              
-                
-                  <a href="https://github.com/daizutabi/pheasant/docs/docs/test.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
-                
-                
-                <h1 id="2-test">2 Test</h1>
-<p>abc</p>
-                
-                  
-                
-              
-              
-                
-              
-            </article>
-          </div>
-        </div>
-      </main>
-      
-        
-<footer class="md-footer">
-  
-    <div class="md-footer-nav">
-      <nav class="md-footer-nav__inner md-grid">
-        
-          <a href=".." title="Home" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
-            <div class="md-flex__cell md-flex__cell--shrink">
-              <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
-            </div>
-            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
-              <span class="md-flex__ellipsis">
-                <span class="md-footer-nav__direction">
-                  Previous
-                </span>
-                Home
-              </span>
-            </div>
-          </a>
-        
-        
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">Pheasant</a>
       </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>Test</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        <a href="https://github.com/daizutabi/pheasant/docs/docs/test.md"
+          class="icon icon-github"> Edit on GitHub</a>
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <p><img alt="png" src="data:image/png;base64,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" /></p>
+<!-- begin -->
+
+<div class="pheasant-markdown pheasant-code codehilite"><pre><span></span><span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">x</span>
+</pre></div>
+
+<!-- end -->
+
+<div class="pheasant-markdown pheasant-code codehilite"><pre><span></span><span class="k">print</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">x</span>
+</pre></div>
+
+<p>abcde</p>
+<div class="pheasant-number-table">
+<p>Table 4.1 a html table</p>
+<table>
+<thead>
+<tr>
+<th>First Header</th>
+<th>Second Header</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Content Cell</td>
+<td>Content Cell</td>
+</tr>
+<tr>
+<td>Content Cell</td>
+<td>Content Cell</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<div class="pheasant-number-table">
+<p>Table 4.2 a DataFrame table</p>
+<table class="dataframe">
+  <thead>
+    <tr>
+      <th></th>
+      <th>0</th>
+      <th>1</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>2</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../image/" class="btn btn-neutral float-right" title="Image">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href=".." class="btn btn-neutral" title="Home"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
     </div>
   
-  <div class="md-footer-meta md-typeset">
-    <div class="md-footer-meta__inner md-grid">
-      <div class="md-footer-copyright">
-        
-        powered by
-        <a href="http://www.mkdocs.org">MkDocs</a>
-        and
-        <a href="https://squidfunk.github.io/mkdocs-material/">
-          Material for MkDocs</a>
-      </div>
-      
-        
-      
-    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
   </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
 </footer>
       
-    </div>
-    
-      <script src="../assets/javascripts/application.9fb73e57.js"></script>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
       
-      <script>app.initialize({version:"0.17.2",url:{base:".."}})</script>
+          <a href="https://github.com/daizutabi/pheasant/" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
       
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML"></script>
       
-    
-    
+        <span><a href=".." style="color: #fcfcfc;">&laquo; Previous</a></span>
       
-    
-  </body>
+      
+        <span style="margin-left: 15px"><a href="../image/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js" defer></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+      <script src="https://cdn.pydata.org/bokeh/release/bokeh-0.12.14.min.js" defer></script>
+      <script src="https://cdn.pydata.org/bokeh/release/bokeh-widgets-0.12.14.min.js" defer></script>
+      <script src="https://cdn.pydata.org/bokeh/release/bokeh-tables-0.12.14.min.js" defer></script>
+
+</body>
 </html>

@@ -4,7 +4,7 @@ repo_url: https://github.com/daizutabi/pheasant/
 edit_uri: https://github.com/daizutabi/pheasant/docs/docs/
 
 theme:
-  name: material
+  name: readthedocs
   font: none
 
 extra:
@@ -15,7 +15,7 @@ markdown_extensions:
   - admonition
   - codehilite
   - attr_list
-  - pymdownx.arithmatex
+  # - pymdownx.arithmatex
 
 extra_css:
   - css/pheasant.css
@@ -47,13 +47,13 @@ plugins:
         template_file: output_text_outside.jinja2
       number:
         level: 0
-        markdown_extensions:
-          - pymdownx.arithmatex
+        # markdown_extensions:
+        #   - pymdownx.arithmatex
       code:
         enabled: true
 
 
-pages:
+nav:
   - Home: index.md
   - Test: test.md
   - Image: image.md

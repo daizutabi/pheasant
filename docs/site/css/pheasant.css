@@ -3,43 +3,197 @@ body {
 }
 
 pre {
-  font-size: 100% !important;
   font-family: monospace;
 }
 
+article table {
+  margin-left: auto !important;
+  margin-right: auto !important;
+  display: table !important;
+  width: auto !important;
+}
 
-.pheasant-figure {
+.pheasant-number-figure {
   margin-bottom: 24px;
 }
 
-.pheasant-figure p {
+.pheasant-number-figure p {
   text-align: center;
   margin: 0px;
   font-weight: bold;
   color: #000066;
 }
 
-.pheasant-figure svg {
-  margin-left: auto;
-  margin-right: auto;
+.pheasant-number-figure svg {
+  margin-left: auto !important;
+  margin-right: auto !important;
   display: table !important;
   width: auto !important;
 }
 
-.pheasant-table {
+.pheasant-number-figure .bk-root {
+  margin-left: auto !important;
+  margin-right: auto !important;
+  display: table !important;
+  width: auto !important;
+}
+
+.pheasant-number-table {
   margin-top: 24px;
 }
 
-.pheasant-table p {
+.pheasant-number-table p {
   text-align: center;
   margin-bottom: 2px;
   font-weight: bold;
   color: #000066;
 }
 
-.pheasant-table table {
-  margin-left: auto;
-  margin-right: auto;
+/* .pheasant-number-table table {
+  margin-left: auto !important;
+  margin-right: auto !important;
   display: table !important;
   width: auto !important;
+} */
+
+.pheasant-number-code p {
+  margin-left: 2.0em !important;
+  margin-bottom: 0px;
+  font-weight: bold;
+  color: #000066;
+}
+
+.pheasant-number-code pre {
+  margin-top: 3px;
+}
+
+table.dataframe {
+  border-collapse: collapse;
+  border: none;
+  font-size: 12px;
+}
+
+.dataframe thead tr, .dataframe thead th, .dataframe tbody tr, .dataframe tbody th, .dataframe tbody td {
+  border: none;
+  text-align: center;
+  padding-left: 4px;
+  padding-right: 4px;
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+
+.dataframe thead th {
+  color: darkblue;
+  background-color: lightcyan;
+  border: 1px solid #333366;
+}
+
+.dataframe tbody th {
+  color: black;
+  background-color: #ffffee;
+  border: 1px solid #666633;
+}
+
+.dataframe tbody td {
+  color: black;
+  background-color: #fcfcfc;
+  border-bottom: 1px solid #b9b9b9;
+  border-right: 1px solid #b9b9b9;
+}
+
+.dataframe tr th:last-child, .dataframe tr td:last-child {
+  border-right: 1px solid #555544;
+  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.dataframe tr:last-child td, .dataframe tr:last-child th {
+  border-bottom: 1px solid #555544;
+  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.dataframe tbody tr:nth-child(2n+1) td {
+  background: #f1f6fc;
+}
+
+.pheasant-markdown {
+  position: relative;
+  margin-left: 2.0em !important;
+  background-color: transparent !important;
+}
+
+.pheasant-markdown:before {
+  content: "";
+  position: absolute;
+  left: -2.5em;
+  font-size: 90%;
+  color: #669;
+  width: 2.3em;
+  text-align: right;
+  margin-top: 5px;
+}
+
+.pheasant-markdown>pre {
+  border-radius: 6px;
+}
+
+.pheasant-jupyter-input {
+  margin-bottom: 3px !important;
+}
+
+.pheasant-jupyter-input:before {
+  content: "In:";
+}
+
+.pheasant-jupyter-input>pre {
+  background-color: #eef !important;
+  border: 1px solid #bdd;
+}
+
+.pheasant-jupyter-output {
+  margin-top: 3px !important;
+}
+
+.pheasant-jupyter-output:before {
+  content: "Out:";
+}
+
+.pheasant-jupyter-output>pre {
+  background-color: #ffd !important;
+  border: 1px solid #ddb;
+}
+
+.pheasant-source {
+  margin-top: 3px !important;
+  margin-bottom: 20px !important;
+}
+
+.pheasant-source:before {
+  content: "Src:";
+}
+
+.pheasant-source>pre {
+  background-color: #efc !important;
+  border: 1px solid #bdb;
+}
+
+.pheasant-code {
+  margin-top: 3px !important;
+  margin-bottom: 20px !important;
+}
+
+.pheasant-code:before {
+  content: "";
+}
+
+.pheasant-code>pre {
+  background-color: #efd !important;
+  border: 1px solid #bdb;
+}
+
+.codehilite pre {
+  padding: 6px 8px !important;
+}
+
+.md-typeset .md-typeset__table {
+  display: inherit;
 }

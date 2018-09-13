@@ -31,6 +31,6 @@ class PheasantPlugin(BasePlugin):
         The raw source for a page as unicode string. If None is returned, the
         default loading from a file will be performed.
         """
-        logger.info(f'Converting: {page.input_path}')
+        logger.info(f'Converting: {page.file.src_path}')
         pheasant_config = config['plugins']['pheasant'].config
-        return convert(page.abs_input_path, pheasant_config)
+        return convert(page.file.abs_src_path, pheasant_config)
