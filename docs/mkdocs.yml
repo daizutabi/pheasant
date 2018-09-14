@@ -15,7 +15,7 @@ markdown_extensions:
   - admonition
   - codehilite
   - attr_list
-  # - pymdownx.arithmatex
+  - pymdownx.arithmatex
 
 extra_css:
   - css/pheasant.css
@@ -53,8 +53,8 @@ plugins:
         enabled: true
 
 
-nav:
-  - Home: index.md
-  - Test: test.md
-  - Image: image.md
-  - HoloViews: holoviews.md
+# nav:
+#   - Home: index.md
+#   - Test: test.md
+#   - Image: image.md
+#   - HoloViews: holoviews.md

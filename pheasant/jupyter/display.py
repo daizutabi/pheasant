@@ -23,7 +23,7 @@ def display(obj: Any, **kwargs: Any) -> str:
         elif module.startswith('holoviews.'):
             source = holoviews_to_html(obj)
         else:
-            source = f'Unknown module: {module}'
+            source = str(obj)
     else:
         is_str = isinstance(obj, str)
         if not is_str:

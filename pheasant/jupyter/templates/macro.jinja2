@@ -32,6 +32,9 @@
 {%- endmacro -%}
 
 {%- macro output_display(output) -%}
+  {%- if output.output_type == 'error' -%}
+    {{ output.traceback[-1] | strip_ansi }}
+  {%- endif -%}
   {%- for type in output.data -%}
     {%- if type == 'application/pdf' -%}
         {%- block data_pdf -%}{%- endblock -%}

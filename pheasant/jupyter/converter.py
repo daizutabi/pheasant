@@ -2,10 +2,9 @@ import os
 from typing import Generator
 
 import nbformat
+import pheasant
 from jinja2 import Environment, FileSystemLoader
 from nbconvert.filters import strip_ansi
-
-import pheasant
 from pheasant.markdown.splitter import fenced_code_splitter
 
 from .client import run_cell
@@ -42,7 +41,9 @@ def convert(source: str) -> str:
     reload_modules()
 
     config['run_counter'] = 0  # used in the cache module. MOVE!!
-    return ''.join(cell_runner(source))
+    out = ''.join(cell_runner(source))
+    # print(out)
+    return out
 
 
 def cell_runner(source: str) -> Generator[str, None, None]:
@@ -60,7 +61,13 @@ def cell_runner(source: str) -> Generator[str, None, None]:
     """
     for splitted in fenced_code_splitter(source):
         if isinstance(splitted, str):
-            yield preprocess_markdown(splitted)
+            cmd = '<!-- break -->'
+            if cmd in splitted:
+                splitted = splitted[:splitted.index(cmd)]
+                yield preprocess_markdown(splitted)
+                break
+            else:
+                yield preprocess_markdown(splitted)
         else:
             language, source, options = splitted
             set_config(options)
@@ -119,8 +126,8 @@ def import_modules() -> None:
 
 
 def run_init_codes() -> None:
-    for code in (config['init_codes'] +
-                 ['pandas.options.display.max_colwidth = 0']):
+    for code in (config['init_codes']
+                 + ['pandas.options.display.max_colwidth = 0']):
         cell = nbformat.v4.new_code_cell(code)
         run_cell(cell)
 
