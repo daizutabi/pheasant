@@ -12,8 +12,8 @@ def test_row():
 
 def test_matrix():
     latex = '\n'.join([
-        R'\left(\begin{array}{ccc}',
+        R'\left[\begin{array}{ccc}',
         R'a_{11}&a_{12}&a_{13}\\a_{21}&a_{22}&a_{23}\\a_{31}&a_{32}&a_{33}',
-        R'\end{array}\right)',
+        R'\end{array}\right]',
     ])
     assert matrix('a', 3, 3) == latex
