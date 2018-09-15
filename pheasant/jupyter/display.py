@@ -22,6 +22,8 @@ def display(obj: Any, **kwargs: Any) -> str:
             source = bokeh_to_html(obj)
         elif module.startswith('holoviews.'):
             source = holoviews_to_html(obj)
+        elif module.startswith('sympy.'):
+            source = sympy_to_latex(obj)
         else:
             source = str(obj)
     else:
@@ -63,6 +65,12 @@ def bokeh_to_html(figure) -> str:
     from bokeh.embed import components
     script, div = components(figure)
     return script + div
+
+
+def sympy_to_latex(obj) -> str:
+    """Convert a Sympy's object into latex string."""
+    import sympy as sp
+    return sp.latex(obj)
 
 
 def matplotlib_to_base64(obj, output='markdown') -> str:

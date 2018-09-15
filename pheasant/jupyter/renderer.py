@@ -32,7 +32,6 @@ def render(cell: NotebookNode) -> str:
 
 def inline_render(cell: NotebookNode) -> str:
     """Convert a cell into markdown or html with `inline_template`."""
-    print(cell)
     strip_text(cell)
     return config['inline_template'].render(cell=cell)
 

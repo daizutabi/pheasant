@@ -1,3 +1,9 @@
+try:
+    import sympy as sp
+except ImportError:
+    sp = None
+
+
 def subscript(var, sub):
     if '{_}' not in var:
         var += '{_}'
@@ -19,10 +25,37 @@ def matrix(var, nrows, ncols, transpose=False):
     mat = '\\\\'.join([row(var, i, ncols, transpose)
                        for i in range(1, nrows + 1)])
     return '\n'.join([
-        R'\left(\begin{array}{' + align + '}',
+        R'\left[\begin{array}{' + align + '}',
         mat,
-        R'\end{array}\right)'
+        R'\end{array}\right]'
     ])
+
+
+def sympy_matrix(v, n, m):
+    m = [[sp.symbols(f'{v}_{i}{j}') for j in range(1, m + 1)]
+         for i in range(1, n + 1)]
+    return sp.Matrix(m)
+
+
+def const(value, nrows, ncols=None):
+    if ncols is None:
+        nrows, ncols = ncols, 1
+    align = 'c' * ncols
+    row = '&'.join([str(value)] * ncols)
+    mat = '\\\\'.join([row] * nrows)
+    return '\n'.join([
+        R'\left[\begin{array}{' + align + '}',
+        mat,
+        R'\end{array}\right]'
+    ])
+
+
+def ones(nrows, ncols=None):
+    return const(1, nrows, ncols)
+
+
+def zeros(nrows, ncols=None):
+    return const(0, nrows, ncols)
 
 
 def vector(var, length, transpose=False):
@@ -33,9 +66,9 @@ def vector(var, length, transpose=False):
     else:
         align = 'c' * length
     return '\n'.join([
-        R'\left(\begin{array}{' + align + '}',
+        R'\left[\begin{array}{' + align + '}',
         vec,
-        R'\end{array}\right)'
+        R'\end{array}\right]'
     ])
 
 
@@ -60,6 +93,15 @@ class Matrix:
     @property
     def T(self):
         return matrix(self.var, self.ncols, self.nrows, transpose=True)
+
+    @property
+    def S(self):
+        return sympy_matrix(self.var, self.nrows, self.ncols)
+
+    def apply(self, func):
+        mat = self.S
+        vec = sp.Matrix([[func(x) for x in mat]])
+        return vec.reshape(self.nrows, self.ncols)
 
     def shape(self):
         return (self.nrows, self.ncols)
@@ -87,6 +129,10 @@ class Vector:
     def T(self):
         return vector(self.var, self.length, transpose=True)
 
+    @property
+    def S(self):
+        return sympy_matrix(self.var, 1, self.length)
+
     def shape(self):
         return (self.length,)
 
@@ -99,8 +145,3 @@ class Vector:
 
     def spartial(self, f, frac=False):
         return partial(f, self.var, frac)
-
-
-def main():
-    x = Matrix('x', 2, 3)
-    x.spartial('L')
