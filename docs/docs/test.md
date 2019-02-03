@@ -1,9 +1,10 @@
 ```python inline
-df = pd.DataFrame([[5, 0], [3, 4]], columns=['a', 'b'])
+df = pd.DataFrame([[4, 0], [3, 4]], columns=['a', 'b'])
 
 def func(x):
   plt.cla()
-  plt.plot([0, x, 3*x])
+  plt.plot([0, x, 2*x])
+
   return {{^plt.gca()}}
 
 {{df.applymap(func)}}
@@ -12,7 +13,7 @@ def func(x):
 ![python](hello.func)
 
 ~~~python
-print(1)
+print(3)
 print(2)
 
 def func(x):
@@ -37,3 +38,6 @@ df = pd.DataFrame([[1, 2]])
 {{df}}
 ```
 <!-- end -->
+
+
+$a^3$

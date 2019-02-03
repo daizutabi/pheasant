@@ -1,2 +1,2 @@
 def func(x):
-    return 2 * x
+    return 5 * x

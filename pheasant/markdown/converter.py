@@ -32,5 +32,5 @@ def fenced_code_convert(source: str,
     source = source.replace(CLASS, cls)
     if only_code:
         match = pre_pattern.match(source)
-        source = match.group(1)
+        source = match.group(1) if match else ''
     return source

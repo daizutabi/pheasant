@@ -2,9 +2,10 @@ import os
 from typing import Generator
 
 import nbformat
-import pheasant
 from jinja2 import Environment, FileSystemLoader
 from nbconvert.filters import strip_ansi
+
+import pheasant
 from pheasant.markdown.splitter import fenced_code_splitter
 
 from .client import run_cell
