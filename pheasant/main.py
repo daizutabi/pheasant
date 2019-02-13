@@ -3,6 +3,7 @@ import logging
 import os
 
 import click
+
 # import pypandoc
 from pheasant.converters import convert
 
@@ -11,15 +12,17 @@ logger = logging.getLogger(__name__)
 
 
 @click.command()
-@click.option('--format', '-f', default=None)
-@click.option('--output', '-o', default=None)
-@click.option('--to', '-t', default=None)
-@click.argument('inputs', nargs=-1)
+@click.option("--format", "-f", default=None)
+@click.option("--output", "-o", default=None)
+@click.option("--to", "-t", default=None)
+@click.argument("inputs", nargs=-1)
 def cli(inputs, format, output, to):
     config = default_config()
-    markdown = ''
+    markdown = ""
     for path in get_file(inputs):
         markdown += convert(path, config)
+
+    print(markdown)
 
     # pdoc_args = ['--self-contained']  # ['--mathjax', '--smart']
     # html = pypandoc.convert_text(markdown, 'md', format='html',
@@ -38,8 +41,8 @@ def get_file(inputs):
 
 def default_config():
     config = {}
-    for converter in ['jupyter', 'number', 'code']:
-        config[converter] = {'enabled': True}
+    for converter in ["jupyter", "number", "code"]:
+        config[converter] = {"enabled": True}
     return config
 
 
@@ -47,5 +50,5 @@ def main():
     cli()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
