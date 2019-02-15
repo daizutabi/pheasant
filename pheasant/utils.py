@@ -32,7 +32,7 @@ def read(root: str, filename: str) -> str:
     """Utility function to read a file under `tests` directory."""
     root = os.path.dirname(os.path.abspath(root))
 
-    basename = None
+    basename = ''
     while basename != 'tests':
         root, basename = os.path.split(root)
         if basename == '':

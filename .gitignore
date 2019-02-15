@@ -1,9 +1,7 @@
-.cache
 build/
 dist/
 *.pyc
 .ipynb_checkpoints/
-*.lnk
 *.egg-info/
 .coverage
 **/pelican/output/
@@ -12,4 +10,3 @@ __pycache__/
 .ropeproject/
 .pytest_cache/
 .mypy_cache/
-.vscode/
