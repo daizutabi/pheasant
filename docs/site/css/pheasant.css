@@ -49,12 +49,12 @@ article table {
   color: #000066;
 }
 
-/* .pheasant-number-table table {
+.pheasant-number-table table {
   margin-left: auto !important;
   margin-right: auto !important;
   display: table !important;
   width: auto !important;
-} */
+}
 
 .pheasant-number-code p {
   margin-left: 2.0em !important;
@@ -85,30 +85,30 @@ table.dataframe {
 .dataframe thead th {
   color: darkblue;
   background-color: lightcyan;
-  border: 1px solid #333366;
+  border: 1px solid #333366 !important;
 }
 
 .dataframe tbody th {
   color: black;
   background-color: #ffffee;
-  border: 1px solid #666633;
+  border: 1px solid #666633 !important;
 }
 
 .dataframe tbody td {
   color: black;
   background-color: #fcfcfc;
-  border-bottom: 1px solid #b9b9b9;
-  border-right: 1px solid #b9b9b9;
+  border-bottom: 1px solid #b9b9b9 !important;
+  border-right: 1px solid #b9b9b9 !important;
 }
 
 .dataframe tr th:last-child, .dataframe tr td:last-child {
-  border-right: 1px solid #555544;
-  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.1);
+  border-right: 1px solid #333366 !important;
+  /* box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.1); */
 }
 
 .dataframe tr:last-child td, .dataframe tr:last-child th {
-  border-bottom: 1px solid #555544;
-  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid #333366 !important;
+  /* box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.1); */
 }
 
 .dataframe tbody tr:nth-child(2n+1) td {

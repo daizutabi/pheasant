@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>2 Bokeh - Pheasant</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+  <link href="../css/pheasant.css" rel="stylesheet">
+  <link href="https://cdn.pydata.org/bokeh/release/bokeh-1.0.4.min.css" rel="stylesheet">
+  <link href="https://cdn.pydata.org/bokeh/release/bokeh-widgets-1.0.4.min.css" rel="stylesheet">
+  <link href="https://cdn.pydata.org/bokeh/release/bokeh-tables-1.0.4.min.css" rel="stylesheet">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "2 Bokeh";
+    var mkdocs_page_input_path = "bokeh.md";
+    var mkdocs_page_url = "/bokeh/";
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> Pheasant</a>
+        
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="..">1 Pheasant</a>
+	    </li>
+          
+            <li class="toctree-l1 current">
+		
+    <a class="current" href="./">2 Bokeh</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l2"><a href="#2-bokeh">2 Bokeh</a></li>
+    
+
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../holoviews/">3 HoloViews</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../image/">4 Image</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../table/">5 Table</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../test/">6 Test</a>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">Pheasant</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>2 Bokeh</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        <a href="https://github.com/daizutabi/pheasant/docs/docs/bokeh.md"
+          class="icon icon-github"> Edit on GitHub</a>
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="2-bokeh">2 Bokeh</h1>
+<div class="pheasant-markdown pheasant-jupyter-input codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">bokeh.plotting</span> <span class="kn">import</span> <span class="n">figure</span>
+<span class="c1"># from bokeh.io import show, output_notebook</span>
+<span class="c1"># from bokeh.resources import INLINE</span>
+<span class="c1"># output_notebook(INLINE)</span>
+
+<span class="n">plot</span> <span class="o">=</span> <span class="n">figure</span><span class="p">(</span><span class="n">plot_width</span><span class="o">=</span><span class="mi">250</span><span class="p">,</span> <span class="n">plot_height</span><span class="o">=</span><span class="mi">250</span><span class="p">)</span>
+<span class="n">plot</span><span class="o">.</span><span class="n">circle</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> <span class="n">size</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="c1"># show(plot)</span>
+</pre></div>
+
+<div style="display: table;"><div style="display: table-row;"><div style="display: table-cell;"><b title="bokeh.models.renderers.GlyphRenderer">GlyphRenderer</b>(</div><div style="display: table-cell;">id&nbsp;=&nbsp;'1160', <span id="1163" style="cursor: pointer;">&hellip;)</span></div></div><div class="1162" style="display: none;"><div style="display: table-cell;"></div><div style="display: table-cell;">data_source&nbsp;=&nbsp;ColumnDataSource(id='1157', ...),</div></div><div class="1162" style="display: none;"><div style="display: table-cell;"></div><div style="display: table-cell;">glyph&nbsp;=&nbsp;Circle(id='1158', ...),</div></div><div class="1162" style="display: none;"><div style="display: table-cell;"></div><div style="display: table-cell;">hover_glyph&nbsp;=&nbsp;None,</div></div><div class="1162" style="display: none;"><div style="display: table-cell;"></div><div style="display: table-cell;">js_event_callbacks&nbsp;=&nbsp;{},</div></div><div class="1162" style="display: none;"><div style="display: table-cell;"></div><div style="display: table-cell;">js_property_callbacks&nbsp;=&nbsp;{},</div></div><div class="1162" style="display: none;"><div style="display: table-cell;"></div><div style="display: table-cell;">level&nbsp;=&nbsp;'glyph',</div></div><div class="1162" style="display: none;"><div style="display: table-cell;"></div><div style="display: table-cell;">muted&nbsp;=&nbsp;False,</div></div><div class="1162" style="display: none;"><div style="display: table-cell;"></div><div style="display: table-cell;">muted_glyph&nbsp;=&nbsp;None,</div></div><div class="1162" style="display: none;"><div style="display: table-cell;"></div><div style="display: table-cell;">name&nbsp;=&nbsp;None,</div></div><div class="1162" style="display: none;"><div style="display: table-cell;"></div><div style="display: table-cell;">nonselection_glyph&nbsp;=&nbsp;Circle(id='1159', ...),</div></div><div class="1162" style="display: none;"><div style="display: table-cell;"></div><div style="display: table-cell;">selection_glyph&nbsp;=&nbsp;None,</div></div><div class="1162" style="display: none;"><div style="display: table-cell;"></div><div style="display: table-cell;">subscribed_events&nbsp;=&nbsp;[],</div></div><div class="1162" style="display: none;"><div style="display: table-cell;"></div><div style="display: table-cell;">tags&nbsp;=&nbsp;[],</div></div><div class="1162" style="display: none;"><div style="display: table-cell;"></div><div style="display: table-cell;">view&nbsp;=&nbsp;CDSView(id='1161', ...),</div></div><div class="1162" style="display: none;"><div style="display: table-cell;"></div><div style="display: table-cell;">visible&nbsp;=&nbsp;True,</div></div><div class="1162" style="display: none;"><div style="display: table-cell;"></div><div style="display: table-cell;">x_range_name&nbsp;=&nbsp;'default',</div></div><div class="1162" style="display: none;"><div style="display: table-cell;"></div><div style="display: table-cell;">y_range_name&nbsp;=&nbsp;'default')</div></div></div>
+
+<script>
+(function() {
+  var expanded = false;
+  var ellipsis = document.getElementById("1163");
+  ellipsis.addEventListener("click", function() {
+    var rows = document.getElementsByClassName("1162");
+    for (var i = 0; i < rows.length; i++) {
+      var el = rows[i];
+      el.style.display = expanded ? "none" : "table-row";
+    }
+    ellipsis.innerHTML = expanded ? "&hellip;)" : "&lsaquo;&lsaquo;&lsaquo;";
+    expanded = !expanded;
+  });
+})();
+</script>
+
+<p>abc</p>
+<div class="pheasant-number-figure">
+<script type="text/javascript">
+  (function() {
+    var fn = function() {
+      Bokeh.safely(function() {
+        (function(root) {
+          function embed_document(root) {
+
+          var docs_json = '{"6fc48a91-aab0-4dc1-8c46-fde4bea6212f":{"roots":{"references":[{"attributes":{},"id":"1138","type":"BasicTicker"},{"attributes":{},"id":"1147","type":"HelpTool"},{"attributes":{"callback":null,"data":{"x":[1,2,3,4,5],"y":[1,2,3,4,5]},"selected":{"id":"1171","type":"Selection"},"selection_policy":{"id":"1172","type":"UnionRenderers"}},"id":"1157","type":"ColumnDataSource"},{"attributes":{"data_source":{"id":"1157","type":"ColumnDataSource"},"glyph":{"id":"1158","type":"Circle"},"hover_glyph":null,"muted_glyph":null,"nonselection_glyph":{"id":"1159","type":"Circle"},"selection_glyph":null,"view":{"id":"1161","type":"CDSView"}},"id":"1160","type":"GlyphRenderer"},{"attributes":{"dimension":1,"plot":{"id":"1123","subtype":"Figure","type":"Plot"},"ticker":{"id":"1138","type":"BasicTicker"}},"id":"1141","type":"Grid"},{"attributes":{"active_drag":"auto","active_inspect":"auto","active_multi":null,"active_scroll":"auto","active_tap":"auto","tools":[{"id":"1142","type":"PanTool"},{"id":"1143","type":"WheelZoomTool"},{"id":"1144","type":"BoxZoomTool"},{"id":"1145","type":"SaveTool"},{"id":"1146","type":"ResetTool"},{"id":"1147","type":"HelpTool"}]},"id":"1148","type":"Toolbar"},{"attributes":{"callback":null},"id":"1124","type":"DataRange1d"},{"attributes":{"formatter":{"id":"1167","type":"BasicTickFormatter"},"plot":{"id":"1123","subtype":"Figure","type":"Plot"},"ticker":{"id":"1138","type":"BasicTicker"}},"id":"1137","type":"LinearAxis"},{"attributes":{"fill_alpha":{"value":0.1},"fill_color":{"value":"#1f77b4"},"line_alpha":{"value":0.1},"line_color":{"value":"#1f77b4"},"size":{"units":"screen","value":10},"x":{"field":"x"},"y":{"field":"y"}},"id":"1159","type":"Circle"},{"attributes":{"callback":null},"id":"1126","type":"DataRange1d"},{"attributes":{"fill_color":{"value":"#1f77b4"},"line_color":{"value":"#1f77b4"},"size":{"units":"screen","value":10},"x":{"field":"x"},"y":{"field":"y"}},"id":"1158","type":"Circle"},{"attributes":{"source":{"id":"1157","type":"ColumnDataSource"}},"id":"1161","type":"CDSView"},{"attributes":{},"id":"1128","type":"LinearScale"},{"attributes":{},"id":"1130","type":"LinearScale"},{"attributes":{},"id":"1142","type":"PanTool"},{"attributes":{},"id":"1167","type":"BasicTickFormatter"},{"attributes":{},"id":"1143","type":"WheelZoomTool"},{"attributes":{"formatter":{"id":"1169","type":"BasicTickFormatter"},"plot":{"id":"1123","subtype":"Figure","type":"Plot"},"ticker":{"id":"1133","type":"BasicTicker"}},"id":"1132","type":"LinearAxis"},{"attributes":{"below":[{"id":"1132","type":"LinearAxis"}],"left":[{"id":"1137","type":"LinearAxis"}],"plot_height":250,"plot_width":250,"renderers":[{"id":"1132","type":"LinearAxis"},{"id":"1136","type":"Grid"},{"id":"1137","type":"LinearAxis"},{"id":"1141","type":"Grid"},{"id":"1150","type":"BoxAnnotation"},{"id":"1160","type":"GlyphRenderer"}],"title":{"id":"1165","type":"Title"},"toolbar":{"id":"1148","type":"Toolbar"},"x_range":{"id":"1124","type":"DataRange1d"},"x_scale":{"id":"1128","type":"LinearScale"},"y_range":{"id":"1126","type":"DataRange1d"},"y_scale":{"id":"1130","type":"LinearScale"}},"id":"1123","subtype":"Figure","type":"Plot"},{"attributes":{},"id":"1169","type":"BasicTickFormatter"},{"attributes":{"overlay":{"id":"1150","type":"BoxAnnotation"}},"id":"1144","type":"BoxZoomTool"},{"attributes":{},"id":"1133","type":"BasicTicker"},{"attributes":{},"id":"1171","type":"Selection"},{"attributes":{"bottom_units":"screen","fill_alpha":{"value":0.5},"fill_color":{"value":"lightgrey"},"left_units":"screen","level":"overlay","line_alpha":{"value":1.0},"line_color":{"value":"black"},"line_dash":[4,4],"line_width":{"value":2},"plot":null,"render_mode":"css","right_units":"screen","top_units":"screen"},"id":"1150","type":"BoxAnnotation"},{"attributes":{},"id":"1145","type":"SaveTool"},{"attributes":{"plot":{"id":"1123","subtype":"Figure","type":"Plot"},"ticker":{"id":"1133","type":"BasicTicker"}},"id":"1136","type":"Grid"},{"attributes":{},"id":"1172","type":"UnionRenderers"},{"attributes":{"plot":null,"text":""},"id":"1165","type":"Title"},{"attributes":{},"id":"1146","type":"ResetTool"}],"root_ids":["1123"]},"title":"Bokeh Application","version":"1.0.4"}}';
+          var render_items = [{"docid":"6fc48a91-aab0-4dc1-8c46-fde4bea6212f","roots":{"1123":"111e5037-013a-4756-8acd-d8ab6c23a44d"}}];
+          root.Bokeh.embed.embed_items(docs_json, render_items);
+
+          }
+          if (root.Bokeh !== undefined) {
+            embed_document(root);
+          } else {
+            var attempts = 0;
+            var timer = setInterval(function(root) {
+              if (root.Bokeh !== undefined) {
+                embed_document(root);
+                clearInterval(timer);
+              }
+              attempts++;
+              if (attempts > 100) {
+                console.log("Bokeh: ERROR: Unable to run BokehJS code because BokehJS library is missing");
+                clearInterval(timer);
+              }
+            }, 10, root)
+          }
+        })(window);
+      });
+    };
+    if (document.readyState != "loading") fn();
+    else document.addEventListener("DOMContentLoaded", fn);
+  })();
+</script>
+
+<div class="bk-root" id="111e5037-013a-4756-8acd-d8ab6c23a44d" data-root-id="1123"></div>
+<p>Figure 2.1 a</p>
+</div>
+
+<p>abc</p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../holoviews/" class="btn btn-neutral float-right" title="3 HoloViews">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href=".." class="btn btn-neutral" title="1 Pheasant"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+          <a href="https://github.com/daizutabi/pheasant/" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
+      
+      
+        <span><a href=".." style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../holoviews/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js" defer></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+      <script src="https://cdn.pydata.org/bokeh/release/bokeh-1.0.4.min.js" defer></script>
+      <script src="https://cdn.pydata.org/bokeh/release/bokeh-widgets-1.0.4.min.js" defer></script>
+      <script src="https://cdn.pydata.org/bokeh/release/bokeh-tables-1.0.4.min.js" defer></script>
+
+</body>
+</html>

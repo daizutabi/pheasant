@@ -1,5 +1,7 @@
+# Test
+
 ```python inline
-df = pd.DataFrame([[4, 0], [3, 4]], columns=['a', 'b'])
+df = pd.DataFrame([[4, 2], [3, 4]], columns=['a', 'b'])
 
 def func(x):
   plt.cla()
@@ -7,8 +9,15 @@ def func(x):
 
   return {{^plt.gca()}}
 
-{{df.applymap(func)}}
+df = df.applymap(func)
 ```
+
+{{df}}
+
+```python
+df
+```
+
 
 ![python](hello.func)
 
@@ -40,4 +49,4 @@ df = pd.DataFrame([[1, 2]])
 <!-- end -->
 
 
-$a^3$
+$$a^3\int f(x)dx$$

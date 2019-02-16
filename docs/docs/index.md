@@ -92,7 +92,7 @@ name = 'Pheasant'
 
 Then, `"My name is {{#name}}."` becomes "My name is {{name}}." You can assign a variable in an inline code. `"{{#a=5}}$2a$ is equal to {{#2*a}}."` becomes "{{a=5}}$2a$ is equal to {{2*a}}." Note that an inline code without outputs is not shown after conversion.
 
-Pheasant supports various output formats other than standard stream. For example, you can create a PNG image from Matplotlib.
+Pheasant supports various output formats other than standard stream. For example, you can create a PNG image using Matplotlib.
 
 ~~~
 ```python
@@ -140,7 +140,6 @@ plot.circle([1, 2, 3, 4, 5], [1, 2, 3, 4, 5], size=10)
 ~~~
 
 
-
 ```python
 from bokeh.plotting import figure
 from bokeh.embed import components
@@ -151,25 +150,6 @@ plot.circle([1, 2, 3, 4, 5], [1, 2, 3, 4, 5], size=10)
 
 {{plot}}
 
-The language executed in Pheasant is not restricted to Python. For example,
-if you install Julia kernel, you can write:
-
-
-~~~
-```javascript
-var a = 1
-a
-```
-~~~
-
-to get an output like below:
-
-
-```javascript
-var a = 1
-a
-```
-
 ### Auto numbering of headers, figures, and tables.
 
 As you can see, all of headers are numbered in this document. This is done by Pheasant automatically. In addition, Pheasant can count the number of figures and tables and give the identical number to each figure or table.
@@ -177,7 +157,7 @@ As you can see, all of headers are numbered in this document. This is done by Ph
 You can use a special *header* statement for figure (`#Figure`) and table (`#Table`) to number them like below:
 
 ~~~
-#Figure This is a cat. {#cat#} <= BUG!
+#Figure This is a cat. {#cat#}
 
 ![jpg](img/cat.jpg)
 ~~~

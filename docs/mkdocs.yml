@@ -19,15 +19,15 @@ markdown_extensions:
 
 extra_css:
   - css/pheasant.css
-  - https://cdn.pydata.org/bokeh/release/bokeh-0.12.14.min.css
-  - https://cdn.pydata.org/bokeh/release/bokeh-widgets-0.12.14.min.css
-  - https://cdn.pydata.org/bokeh/release/bokeh-tables-0.12.14.min.css
+  - https://cdn.pydata.org/bokeh/release/bokeh-1.0.4.min.css
+  - https://cdn.pydata.org/bokeh/release/bokeh-widgets-1.0.4.min.css
+  - https://cdn.pydata.org/bokeh/release/bokeh-tables-1.0.4.min.css
 
 extra_javascript:
   - https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML
-  - https://cdn.pydata.org/bokeh/release/bokeh-0.12.14.min.js
-  - https://cdn.pydata.org/bokeh/release/bokeh-widgets-0.12.14.min.js
-  - https://cdn.pydata.org/bokeh/release/bokeh-tables-0.12.14.min.js
+  - https://cdn.pydata.org/bokeh/release/bokeh-1.0.4.min.js
+  - https://cdn.pydata.org/bokeh/release/bokeh-widgets-1.0.4.min.js
+  - https://cdn.pydata.org/bokeh/release/bokeh-tables-1.0.4.min.js
 
 plugins:
   - pheasant:
@@ -35,7 +35,7 @@ plugins:
         enabled: true
       jupyter:
         kernel_name:
-          python: doc
+          python: daizu
         sys_paths:
           - scripts
         import_modules:

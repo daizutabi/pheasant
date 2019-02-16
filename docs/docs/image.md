@@ -103,17 +103,17 @@ You can embed plots into MkDocs HTML documents. Following [User Guide "Embedding
 
 ~~~yaml
 extra_css:
-  - https://cdn.pydata.org/bokeh/release/bokeh-0.12.14.min.css
-  - https://cdn.pydata.org/bokeh/release/bokeh-widgets-0.12.14.min.css
-  - https://cdn.pydata.org/bokeh/release/bokeh-tables-0.12.14.min.css
+  - https://cdn.pydata.org/bokeh/release/bokeh-1.0.4.min.css
+  - https://cdn.pydata.org/bokeh/release/bokeh-widgets-1.0.4.min.css
+  - https://cdn.pydata.org/bokeh/release/bokeh-tables-1.0.4.min.css
 
 extra_javascript:
-  - https://cdn.pydata.org/bokeh/release/bokeh-0.12.14.min.js
-  - https://cdn.pydata.org/bokeh/release/bokeh-widgets-0.12.14.min.js
-  - https://cdn.pydata.org/bokeh/release/bokeh-tables-0.12.14.min.js
+  - https://cdn.pydata.org/bokeh/release/bokeh-1.0.4.min.js
+  - https://cdn.pydata.org/bokeh/release/bokeh-widgets-1.0.4.min.js
+  - https://cdn.pydata.org/bokeh/release/bokeh-tables-1.0.4.min.js
 ~~~
 
-Here, `0.12.14` is a version number of Bokeh and you can choose other version number you want to use.
+Here, `1.0.4` is a version number of Bokeh and you can choose other version number you want to use.
 
 In order to embed plots in your documents, `bokeh.embed.components` function can be used. This function returns `<script>`  and `<div>` tags in HTML format. For example:
 
