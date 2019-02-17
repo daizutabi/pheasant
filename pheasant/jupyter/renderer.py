@@ -30,10 +30,10 @@ def render(cell: NotebookNode) -> str:
     return config['template'].render(cell=cell)
 
 
-def inline_render(cell: NotebookNode) -> str:
+def inline_render(cell: NotebookNode, display=False) -> str:
     """Convert a cell into markdown or html with `inline_template`."""
     strip_text(cell)
-    return config['inline_template'].render(cell=cell)
+    return config['inline_template'].render(cell=cell, display=display)
 
 
 def pheasant_options(cell: NotebookNode) -> list:
@@ -47,15 +47,16 @@ def pheasant_options(cell: NotebookNode) -> list:
 @abort
 @memoize
 def run_and_render(cell: NotebookNode,
-                   render: Callable[[NotebookNode], str],
-                   kernel_name: Optional[str] = None) -> str:
+                   render: Callable[[NotebookNode, Any], str],
+                   kernel_name: Optional[str] = None,
+                   **kwargs) -> str:
     """Run a code cell and render the source and outputs into markdown."""
 
     # These two functions are defined in this function in order to cache the
     # source and outputs to avoid rerunning the cell unnecessarily.
     run_cell(cell, kernel_name)
     select_display_data(cell)
-    return render(cell)
+    return render(cell=cell, **kwargs)
 
 
 display_data_priority = [

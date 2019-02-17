@@ -29,6 +29,8 @@ def replace(match: Match, ignore_equal: bool = False) -> str:
         output = 'html'
     else:
         output = 'markdown'
+    if source.startswith(config['inline_display_character']):
+        source = source[1:]
 
     if ';' in source:
         sources = source.split(';')
@@ -57,8 +59,9 @@ def preprocess_markdown(source: str) -> str:
         if source.startswith(config['inline_ignore_character']):
             return match.group().replace(source, source[1:])
 
+        display = source.startswith(config['inline_display_character'])
         source = replace(match)
         cell = nbformat.v4.new_code_cell(source)
-        return run_and_render(cell, inline_render)
+        return run_and_render(cell, inline_render, display=display)
 
     return re.sub(config['inline_pattern'], replace_and_run, source)

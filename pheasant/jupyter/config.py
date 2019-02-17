@@ -27,6 +27,9 @@ config: Dict[str, Any] = {
     # Character to ignore an inline code.
     'inline_ignore_character': '#',
 
+    # Character to display an inline code.
+    'inline_display_character': '!',
+
     # Extra package directories that will be added to sys.path.
     'sys_paths': [],
 

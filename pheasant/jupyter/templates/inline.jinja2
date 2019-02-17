@@ -8,9 +8,9 @@
   {%- endfor -%}
   {%- for output in cell.outputs -%}
     {%- if ns.found and output.output_type == 'display_data' -%}
-      {{ output_display(output) }}
+      {{ output_display(output, display) }}
     {%- elif not ns.found and output.output_type != 'display_data' -%}
-      {{ output_display(output) }}
+      {{ output_display(output, display) }}
     {%- endif -%}
   {%- endfor -%}
 {%- endblock codecell -%}
