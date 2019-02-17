@@ -32,34 +32,36 @@
 {%- endmacro -%}
 
 {%- macro output_display(output) -%}
-  {%- if output.output_type == 'error' -%}
-    {{ output.traceback[-1] | strip_ansi }}
-  {%- endif -%}
-  {%- for type in output.data -%}
-    {%- if type == 'application/pdf' -%}
-        {%- block data_pdf -%}{%- endblock -%}
-    {%- elif type == 'image/svg+xml' -%}
-        {%- block data_svg -%}{%- endblock -%}
-    {%- elif type == 'image/png' -%}
-        {{ data_png(output) }}
-    {%- elif type == 'text/html' -%}
-        {{ data_html(output) }}
-    {%- elif type == 'text/markdown' -%}
-        {%- block data_markdown -%}{%- endblock -%}
-    {%- elif type == 'image/jpeg' -%}
-        {%- block data_jpg -%}{%- endblock -%}
-    {%- elif type == 'text/plain' -%}
-        {{ data_plain(output) }}
-    {%- elif type == 'text/latex' -%}
-        {{ data_latex(output) }}
-    {%- elif type == 'application/javascript' -%}
-        {%- block data_javascript -%}{%- endblock -%}
-    {%- elif type == 'application/vnd.jupyter.widget-state+json' -%}
-        {%- block data_widget_state -%}{%- endblock -%}
-    {%- elif type == 'application/vnd.jupyter.widget-view+json' -%}
-        {%- block data_widget_view -%}{%- endblock -%}
-    {%- else -%}
-        {%- block data_other -%}{%- endblock -%}
+  {{ '```display .pheasant-jupyter-display\n' }}
+    {%- if output.output_type == 'error' -%}
+      {{ output.traceback[-1] | strip_ansi }}
     {%- endif -%}
-  {%- endfor -%}
+    {%- for type in output.data -%}
+      {%- if type == 'application/pdf' -%}
+          {%- block data_pdf -%}{%- endblock -%}
+      {%- elif type == 'image/svg+xml' -%}
+          {%- block data_svg -%}{%- endblock -%}
+      {%- elif type == 'image/png' -%}
+          {{ data_png(output) }}
+      {%- elif type == 'text/html' -%}
+          {{ data_html(output) }}
+      {%- elif type == 'text/markdown' -%}
+          {%- block data_markdown -%}{%- endblock -%}
+      {%- elif type == 'image/jpeg' -%}
+          {%- block data_jpg -%}{%- endblock -%}
+      {%- elif type == 'text/plain' -%}
+          {{ data_plain(output) }}
+      {%- elif type == 'text/latex' -%}
+          {{ data_latex(output) }}
+      {%- elif type == 'application/javascript' -%}
+          {%- block data_javascript -%}{%- endblock -%}
+      {%- elif type == 'application/vnd.jupyter.widget-state+json' -%}
+          {%- block data_widget_state -%}{%- endblock -%}
+      {%- elif type == 'application/vnd.jupyter.widget-view+json' -%}
+          {%- block data_widget_view -%}{%- endblock -%}
+      {%- else -%}
+          {%- block data_other -%}{%- endblock -%}
+      {%- endif -%}
+    {%- endfor -%}
+  {{ '\n```\n\n' }}
 {%- endmacro -%}

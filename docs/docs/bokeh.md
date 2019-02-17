@@ -17,6 +17,8 @@ abc
 
 #Figure a
 
+<!-- begin -->
 {{plot}}
+<!-- end -->
 
 abc

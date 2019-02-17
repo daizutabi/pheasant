@@ -104,7 +104,7 @@ def fenced_code_splitter(
             yield splitted
         else:
             language, source, options = from_match(splitted, comment_option)
-            if select_kernel_name(language) is None:
+            if select_kernel_name(language) is None and language != 'display':
                 yield splitted.group()
             else:
                 yield language, source, options

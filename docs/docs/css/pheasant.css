@@ -6,7 +6,14 @@ pre {
   font-family: monospace;
 }
 
-article table {
+/* article table {
+  margin-left: auto !important;
+  margin-right: auto !important;
+  display: table !important;
+  width: auto !important;
+} */
+
+.pheasant-jupyter-display {
   margin-left: auto !important;
   margin-right: auto !important;
   display: table !important;
@@ -22,20 +29,6 @@ article table {
   margin: 0px;
   font-weight: bold;
   color: #000066;
-}
-
-.pheasant-number-figure svg {
-  margin-left: auto !important;
-  margin-right: auto !important;
-  display: table !important;
-  width: auto !important;
-}
-
-.pheasant-number-figure .bk-root {
-  margin-left: auto !important;
-  margin-right: auto !important;
-  display: table !important;
-  width: auto !important;
 }
 
 .pheasant-number-table {
@@ -73,13 +66,20 @@ table.dataframe {
   font-size: 12px;
 }
 
+tr {
+  padding-left: 6px !important;
+  padding-right: 6px !important;
+  padding-top: 2px !important;
+  padding-bottom: 2px !important;
+}
+
 .dataframe thead tr, .dataframe thead th, .dataframe tbody tr, .dataframe tbody th, .dataframe tbody td {
   border: none;
   text-align: center;
-  padding-left: 4px;
-  padding-right: 4px;
-  padding-top: 0px;
-  padding-bottom: 0px;
+  padding-left: 6px !important;
+  padding-right: 6px !important;
+  padding-top: 2px !important;
+  padding-bottom: 2px !important;
 }
 
 .dataframe thead th {

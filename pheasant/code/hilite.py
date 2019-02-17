@@ -1,6 +1,6 @@
 from typing import Generator, List
 
-from pheasant.markdown.converter import fenced_code_convert
+from pheasant.markdown.converter import fenced_code_convert, markdown_convert
 from pheasant.markdown.splitter import fenced_code_splitter
 
 
@@ -25,12 +25,16 @@ def render(source: str) -> Generator[str, None, None]:
             yield hilite(*splitted)
 
 
-def hilite(language: str,
-           source: str,
-           options: List[str],
+def hilite(language: str, source: str, options: List[str],
            escaped: bool = False) -> str:
-    source = f'```{language}\n{source}\n```'
     cls = ' '.join(option[1:] for option in options if option.startswith('.'))
+
+    if language == 'display':
+        source = markdown_convert(source)
+        source = f'<div class="{cls}">\n{source}\n</div>\n'
+        return source
+
+    source = f'```{language}\n{source}\n```'
     cls += ' codehilite'  # gives original 'codehilite' class.
     source = fenced_code_convert(source, cls=cls, only_code=escaped)
     if escaped:
