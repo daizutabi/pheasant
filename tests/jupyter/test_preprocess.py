@@ -18,3 +18,9 @@ def test_inline_pattern():
 def test_evaluate_markdown(source, output):
     initialize()
     assert preprocess_markdown(source) == output
+
+
+def test_evaluate_markdown_display():
+    initialize()
+    output = preprocess_markdown('a{{x=1}}{{!x}}')
+    assert output == 'a\n\n```display .pheasant-jupyter-display\n1\n```\n\n'

@@ -34,7 +34,7 @@ def find_kernel_names() -> dict:
     return kernel_names
 
 
-def select_kernel_name(language: str) -> str:
+def select_kernel_name(language: str) -> Optional[str]:
     """
     Select one kernelspec per language.
     """
@@ -123,6 +123,9 @@ def run_cell(cell, kernel_name: Optional[str] = None):
         else:
             kernel_name = select_kernel_name(language='python')
             kernel_name = config.setdefault('default_kernel', kernel_name)
+
+    if not isinstance(kernel_name, str):
+        raise ValueError('No kernel')
 
     kernel_client = get_kernel_client(kernel_name)
     msg_id = kernel_client.execute(cell.source)

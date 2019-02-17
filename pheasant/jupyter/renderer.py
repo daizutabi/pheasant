@@ -46,10 +46,8 @@ def pheasant_options(cell: NotebookNode) -> list:
 
 @abort
 @memoize
-def run_and_render(cell: NotebookNode,
-                   render: Callable[[NotebookNode, Any], str],
-                   kernel_name: Optional[str] = None,
-                   **kwargs) -> str:
+def run_and_render(cell: NotebookNode, render: Callable[..., str],
+                   kernel_name: Optional[str] = None, **kwargs) -> str:
     """Run a code cell and render the source and outputs into markdown."""
 
     # These two functions are defined in this function in order to cache the
