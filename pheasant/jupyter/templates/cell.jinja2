@@ -1,6 +1,5 @@
 {% from 'macro.jinja2' import output_display with context %}
 
-
 {%- block codecell -%}
   {%- set options = cell.metadata.get('pheasant', {}).get('options', []) -%}
   {%- set language = cell.metadata.get('pheasant', {}).get('language', '') -%}

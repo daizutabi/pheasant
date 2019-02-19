@@ -1,52 +1,29 @@
 # Test
 
+```python hide
+from bokeh.plotting import figure
+plot = figure(plot_width=250, plot_height=250)
+plot.circle([1, 2, 3, 4, 5], [1, 2, 3, 4, 5], size=20)
+```
+
+{{!plot}}
+
+
+```python hide
+import numpy as np
+import pandas as pd
+import holoviews as hv
+hv.extension('bokeh')
+```
+
+```python display
+xs = np.arange(-10, 10.5, 0.5)
+ys = 100-xs**3
+df = pd.DataFrame(dict(x=xs, y=ys))
+df.head()
+```
+
 ```python inline
-df = pd.DataFrame([[4, 2], [3, 4]], columns=['a', 'b'])
-
-def func(x):
-  plt.cla()
-  plt.plot([0, x, 2*x])
-
-  return {{^plt.gca()}}
-
-df = df.applymap(func)
+curve = hv.Curve(df,'x','y')
+{{!curve}}
 ```
-
-{{df}}
-
-```python
-df
-```
-
-
-![python](hello.func)
-
-~~~python
-print(3)
-print(2)
-
-def func(x):
-    return 2 * x
-~~~
-
-abcde
-
-#Tab. a html table
-
-First Header | Second Header
------------- | -------------
-Content Cell | Content Cell
-Content Cell | Content Cell
-
-#Tab. a DataFrame table
-
-<!-- begin -->
-```python
-## inline
-df = pd.DataFrame([[1, 2]])
-{{df}}
-```
-<!-- end -->
-
-
-$$a^3\int f(x)dx$$

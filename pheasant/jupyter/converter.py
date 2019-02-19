@@ -98,7 +98,7 @@ def set_config(options: list) -> None:
         run_cell(cell)
 
 
-def set_template(prefix=''):
+def set_template(prefix='') -> None:
     default_directory = os.path.join(os.path.dirname(__file__), 'templates')
     abspath = os.path.abspath(config[prefix + 'template_file'])
     template_directory, template_file = os.path.split(abspath)

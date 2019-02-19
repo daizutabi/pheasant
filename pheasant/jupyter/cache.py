@@ -70,8 +70,8 @@ def memoize(func):
                 f'Running cell: {os.path.basename(source_file)}:{counter}')
         markdown = func(cell, *args, **kwargs)
 
-        cache[source_file] = (source_markdown[:counter] +
-                              [(cell.source, options, markdown)])
+        cache[source_file] = (source_markdown[:counter]
+                              + [(cell.source, options, markdown)])
         return markdown
 
     return decorator

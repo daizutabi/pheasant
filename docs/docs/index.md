@@ -55,7 +55,7 @@ PHEASANT = {'jupyter': {'enabled': True}, 'number': {'enabled': True}}
 
 ### Auto generation of outputs with Jupyter client
 
-A markdown soure below:
+A markdown source below:
 
 ~~~
 ```python
@@ -67,9 +67,13 @@ is converted into:
 
 ~~~
 ```python
->>> print(1)
+print(1)
+```
+
+```python
 1
 ```
+
 ~~~
 
 after execution of `print` function via Jupyter client and finally rendered as:
