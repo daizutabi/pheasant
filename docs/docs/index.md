@@ -73,7 +73,6 @@ print(1)
 ```python
 1
 ```
-
 ~~~
 
 after execution of `print` function via Jupyter client and finally rendered as:
