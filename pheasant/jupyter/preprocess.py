@@ -12,8 +12,8 @@ from typing import Match
 
 import nbformat
 
-from .config import config
-from .renderer import inline_render, run_and_render
+from pheasant.jupyter.config import config
+from pheasant.jupyter.renderer import inline_render, run_and_render
 
 
 def replace(match: Match, ignore_equal: bool = False) -> str:
@@ -24,11 +24,13 @@ def replace(match: Match, ignore_equal: bool = False) -> str:
         return match.group().replace(source, source[1:])
     elif '=' in source and not ignore_equal:
         return source
-    elif source.startswith(config['inline_html_character']):
+
+    if source.startswith(config['inline_html_character']):
         source = source[1:]
         output = 'html'
     else:
         output = 'markdown'
+
     if source.startswith(config['inline_display_character']):
         source = source[1:]
 

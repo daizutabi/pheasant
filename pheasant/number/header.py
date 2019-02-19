@@ -3,8 +3,7 @@ from typing import Generator, Tuple, Union
 
 from pheasant.markdown.converter import markdown_convert
 from pheasant.markdown.splitter import escaped_splitter_join
-
-from .config import config
+from pheasant.number.config import config
 
 
 def convert(source: str, label=None,
@@ -27,12 +26,12 @@ def convert(source: str, label=None,
         Markdown source
     """
     label = {} if label is None else label
-    source = '\n\n'.join(renderer(source, label, page_index=page_index))
+    source = '\n\n'.join(render(source, label, page_index=page_index))
     return source, label
 
 
-def renderer(source: str, label: dict,
-             page_index: Union[int, list] = 1) -> Generator[str, None, None]:
+def render(source: str, label: dict,
+           page_index: Union[int, list] = 1) -> Generator[str, None, None]:
     splitter = header_splitter(source)
     for splitted in splitter:
         if isinstance(splitted, str):

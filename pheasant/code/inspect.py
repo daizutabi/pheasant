@@ -2,11 +2,10 @@ from typing import Generator
 
 import nbformat
 
+from pheasant.code.config import config
 from pheasant.jupyter.renderer import run_and_render
 from pheasant.markdown.splitter import escaped_splitter_join
 from pheasant.number import config as config_number
-
-from .config import config
 
 
 def convert(source: str) -> str:

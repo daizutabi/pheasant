@@ -1,13 +1,12 @@
-"""This module processes inline code."""
+"""A module processes inline code."""
 import base64
 import html
 import io
 from typing import Any
 
+from pheasant.jupyter.config import config
+from pheasant.jupyter.renderer import delete_style
 from pheasant.markdown.converter import markdown_convert
-
-from .config import config
-from .renderer import delete_style
 
 
 def display(obj: Any, **kwargs: Any) -> str:
@@ -39,10 +38,6 @@ def display(obj: Any, **kwargs: Any) -> str:
             source = html.escape(obj)
 
     return source
-
-    # begin = config_number['begin_pattern']
-    # end = config_number['end_pattern']
-    # return f'{begin}{source}{end}'
 
 
 def to_html(obj: Any, **kwargs: Any) -> str:

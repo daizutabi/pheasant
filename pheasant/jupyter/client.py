@@ -1,4 +1,4 @@
-"""This module provide jupyter client interface."""
+"""A module provide jupyter client interface."""
 import logging
 from queue import Empty
 from typing import Any, Dict, Optional
@@ -6,7 +6,7 @@ from typing import Any, Dict, Optional
 import jupyter_client
 from nbformat.v4 import output_from_msg
 
-from .config import config
+from pheasant.jupyter.config import config
 
 logger = logging.getLogger('pheasant')
 
@@ -16,9 +16,7 @@ kernel_clients: Dict[str, Any] = {}
 
 
 def find_kernel_names() -> dict:
-    """
-    Find kernel names for language
-    """
+    """Find kernel names for language."""
     if kernel_names:
         return kernel_names
 
@@ -35,9 +33,7 @@ def find_kernel_names() -> dict:
 
 
 def select_kernel_name(language: str) -> Optional[str]:
-    """
-    Select one kernelspec per language.
-    """
+    """Select one kernelspec per language."""
     if language in config['kernel_name']:
         return config['kernel_name'][language]
 
@@ -90,9 +86,6 @@ def get_kernel_client(kernel_name: str):
         kernel_client.allow_stdin = False
         kernel_clients[kernel_name] = kernel_client
         return kernel_client
-
-
-# From nbconvert.preprocessors.execute.ExecutePreprocessor
 
 
 def _wait_for_reply(kernel_name: str, msg_id, timeout: int = 300):

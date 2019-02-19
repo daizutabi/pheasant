@@ -6,12 +6,12 @@ from jinja2 import Environment, FileSystemLoader
 from nbconvert.filters import strip_ansi
 
 import pheasant
+from pheasant.jupyter.client import run_cell
+from pheasant.jupyter.config import config
+from pheasant.jupyter.preprocess import preprocess_code, preprocess_markdown
+from pheasant.jupyter.renderer import (inline_render, new_code_cell, render,
+                                       run_and_render)
 from pheasant.markdown.splitter import fenced_code_splitter
-
-from .client import run_cell
-from .config import config
-from .preprocess import preprocess_code, preprocess_markdown
-from .renderer import inline_render, new_code_cell, render, run_and_render
 
 
 def initialize() -> None:

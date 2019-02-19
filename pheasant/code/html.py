@@ -22,15 +22,16 @@ def render(source: str) -> Generator[str, None, None]:
         if isinstance(splitted, str):
             yield splitted
         else:
-            yield hilite(*splitted)
+            yield html(*splitted)
 
 
-def hilite(language: str, source: str, options: List[str],
-           escaped: bool = False) -> str:
+def html(language: str, source: str, options: List[str],
+         escaped: bool = False) -> str:
+    """Convert fenced code into html with codehilite and <div> classes."""
     cls = ' '.join(option[1:] for option in options if option.startswith('.'))
 
     if language == 'display':  # special lang to display figures, tables, etc.
-        if source.startswith('$$'):
+        if source.startswith('$$'):  # for latex
             source = f'<p>{source}</p>'
         else:
             source = markdown_convert(source)
@@ -61,7 +62,7 @@ def escaped_code(language: str, source: str, options: List[str]) -> str:
     """
     if language:
         options += ['.pheasant-markdown', '.pheasant-code']
-        return hilite(language, source, options)
+        return html(language, source, options)
 
     source = ''.join(escaped_code_splitter(source))
     cls = 'pheasant-markdown pheasant-source'
@@ -75,4 +76,4 @@ def escaped_code_splitter(source: str) -> Generator[str, None, None]:
         if isinstance(splitted, str):
             yield splitted
         else:
-            yield hilite(*splitted, escaped=True) + '\n'
+            yield html(*splitted, escaped=True) + '\n'

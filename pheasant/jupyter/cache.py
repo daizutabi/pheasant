@@ -3,7 +3,7 @@ import logging
 import os
 from functools import wraps
 
-from .config import config
+from pheasant.jupyter.config import config
 
 logger = logging.getLogger('pheasant')
 

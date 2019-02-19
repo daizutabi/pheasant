@@ -1,2 +1,4 @@
-from .config import config
-from .converter import convert, initialize
+from pheasant.macro.config import config
+from pheasant.macro.converter import convert, initialize
+
+__all__ = ['config', 'convert', 'initialize']

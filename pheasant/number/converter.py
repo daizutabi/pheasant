@@ -5,9 +5,9 @@ from typing import Any, Dict
 
 from jinja2 import Environment, FileSystemLoader
 
-from .config import config
-from .header import convert as convert_header
-from .reference import convert as convert_reference
+from pheasant.number.config import config
+from pheasant.number.header import convert as convert_header
+from pheasant.number.reference import convert as convert_reference
 
 logger = logging.getLogger('pheasant')
 

@@ -2,8 +2,7 @@ import pytest
 
 from pheasant.number import initialize
 from pheasant.number.header import (convert, header_splitter,
-                                    normalize_number_list, renderer,
-                                    split_label)
+                                    normalize_number_list, render, split_label)
 
 
 @pytest.mark.parametrize('input,text,label', [
@@ -142,26 +141,26 @@ Content Cell | Content Cell
 
 def test_renderer(source_input):
     label = {}
-    for k, splitted in enumerate(renderer(source_input, label)):
+    for k, splitted in enumerate(render(source_input, label)):
         if k == 0:
             answer = '# <span id="pheasant-number-H1">1 header1</span>'
             assert splitted == answer
         elif k == 2:
-            assert (splitted ==
-                    '## <span id="pheasant-number-H1.1">1.1 header2</span>')
+            assert (splitted
+                    == '## <span id="pheasant-number-H1.1">1.1 header2</span>')
     for key, value in label.items():
-        assert key == (value['kind'][0].upper() +
-                       '.'.join(str(i) for i in value['number_list']))
+        assert key == (value['kind'][0].upper()
+                       + '.'.join(str(i) for i in value['number_list']))
 
     label = {}
-    for k, splitted in enumerate(renderer(source_input, label,
-                                          page_index=[2, 3])):
+    for k, splitted in enumerate(render(source_input, label,
+                                        page_index=[2, 3])):
         if k == 0:
             answer = '# <span id="pheasant-number-H1">2.3 header1</span>'
             assert splitted == answer
         elif k == 2:
-            assert (splitted ==
-                    '## <span id="pheasant-number-H1.1">2.3.1 header2</span>')
+            answer = '## <span id="pheasant-number-H1.1">2.3.1 header2</span>'
+            assert splitted == answer
 
 
 def test_convert(source_input, source_output):

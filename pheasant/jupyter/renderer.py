@@ -4,13 +4,12 @@ from typing import Any, Callable, Dict, Optional
 import nbformat
 from nbformat import NotebookNode
 
-from .cache import abort, memoize
-from .client import run_cell, select_kernel_name
-from .config import config
+from pheasant.jupyter.cache import abort, memoize
+from pheasant.jupyter.client import run_cell, select_kernel_name
+from pheasant.jupyter.config import config
 
 
-def new_code_cell(source: str,
-                  language: Optional[str] = None,
+def new_code_cell(source: str, language: Optional[str] = None,
                   options: Optional[list] = None) -> NotebookNode:
     """Create a new code cell for evaluation."""
     cell = nbformat.v4.new_code_cell(source)
@@ -30,7 +29,7 @@ def render(cell: NotebookNode) -> str:
     return config['template'].render(cell=cell)
 
 
-def inline_render(cell: NotebookNode, display=False) -> str:
+def inline_render(cell: NotebookNode, display: bool = False) -> str:
     """Convert a cell into markdown or html with `inline_template`."""
     strip_text(cell)
     return config['inline_template'].render(cell=cell, display=display)

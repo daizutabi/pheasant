@@ -1,7 +1,6 @@
+from pheasant.code.html import convert as convert_html
+from pheasant.code.inspect import convert as convert_inspect
 from pheasant.utils import read_source
-
-from .hilite import convert as convert_hilite
-from .inspect import convert as convert_inspect
 
 
 def initialize():
@@ -11,5 +10,5 @@ def initialize():
 def convert(source: str) -> str:
     source = read_source(source)
     source = convert_inspect(source)
-    source = convert_hilite(source)
+    source = convert_html(source)
     return source

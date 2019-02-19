@@ -2,9 +2,8 @@ import logging
 import re
 from typing import Dict, Generator
 
+from pheasant.macro.config import config
 from pheasant.utils import read_source
-
-from .config import config
 
 logger = logging.getLogger(__name__)
 
