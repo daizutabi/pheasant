@@ -9,3 +9,6 @@ try:  # For pelican plugin.
     from .plugins.pelican import register
 except ImportError:
     pass
+
+
+__all__ = ["convert", "register"]

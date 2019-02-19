@@ -30,7 +30,10 @@ def hilite(language: str, source: str, options: List[str],
     cls = ' '.join(option[1:] for option in options if option.startswith('.'))
 
     if language == 'display':  # special lang to display figures, tables, etc.
-        source = markdown_convert(source)
+        if source.startswith('$$'):
+            source = f'<p>{source}</p>'
+        else:
+            source = markdown_convert(source)
         source = f'<div class="{cls}">\n{source}\n</div>\n'
         return source
 
