@@ -1,6 +1,5 @@
 import codecs
 import os
-from typing import Generator
 
 
 def read_source(source: str) -> str:
