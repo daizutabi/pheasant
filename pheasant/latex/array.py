@@ -1,16 +1,19 @@
+from typing import Optional, Union
+
 try:
     import sympy as sp
 except ImportError:
     sp = None
 
 
-def subscript(var, sub):
+def subscript(var: str, sub: Union[str, int]) -> str:
     if '{_}' not in var:
         var += '{_}'
     return var.replace('{_}', '_{' + str(sub) + '}')
 
 
-def row(var, r, c=None, transpose=False):
+def row(var: str, r: int, c: Optional[int] = None,
+        transpose: bool = False) -> str:
     if c is None:
         c = r
         sub = '{i}'
@@ -20,7 +23,7 @@ def row(var, r, c=None, transpose=False):
                     for i in range(1, c + 1))
 
 
-def matrix(var, nrows, ncols, transpose=False):
+def matrix(var: str, nrows: int, ncols: int, transpose: bool = False) -> str:
     align = 'c' * ncols
     mat = '\\\\'.join([row(var, i, ncols, transpose)
                        for i in range(1, nrows + 1)])
@@ -31,15 +34,15 @@ def matrix(var, nrows, ncols, transpose=False):
     ])
 
 
-def sympy_matrix(v, n, m):
-    m = [[sp.symbols(f'{v}_{i}{j}') for j in range(1, m + 1)]
-         for i in range(1, n + 1)]
-    return sp.Matrix(m)
+def sympy_matrix(var: str, n: int, m: int) -> sp.Matrix:
+    matrix = [[sp.symbols(f'{var}_{i}{j}') for j in range(1, m + 1)]
+              for i in range(1, n + 1)]
+    return sp.Matrix(matrix)
 
 
-def const(value, nrows, ncols=None):
+def const(value, nrows: int, ncols: Optional[int] = None) -> str:
     if ncols is None:
-        nrows, ncols = ncols, 1
+        nrows, ncols = 1, nrows
     align = 'c' * ncols
     row = '&'.join([str(value)] * ncols)
     mat = '\\\\'.join([row] * nrows)
@@ -50,15 +53,15 @@ def const(value, nrows, ncols=None):
     ])
 
 
-def ones(nrows, ncols=None):
+def ones(nrows: int, ncols: Optional[int] = None) -> str:
     return const(1, nrows, ncols)
 
 
-def zeros(nrows, ncols=None):
+def zeros(nrows: int, ncols: Optional[int] = None) -> str:
     return const(0, nrows, ncols)
 
 
-def vector(var, length, transpose=False):
+def vector(var: str, length: int, transpose: bool = False) -> str:
     vec = row(var, length)
     if transpose:
         align = 'c' * length
@@ -72,7 +75,7 @@ def vector(var, length, transpose=False):
     ])
 
 
-def partial(f, x, frac=False):
+def partial(f: str, x: str, frac: bool = False) -> str:
     if frac:
         return (R'\frac{\partial ' + f + R'}{\partial\mathbf{'
                 + x.upper() + '}}')
