@@ -1,7 +1,6 @@
 import nbformat
 
-from pheasant.code.html import escaped_code_splitter
-from pheasant.code.inspect import convert
+from pheasant.code.inspect import convert, inspect_render
 from pheasant.jupyter.client import run_cell
 from pheasant.jupyter.converter import initialize
 
@@ -21,18 +20,8 @@ def test_inspect_convert():
     source = '![dummy](func)'
     assert convert(source) == source
 
+    source = '![python](print)'
+    assert convert(source) == ''
 
-def test_escaped_code_splitter():
-    splitter = escaped_code_splitter('a\nb')
-    for k, splited in enumerate(splitter):
-        if k == 0:
-            assert splited == 'a\nb'
-    assert k == 0
-
-    splitter = escaped_code_splitter('~~~python\nprint(1)\n~~~\n\nabc')
-    for k, splited in enumerate(splitter):
-        if k == 0:
-            assert splited == '~~~python\nprint(1)\n~~~\n'
-        elif k == 1:
-            assert splited == '\nabc'
-    assert k == 1
+    cell = nbformat.v4.new_code_cell('a = 1')
+    assert inspect_render(cell, 'python') == ''
