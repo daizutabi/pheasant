@@ -1,7 +1,7 @@
 import sympy as sp
 
-from pheasant.latex.array import (Matrix, const, matrix, ones, partial, row,
-                                  subscript, sympy_matrix, vector, zeros)
+from pheasant.latex.array import (Matrix, Vector, const, matrix, ones, partial,
+                                  row, subscript, sympy_matrix, vector, zeros)
 
 
 def test_subscript():
@@ -53,3 +53,63 @@ def test_partial():
     assert partial('f', 'x') == '\\partial f/\\partial\\mathbf{X} '
     answer = '\\frac{\\partial f}{\\partial\\mathbf{X}}'
     assert partial('f', 'x', frac=True) == answer
+
+
+def test_matrix_class():
+    m = Matrix('a', 2, 3)
+    answer = ('\\left[\\begin{array}{ccc}\na_{11}&a_{12}&a_{13}'
+              '\\\\a_{21}&a_{22}&a_{23}\n\\end{array}\\right]')
+    assert str(m) == answer
+
+    answer = ('\\left[\\begin{array}{cc}\na_{11}&a_{21}\\\\a_{12}&a_{22}'
+              '\\\\a_{13}&a_{23}\n\\end{array}\\right]')
+    assert m.T == answer
+    assert str(m.S) == 'Matrix([[a_11, a_12, a_13], [a_21, a_22, a_23]])'
+
+    answer = ('Matrix([[a_11**2, a_12**2, a_13**2],'
+              ' [a_21**2, a_22**2, a_23**2]])')
+    assert str(m.apply(lambda x: x**2)) == answer
+
+    assert m.shape == (2, 3)
+
+    answer = ('\\left[\\begin{array}{ccc}\n\\partial f/\\partial a_{11} &'
+              '\\partial f/\\partial a_{12} &\\partial f/\\partial a_{13} '
+              '\\\\\\partial f/\\partial a_{21} &\\partial f/\\partial a_{22} '
+              '&\\partial f/\\partial a_{23} \n\\end{array}\\right]')
+    assert m.partial('f') == answer
+
+    answer = ('\\left[\\begin{array}{ccc}\n\\frac{\\partial f}'
+              '{\\partial a_{11} }&\\frac{\\partial f}{\\partial a_{12} }'
+              '&\\frac{\\partial f}{\\partial a_{13} }\\\\\\frac{\\partial f}'
+              '{\\partial a_{21} }&\\frac{\\partial f}{\\partial a_{22} }&'
+              '\\frac{\\partial f}{\\partial a_{23} }\n\\end{array}\\right]')
+    assert m.partial('f', frac=True) == answer
+
+    assert m.spartial('f') == '\\partial f/\\partial\\mathbf{A} '
+    answer = '\\frac{\\partial f}{\\partial\\mathbf{A}}'
+    assert m.spartial('f', frac=True) == answer
+
+
+def test_vector_class():
+    v = Vector('a', 2)
+    answer = '\\left[\\begin{array}{cc}\na_{1}&a_{2}\n\\end{array}\\right]'
+    assert str(v) == answer
+
+    answer = ('\\left[\\begin{array}{cc}\na_{1}\\\\a_{2}\n'
+              '\\end{array}\\right]')
+    assert v.T == answer
+    assert str(v.S) == 'Matrix([[a_11, a_12]])'
+    assert v.shape == (2,)
+
+    answer = ('\\left[\\begin{array}{cc}\n\\partial f/\\partial a_{1} &'
+              '\\partial f/\\partial a_{2} \n\\end{array}\\right]')
+    assert v.partial('f') == answer
+
+    answer = ('\\left[\\begin{array}{cc}\n\\frac{\\partial f}'
+              '{\\partial a_{1} }&\\frac{\\partial f}{\\partial a_{2} }\n'
+              '\\end{array}\\right]')
+    assert v.partial('f', frac=True) == answer
+
+    assert v.spartial('f') == '\\partial f/\\partial\\mathbf{A} '
+    answer = '\\frac{\\partial f}{\\partial\\mathbf{A}}'
+    assert v.spartial('f', frac=True) == answer

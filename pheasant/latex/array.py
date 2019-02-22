@@ -1,4 +1,4 @@
-from typing import Optional, Union
+from typing import Callable, Optional, Union
 
 try:
     import sympy as sp
@@ -85,66 +85,68 @@ def partial(f: str, x: str, frac: bool = False) -> str:
 
 
 class Matrix:
-    def __init__(self, var, nrows, ncols):
+    def __init__(self, var: str, nrows: int, ncols: int):
         self.var = var
         self.nrows = nrows
         self.ncols = ncols
 
-    def __str__(self):
+    def __str__(self) -> str:
         return matrix(self.var, self.nrows, self.ncols)
 
     @property
-    def T(self):
+    def T(self) -> str:
         return matrix(self.var, self.ncols, self.nrows, transpose=True)
 
     @property
-    def S(self):
+    def S(self) -> sp.Matrix:
         return sympy_matrix(self.var, self.nrows, self.ncols)
 
-    def apply(self, func):
+    def apply(self, func: Callable) -> sp.Matrix:
         mat = self.S
         vec = sp.Matrix([[func(x) for x in mat]])
         return vec.reshape(self.nrows, self.ncols)
 
-    def shape(self):
+    @property
+    def shape(self) -> tuple:
         return (self.nrows, self.ncols)
 
-    def partial(self, f, frac=False):
+    def partial(self, f: str, frac: bool = False) -> str:
         if frac:
             var = R'\frac{\partial ' + f + R'}{\partial ' + self.var + '{_} }'
         else:
             var = R'\partial ' + f + R'/\partial ' + self.var + '{_} '
         return matrix(var, self.nrows, self.ncols)
 
-    def spartial(self, f, frac=False):
+    def spartial(self, f: str, frac: bool = False) -> str:
         return partial(f, self.var, frac)
 
 
 class Vector:
-    def __init__(self, var, length):
+    def __init__(self, var: str, length: int):
         self.var = var
         self.length = length
 
-    def __str__(self):
+    def __str__(self) -> str:
         return vector(self.var, self.length)
 
     @property
-    def T(self):
+    def T(self) -> str:
         return vector(self.var, self.length, transpose=True)
 
     @property
-    def S(self):
+    def S(self) -> sp.Matrix:
         return sympy_matrix(self.var, 1, self.length)
 
-    def shape(self):
+    @property
+    def shape(self) -> tuple:
         return (self.length,)
 
-    def partial(self, f, frac=False):
+    def partial(self, f: 'str', frac: bool = False) -> str:
         if frac:
             var = R'\frac{\partial ' + f + R'}{\partial ' + self.var + '{_} }'
         else:
             var = R'\partial ' + f + R'/\partial ' + self.var + '{_} '
         return vector(var, self.length)
 
-    def spartial(self, f, frac=False):
+    def spartial(self, f: str, frac: bool = False) -> str:
         return partial(f, self.var, frac)
