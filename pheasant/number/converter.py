@@ -34,8 +34,8 @@ def convert(source: str) -> str:
         page_index = [config['pages'].index(source_file) + 1]
     else:
         page_index = config['level']
-    msg = f'Page index for {os.path.basename(source_file)}: {page_index}'
-    logger.debug(msg)
+    # msg = f'Page index for {os.path.basename(source_file)}: {page_index}'
+    # logger.debug(msg)
 
     label: Dict[str, Any] = {}
     source, label = convert_header(source, label, page_index)
@@ -57,7 +57,8 @@ def convert(source: str) -> str:
 
     for key in label_all:
         id = label_all[key]
-        relpath = os.path.relpath(id['path'], os.path.dirname(source_file))
+        relpath = os.path.relpath(id['path'] or '<dummy>',  # dummy for pytest
+                                  os.path.dirname(source_file or 'dummy'))
         relpath = relpath.replace('\\', '/')
         if config['relpath_function']:
             relpath = config['relpath_function'](relpath)
