@@ -40,12 +40,39 @@ def display(obj: Any, **kwargs: Any) -> str:
     return source
 
 
-def to_html(obj: Any, **kwargs: Any) -> str:
-    return display(obj, output='html')
+# def to_html(obj: Any, **kwargs: Any) -> str:
+#     return display(obj, output='html')
+#
+#
+# def to_markdown(obj: Any, **kwargs: Any) -> str:
+#     return display(obj, output='markdown')
 
 
-def to_markdown(obj: Any, **kwargs: Any) -> str:
-    return display(obj, output='markdown')
+def matplotlib_to_base64(obj, output='markdown') -> str:
+    """Convert a Matplotlib's figure into base64 string."""
+    fmt = config['matplotlib_format']
+    buf = io.BytesIO()
+
+    if not hasattr(obj, 'savefig'):
+        obj = obj.figure  # obj is axes.
+
+    obj.savefig(buf, fmt=fmt, bbox_inches='tight', transparent=True)
+    buf.seek(0)
+    binary = buf.getvalue()
+
+    return base64image(binary, fmt, output)
+
+
+def base64image(binary, fmt: str, output: str) -> str:
+    data = base64.b64encode(binary).decode('utf8')
+    data = f'data:image/{fmt};base64,{data}'
+
+    if output == 'markdown':
+        return f'![{fmt}]({data})'
+    elif output == 'html':
+        return f'<img alt="{fmt}" src="{data}"/>'
+    else:
+        raise ValueError(f'Unknown output: {output}')
 
 
 def pandas_to_html(dataframe) -> str:
@@ -62,47 +89,21 @@ def bokeh_to_html(figure) -> str:
     return script + div
 
 
-def sympy_to_latex(obj) -> str:
-    """Convert a Sympy's object into latex string."""
-    import sympy as sp
-    return sp.latex(obj)
-
-
-def matplotlib_to_base64(obj, output='markdown') -> str:
-    """Convert a Matplotlib's figure into base64 string."""
-    format = config['matplotlib_format']
-    buf = io.BytesIO()
-
-    if not hasattr(obj, 'savefig'):
-        obj = obj.figure  # obj is axes.
-
-    obj.savefig(buf, format=format, bbox_inches='tight', transparent=True)
-    buf.seek(0)
-    binary = buf.getvalue()
-
-    return base64image(binary, format, output)
-
-
-def holoviews_to_html(figure, output='markdown') -> str:
+def holoviews_to_html(figure, output='markdown', fmt=None) -> str:
     import holoviews as hv
     backend = config['holoviews_backend']
-    format = config[f'{backend}_format']
+    if fmt is None:
+        fmt = config[f'{backend}_format']
     renderer = hv.renderer(backend)
-    html, info = renderer(figure, fmt=format)
+    html, info = renderer(figure, fmt=fmt)
 
-    if format == 'png':
-        return base64image(html, format, output)
+    if fmt == 'png':
+        return base64image(html, fmt, output)
     else:
         return html
 
 
-def base64image(binary, format: str, output: str) -> str:
-    data = base64.b64encode(binary).decode('utf8')
-    data = f'data:image/{format};base64,{data}'
-
-    if output == 'markdown':
-        return f'![{format}]({data})'
-    elif output == 'html':
-        return f'<img alt="{format}" src="{data}"/>'
-    else:
-        raise ValueError(f'Unknown output: {output}')
+def sympy_to_latex(obj) -> str:
+    """Convert a Sympy's object into latex string."""
+    import sympy as sp
+    return sp.latex(obj)
