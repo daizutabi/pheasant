@@ -1,5 +1,6 @@
 import nbformat
 
+from pheasant.jupyter.config import config
 from pheasant.jupyter.client import run_cell
 from pheasant.jupyter.converter import (cell_runner, initialize,
                                         reload_modules, set_config)
@@ -39,4 +40,5 @@ def test_set_config():
 
 
 def test_reload_modules():
+    config['import_modules'] = ['pandas']
     assert reload_modules() is None

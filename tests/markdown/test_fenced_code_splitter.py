@@ -78,3 +78,9 @@ def test_fenced_code_splitter_stream(stream):
             assert output.startswith('~~~')
         elif k == 10:
             assert output == '\n\n```unknown\nabc\n```'
+
+
+def test_fenced_code_splitter_pheasant_options():
+    source = '```python\n## inline\na = 1\n```\n'
+    for output in fenced_code_splitter(source):
+        assert output[2] == ['inline']
