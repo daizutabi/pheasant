@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Latex - Pheasant</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+  <link href="../css/pheasant.css" rel="stylesheet">
+  <link href="https://cdn.pydata.org/bokeh/release/bokeh-1.0.4.min.css" rel="stylesheet">
+  <link href="https://cdn.pydata.org/bokeh/release/bokeh-widgets-1.0.4.min.css" rel="stylesheet">
+  <link href="https://cdn.pydata.org/bokeh/release/bokeh-tables-1.0.4.min.css" rel="stylesheet">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Latex";
+    var mkdocs_page_input_path = "latex.md";
+    var mkdocs_page_url = "/latex/";
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> Pheasant</a>
+        
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="..">1 Pheasant</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../bokeh/">2 Bokeh</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../holoviews/">3 HoloViews</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../image/">4 Image</a>
+	    </li>
+          
+            <li class="toctree-l1 current">
+		
+    <a class="current" href="./">Latex</a>
+    <ul class="subnav">
+            
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../matplotlib/">6 Matplotlib</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../table/">7 Table</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../test/">Test</a>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">Pheasant</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>Latex</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        <a href="https://github.com/daizutabi/pheasant/docs/docs/latex.md"
+          class="icon icon-github"> Edit on GitHub</a>
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <div class="pheasant-markdown pheasant-jupyter-input codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">pheasant.latex.array</span> <span class="kn">import</span> <span class="n">Matrix</span><span class="p">,</span> <span class="n">Vector</span><span class="p">,</span> <span class="n">partial</span><span class="p">,</span> <span class="n">ones</span>
+<span class="n">N</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">m</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span>
+<span class="n">Y</span> <span class="o">=</span> <span class="n">Matrix</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">Matrix</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+<span class="n">W</span> <span class="o">=</span> <span class="n">Matrix</span><span class="p">(</span><span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span>
+<span class="n">B</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">(</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span>
+</pre></div>
+
+<div class="codehilite pheasant-markdown pheasant-source"><pre>$$
+{{Y}}={{X}}\cdot{{W}} \\ +{{ones(N, 1)}}\cdot{{B}}
+$$
+</pre></div>
+
+<div>
+<div class="MathJax_Preview">
+\left[\begin{array}{cccc}
+y_{11}&amp;y_{12}&amp;y_{13}&amp;y_{14}\\y_{21}&amp;y_{22}&amp;y_{23}&amp;y_{24}\\y_{31}&amp;y_{32}&amp;y_{33}&amp;y_{34}
+\end{array}\right]=\left[\begin{array}{cc}
+x_{11}&amp;x_{12}\\x_{21}&amp;x_{22}\\x_{31}&amp;x_{32}
+\end{array}\right]\cdot\left[\begin{array}{cccc}
+w_{11}&amp;w_{12}&amp;w_{13}&amp;w_{14}\\w_{21}&amp;w_{22}&amp;w_{23}&amp;w_{24}
+\end{array}\right] \\ +\left[\begin{array}{c}
+1\\1\\1
+\end{array}\right]\cdot\left[\begin{array}{cccc}
+b_{1}&amp;b_{2}&amp;b_{3}&amp;b_{4}
+\end{array}\right]
+</div>
+<script type="math/tex; mode=display">
+\left[\begin{array}{cccc}
+y_{11}&y_{12}&y_{13}&y_{14}\\y_{21}&y_{22}&y_{23}&y_{24}\\y_{31}&y_{32}&y_{33}&y_{34}
+\end{array}\right]=\left[\begin{array}{cc}
+x_{11}&x_{12}\\x_{21}&x_{22}\\x_{31}&x_{32}
+\end{array}\right]\cdot\left[\begin{array}{cccc}
+w_{11}&w_{12}&w_{13}&w_{14}\\w_{21}&w_{22}&w_{23}&w_{24}
+\end{array}\right] \\ +\left[\begin{array}{c}
+1\\1\\1
+\end{array}\right]\cdot\left[\begin{array}{cccc}
+b_{1}&b_{2}&b_{3}&b_{4}
+\end{array}\right]
+</script>
+</div>
+<div class="pheasant-markdown pheasant-jupyter-input codehilite"><pre><span></span><span class="kn">import</span> <span class="nn">sympy</span> <span class="kn">as</span> <span class="nn">sp</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="n">sp</span><span class="o">.</span><span class="n">init_printing</span><span class="p">()</span>
+
+<span class="n">xw</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">11</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">14</span><span class="p">],</span> <span class="p">[</span><span class="mi">21</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">24</span><span class="p">],</span> <span class="p">[</span><span class="mi">31</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">33</span><span class="p">,</span> <span class="mi">34</span><span class="p">]])</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">2000</span><span class="p">,</span> <span class="mi">3000</span><span class="p">,</span> <span class="mi">4000</span><span class="p">])</span>
+<span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">(</span><span class="n">xw</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="nb">int</span><span class="p">)</span> <span class="err">@</span> <span class="n">b</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)))</span>
+</pre></div>
+
+<div class="pheasant-jupyter-display">
+<p>$$\left[\begin{matrix}1011 & 2012 & 3013 & 4014\\1021 & 2022 & 3023 & 4024\\1031 & 2032 & 3033 & 4034\end{matrix}\right]$$
+</p>
+</div>
+
+<div class="pheasant-markdown pheasant-jupyter-input codehilite"><pre><span></span><span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">(</span><span class="n">xw</span> <span class="o">+</span> <span class="n">b</span><span class="p">)</span>
+</pre></div>
+
+<div class="pheasant-jupyter-display">
+<p>$$\left[\begin{matrix}1011 & 2012 & 3013 & 4014\\1021 & 2022 & 3023 & 4024\\1031 & 2032 & 3033 & 4034\end{matrix}\right]$$
+</p>
+</div>
+
+<div class="pheasant-markdown pheasant-jupyter-input codehilite"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">Symbol</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+<span class="n">x</span>
+</pre></div>
+
+<div class="pheasant-jupyter-display">
+<p>$$x$$
+</p>
+</div>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../matplotlib/" class="btn btn-neutral float-right" title="6 Matplotlib">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../image/" class="btn btn-neutral" title="4 Image"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+          <a href="https://github.com/daizutabi/pheasant/" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
+      
+      
+        <span><a href="../image/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../matplotlib/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js" defer></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+      <script src="https://cdn.pydata.org/bokeh/release/bokeh-1.0.4.min.js" defer></script>
+      <script src="https://cdn.pydata.org/bokeh/release/bokeh-widgets-1.0.4.min.js" defer></script>
+      <script src="https://cdn.pydata.org/bokeh/release/bokeh-tables-1.0.4.min.js" defer></script>
+
+</body>
+</html>
