@@ -11,13 +11,13 @@ B = Vector('b', m)
 
 ~~~
 $$
-{{Y}}={{X}}\cdot{{W}} \\ +{{ones(N, 1)}}\cdot{{B}}
+{{Y}}={{X}}\cdot{{W}} \\ + {{ones(N, 1)}}\cdot{{B}}
 $$
 ~~~
 
 
 $$
-{{Y}}={{X}}\cdot{{W}} \\ +{{ones(N, 1)}}\cdot{{B}}
+{{Y}}={{X}}\cdot{{W}} \\ + {{ones(N, 1)}}\cdot{{B}}
 $$
 
 
@@ -37,5 +37,5 @@ sp.Matrix(xw + b)
 
 ```python
 x = sp.Symbol('x')
-x
+x ** 3
 ```

@@ -139,7 +139,7 @@
 </pre></div>
 
 <div class="codehilite pheasant-markdown pheasant-source"><pre>$$
-{{Y}}={{X}}\cdot{{W}} \\ +{{ones(N, 1)}}\cdot{{B}}
+{{Y}}={{X}}\cdot{{W}} \\ + {{ones(N, 1)}}\cdot{{B}}
 $$
 </pre></div>
 
@@ -151,7 +151,7 @@ y_{11}&amp;y_{12}&amp;y_{13}&amp;y_{14}\\y_{21}&amp;y_{22}&amp;y_{23}&amp;y_{24}
 x_{11}&amp;x_{12}\\x_{21}&amp;x_{22}\\x_{31}&amp;x_{32}
 \end{array}\right]\cdot\left[\begin{array}{cccc}
 w_{11}&amp;w_{12}&amp;w_{13}&amp;w_{14}\\w_{21}&amp;w_{22}&amp;w_{23}&amp;w_{24}
-\end{array}\right] \\ +\left[\begin{array}{c}
+\end{array}\right] \\ + \left[\begin{array}{c}
 1\\1\\1
 \end{array}\right]\cdot\left[\begin{array}{cccc}
 b_{1}&amp;b_{2}&amp;b_{3}&amp;b_{4}
@@ -164,7 +164,7 @@ y_{11}&y_{12}&y_{13}&y_{14}\\y_{21}&y_{22}&y_{23}&y_{24}\\y_{31}&y_{32}&y_{33}&y
 x_{11}&x_{12}\\x_{21}&x_{22}\\x_{31}&x_{32}
 \end{array}\right]\cdot\left[\begin{array}{cccc}
 w_{11}&w_{12}&w_{13}&w_{14}\\w_{21}&w_{22}&w_{23}&w_{24}
-\end{array}\right] \\ +\left[\begin{array}{c}
+\end{array}\right] \\ + \left[\begin{array}{c}
 1\\1\\1
 \end{array}\right]\cdot\left[\begin{array}{cccc}
 b_{1}&b_{2}&b_{3}&b_{4}
@@ -194,11 +194,11 @@ b_{1}&b_{2}&b_{3}&b_{4}
 </div>
 
 <div class="pheasant-markdown pheasant-jupyter-input codehilite"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">Symbol</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
-<span class="n">x</span>
+<span class="n">x</span> <span class="o">**</span> <span class="mi">3</span>
 </pre></div>
 
 <div class="pheasant-jupyter-display">
-<p>$$x$$
+<p>$$x^{3}$$
 </p>
 </div>
               

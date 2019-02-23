@@ -130,9 +130,17 @@
             <div class="section">
               
                 <h1 id="7-table">7 Table</h1>
-<p>abcde</p>
+<div class="codehilite pheasant-markdown pheasant-source"><pre>#Tab A HTML table
+
+First Header | Second Header
+------------ | -------------
+Content Cell | Content Cell
+Content Cell | Content Cell
+
+</pre></div>
+
 <div class="pheasant-number-table">
-<p>Table 7.1 a html table</p>
+<p>Table 7.1 A HTML table</p>
 <table>
 <thead>
 <tr>
@@ -153,14 +161,22 @@
 </table>
 </div>
 
+<div class="codehilite pheasant-markdown pheasant-source"><pre>#Tab a DataFrame table
+&lt;-- begin --&gt;
+<span>```</span>python inline
+<span></span><span class="p">{{</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">]],</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">])}}</span>
+<span>```</span>
+&lt;-- end --&gt;
+</pre></div>
+
 <div class="pheasant-number-table">
-<p>Table 7.2 a DataFrame table</p>
+<p>Table 7.2 A DataFrame table</p>
 <table class="dataframe">
   <thead>
     <tr>
       <th></th>
-      <th>0</th>
-      <th>1</th>
+      <th>x</th>
+      <th>y</th>
     </tr>
   </thead>
   <tbody>
