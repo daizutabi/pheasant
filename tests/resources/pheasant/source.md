@@ -6,7 +6,6 @@ $\frac{\partial f(x)}{\partial x}$
 
 ```python
 import matplotlib
-matplotlib
 ```
 
 ```python
