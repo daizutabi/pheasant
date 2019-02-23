@@ -139,11 +139,11 @@ plot = figure(plot_width=250, plot_height=250)
 plot.circle([1, 2, 3, 4, 5], [1, 2, 3, 4, 5], size=10)
 ```
 
-{{plot}}
+{{!plot}}
 ~~~
 
 
-```python
+```python hide
 from bokeh.plotting import figure
 from bokeh.embed import components
 
@@ -151,7 +151,7 @@ plot = figure(plot_width=250, plot_height=250)
 plot.circle([1, 2, 3, 4, 5], [1, 2, 3, 4, 5], size=10)
 ```
 
-{{plot}}
+{{!plot}}
 
 ### Auto numbering of headers, figures, and tables.
 
@@ -227,21 +227,20 @@ pd.DataFrame([[1, 2], [3, 4]], columns=list('ab')) * 2
 
 A Markdown source for figures and tables is a source block separated by a blank line from following text. If a figure or table has a blank line within it, you have to explicitly show the content range with `<!-- begin -->` and `<!-- end -->` statement.
 
+
 ~~~
 #Fig A Bokeh's HTML figure
-
 &lt;!-- begin --&gt;
-```python inline
-{{plot}}
-```
+{{!plot}}
 &lt;!-- end --&gt;
 ~~~
 
-#Fig A Bokeh's HTML figure
 
+#Fig A Bokeh's HTML figure
 <!-- begin -->
-{{plot}}
+{{!plot}}
 <!-- end -->
+
 
 ### Hyperlink
 
