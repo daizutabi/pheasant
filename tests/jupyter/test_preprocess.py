@@ -14,6 +14,7 @@ def test_inline_pattern():
                           ('-{{#a}}-', '-{{a}}-'),
                           ('a{{^a}}b', 'a<p>1</p>b'),
                           ('a{{b=10;a+b}}b', 'a11b'),
+                          ('x{{a;b;3*b-a}}y', 'x29y'),
                           ])
 def test_evaluate_markdown(source, output):
     initialize()

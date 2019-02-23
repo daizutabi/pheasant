@@ -20,9 +20,11 @@ def replace(match: Match, ignore_equal: bool = False) -> str:
     convert = 'pheasant.jupyter.display'
     source = match.group(1)
 
-    if source.startswith(config['inline_ignore_character']):
-        return match.group().replace(source, source[1:])
-    elif '=' in source and not ignore_equal:
+    # if source.startswith(config['inline_ignore_character']):
+    #     return match.group().replace(source, source[1:])
+    # elif '=' in source and not ignore_equal:
+    #     return source
+    if '=' in source and not ignore_equal:
         return source
 
     if source.startswith(config['inline_html_character']):
