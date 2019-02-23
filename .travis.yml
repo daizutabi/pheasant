@@ -10,7 +10,7 @@ matrix:
 install:
   - pip install click jupyter coveralls pytest-cov coverage holoviews
   - pip install flake8 mkdocs pelican matplotlib pandas bokeh sympy
-  - pip install selenium phantomjs
+  - pip install selenium
   - pip install -e .
 
 before_script:
