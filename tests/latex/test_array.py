@@ -1,5 +1,3 @@
-import sympy as sp
-
 from pheasant.latex.array import (Matrix, Vector, const, matrix, ones, partial,
                                   row, subscript, sympy_matrix, vector, zeros)
 

@@ -3,7 +3,9 @@ import logging
 import os
 
 import click
+
 # import pypandoc
+import pheasant
 from pheasant.converters import convert
 
 logging.basicConfig(level=logging.WARNING)
@@ -15,8 +17,13 @@ logger = logging.getLogger(__name__)
 @click.option("--format", "-f", default=None)
 @click.option("--output", "-o", default=None)
 @click.option("--to", "-t", default=None)
-@click.option("--verbose", "-v", default=None)
-def cli(inputs, format, output, to, verbose):
+@click.option("--verbose", "-v", is_flag=True)
+@click.option("--version", is_flag=True)
+def cli(inputs, format, output, to, verbose, version):
+    if version:
+        print(f'Pheasant version: {pheasant.__version__}')
+        return
+
     # FIXME
     if verbose:
         logging.basicConfig(level=logging.INFO)
