@@ -1,5 +1,4 @@
 language: python
-language: julia
 
 matrix:
   include:
@@ -17,7 +16,6 @@ install:
 before_script:
   - flake8 pheasant
   - python -m ipykernel install --user --name travis
-  - julia
 
 script:
   - jupyter kernelspec list
