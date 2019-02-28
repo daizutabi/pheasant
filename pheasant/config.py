@@ -8,4 +8,6 @@ config: Dict[str, Any] = {
     # 'converters': [macro, jupyter, code, office, number],
     'converters': [macro, jupyter, code, number],
     'source_file': None,
+    'extra_css': [],
+    'extra_javascript': [],
 }

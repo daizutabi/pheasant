@@ -4,6 +4,7 @@ from queue import Empty
 from typing import Any, Dict, Optional
 
 import jupyter_client
+import nbformat
 from nbformat.v4 import output_from_msg
 
 from pheasant.jupyter.config import config
@@ -108,13 +109,19 @@ def _wait_for_reply(kernel_name: str, msg_id, timeout: int = 300):
             continue
 
 
-def run_cell(cell, kernel_name: Optional[str] = None):
+def run_cell(cell_or_source, kernel_name: Optional[str] = None,
+             language: Optional[str] = 'python') -> None:
+    if isinstance(cell_or_source, str):
+        cell = nbformat.v4.new_code_cell(cell_or_source)
+    else:
+        cell = cell_or_source
+
     if kernel_name is None:
         if ('pheasant' in cell.metadata
                 and 'kernel_name' in cell.metadata['pheasant']):
             kernel_name = cell.metadata['pheasant']['kernel_name']
         else:
-            kernel_name = select_kernel_name(language='python')
+            kernel_name = select_kernel_name(language=language)
             kernel_name = config.setdefault('default_kernel', kernel_name)
 
     if not isinstance(kernel_name, str):

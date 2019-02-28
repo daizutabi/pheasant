@@ -1,4 +1,8 @@
-"""A module processes inline code."""
+"""
+A module processes inline code.
+
+IMPORTANT: `display` function is called from jupyter kernel.
+"""
 import base64
 import html
 import io
@@ -38,14 +42,6 @@ def display(obj: Any, **kwargs: Any) -> str:
             source = html.escape(obj)
 
     return source
-
-
-# def to_html(obj: Any, **kwargs: Any) -> str:
-#     return display(obj, output='html')
-#
-#
-# def to_markdown(obj: Any, **kwargs: Any) -> str:
-#     return display(obj, output='markdown')
 
 
 def matplotlib_to_base64(obj, output='markdown') -> str:

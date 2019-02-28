@@ -5,7 +5,6 @@ edit_uri: https://github.com/daizutabi/pheasant/docs/docs/
 
 theme:
   name: readthedocs
-  font: none
 
 extra:
   search:
@@ -19,39 +18,12 @@ markdown_extensions:
 
 extra_css:
   - css/pheasant.css
-  - https://cdn.pydata.org/bokeh/release/bokeh-1.0.4.min.css
-  - https://cdn.pydata.org/bokeh/release/bokeh-widgets-1.0.4.min.css
-  - https://cdn.pydata.org/bokeh/release/bokeh-tables-1.0.4.min.css
 
 extra_javascript:
   - https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML
-  - https://cdn.pydata.org/bokeh/release/bokeh-1.0.4.min.js
-  - https://cdn.pydata.org/bokeh/release/bokeh-widgets-1.0.4.min.js
-  - https://cdn.pydata.org/bokeh/release/bokeh-tables-1.0.4.min.js
 
 plugins:
-  - pheasant:
-      macro:
-        enabled: true
-      jupyter:
-        kernel_name:
-          python: python3
-        sys_paths:
-          - scripts
-        import_modules:
-          - hello
-        init_codes:
-          - import matplotlib as mpl
-          - import matplotlib.pyplot as plt
-          - import pandas as pd
-        template_file: output_text_outside.jinja2
-      number:
-        level: 0
-        # markdown_extensions:
-        #   - pymdownx.arithmatex
-      code:
-        enabled: true
-
+  - pheasant
 
 # nav:
 #   - Home: index.md

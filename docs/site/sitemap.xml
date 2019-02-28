@@ -1,43 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
-     <loc>https://pheasant.daizutabi.net/</loc>
-     <lastmod>2019-02-23</lastmod>
-     <changefreq>daily</changefreq>
-    </url>
-    <url>
-     <loc>https://pheasant.daizutabi.net/bokeh/</loc>
-     <lastmod>2019-02-23</lastmod>
-     <changefreq>daily</changefreq>
-    </url>
-    <url>
-     <loc>https://pheasant.daizutabi.net/holoviews/</loc>
-     <lastmod>2019-02-23</lastmod>
-     <changefreq>daily</changefreq>
-    </url>
-    <url>
-     <loc>https://pheasant.daizutabi.net/image/</loc>
-     <lastmod>2019-02-23</lastmod>
-     <changefreq>daily</changefreq>
-    </url>
-    <url>
-     <loc>https://pheasant.daizutabi.net/latex/</loc>
-     <lastmod>2019-02-23</lastmod>
-     <changefreq>daily</changefreq>
-    </url>
-    <url>
-     <loc>https://pheasant.daizutabi.net/matplotlib/</loc>
-     <lastmod>2019-02-23</lastmod>
-     <changefreq>daily</changefreq>
-    </url>
-    <url>
-     <loc>https://pheasant.daizutabi.net/table/</loc>
-     <lastmod>2019-02-23</lastmod>
-     <changefreq>daily</changefreq>
-    </url>
-    <url>
      <loc>https://pheasant.daizutabi.net/test/</loc>
-     <lastmod>2019-02-23</lastmod>
+     <lastmod>2019-02-28</lastmod>
      <changefreq>daily</changefreq>
     </url>
 </urlset>

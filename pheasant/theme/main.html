@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{%- block extrahead %}
+{%- if 'pheasant' in config -%}
+  {%- for path in config['pheasant']['extra_css'] %}
+    <link href="{{ path|url }}" rel="stylesheet">
+  {%- endfor %}
+  {%- for path in config['pheasant']['extra_javascript'] %}
+    <script src="{{ path|url }}" defer></script>
+  {%- endfor %}
+{%- endif -%}
+{% endblock %}

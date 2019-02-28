@@ -25,6 +25,11 @@ def initialize() -> None:
     import_modules()
     run_init_codes()
 
+    from pheasant.config import config as pheasant_config
+    from bokeh.resources import CDN
+    pheasant_config['extra_css'] = CDN.css_files
+    pheasant_config['extra_javascript'] = CDN.js_files
+
 
 def convert(source: str) -> str:
     """Convert markdown string into markdown with running results.
