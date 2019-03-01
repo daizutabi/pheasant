@@ -42,14 +42,12 @@ def convert(source: str) -> str:
     Returns
     -------
     results : str
-        Markdown source
+        Markdown source with running results
     """
     reload_modules()
 
     config['run_counter'] = 0  # used in the cache module. MOVE!!
-    out = ''.join(cell_runner(source))
-    # print(out)
-    return out
+    return ''.join(cell_runner(source))
 
 
 def cell_runner(source: str) -> Generator[str, None, None]:

@@ -6,60 +6,36 @@ IMPORTANT: `display` function is called from jupyter kernel.
 import base64
 import html
 import io
-from typing import Any
+import re
+from typing import Any, Dict, Optional, Tuple, Union
 
 from pheasant.jupyter.config import config
 from pheasant.jupyter.renderer import delete_style
 from pheasant.markdown.converter import markdown_convert
 
-
-def display(obj: Any, **kwargs: Any) -> str:
-    # FIXME: how to determine the function for conversion.
-    if hasattr(obj, '__module__'):
-        module = obj.__module__
-        if module.startswith('matplotlib.'):
-            source = matplotlib_to_base64(obj, **kwargs)
-        elif module.startswith('pandas.'):
-            source = pandas_to_html(obj)
-        elif module.startswith('bokeh.'):
-            source = bokeh_to_html(obj)
-        elif module.startswith('holoviews.'):
-            source = holoviews_to_html(obj)
-        elif module.startswith('sympy.'):
-            source = sympy_to_latex(obj)
-        else:
-            source = str(obj)
-    else:
-        is_str = isinstance(obj, str)
-        if not is_str:
-            obj = str(obj)
-
-        if 'html' == kwargs.get('output'):
-            source = markdown_convert(obj)
-        elif is_str:
-            source = obj
-        else:
-            source = html.escape(obj)
-
-    return source
+# type for output and its resources
+Str_And_Dict = Tuple[str, Dict[str, list]]
 
 
-def matplotlib_to_base64(obj, output='markdown') -> str:
+def matplotlib_to_base64(obj, fmt: Optional[str] = None,
+                         output: str = 'markdown') -> str:
     """Convert a Matplotlib's figure into base64 string."""
-    fmt = config['matplotlib_format']
-    buf = io.BytesIO()
-
     if not hasattr(obj, 'savefig'):
         obj = obj.figure  # obj is axes.
+    if fmt is None:
+        fmt = config['matplotlib_format']
 
-    obj.savefig(buf, fmt=fmt, bbox_inches='tight', transparent=True)
-    buf.seek(0)
-    binary = buf.getvalue()
+    buffer = io.BytesIO()
+    obj.savefig(buffer, fmt=fmt, bbox_inches='tight', transparent=True)
+    buffer.seek(0)
+    binary = buffer.getvalue()
+    buffer.close()
 
     return base64image(binary, fmt, output)
 
 
-def base64image(binary, fmt: str, output: str) -> str:
+def base64image(binary: bytes, fmt: str, output: str) -> str:
+    """Return markdown or HTML image source."""
     data = base64.b64encode(binary).decode('utf8')
     data = f'data:image/{fmt};base64,{data}'
 
@@ -71,35 +47,94 @@ def base64image(binary, fmt: str, output: str) -> str:
         raise ValueError(f'Unknown output: {output}')
 
 
-def pandas_to_html(dataframe) -> str:
+def pandas_to_html(dataframe, **kwargs) -> str:
     """Convert a pandas.DataFrame into a <table> tag."""
     html = dataframe.to_html(escape=False)
     html = delete_style(html)
     return html
 
 
-def bokeh_to_html(figure) -> str:
-    """Convert a Bokeh's figure into <script> and <div> tags."""
+def sympy_to_latex(obj) -> str:
+    """Convert a Sympy's object into latex string."""
+    import sympy
+    return sympy.latex(obj)
+
+
+def bokeh_to_html(obj, **kwargs) -> Str_And_Dict:
+    """Convert a Bokeh's obj into <script> and <div> tags."""
     from bokeh.embed import components
-    script, div = components(figure)
-    return script + div
+    from bokeh.resources import CDN
+
+    script, div = components(obj)
+    resources = {'extra_css': CDN.css_files, 'extra_javascript': CDN.js_files}
+
+    return script + div, resources
 
 
-def holoviews_to_html(figure, output='markdown', fmt=None) -> str:
+def holoviews_to_html(obj, output: str = 'markdown',
+                      fmt: Optional[str] = None) -> Union[str, Str_And_Dict]:
     import holoviews as hv
+
     backend = config['holoviews_backend']
     if fmt is None:
         fmt = config[f'{backend}_format']
+
     renderer = hv.renderer(backend)
-    html, info = renderer(figure, fmt=fmt)
 
     if fmt == 'png':
-        return base64image(html, fmt, output)
+        png, info = renderer(obj, fmt=fmt)
+        return base64image(png, fmt, output)
     else:
-        return html
+        html = renderer.html(obj, fmt)
+        js_html, css_html = renderer.html_assets()
+        resources = _split_html_assets(js_html, css_html)
+        return html, resources
 
 
-def sympy_to_latex(obj) -> str:
-    """Convert a Sympy's object into latex string."""
-    import sympy as sp
-    return sp.latex(obj)
+def _split_html_assets(js_html: str, css_html: str) -> Dict[str, list]:
+    resources = _split_js_html_assets(js_html)
+    resources.update(_split_css_html_assets(css_html))
+    return resources
+
+
+def _split_js_html_assets(js_html: str) -> Dict[str, list]:
+    pattern = r'<script src="(.*?)" type="text/javascript"></script>'
+    extra_javascript = re.findall(pattern, js_html)
+
+    pattern = r'<script type="text/javascript">(.*?)</script>'
+    extra_raw_javascript = re.findall(pattern, js_html, re.DOTALL)
+
+    return {'extra_javascript': extra_javascript,
+            'extra_raw_javascript': extra_raw_javascript}
+
+
+def _split_css_html_assets(css_html: str) -> Dict[str, list]:
+    pattern = r'<link rel="stylesheet" href="(.*?)">'
+    extra_css = re.findall(pattern, css_html)
+    return {'extra_css': extra_css}
+
+
+converters = {'matplotlib': matplotlib_to_base64, 'pandas': pandas_to_html,
+              'sympy': sympy_to_latex, 'bokeh': bokeh_to_html,
+              'holoviews': holoviews_to_html}
+
+
+def display(obj: Any, **kwargs: Any) -> Union[str, Str_And_Dict]:
+    if not hasattr(obj, '__module__'):
+        is_str = isinstance(obj, str)
+        if not is_str:
+            obj = str(obj)
+
+        if 'html' == kwargs.get('output'):
+            return markdown_convert(obj)
+        elif is_str:
+            return obj
+        else:
+            return html.escape(obj)
+
+    print(obj)
+    module = obj.__module__.split('.')[0]
+    print(module, kwargs)
+    converter = converters.get(module, lambda obj: str(obj))
+    print(converter)
+    return converter(obj, **kwargs)

@@ -10,3 +10,11 @@ p
 ```
 
 {{!p}}
+
+
+```python
+from pheasant.config import config as pheasant_config
+pheasant_config
+from pheasant import config
+config.__module__
+```

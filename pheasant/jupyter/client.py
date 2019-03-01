@@ -110,7 +110,7 @@ def _wait_for_reply(kernel_name: str, msg_id, timeout: int = 300):
 
 
 def run_cell(cell_or_source, kernel_name: Optional[str] = None,
-             language: Optional[str] = 'python') -> None:
+             language: str = 'python') -> None:
     if isinstance(cell_or_source, str):
         cell = nbformat.v4.new_code_cell(cell_or_source)
     else:
@@ -141,7 +141,7 @@ def run_cell(cell_or_source, kernel_name: Optional[str] = None,
             # in certain CI systems, waiting < 1 second might miss messages.
             # So long as the kernel sends a status:idle message when it
             # finishes, we won't actually have to wait this long, anyway.
-            msg = kernel_client.iopub_channel.get_msg(timeout=10)
+            msg = kernel_client.iopub_channel.get_msg(timeout=50)
         except Empty:
             logger.warn('Timeout waiting for IOPub output')
             raise RuntimeError('Timeout waiting for IOPub output')

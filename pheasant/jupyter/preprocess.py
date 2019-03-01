@@ -62,6 +62,8 @@ def preprocess_markdown(source: str) -> str:
         display = source.startswith(config['inline_display_character'])
         source = replace(match)
         cell = nbformat.v4.new_code_cell(source)
-        return run_and_render(cell, inline_render, display=display)
+        print(source)
+        out = run_and_render(cell, inline_render, display=display)
+        return out
 
     return re.sub(config['inline_pattern'], replace_and_run, source)

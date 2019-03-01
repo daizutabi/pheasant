@@ -42,17 +42,18 @@ def test_display_dataframe():
 def test_display_bokeh():
     plot = figure(plot_width=250, plot_height=250)
     plot.circle([1, 2, 3, 4, 5], [1, 2, 3, 4, 5], size=10)
-    assert display(plot).strip().startswith('<script type="text/javascript">')
-    assert (
-        display(plot, output="html")
-        .strip()
-        .startswith('<script type="text/javascript">')
-    )
+
+    html, resources = display(plot)
+    assert html.strip().startswith('<script type="text/javascript">')
+
+    html, resources = display(plot, output='html')
+    assert html.strip().startswith('<script type="text/javascript">')
 
 
 def test_display_holoviews():
     curve = hv.Curve(((1, 2), (3, 4)))
-    assert display(curve).startswith('<div style=\'display')
+    html, resources = display(curve)
+    assert html.startswith('<div style=\'display')
 
     png = holoviews_to_html(curve, fmt='png')
     assert png.startswith("![png](data:image/png;base64,iVBOR")
