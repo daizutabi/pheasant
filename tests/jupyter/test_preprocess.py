@@ -86,6 +86,8 @@ def test_update_extra_resources_for_holoviews():
     text = preprocess_markdown('{{hmap}}')[:40]
     assert text == "<div style='display: table; margin: 0 au"
 
+    text = preprocess_markdown('{{hmap}}')
+
     extra_css = pheasant_config['extra_css']
     assert len(extra_css) == 5
     assert extra_css[:3] == CDN.css_files
