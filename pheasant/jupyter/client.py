@@ -1,10 +1,12 @@
 """A module provide jupyter client interface."""
+
 import logging
 from queue import Empty
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Union
 
 import jupyter_client
 import nbformat
+from nbformat import NotebookNode
 from nbformat.v4 import output_from_msg
 
 from pheasant.jupyter.config import config
@@ -109,11 +111,14 @@ def _wait_for_reply(kernel_name: str, msg_id, timeout: int = 300):
             continue
 
 
-def run_cell(cell_or_source, kernel_name: Optional[str] = None,
-             language: str = 'python') -> None:
+def run_cell(cell_or_source: Union[NotebookNode, str],
+             kernel_name: Optional[str] = None,
+             language: str = 'python') -> Optional[NotebookNode]:
     if isinstance(cell_or_source, str):
+        return_cell = True
         cell = nbformat.v4.new_code_cell(cell_or_source)
     else:
+        return_cell = False
         cell = cell_or_source
 
     if kernel_name is None:
@@ -182,4 +187,5 @@ def run_cell(cell_or_source, kernel_name: Optional[str] = None,
         outs.append(out)
 
     cell.outputs = outs
-    return cell
+
+    return cell if return_cell else None

@@ -39,21 +39,31 @@ def test_display_dataframe():
     assert display(df, output="html").startswith("<table")
 
 
-def test_display_bokeh():
+@pytest.mark.parametrize('output', ['markdown', 'html'])
+def test_display_bokeh(output):
     plot = figure(plot_width=250, plot_height=250)
     plot.circle([1, 2, 3, 4, 5], [1, 2, 3, 4, 5], size=10)
 
-    html, resources = display(plot)
+    html, resources = display(plot, output=output)
     assert html.strip().startswith('<script type="text/javascript">')
-
-    html, resources = display(plot, output='html')
-    assert html.strip().startswith('<script type="text/javascript">')
+    assert 'extra_css' in resources
+    assert isinstance(resources['extra_css'], list)
+    assert 'extra_javascript' in resources
+    assert isinstance(resources['extra_javascript'], list)
 
 
 def test_display_holoviews():
     curve = hv.Curve(((1, 2), (3, 4)))
     html, resources = display(curve)
     assert html.startswith('<div style=\'display')
+    assert 'extra_css' in resources
+    assert isinstance(resources['extra_css'], list)
+    assert 'extra_raw_css' in resources
+    assert isinstance(resources['extra_raw_css'], list)
+    assert 'extra_javascript' in resources
+    assert isinstance(resources['extra_javascript'], list)
+    assert 'extra_raw_javascript' in resources
+    assert isinstance(resources['extra_raw_javascript'], list)
 
     png = holoviews_to_html(curve, fmt='png')
     assert png.startswith("![png](data:image/png;base64,iVBOR")

@@ -7,7 +7,7 @@ import base64
 import html
 import io
 import re
-from typing import Any, Dict, Optional, Tuple, Union
+from typing import Any, Callable, Dict, Optional, Tuple, Union
 
 from pheasant.jupyter.config import config
 from pheasant.jupyter.renderer import delete_style
@@ -54,7 +54,7 @@ def pandas_to_html(dataframe, **kwargs) -> str:
     return html
 
 
-def sympy_to_latex(obj) -> str:
+def sympy_to_latex(obj, **kwargs) -> str:
     """Convert a Sympy's object into latex string."""
     import sympy
     return sympy.latex(obj)
@@ -111,12 +111,18 @@ def _split_js_html_assets(js_html: str) -> Dict[str, list]:
 def _split_css_html_assets(css_html: str) -> Dict[str, list]:
     pattern = r'<link rel="stylesheet" href="(.*?)">'
     extra_css = re.findall(pattern, css_html)
-    return {'extra_css': extra_css}
+
+    pattern = r'<style>(.*?)</style>'
+    extra_raw_css = re.findall(pattern, css_html, re.DOTALL)
+
+    return {'extra_css': extra_css,
+            'extra_raw_css': extra_raw_css}
 
 
-converters = {'matplotlib': matplotlib_to_base64, 'pandas': pandas_to_html,
-              'sympy': sympy_to_latex, 'bokeh': bokeh_to_html,
-              'holoviews': holoviews_to_html}
+CONVERTERS: Dict[str, Callable] = {
+    'matplotlib': matplotlib_to_base64, 'pandas': pandas_to_html,
+    'sympy': sympy_to_latex, 'bokeh': bokeh_to_html,
+    'holoviews': holoviews_to_html}
 
 
 def display(obj: Any, **kwargs: Any) -> Union[str, Str_And_Dict]:
@@ -132,9 +138,6 @@ def display(obj: Any, **kwargs: Any) -> Union[str, Str_And_Dict]:
         else:
             return html.escape(obj)
 
-    print(obj)
     module = obj.__module__.split('.')[0]
-    print(module, kwargs)
-    converter = converters.get(module, lambda obj: str(obj))
-    print(converter)
+    converter = CONVERTERS.get(module, lambda obj: str(obj))
     return converter(obj, **kwargs)

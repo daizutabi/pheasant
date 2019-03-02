@@ -2,19 +2,11 @@
 
 ```python
 from bokeh.plotting import figure
-p = figure(title='Test', width=200, height=200)
+p = figure(title='Test', width=300, height=300)
 p.xaxis.axis_label = 'Petal Length'
 p.yaxis.axis_label = 'Petal Width'
-p.circle([1, 2, 3], [4, 5, 6])
+p.circle([3, 2, 3], [2, 5, 6])
 p
 ```
 
 {{!p}}
-
-
-```python
-from pheasant.config import config as pheasant_config
-pheasant_config
-from pheasant import config
-config.__module__
-```

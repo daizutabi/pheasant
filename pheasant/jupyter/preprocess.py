@@ -1,8 +1,8 @@
-"""Evaluate {{expr}} in Markdown source and fenced code.
+"""Execute `{{expr}}` in a markdown source and fenced code.
 
-If expr starts with '#', expr is not evaluated: {{#abc}} -> {{abc}}
-
-If expr starts with '^', expr is converted into HTML after execution.
+If `expr` starts with '#', `expr` is not executed: {{#abc}} -> {{abc}}.
+If `expr` starts with '^', `expr` is converted into a HTML source after
+execution.
 
 Above settings is default values and configurable.
 """
@@ -11,12 +11,52 @@ import re
 from typing import Match
 
 import nbformat
+from nbformat import NotebookNode
 
 from pheasant.jupyter.config import config
 from pheasant.jupyter.renderer import inline_render, run_and_render
 
 
+def preprocess_fenced_code(source: str) -> str:
+    def replace_(match):
+        return replace(match, ignore_equal=True)
+
+    return re.sub(config['inline_pattern'], replace_, source)
+
+
+def preprocess_markdown(source: str) -> str:
+    if source[:3] in ['```', '~~~', '<di']:  # escaped or already converted.
+        return source
+
+    def replace_and_run(match: Match) -> str:
+        source = match.group(1)
+        if source.startswith(config['inline_ignore_character']):
+            return match.group().replace(source, source[1:])
+
+        cell = nbformat.v4.new_code_cell(replace(match))
+        display = source.startswith(config['inline_display_character'])
+
+        return run_and_render(cell, inline_render, display=display,
+                              callback=update_extra_resources)
+
+    return re.sub(config['inline_pattern'], replace_and_run, source)
+
+
 def replace(match: Match, ignore_equal: bool = False) -> str:
+    """Replace a match object with `display` function.
+
+    Parameters
+    ----------
+    match
+        The match object returned by the `re.sub` function for an inline cell.
+    ignore_equal
+        If True, do not replace the source which contains `=`.
+
+    Returns
+    -------
+    str
+        Replaced python source code but has not been executed yet.
+    """
     convert = 'pheasant.jupyter.display'
     source = match.group(1)
 
@@ -43,27 +83,38 @@ def replace(match: Match, ignore_equal: bool = False) -> str:
     return f'{convert}({source}, output="{output}")'
 
 
-def preprocess_code(source: str) -> str:
-    def replace_(match):
-        return replace(match, ignore_equal=True)
+def update_extra_resources(cell: NotebookNode) -> None:
+    """Update extra resources in the pheasant config.
 
-    return re.sub(config['inline_pattern'], replace_, source)
+    If the `text/plain` output of the cell is `tuple`,
+    the first element is the real output of the cell execution
+    and the second element is a dictionary to update the extra
+    resources in the pheasant config.
 
+    Parameters
+    ----------
+    cell
+        Input cell after execution.
+    """
+    def replace(data: NotebookNode) -> None:
+        display = eval(data['text/plain'])
+        if isinstance(display, tuple):
+            html, resources = display
+            update(resources)
+            data['text/html'] = html
+            del data['text/plain']
 
-def preprocess_markdown(source: str) -> str:
-    if source[:3] in ['```', '~~~', '<di']:  # escaped or already converted.
-        return source
+    def update(resources: dict) -> None:
+        from pheasant.config import config as pheasant_config
+        from pheasant.converters import extra_keys
 
-    def replace_and_run(match: Match) -> str:
-        source = match.group(1)
-        if source.startswith(config['inline_ignore_character']):
-            return match.group().replace(source, source[1:])
+        for key in extra_keys():
+            if key in resources:
+                values = [value for value in resources[key]
+                          if value not in pheasant_config[key]]
+                pheasant_config[key].extend(values)
 
-        display = source.startswith(config['inline_display_character'])
-        source = replace(match)
-        cell = nbformat.v4.new_code_cell(source)
-        print(source)
-        out = run_and_render(cell, inline_render, display=display)
-        return out
-
-    return re.sub(config['inline_pattern'], replace_and_run, source)
+    for output in cell.outputs:
+        if (output['output_type'] == 'execute_result'
+                and 'text/plain' in output['data']):
+            replace(output['data'])

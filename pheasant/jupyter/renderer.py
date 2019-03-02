@@ -36,23 +36,47 @@ def inline_render(cell: NotebookNode, display: bool = False) -> str:
 
 
 def pheasant_options(cell: NotebookNode) -> list:
-    """Get pheasant options from cell's metadata."""
+    """Get pheasant options from the cell's metadata."""
     if 'pheasant' in cell.metadata:
         return cell.metadata['pheasant']['options']
     else:
         return []
 
-
+# `run_and_render` function is 'memoize'-decorated in order to cache the
+# source and outputs to avoid rerunning the same cell unnecessarily.
 @abort
 @memoize
 def run_and_render(cell: NotebookNode, render: Callable[..., str],
-                   kernel_name: Optional[str] = None, **kwargs) -> str:
-    """Run a code cell and render the source and outputs into markdown."""
+                   kernel_name: Optional[str] = None,
+                   callback: Optional[Callable[[NotebookNode], None]] = None,
+                   select_display: bool = True, **kwargs) -> str:
+    """Run a code cell and render the source and outputs into markdown.
 
-    # These two functions are defined in this function in order to cache the
-    # source and outputs to avoid rerunning the cell unnecessarily.
+    Parameters
+    ----------
+    cell : NotebookNode
+        Input notebook cell.
+    render : callable
+        Rendering function for the output cell.
+    kernel_name : str, optional
+        Name of a jupyter kernel to execute the input cell.
+    callback : callable, optional
+        Callback function which is called after cell execution.
+    select_display : bool, optional
+        If True, select display data with the highest priority.
+    **kwars:
+        Additional parameters for the render function.
+
+    Returun
+    -------
+    str
+        rendered string
+    """
     run_cell(cell, kernel_name)
-    select_display_data(cell)
+    if select_display:
+        select_display_data(cell)
+    if callback:
+        callback(cell)
     return render(cell=cell, **kwargs)
 
 
@@ -79,7 +103,9 @@ def select_display_data(cell: NotebookNode) -> None:
 def strip_text(cell: NotebookNode) -> None:
     for output in cell.outputs:
         if output['output_type'] == 'execute_result':
-            if 'text/plain' in output['data']:
+            if 'text/html' in output['data']:
+                return
+            elif 'text/plain' in output['data']:
                 text = output['data']['text/plain']
                 if text.startswith("'"):
                     text = eval(text)

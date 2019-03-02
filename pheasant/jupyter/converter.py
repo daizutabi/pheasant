@@ -8,7 +8,8 @@ from nbconvert.filters import strip_ansi
 import pheasant
 from pheasant.jupyter.client import run_cell
 from pheasant.jupyter.config import config
-from pheasant.jupyter.preprocess import preprocess_code, preprocess_markdown
+from pheasant.jupyter.preprocess import (preprocess_fenced_code,
+                                         preprocess_markdown)
 from pheasant.jupyter.renderer import (inline_render, new_code_cell, render,
                                        run_and_render)
 from pheasant.markdown.splitter import fenced_code_splitter
@@ -24,11 +25,6 @@ def initialize() -> None:
     sys_path_insert()
     import_modules()
     run_init_codes()
-
-    from pheasant.config import config as pheasant_config
-    from bokeh.resources import CDN
-    pheasant_config['extra_css'] = CDN.css_files
-    pheasant_config['extra_javascript'] = CDN.js_files
 
 
 def convert(source: str) -> str:
@@ -78,7 +74,7 @@ def cell_runner(source: str) -> Generator[str, None, None]:
             cell = new_code_cell(source, language=language, options=options)
 
             if 'inline' in options:
-                cell.source = preprocess_code(cell.source)
+                cell.source = preprocess_fenced_code(cell.source)
                 yield run_and_render(cell, inline_render) + '\n\n'
             else:
                 yield run_and_render(cell, render)

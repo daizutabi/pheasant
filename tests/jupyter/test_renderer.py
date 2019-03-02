@@ -1,5 +1,7 @@
 import nbformat
+
 from pheasant.jupyter.renderer import pheasant_options
+
 
 def test_pheasant_options():
     cell = nbformat.v4.new_code_cell('a = 1')
