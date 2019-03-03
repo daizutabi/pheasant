@@ -112,10 +112,10 @@ Content Cell | Content Cell
 @pytest.fixture
 def source_output():
     yield """
-# <span id="PN-H1"><span class="pheasant-header-number">1</span>
+# <span id="PN-H1"><span class="pheasant-header-number">1</span>++
 <span class="pheasant-header-title">header1</span></span>
 A text
-## <span id="PN-H1.1"><span class="pheasant-header-number">1.1</span>
+## <span id="PN-H1.1"><span class="pheasant-header-number">1.1</span>++
 <span class="pheasant-header-title">header2</span></span>
 <div class="PN-figure" id="PN-F1">
 <p><img alt="png" src="figure1.png" /></p>
@@ -162,8 +162,9 @@ A text
 def test_renderer(source_input, source_output):
     label = {}
     o = '\n'.join(list(render(source_input, label)))
+    o2 = source_output.replace('++\n', ' ')
 
-    for x, y in zip(o.split('\n'), source_output.split('\n')):
+    for x, y in zip(o.split('\n'), o2.split('\n')):
         assert x.replace('pheasant-number', 'PN') == y
 
 

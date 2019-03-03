@@ -31,8 +31,12 @@ Content Cell | Content Cell
 Content Cell | Content Cell
 
 
+import
+
 ```python
 import pandas as pd
 df = pd.DataFrame([[1,2], [4,5]], columns=['x', 'y'])
 df
+
+1 == 2
 ```
