@@ -8,10 +8,7 @@ matrix:
       sudo: true
 
 install:
-  - pip install click jupyter coveralls pytest-cov coverage holoviews
-  - pip install flake8 mkdocs pelican matplotlib pandas bokeh sympy
-  - pip install selenium
-  - pip install -e .
+  - pip install -e .[develop]
 
 before_script:
   - flake8 pheasant
