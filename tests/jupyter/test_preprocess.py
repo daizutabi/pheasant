@@ -6,19 +6,20 @@ from pheasant.config import config as pheasant_config
 from pheasant.jupyter.client import run_cell
 from pheasant.jupyter.config import config
 from pheasant.jupyter.converter import initialize
-from pheasant.jupyter.preprocess import preprocess_markdown
+from pheasant.jupyter.preprocess import move_from_header, preprocess_markdown
 
 
 def test_inline_pattern():
     assert config['inline_pattern'] == r'\{\{(.+?)\}\}'
 
 
-initialize()
+def test_intialize():
+    assert initialize() is None
 
 
 @pytest.mark.parametrize('source,output',
                          [('text', 'text'), ('1{{a=1}}2', '12'),
-                          ('a{{a}}b', 'a1b'), ('#{{2*a}}!', '#2!'),
+                          ('a{{a}}b', 'a1b'), ('${{2*a}}!', '$2!'),
                           ('-{{#a}}-', '-{{a}}-'),
                           ('a{{^a}}b', 'a<p>1</p>b'),
                           ('a{{b=10;a+b}}b', 'a11b'),
@@ -121,3 +122,12 @@ def test_extra_raw_javascript():
     assert len(extra) == 2
     assert extra[0][:40] == 'function HoloViewsWidget() {\n}\n\nHoloView'
     assert extra[0][-40:] == 'kehScrubberWidget = BokehScrubberWidget\n'
+
+
+def test_move_from_header():
+    source = 'dummy\n#header {{inline}} title.\n\n#Fig title. {{fig}}\n'
+    output = move_from_header(source)
+    answer = ('dummy\n#header title.\n<!-- begin -->\n{{inline}}\n'
+              '<!-- end -->\n\n#Fig title.\n<!-- begin -->\n'
+              '{{fig}}\n<!-- end -->\n')
+    assert output == answer

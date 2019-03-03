@@ -40,6 +40,9 @@ setup(
         'console_scripts': [
            'pheasant = pheasant.main:cli',
         ],
+        'mkdocs.themes': [
+            'rtd-pheasant = pheasant.themes.mkdocs.rtd_pheasant',
+        ],
         'mkdocs.plugins': [
             'pheasant = pheasant.plugins.mkdocs:PheasantPlugin',
         ]

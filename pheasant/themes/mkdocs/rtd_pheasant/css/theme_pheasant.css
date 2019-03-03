@@ -1,0 +1,226 @@
+body {
+  font-size: 100%;
+}
+
+/**************************************************
+ Display style
+**************************************************/
+
+div.pheasant-jupyter-display {
+  display: table;
+  margin: 0 auto;
+}
+
+/**************************************************
+ Numbering style
+**************************************************/
+
+.pheasant-header-number {
+  opacity: 0.5;
+  /* font-size: 90%; */
+}
+
+div.pheasant-number-figure {
+  margin-bottom: 1.6em;
+}
+
+div.pheasant-number-table {
+  margin-top: 1.6em;
+}
+
+p.pheasant-figure, p.pheasant-table {
+  text-align: center;
+  margin: 2px 8%;
+  font-size: 100%;
+}
+
+p.pheasant-figure .name, p.pheasant-figure .number {
+  font-weight: bold;
+  color: #002299;
+}
+
+p.pheasant-table .name, p.pheasant-table .number {
+  font-weight: bold;
+  color: #002299;
+}
+
+div.pheasant-number-table table {
+  margin: 0 auto;
+  display: table !important;
+  width: auto !important;
+}
+
+p.pheasant-figure .title, p.pheasant-table .title {
+  margin-left: 5px;
+}
+
+div.pheasant-number-code p {
+  margin-left: 2.0em !important;
+  margin-bottom: -2px !important;
+  padding: 0px 6px !important;
+  font-size: 90%;
+}
+
+
+div.pheasant-number-code .name, div.pheasant-number-code .number {
+  font-weight: bold;
+  color: #002299;
+}
+
+
+/**************************************************
+ Pandas DataFrame style
+**************************************************/
+
+table.dataframe {
+  border-collapse: collapse;
+  border: none;
+  font-size: 90%;
+}
+
+table.dataframe thead tr,
+table.dataframe thead th,
+table.dataframe tbody tr,
+table.dataframe tbody th,
+table.dataframe tbody td {
+  border: none;
+  text-align: center;
+  padding: 2px 6px !important;
+}
+
+table.dataframe thead th {
+  color: darkblue;
+  background-color: lightcyan;
+  border: 1px solid #333366 !important;
+}
+
+table.dataframe tbody th {
+  color: black;
+  background-color: #ffffee;
+  border: 1px solid #666633 !important;
+}
+
+table.dataframe tbody td {
+  color: black;
+  background-color: #fcfcfc;
+  border-bottom: 1px solid #b9b9b9 !important;
+  border-right: 1px solid #b9b9b9 !important;
+}
+
+.dataframe tr th:last-child, .dataframe tr td:last-child {
+  border-right: 1px solid #333366 !important;
+}
+
+.dataframe tr:last-child td, .dataframe tr:last-child th {
+  border-bottom: 1px solid #333366 !important;
+}
+
+.dataframe tbody tr:nth-child(2n+1) td {
+  background: #f1f6fc;
+}
+
+
+/**************************************************
+ Fenced code style
+**************************************************/
+
+.pheasant-fenced-code pre {
+  padding: 0px 2px;
+  margin: 0px;
+}
+
+.pheasant-fenced-code code {
+  font-family: "Fira Code";
+  line-height: 1.38;
+  font-size: 14px;
+  background: transparent !important;
+  border: none !important;
+  padding: 4px 6px;
+}
+
+
+.pheasant-fenced-code {
+  position: relative;
+  margin-left: 2.0em !important;
+  background-color: transparent !important;
+}
+
+.pheasant-fenced-code:before {
+  content: "";
+  position: absolute;
+  left: -2.5em;
+  font-size: 90%;
+  color: #669;
+  width: 2.3em;
+  text-align: right;
+  margin-top: 5px;
+}
+
+.pheasant-fenced-code > pre {
+  border-radius: 6px;
+}
+
+.pheasant-jupyter-input {
+  margin-bottom: 3px !important;
+}
+
+.pheasant-jupyter-input:before {
+  content: "In:";
+}
+
+.pheasant-jupyter-input > pre {
+  background-color: #eef !important;
+  border: 1px solid #bdd;
+}
+
+.pheasant-jupyter-output {
+  margin-bottom: 18px !important;
+}
+
+.pheasant-jupyter-output:before {
+  content: "Out:";
+}
+
+.pheasant-jupyter-output > pre {
+  background-color: #ffd !important;
+  border: 1px solid #ddb;
+}
+
+.pheasant-source {
+  margin-top: 3px !important;
+  margin-bottom: 20px !important;
+}
+
+.pheasant-source:before {
+  content: "Src:";
+}
+
+.pheasant-source > pre {
+  background-color: #efc !important;
+  border: 1px solid #bdb;
+}
+
+.pheasant-code {
+  margin-top: 3px !important;
+  margin-bottom: 20px !important;
+}
+
+.pheasant-code:before {
+  content: "";
+}
+
+.pheasant-code > pre {
+  background-color: #efd !important;
+  border: 1px solid #bdb;
+}
+
+.codehilite pre {
+  padding: 6px 8px !important;
+}
+
+
+/*
+.md-typeset .md-typeset__table {
+  display: inherit;
+}
+*/

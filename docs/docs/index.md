@@ -1,25 +1,13 @@
 # Pheasant
 
-abc
-
 ```python
-example
+import holoviews as hv
+curve = hv.Curve(((1, 2), (2, 3)))
+curve
 ```
 
-#Code a
-
-![python](example)
-
-~~~python
-# test
-print(1)
+~~~
+#Fig A HoloViews {{curve}} Plot.
 ~~~
 
-#Code b
-
-~~~
-test:
-  - abc
-~~~
-
-![file](mkdocs.yml)
+df

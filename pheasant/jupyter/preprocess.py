@@ -1,12 +1,3 @@
-"""Execute `{{expr}}` in a markdown source and fenced code.
-
-If `expr` starts with '#', `expr` is not executed: {{#abc}} -> {{abc}}.
-If `expr` starts with '^', `expr` is converted into a HTML source after
-execution.
-
-Above settings is default values and configurable.
-"""
-
 import re
 from typing import Match
 
@@ -15,6 +6,17 @@ from nbformat import NotebookNode
 
 from pheasant.jupyter.config import config
 from pheasant.jupyter.renderer import inline_render, run_and_render
+from pheasant.number import config as config_number
+
+
+"""Execute `{{expr}}` in a markdown source and fenced code.
+
+If `expr` starts with '#', `expr` is not executed: {{#abc}} -> {{abc}}.
+If `expr` starts with '^', `expr` is converted into a HTML source after
+execution.
+
+Above settings is default values and configurable.
+"""
 
 
 def preprocess_fenced_code(source: str) -> str:
@@ -39,6 +41,7 @@ def preprocess_markdown(source: str) -> str:
         return run_and_render(cell, inline_render, display=display,
                               callback=update_extra_resources)
 
+    source = move_from_header(source)  # Allows an inline expr in a header.
     return re.sub(config['inline_pattern'], replace_and_run, source)
 
 
@@ -119,3 +122,31 @@ def update_extra_resources(cell: NotebookNode) -> None:
         if (output['output_type'] == 'execute_result'
                 and 'text/plain' in output['data']):
             replace(output['data'])
+
+
+def move_from_header(source: str) -> str:
+    """Inline cells are moved below header line.
+
+    Before:
+        #Fig title {{plot}}
+
+    After:
+        #Fig title
+        <!-- begin -->
+        {{plot}}
+        <!-- end -->
+    """
+    begin = config_number['begin_pattern']
+    end = config_number['end_pattern']
+
+    def replace(match):
+        header, inline, _, title = match.groups()
+        header = header.strip()
+        title = title.strip()
+        if title:
+            return f'{header} {title}\n{begin}\n{inline}\n{end}'
+        else:
+            return f'{header}\n{begin}\n{inline}\n{end}'
+
+    pattern = r'^(#.*?)(' + config['inline_pattern'] + r')(.*?)$'
+    return re.sub(pattern, replace, source, flags=re.MULTILINE)
