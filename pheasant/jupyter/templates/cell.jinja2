@@ -5,7 +5,7 @@
   {%- set language = cell.metadata.get('pheasant', {}).get('language', '') -%}
   {%- if 'hide' not in options and 'display' not in options -%}
     {%- if 'hide-input' not in options -%}
-      {{ '```' + language + ' .pheasant-markdown .pheasant-jupyter-input\n' }}
+      {{ '```' + language + ' .pheasant-fenced-code .pheasant-jupyter-input\n' }}
       {%- if not cell.outputs or 'hide-output' in options -%}
         {%- block input -%}{%- endblock -%}
       {%- else -%}

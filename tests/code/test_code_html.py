@@ -19,14 +19,14 @@ def test_convert():
     assert convert(source) == answer
 
     source = '~~~\n```python\nprint(1)\n```\n~~~\n'
-    answer = '<div class="codehilite pheasant-markdown pheasant-source"><pre>'
+    answer = '<div class="codehilite pheasant-fenced-code pheasant-source"><pre>'
     assert convert(source).startswith(answer)
     answer = '1</span><span class="p">)</span>\n<span>```</span>\n</pre></div>'
     assert convert(source).endswith(answer)
 
 
 def test_escaped_code():
-    answer = ('<div class="pheasant-markdown pheasant-code codehilite">'
+    answer = ('<div class="pheasant-fenced-code pheasant-code codehilite">'
               '<pre><span></span>source\n</pre></div>')
     assert escaped_code('abd', 'source', ['cls']) == answer
 

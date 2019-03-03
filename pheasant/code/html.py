@@ -61,11 +61,11 @@ def escaped_code(language: str, source: str, options: List[str]) -> str:
     <div class="... pheasant-source"><pre> ... </pre></div>
     """
     if language:
-        options += ['.pheasant-markdown', '.pheasant-code']
+        options += ['.pheasant-fenced-code', '.pheasant-code']
         return html(language, source, options)
 
     source = ''.join(escaped_code_splitter(source))
-    cls = 'pheasant-markdown pheasant-source'
+    cls = 'pheasant-fenced-code pheasant-source'
     source = f'<div class="codehilite {cls}"><pre>{source}</pre></div>'
     return source
 

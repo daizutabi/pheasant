@@ -47,6 +47,6 @@ def inspect_render(cell, language: str) -> str:
         if 'data' in output and 'text/plain' in output['data']:
             lines, lineno = eval(output['data']['text/plain'])
             source = ''.join(lines)
-            cls = '.pheasant-markdown .pheasant-code'
+            cls = '.pheasant-fenced-code .pheasant-code'
             return f'{begin}\n```{language} {cls}\n{source}```\n{end}\n'
     return ''

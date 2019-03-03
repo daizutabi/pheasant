@@ -15,7 +15,7 @@ def test_cell_runner():
         if k == 0:
             assert output == 'a\n\n'
         if k == 1:
-            assert output.startswith('```python .pheasant-markdown')
+            assert output.startswith('```python .pheasant-fenced-code')
         if k == 2:
             assert output == '\n10'
     assert k == 2
