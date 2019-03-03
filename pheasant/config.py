@@ -22,12 +22,4 @@ config: Dict[str, Any] = {
 
     # current extra raw javascript list
     'extra_raw_javascript': [],
-
-    # source files set to remember which source file needs extra head.
-    'extra_head': {
-        'extra_css': set(),
-        'extra_raw_css': set(),
-        'extra_javascript': set(),
-        'extra_raw_javascript': set()
-    },
 }

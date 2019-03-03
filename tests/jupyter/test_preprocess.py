@@ -3,7 +3,6 @@ import pytest
 from bokeh.resources import CDN
 
 from pheasant.config import config as pheasant_config
-from pheasant.converters import extra_keys
 from pheasant.jupyter.client import run_cell
 from pheasant.jupyter.config import config
 from pheasant.jupyter.converter import initialize
@@ -32,11 +31,6 @@ def test_evaluate_markdown(source, output):
 def test_evaluate_markdown_display():
     output = preprocess_markdown('a{{x=1}}{{!x}}')
     assert output == 'a\n\n```display .pheasant-jupyter-display\n1\n```\n\n'
-
-
-def test_initial_extra_resources():
-    for key in extra_keys():
-        assert pheasant_config[key] == []
 
 
 def test_update_extra_resources_for_bokeh():
@@ -84,9 +78,7 @@ def test_update_extra_resources_for_holoviews():
     assert data['text/plain'] == plain
 
     text = preprocess_markdown('{{hmap}}')[:40]
-    assert text == "<div style='display: table; margin: 0 au"
-
-    text = preprocess_markdown('{{hmap}}')
+    assert text == '<div class="hololayout row row-fluid">\n '
 
     extra_css = pheasant_config['extra_css']
     assert len(extra_css) == 5

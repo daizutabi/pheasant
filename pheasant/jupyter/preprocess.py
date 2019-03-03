@@ -106,9 +106,10 @@ def update_extra_resources(cell: NotebookNode) -> None:
 
     def update(resources: dict) -> None:
         from pheasant.config import config as pheasant_config
-        from pheasant.converters import extra_keys
+        extra_keys = [key for key in pheasant_config.keys()
+                      if key.startswith('extra_')]
 
-        for key in extra_keys():
+        for key in extra_keys:
             if key in resources:
                 values = [value for value in resources[key]
                           if value not in pheasant_config[key]]

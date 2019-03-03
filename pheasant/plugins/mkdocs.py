@@ -4,8 +4,7 @@ import os
 from mkdocs.config import config_options
 from mkdocs.plugins import BasePlugin
 
-from pheasant.converters import (convert, set_pheasant_config,
-                                 update_pheasant_config)
+from pheasant.converters import convert, update_pheasant_config
 
 logger = logging.getLogger('pheasant')
 config_options  # for BasePlugin
@@ -16,13 +15,7 @@ class PheasantPlugin(BasePlugin):
         if 'pheasant' in config['plugins']:
             path = os.path.dirname(config['config_file_path'])
             path = os.path.join(path, 'pheasant.yml')
-            update_pheasant_config(path)
-
-            # Add pheasant theme for dynamic css and javascript link
-            theme = config['theme']
-            path = os.path.abspath(os.path.join(__file__, '../../theme'))
-            theme.dirs = [path] + theme.dirs
-            config['thema'] = theme
+            update_pheasant_config(config, path)
 
         return config
 
@@ -45,6 +38,5 @@ class PheasantPlugin(BasePlugin):
         logger.info(f'Converting: {page.file.src_path}')
 
         source = convert(page.file.abs_src_path)
-        set_pheasant_config(config)
 
         return source

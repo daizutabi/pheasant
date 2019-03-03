@@ -85,8 +85,7 @@ def holoviews_to_html(obj, output: str = 'markdown',
         png, info = renderer(obj, fmt=fmt)
         return base64image(png, fmt, output)
     else:
-        # html = renderer.html(obj, fmt)
-        html = renderer.html(obj)
+        html = renderer.html(obj, fmt=None)  # fmt = None is important!
         js_html, css_html = renderer.html_assets()
         resources = _split_html_assets(js_html, css_html)
         return html, resources

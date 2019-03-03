@@ -3,7 +3,7 @@ import os
 import pytest
 from pheasant import jupyter
 from pheasant.converters import (get_converter_name, get_converters,
-                                 set_converters, update_config)
+                                 set_converters, update_converter_config)
 from pheasant.utils import read
 
 
@@ -34,9 +34,9 @@ def test_jupyter_config():
     assert 'configured' not in jupyter.config
 
 
-def test_jupyter_update_config():
+def test_jupyter_update_converter_config():
     config = {'jupyter': {'kernel_name': {'julia': 'julia'}}}
-    update_config(jupyter, config)
+    update_converter_config(jupyter, config)
     assert jupyter.config['kernel_name'] == {'python': 'python3',
                                              'julia': 'julia'}
     assert jupyter.config['configured'] is True
