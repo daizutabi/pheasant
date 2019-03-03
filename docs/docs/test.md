@@ -13,3 +13,26 @@ p
 
 
 $$\int f(x)dx$$
+
+abc
+
+#Fig a
+<!-- begin -->
+{{!p}}
+<!-- end -->
+
+edc
+
+#Tab A HTML table
+
+First Header | Second Header
+------------ | -------------
+Content Cell | Content Cell
+Content Cell | Content Cell
+
+
+```python
+import pandas as pd
+df = pd.DataFrame([[1,2], [4,5]], columns=['x', 'y'])
+df
+```

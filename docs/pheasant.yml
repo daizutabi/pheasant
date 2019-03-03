@@ -1,16 +1,11 @@
-macro:
 jupyter:
   kernel_name:
     python: python3
   sys_paths:
     - scripts
   import_modules:
-    - hello
-  init_codes:
-    - import matplotlib as mpl
-    - import matplotlib.pyplot as plt
-    - import pandas as pd
-  template_file: output_text_outside.jinja2
+    - example
 number:
   level: 0
 code:
+macro:

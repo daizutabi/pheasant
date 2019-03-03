@@ -16,3 +16,12 @@ hmap
 ```
 
 {{hmap}}
+
+
+
+```python
+curve = hv.Curve(((1, 2), (4, 5)))
+curve
+```
+
+{{curve}}

@@ -5,19 +5,7 @@ edit_uri: https://github.com/daizutabi/pheasant/docs/docs/
 
 theme:
   name: rtd-pheasant
-  # name: readthedocs
 
-extra:
-  search:
-    language: en
-
-# markdown_extensions:
-#   - admonition
-#   - codehilite
-#   - attr_list
-#   - pymdownx.arithmatex
-#
-#
 extra_javascript:
   - https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML
 
@@ -28,3 +16,9 @@ nav:
   - Home: index.md
   - Test: test.md
   - Test2: test2.md
+
+# markdown_extensions:
+#   - admonition
+#   - codehilite
+#   - attr_list
+#   - pymdownx.arithmatex

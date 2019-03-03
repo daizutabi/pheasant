@@ -11,21 +11,31 @@
 {%- endblock -%}
 
 {%- block header -%}
-{{ number_string }} {{ title }}
+<span class="pheasant-header-number">{{ number_string }}</span>
+<span class="pheasant-header-title">{{ title }}</span>
 {%- endblock -%}
 
 {%- block figure -%}
 {{ content }}
-<p>{% block figure_prefix %}{{ prefix }}{% endblock %}{{ number_string }} {{ title }}</p>
+<p class="pheasant-figure">
+<span class="name">{% block figure_prefix %}{{ prefix }}{% endblock %}</span>
+<span class="number">{{ number_string }}</span>
+<span class="title">{{ title }}</span></p>
 {%- endblock -%}
 
 {%- block table -%}
-<p>{% block table_prefix %}{{ prefix }}{% endblock %}{{ number_string }} {{ title }}</p>
+<p class="pheasant-table">
+<span class="name">{% block table_prefix %}{{ prefix }}{% endblock %}</span>
+<span class="number">{{ number_string }}</span>
+<span class="title">{{ title }}</span></p>
 {{ content }}
 {%- endblock -%}
 
 {%- block code -%}
-<p>{% block code_prefix %}{{ prefix }}{% endblock %}{{ number_string }} {{ title }}</p>
+<p class="pheasant-code">
+<span class="name">{% block code_prefix %}{{ prefix }}{% endblock %}</span>
+<span class="number">{{ number_string }}</span>
+<span class="title">{{ title }}</span></p>
 {{ content }}
 {%- endblock -%}
 

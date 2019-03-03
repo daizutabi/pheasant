@@ -42,7 +42,7 @@ def render(source: str, label: dict,
         if kind == 'header':
             splitted['prefix'] = '#' * len(splitted['number_list'])
         else:
-            default_prefix = kind[0].upper() + kind[1:] + ' '
+            default_prefix = kind[0].upper() + kind[1:]
             prefix = config['kind_prefix'].get(kind, default_prefix)
             splitted['prefix'] = prefix
 
