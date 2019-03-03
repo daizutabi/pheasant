@@ -35,7 +35,12 @@ setup(
     license='MIT',
     packages=find_packages(exclude=['tests', 'docs']),
     include_package_data=True,
-    install_requires=['click', 'jupyter', 'markdown', 'pygments'],
+    install_requires=['click', 'ipykernel', 'nbformat', 'markdown'],
+    extras_require={
+        'develop': ['mkdocs', 'pelican', 'pytest', 'pytest-cov',
+                    'matplotlib', 'bokeh', 'holoviews', 'pandas',
+                    'sympy', 'selenium', 'flake8']
+        },
     entry_points={
         'console_scripts': [
            'pheasant = pheasant.main:cli',
