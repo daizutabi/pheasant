@@ -14,11 +14,10 @@ plugins:
 
 nav:
   - Home: index.md
-  - Test: test.md
-  - Test2: test2.md
+  # - Test: test.md
+  # - Test2: test2.md
 
 # markdown_extensions:
 #   - admonition
-#   - codehilite
 #   - attr_list
 #   - pymdownx.arithmatex
