@@ -26,12 +26,24 @@ def render(source: str) -> Generator[str, None, None]:
             yield splitted
         else:
             language, reference = splitted.group(1, 2)
+            if splitted.group().startswith('#'):
+                yield generate_header(language, reference)
             if language == 'python':
                 yield inspect(language, reference)
             elif language == 'file':
                 yield read_file(reference)
             else:
                 yield splitted.group()
+
+
+def generate_header(language: str, reference: str) -> str:
+    if language == 'python':
+        code = 'Code'
+    elif language == 'file':
+        code = 'File'
+    else:
+        return ''
+    return f'#{code} `{reference}`\n'
 
 
 def inspect(language: str, reference: str,

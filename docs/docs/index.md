@@ -11,11 +11,9 @@ curve
 ~~~
 
 #File a
-
 ![file](mkdocs.yml)
 
 #Code d
-
 ![python](example)
 
 

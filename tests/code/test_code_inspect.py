@@ -5,8 +5,11 @@ from pheasant.jupyter.client import run_cell
 from pheasant.jupyter.converter import initialize
 
 
+def test_initialize():
+    assert initialize() is None
+
+
 def test_inspect_convert():
-    initialize()
     assert convert('abc') == 'abc'
     source = 'def func(x):\n    return x + 1\n'
     cell = nbformat.v4.new_code_cell(source)
@@ -25,3 +28,10 @@ def test_inspect_convert():
 
     cell = nbformat.v4.new_code_cell('a = 1')
     assert inspect_render(cell, 'python') == ''
+
+
+def test_inspect_convert_with_header():
+    content = convert('abc\n\n#![file](a.py)\n\ndef')
+    answer = ('abc\n\n#File `a.py`\n<p style="font-color:red">'
+              'File not found: a.py</p>\n\ndef')
+    assert content == answer
