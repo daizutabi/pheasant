@@ -1,7 +1,6 @@
 site_name: Pheasant
 site_url: https://pheasant.daizutabi.net/
 repo_url: https://github.com/daizutabi/pheasant/
-edit_uri: https://github.com/daizutabi/pheasant/tree/master/docs/docs
 
 theme:
   name: rtd-pheasant
