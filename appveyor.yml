@@ -17,6 +17,7 @@ install:
   - conda info -a
   - "conda create -q -n test-environment python=%PYTHON_VERSION%"
   - activate test-environment
+  - conda install -q -c pyviz/label/dev pyviz
   - pip install coveralls pytest-cov coverage
   - pip install -e .[develop]
 
