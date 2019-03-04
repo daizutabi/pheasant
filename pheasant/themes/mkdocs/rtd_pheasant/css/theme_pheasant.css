@@ -50,8 +50,17 @@ div.pheasant-number-table table {
   width: auto !important;
 }
 
-p.pheasant-figure .title, p.pheasant-table .title {
-  margin-left: 5px;
+.pheasant-header-title {
+  margin-left: 10px;
+}
+
+
+p.pheasant-figure .title,
+p.pheasant-table .title,
+p.pheasant-code .title,
+p.pheasant-file .title {
+  margin-left: 4px;
+  color: #005599;
 }
 
 div.pheasant-number-code p,
