@@ -32,6 +32,6 @@ def test_inspect_convert():
 
 def test_inspect_convert_with_header():
     content = convert('abc\n\n#![file](a.py)\n\ndef')
-    answer = ('abc\n\n#File `a.py`\n<p style="font-color:red">'
+    answer = ('abc\n\n#File a.py\n<p style="font-color:red">'
               'File not found: a.py</p>\n\ndef')
     assert content == answer

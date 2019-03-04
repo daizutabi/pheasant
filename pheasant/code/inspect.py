@@ -43,7 +43,7 @@ def generate_header(language: str, reference: str) -> str:
         code = 'File'
     else:
         return ''
-    return f'#{code} `{reference}`\n'
+    return f'#{code} {reference}\n'
 
 
 def inspect(language: str, reference: str,

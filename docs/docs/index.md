@@ -10,11 +10,12 @@ curve
 #Fig A HoloViews {{curve}} Plot.
 ~~~
 
-#File a
-![file](mkdocs.yml)
+#![file](mkdocs.yml)
 
 #Code d
 ![python](example)
+
+#![python](example)
 
 
 ~~~python

@@ -1,13 +1,9 @@
 site_name: Pheasant
 site_url: https://pheasant.daizutabi.net/
 repo_url: https://github.com/daizutabi/pheasant/
-edit_uri: https://github.com/daizutabi/pheasant/docs/docs/
 
 theme:
   name: rtd-pheasant
-
-extra_javascript:
-  - https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML
 
 plugins:
   - pheasant
