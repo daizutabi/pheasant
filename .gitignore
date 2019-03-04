@@ -4,6 +4,7 @@ dist/
 .ipynb_checkpoints/
 *.egg-info/
 .coverage.*
+.coverage
 **/pelican/output/
 **/mkdocs/site/
 __pycache__/

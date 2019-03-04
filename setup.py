@@ -18,10 +18,10 @@ def get_version(package):
 
 long_description = (
     "Pheasant is a Markdown converter which is designed to be used "
-    "as a plugin for static site generators such as MkDocs or Pelican. "
+    "as a plugin for static site generators, especially MkDocs. "
     "The Pheasant main feature is auto generation of outputs for a fenced "
     "code block in Markdown source using Jupyter client. In addition, "
-    "Pheasant can automatically number headers, figures, and tables."
+    "Pheasant can automatically number headers, figures, tables, etc."
 )
 
 setup(
@@ -38,9 +38,8 @@ setup(
     install_requires=['click', 'ipykernel', 'nbformat', 'nbconvert',
                       'markdown'],
     extras_require={
-        'develop': ['mkdocs', 'pelican', 'pytest', 'pytest-cov',
-                    'matplotlib', 'bokeh', 'holoviews', 'pandas',
-                    'sympy', 'selenium', 'flake8']
+        'develop': ['mkdocs', 'pytest', 'pytest-cov', 'matplotlib', 'bokeh',
+                    'holoviews', 'pandas', 'sympy', 'selenium', 'flake8']
         },
     entry_points={
         'console_scripts': [
