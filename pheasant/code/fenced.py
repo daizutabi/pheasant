@@ -54,10 +54,10 @@ def div(language: str, source: str, options: List[str],
 def escaped_code(language: str, source: str, options: List[str]) -> str:
     """
     Input:
-    ~~~
-    ```[language] [options..]
-    [source]
-    ```
+    ~~~[language] [options..]
+
+    <raw source>
+
     ~~~
 
     Output:
@@ -70,6 +70,8 @@ def escaped_code(language: str, source: str, options: List[str]) -> str:
     else:
         cls = 'pheasant-fenced-code pheasant-source'
 
+    escaped_backquotes = '<span class="pheasant-backquote">```</span>'
+    source = source.replace('```', escaped_backquotes)
     source = (f'<div class="{cls}">\n<pre><code class="{language}">'
               f'{source}</code></pre>\n</div>\n')
     return source
