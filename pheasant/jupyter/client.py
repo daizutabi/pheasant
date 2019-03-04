@@ -1,5 +1,6 @@
 """A module provide jupyter client interface."""
 
+import atexit
 import logging
 from queue import Empty
 from typing import Any, Dict, Optional, Union
@@ -61,7 +62,7 @@ def get_kernel_manager(kernel_name: str):
         if kernel_name not in kernel_specs:
             msg = f'Could not find kernel name: {kernel_name}'
             raise ValueError(msg)
-        logger.info(f'Creating kernel manager with kernel: {kernel_name}')
+        logger.info(f'Creating kernel manager for kernel: {kernel_name}')
         kernel_manager = jupyter_client.KernelManager(kernel_name=kernel_name)
         kernel_managers[kernel_name] = kernel_manager
 
@@ -76,7 +77,7 @@ def get_kernel_client(kernel_name: str):
     if kernel_name in kernel_clients:
         return kernel_clients[kernel_name]
     else:
-        logger.info(f'Creating kernel client with kernel: {kernel_name}')
+        logger.info(f'Creating kernel client for kernel: {kernel_name}')
         kernel_client = kernel_manager.client()
         kernel_client.start_channels()
         try:
@@ -192,9 +193,10 @@ def run_cell(cell_or_source: Union[NotebookNode, str],
 
 
 def shutdown_kernels():
-    for kernel_name in kernel_clients:
-        logger.info(f'Shutting down kernel client with kernel: {kernel_name}')
-        kernel_client = kernel_clients['python3']
-        reply = kernel_client.shutdown(reply=True)
-        status = reply['content']['status']
-        logger.info(f'.... Status: {status}')
+    for kernel_name in kernel_managers:
+        logger.info(f'Shutting down kernel: {kernel_name}')
+        kernel_manager = kernel_managers[kernel_name]
+        kernel_manager.shutdown_kernel()
+
+
+atexit.register(shutdown_kernels)
