@@ -65,6 +65,7 @@ def get_kernel_manager(kernel_name: str):
         logger.info(f'Creating kernel manager for kernel: {kernel_name}')
         kernel_manager = jupyter_client.KernelManager(kernel_name=kernel_name)
         kernel_managers[kernel_name] = kernel_manager
+        atexit.register(shutdown_kernels)
 
     if not kernel_manager.is_alive():
         kernel_manager.start_kernel()
@@ -197,6 +198,3 @@ def shutdown_kernels():
         logger.info(f'Shutting down kernel: {kernel_name}')
         kernel_manager = kernel_managers[kernel_name]
         kernel_manager.shutdown_kernel()
-
-
-atexit.register(shutdown_kernels)

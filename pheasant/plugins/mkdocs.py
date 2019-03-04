@@ -5,7 +5,6 @@ from mkdocs.config import config_options
 from mkdocs.plugins import BasePlugin
 
 from pheasant.converters import convert, update_pheasant_config
-from pheasant.jupyter.client import shutdown_kernels
 
 
 logger = logging.getLogger('pheasant')
@@ -42,8 +41,3 @@ class PheasantPlugin(BasePlugin):
         source = convert(page.file.abs_src_path)
 
         return source
-
-    def on_post_build(self, config):
-        if config['site_url'].startswith('http://127.0.0.1'):
-            return
-        shutdown_kernels()

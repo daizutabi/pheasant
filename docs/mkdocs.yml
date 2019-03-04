@@ -13,7 +13,7 @@ nav:
   # - Test: test.md
   # - Test2: test2.md
 
-# markdown_extensions:
-#   - admonition
+markdown_extensions:
+  - admonition
+  - pymdownx.arithmatex
 #   - attr_list
-#   - pymdownx.arithmatex

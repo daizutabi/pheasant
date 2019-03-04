@@ -20,7 +20,9 @@ def test_convert():
     output = convert(source)
     answer = '<div class="pheasant-fenced-code pheasant-source">\n<pre>'
     assert output.startswith(answer)
-    answer = '"markdown">```python\nprint(1)\n```\n</code></pre>\n</div>\n'
+    answer = ('"markdown"><span class="pheasant-backquote">```</span>python\n'
+              'print(1)\n<span class="pheasant-backquote">```</span>\n</code>'
+              '</pre>\n</div>\n')
     assert output.endswith(answer)
 
 
