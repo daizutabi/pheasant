@@ -55,19 +55,39 @@ def inspect_render(cell: NotebookNode, language: str) -> str:
 
 
 def read_file(path: str) -> str:
-    """Read a file from disc."""
+    """Read a file from disc.
+
+    `path`: `<path_to_file>:<language>` form is avaiable.
+    Otherwise, the language is determined from the path's extension.
+    For example, If the path is `a.py`, then the language is Python.
+    """
+    if ':' in path:
+        path, language = path.split(':')
+    else:
+        language = ''
+
     if path.startswith('~'):
         path = os.path.expanduser(path)
 
     if not os.path.exists(path):
         return f'<p style="font-color:red">File not found: {path}</p>'
 
+    if not language:
+        ext = os.path.splitext(path)[-1]
+        if ext:
+            ext = ext[1:]  # Remove a dot.
+        for language in config['language']:
+            if ext in config['language'][language]:
+                break
+        else:
+            language = ''
+
     source = read_source(path)
-    return fenced_code(source, c='~~~')
+    return fenced_code(source, language)
 
 
-def fenced_code(source: str, language: str = '', c: str = '```') -> str:
+def fenced_code(source: str, language: str = '') -> str:
     begin = config_number['begin_pattern']
     end = config_number['end_pattern']
     cls = '.pheasant-fenced-code .pheasant-code'
-    return f'{begin}\n{c}{language} {cls}\n{source}{c}\n{end}\n'
+    return f'{begin}\n~~~{language} {cls}\n{source}~~~\n{end}\n'

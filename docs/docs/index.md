@@ -10,4 +10,19 @@ curve
 #Fig A HoloViews {{curve}} Plot.
 ~~~
 
-df
+#File a
+
+![file](mkdocs.yml)
+
+#Code d
+
+![python](example)
+
+
+~~~python
+print(1)
+~~~
+
+~~~bash
+> echo %HOME
+~~~

@@ -64,7 +64,12 @@ def escaped_code(language: str, source: str, options: List[str]) -> str:
     <div class="... pheasant-source"><pre> ... </pre></div>
     """
     language = language or 'markdown'
-    cls = 'pheasant-fenced-code pheasant-source'
+    if options:
+        cls = ' '.join([option[1:] for option in options
+                        if option.startswith('.')])
+    else:
+        cls = 'pheasant-fenced-code pheasant-source'
+
     source = (f'<div class="{cls}">\n<pre><code class="{language}">'
               f'{source}</code></pre>\n</div>\n')
     return source

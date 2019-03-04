@@ -12,9 +12,9 @@ def test_inspect_convert():
     cell = nbformat.v4.new_code_cell(source)
     run_cell(cell)
     content = convert('![python](func)')
-    answer = '<!-- begin -->\n```python .pheasant-fenced-code .pheasant-code\n'
+    answer = '<!-- begin -->\n~~~python .pheasant-fenced-code .pheasant-code\n'
     assert content.startswith(answer)
-    answer = f'{source}```\n<!-- end -->\n'
+    answer = f'{source}~~~\n<!-- end -->\n'
     assert content.endswith(answer)
 
     source = '![dummy](func)'

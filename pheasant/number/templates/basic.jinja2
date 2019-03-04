@@ -38,6 +38,14 @@
 {{ content }}
 {%- endblock -%}
 
+{%- block file -%}
+<p class="pheasant-file">
+<span class="name">{% block file_prefix %}{{ prefix }}{% endblock %}</span>
+<span class="number">{{ number_string }}</span>
+<span class="title">{{ title }}</span></p>
+{{ content }}
+{%- endblock -%}
+
 {%- block reference -%}
 [{{ number_string }}]({{ ref }})
 {%- endblock -%}

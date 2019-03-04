@@ -5,7 +5,7 @@ config: Dict[str, Any] = {
     'template_file': 'basic.jinja2',
 
     # List of numbered objects
-    'kind': ['header', 'figure', 'table', 'code'],
+    'kind': ['header', 'figure', 'table', 'code', 'file'],
 
     # Numbering level. 0 for multiple pages, 2 for h2 etc.
     'level': 2,

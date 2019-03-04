@@ -21,5 +21,9 @@
 <div class="{{ class }}"{{ ' id="' + id + '"' if id }}>
 {% block code -%}{%- endblock %}
 </div>
+{%- elif kind == 'file' -%}
+<div class="{{ class }}"{{ ' id="' + id + '"' if id }}>
+{% block file -%}{%- endblock %}
+</div>
 {%- endif -%}
 {%- endif -%}

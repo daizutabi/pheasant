@@ -75,6 +75,42 @@ def test_header_splitter(source):
             assert splitted['cursor'] == 55
 
 
+def test_header_splitter_invalid_div_escape():
+    source = ('# a\n\n<div>\n\n# b\n</div>\n\n<div class="pheasant-code">\n'
+              '<pre>abc\n\n# c\ndef\n</pre></div>\n\n## d\n\ntext.\n')
+    for k, splitted in enumerate(header_splitter(source)):
+        if k == 0:
+            assert isinstance(splitted, dict) and splitted['title'] == 'a'
+        elif k == 1:
+            assert splitted == '<div>'
+        elif k == 2:
+            assert isinstance(splitted, dict) and splitted['title'] == 'b'
+        elif k == 3:
+            answer = ('</div>\n\n<div class="pheasant-code">\n'
+                      '<pre>abc\n\n# c\ndef\n</pre></div>')
+            assert splitted == answer
+        elif k == 4:
+            assert isinstance(splitted, dict) and splitted['title'] == 'd'
+        elif k == 5:
+            assert splitted == 'text.'
+
+
+def test_header_splitter_valid_div_escape():
+    source = ('# a\n\n<div class="pheasant-code">\n'
+              '<pre>abc\n\n# b\n\ndef\n</pre></div>\n\n## c\n\ntext.\n')
+    for k, splitted in enumerate(header_splitter(source)):
+        if k == 0:
+            assert isinstance(splitted, dict) and splitted['title'] == 'a'
+        elif k == 1:
+            answer = ('<div class="pheasant-code">\n<pre>abc\n\n'
+                      '# b\n\ndef\n</pre></div>')
+            assert splitted == answer
+        elif k == 2:
+            assert isinstance(splitted, dict) and splitted['title'] == 'c'
+        elif k == 3:
+            assert splitted == 'text.'
+
+
 def test_initialize():
     initialize()
 

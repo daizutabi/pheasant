@@ -25,6 +25,6 @@ def test_convert():
 
 
 def test_escaped_code():
-    answer = ('<div class="pheasant-fenced-code pheasant-source">\n'
-              '<pre><code class="abd">source</code></pre>\n</div>\n')
-    assert escaped_code('abd', 'source', ['cls']) == answer
+    answer = ('<div class="class1 class2">\n'
+              '<pre><code class="language">source</code></pre>\n</div>\n')
+    assert escaped_code('language', 'source', ['.class1', '.class2']) == answer
