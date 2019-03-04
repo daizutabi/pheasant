@@ -189,3 +189,12 @@ def run_cell(cell_or_source: Union[NotebookNode, str],
     cell.outputs = outs
 
     return cell if return_cell else None
+
+
+def shutdown_kernels():
+    for kernel_name in kernel_clients:
+        logger.info(f'Shutting down kernel client with kernel: {kernel_name}')
+        kernel_client = kernel_clients['python3']
+        reply = kernel_client.shutdown(reply=True)
+        status = reply['content']['status']
+        logger.info(f'.... Status: {status}')
