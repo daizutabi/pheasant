@@ -161,6 +161,7 @@
     {%- for path in config['extra_javascript'] %}
       <script src="{{ path|url }}"></script>
     {%- endfor %}
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML"></script>
   {%- endblock %}
 
 </body>
