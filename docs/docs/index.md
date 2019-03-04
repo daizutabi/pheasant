@@ -2,7 +2,7 @@
 
 ## Overview
 
-Pheasant is a Markdown converter which is designed to work with [MkDocs](http://www.mkdocs.org/) or [Pelican](http://docs.getpelican.com/en/stable/) as a plugin.
+Pheasant is a Markdown converter which is designed to work with [MkDocs](http://www.mkdocs.org/) as a plugin.
 
 Highlights include:
 
@@ -17,16 +17,13 @@ You can install Pheasant from PyPI.
 $ pip install pheasant
 ~~~
 
-If you use Pheasant as a plugin for MkDocs or Pelican, you also need to install one or both.
+If you use Pheasant as a plugin of MkDocs, you also need to install it.
 
 ~~~bash
 $ pip install mkdocs
-$ pip install pelican
 ~~~
 
-## Plugin settings
-
-### MkDocs
+## Settings for a MkDocs plugin
 
 In your `mkdocs.yml`, add lines below:
 
@@ -36,15 +33,6 @@ theme:
 
 plugins:
   - pheasant
-~~~
-
-### Pelican
-
-In your `pelicanconf.py`, add lines below:
-
-~~~python
-PLUGINS = ['pheasant']
-PHEASANT = {'jupyter': {'enabled': True}, 'number': {'enabled': True}}
 ~~~
 
 ## Examples
@@ -79,19 +67,7 @@ print(1)
 
 ### Inline code embeded in a Markdown source
 
-"Inline code" is a powerful function of Pheasant. An inline code is surrounded by `{{#` and `}}` like Jinja2. For example:
-
-~~~
-```python
-name = 'Pheasant'
-```
-~~~
-
-```python hide
-name = 'Pheasant'
-```
-
-The above code defines a variable `name` with string value of "Pheasant". This variable is valid outside the fenced code block. Therefore, `"My name is {{#name}}."` becomes "My name is {{name}}." You can also assign a value to a variable within an inline code. `"{{#a=5}}$2a$ is equal to {{#2*a}}."` becomes "{{a=5}}$2a$ is equal to {{2*a}}." Note that an inline code without outputs is not shown after execution.
+"Inline code" is a powerful feature of Pheasant. Any python codes surrounded by `{{#` and `}}` are executed and the result remains there. For example, `{{#3*5}}` becomes {{3*5}}. Variables can be assigned in an inline code: `{{#name='pheasant'}}`. Then, `"I'm {{#name}}."` becomes "I'm {{name}}." Note that an inline code without outputs is not shown after execution.
 
 ### Visualization
 
@@ -118,9 +94,9 @@ plt.plot([1, 2, 4])
 ```
 
 !!! Note
-    I'm not sure but `import`statement and `plot` function must be runned in a different cell for the first time to generate a PNG image.
+    I'm not sure but `import` statement and `plot` function must be runned in a different cell to generate a PNG image for the first running time.
 
-You may want to display only graphics. You can use `display` option for a fenced code.
+You may want to display only graphics. You can set `display` option to a fenced code after language notation.
 
 ~~~
 ```python display
@@ -164,17 +140,14 @@ Furthermore, Pheasant supports HoloViews including interactive HoloMap.
 
 ```python
 import holoviews as hv
-curve = hv.Curve(((1, 2), (3, 4)))
+curve = hv.Curve(((1, 2), (2, 3)))
 ```
 
 ~~~
-{{curve}}
+{{!curve}}
 ~~~
 
-{{curve}}
-
-!!! Note
-    HoloViews plots are automatically aligned at the center of a page using its original stylesheet.
+{{!curve}}
 
 HoloMap can work as in a Jupyter Notebook.
 
@@ -192,17 +165,17 @@ holomap = hv.HoloMap(curve_dict, kdims='Frequency')
 ```
 
 ~~~
-{{holomap}}
+{{!holomap}}
 ~~~
 
-{{holomap}}
+{{!holomap}}
 
 
 ### Auto numbering of headers, figures, tables, *etc*.
 
 As you can see, all of headers are numbered in this document. This numbering has done by Pheasant automatically. In addition, Pheasant can count the number of figures, tables, *etc*. and give the identical number to each object.
 
-You can use a special *header* statement for figure (`#Figure`) and table (`#Table`) to number them like below:
+You can use a special **"header"** statement for figure (`#Figure`) and table (`#Table`) to number them like below:
 
 ~~~
 #Figure This is a cat. {#cat#}

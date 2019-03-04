@@ -7,11 +7,6 @@ try:  # For import from jupyter kernel.
 except ImportError:
     pass
 
-try:  # For pelican plugin.
-    from pheasant.plugins.pelican import register
-except ImportError:
-    pass
-
 
 __all__ = ['convert', 'register']
 

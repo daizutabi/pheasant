@@ -11,6 +11,18 @@ div.pheasant-jupyter-display {
   margin: 5px auto 15px auto;
 }
 
+div.pheasant-number-figure div.pheasant-jupyter-display {
+  margin: 3px auto 3px auto;
+}
+
+div.pheasant-jupyter-display p {
+  margin: 0px;
+}
+
+div.pheasant-number-figure p {
+  margin: 3px auto 3px auto;
+}
+
 /**************************************************
  Numbering style
 **************************************************/
