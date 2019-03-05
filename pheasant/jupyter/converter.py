@@ -1,17 +1,17 @@
 import os
-from typing import Generator
+from typing import Any, Dict, Generator, Optional
 
 import nbformat
 from jinja2 import Environment, FileSystemLoader
 from nbconvert.filters import strip_ansi
+from nbformat import NotebookNode
 
 import pheasant
-from pheasant.jupyter.client import run_cell
+from pheasant.jupyter.client import run_cell, select_kernel_name
 from pheasant.jupyter.config import config
 from pheasant.jupyter.preprocess import (preprocess_fenced_code,
                                          preprocess_markdown)
-from pheasant.jupyter.renderer import (inline_render, new_code_cell, render,
-                                       run_and_render)
+from pheasant.jupyter.renderer import inline_render, render, run_and_render
 from pheasant.markdown.splitter import fenced_code_splitter
 
 
@@ -83,6 +83,24 @@ def cell_runner(source: str) -> Generator[str, None, None]:
                 yield run_and_render(cell, render)
 
 
+def new_code_cell(source: str, language: Optional[str] = None,
+                  options: Optional[list] = None) -> NotebookNode:
+    """Create a new code cell for evaluation.
+
+    This function is used for any languages other than Python.
+    """
+    cell = nbformat.v4.new_code_cell(source)
+    metadata: Dict[str, Any] = {}
+    if language is not None:
+        metadata['language'] = language
+        kernel_name = select_kernel_name(language)
+        metadata['kernel_name'] = kernel_name
+    if options is not None:
+        metadata['options'] = options
+    cell.metadata['pheasant'] = metadata
+    return cell
+
+
 def set_config(options: list) -> None:
     sources = ['from pheasant.jupyter.config import config']
     for option in options:
@@ -100,7 +118,7 @@ def set_config(options: list) -> None:
         run_cell(cell)
 
 
-def set_template(prefix='') -> None:
+def set_template(prefix: str = '') -> None:
     default_directory = os.path.join(os.path.dirname(__file__), 'templates')
     abspath = os.path.abspath(config[prefix + 'template_file'])
     template_directory, template_file = os.path.split(abspath)

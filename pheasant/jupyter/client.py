@@ -1,4 +1,4 @@
-"""A module provide jupyter client interface."""
+"""A module provides jupyter client interface."""
 
 import atexit
 import logging
@@ -7,6 +7,7 @@ from typing import Any, Dict, Optional, Union
 
 import jupyter_client
 import nbformat
+from jupyter_client.manager import KernelManager
 from nbformat import NotebookNode
 from nbformat.v4 import output_from_msg
 
@@ -14,13 +15,13 @@ from pheasant.jupyter.config import config
 
 logger = logging.getLogger('mkdocs')
 
-kernel_names: Dict[str, Any] = {}
+kernel_names: Dict[str, list] = {}
 kernel_managers: Dict[str, Any] = {}
 kernel_clients: Dict[str, Any] = {}
 
 
-def find_kernel_names() -> dict:
-    """Find kernel names for language."""
+def find_kernel_names() -> Dict[str, list]:
+    """Find kernel names for languages."""
     if kernel_names:
         return kernel_names
 
@@ -37,7 +38,7 @@ def find_kernel_names() -> dict:
 
 
 def select_kernel_name(language: str) -> Optional[str]:
-    """Select one kernelspec per language."""
+    """Select one kernel name for a language."""
     if language in config['kernel_name']:
         return config['kernel_name'][language]
 
@@ -54,7 +55,7 @@ def select_kernel_name(language: str) -> Optional[str]:
     return kernel_name
 
 
-def get_kernel_manager(kernel_name: str):
+def get_kernel_manager(kernel_name: str) -> KernelManager:
     if kernel_name in kernel_managers:
         kernel_manager = kernel_managers[kernel_name]
     else:
@@ -193,7 +194,7 @@ def run_cell(cell_or_source: Union[NotebookNode, str],
     return cell if return_cell else None
 
 
-def shutdown_kernels():
+def shutdown_kernels() -> None:
     for kernel_name in kernel_managers:
         logger.info(f'Shutting down kernel: {kernel_name}')
         kernel_manager = kernel_managers[kernel_name]

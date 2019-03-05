@@ -1,5 +1,4 @@
-"""
-A module processes inline code.
+"""A module processes inline code.
 
 IMPORTANT: `display` function is called from jupyter kernel.
 """
@@ -13,7 +12,7 @@ from pheasant.jupyter.config import config
 from pheasant.jupyter.renderer import delete_style
 from pheasant.markdown.converter import markdown_convert
 
-# type for output and its resources
+# Type for output and its resources. Resources are used as extra css and js.
 Str_And_Dict = Tuple[str, Dict[str, list]]
 
 

@@ -1,27 +1,13 @@
-import re
-from typing import Any, Callable, Dict, Optional
+"""Render a cell using the Jinja2 template engine."""
 
-import nbformat
+import re
+from typing import Callable, Optional
+
 from nbformat import NotebookNode
 
 from pheasant.jupyter.cache import abort, memoize
-from pheasant.jupyter.client import run_cell, select_kernel_name
+from pheasant.jupyter.client import run_cell
 from pheasant.jupyter.config import config
-
-
-def new_code_cell(source: str, language: Optional[str] = None,
-                  options: Optional[list] = None) -> NotebookNode:
-    """Create a new code cell for evaluation."""
-    cell = nbformat.v4.new_code_cell(source)
-    metadata: Dict[str, Any] = {}
-    if language is not None:
-        metadata['language'] = language
-        kernel_name = select_kernel_name(language)
-        metadata['kernel_name'] = kernel_name
-    if options is not None:
-        metadata['options'] = options
-    cell.metadata['pheasant'] = metadata
-    return cell
 
 
 def render(cell: NotebookNode) -> str:

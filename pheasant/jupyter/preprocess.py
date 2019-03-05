@@ -1,16 +1,4 @@
-import re
-from typing import Match
-
-import nbformat
-from nbformat import NotebookNode
-
-from pheasant.jupyter.config import config
-from pheasant.jupyter.renderer import inline_render, run_and_render
-from pheasant.number import config as config_number
-from pheasant.jupyter.client import run_cell
-
-
-"""Execute `{{expr}}` in a markdown source and fenced code.
+"""Execute `{{expr}}` in a markdown source or fenced code.
 
 If `expr` starts with '#', `expr` is not executed: {{#abc}} -> {{abc}}.
 If `expr` starts with '^', `expr` is converted into a HTML source after
@@ -19,9 +7,20 @@ execution.
 Above settings is default values and configurable.
 """
 
+import re
+from typing import Match
+
+import nbformat
+from nbformat import NotebookNode
+
+from pheasant.jupyter.client import run_cell
+from pheasant.jupyter.config import config
+from pheasant.jupyter.renderer import inline_render, run_and_render
+from pheasant.number import config as config_number
+
 
 def preprocess_fenced_code(source: str) -> str:
-    def replace_(match):
+    def replace_(match: Match) -> str:
         return replace(match, ignore_equal=True)
 
     return re.sub(config['inline_pattern'], replace_, source)

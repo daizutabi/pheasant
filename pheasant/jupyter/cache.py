@@ -1,11 +1,12 @@
 """Decorators are provided to control run-export process."""
+
 import logging
 import os
 from functools import wraps
 
 from pheasant.jupyter.config import config
 
-logger = logging.getLogger('pheasant')
+logger = logging.getLogger('mkdocs')
 
 
 def pheasant_options(cell) -> list:
