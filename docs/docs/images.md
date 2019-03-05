@@ -131,8 +131,6 @@ A shortcut to this functionality is prepared.
 {{plot}}
 ~~~
 
-Note: `{{#plot}}` is displayed as **"display"** mode by default for convenience.
-
 Just for your infomation, extra stylesheet and javascript files are obtained by the following commands.
 
 ```python
