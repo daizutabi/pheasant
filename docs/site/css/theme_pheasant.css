@@ -8,7 +8,7 @@ body {
 
 div.pheasant-jupyter-display {
   display: table;
-  margin: 5px auto 15px auto;
+  margin: 5px auto 5px auto;
 }
 
 div.pheasant-number-figure div.pheasant-jupyter-display {
@@ -19,7 +19,8 @@ div.pheasant-jupyter-display p {
   margin: 0px;
 }
 
-div.pheasant-number-figure p {
+div.pheasant-number-figure p,
+div.pheasant-number-table p {
   margin: 3px auto 3px auto;
 }
 
@@ -153,25 +154,26 @@ table.dataframe tbody td {
  Fenced code style
 **************************************************/
 
+.pheasant-fenced-code {
+  position: relative;
+  background-color: transparent !important;
+  margin-left: 2em !important;
+  margin-top: 2px;
+  margin-bottom: 2px;
+}
+
 .pheasant-fenced-code pre {
-  padding: 0px 2px;
   margin: 0px;
+  padding: 0px;
 }
 
 .pheasant-fenced-code code {
   font-family: "Fira Code";
-  line-height: 1.38;
+  line-height: 1.34;
   font-size: 14px;
   background: transparent !important;
   border: none !important;
-  padding: 4px 6px;
-}
-
-
-.pheasant-fenced-code {
-  position: relative;
-  margin-left: 2.0em !important;
-  background-color: transparent !important;
+  padding: 6px 8px;
 }
 
 .pheasant-fenced-code:before {
@@ -185,74 +187,49 @@ table.dataframe tbody td {
   margin-top: 5px;
 }
 
-.pheasant-fenced-code > pre {
-  border-radius: 6px;
-}
-
-.pheasant-jupyter-input {
-  margin-bottom: 3px !important;
-}
-
-.pheasant-jupyter-input:before {
-  content: "In:";
-}
-
-.pheasant-jupyter-input > pre {
-  background-color: #eef !important;
-  border: 1px solid #bdd;
-}
-
-.pheasant-jupyter-output {
-  margin-bottom: 18px !important;
-}
-
-.pheasant-jupyter-output:before {
-  content: "Out:";
-}
-
-.pheasant-jupyter-output > pre {
-  background-color: #ffd !important;
-  border: 1px solid #ddb;
-}
-
-.pheasant-source {
-  margin-top: 3px !important;
-  margin-bottom: 20px !important;
-}
-
 .pheasant-source:before {
   content: "Src:";
+  color: #9b9;
 }
-
-.pheasant-source > pre {
-  background-color: #efc !important;
-  border: 1px solid #bdb;
+.pheasant-input:before {
+  content: "In:";
+  color: #9bb;
 }
-
-.pheasant-code {
-  margin-top: 3px !important;
-  margin-bottom: 20px !important;
+.pheasant-output:before {
+  content: "Out:";
+  color: #bb9;
 }
-
 .pheasant-code:before {
-  content: "";
+ content: "";
+ color: #9b9;
 }
-
+.pheasant-source > pre {
+  background-color: #efc;
+  border: 1px solid #bda;
+}
+.pheasant-input > pre {
+  background-color: #dff;
+  border: 1px solid #bdd;
+}
+.pheasant-output > pre {
+  background-color: #ffd;
+  border: 1px solid #ddb;
+}
 .pheasant-code > pre {
-  background-color: #efd !important;
+  background-color: #efd;
   border: 1px solid #bdb;
 }
 
-.codehilite pre {
-  padding: 6px 8px !important;
+.pheasant-fenced-code + p,
+.pheasant-fenced-code + h1,
+.pheasant-fenced-code + h2,
+.pheasant-fenced-code + h3 {
+  margin-top: 1.2em;
 }
 
-
-/*
-.md-typeset .md-typeset__table {
-  display: inherit;
+p + .pheasant-fenced-code {
+  margin-top: -16px;
 }
-*/
 
 /**************************************************
  HoloViews

@@ -71,32 +71,23 @@ print(1)
 
 ### Visualization
 
-Pheasant supports various output formats other than standard stream. For example, you can create a PNG image using Matplotlib.
+Pheasant supports various output formats other than standard stream. For example, you can create a PNG image using Matplotlib. First, import the Matplotlib plotting library.
 
-~~~
+~~~copy
 ```python
 import matplotlib.pyplot as plt
 ```
+~~~
 
+Then, plot a line.
+
+~~~copy
 ```python
-plt.plot([1, 3, 2])
+plt.plot([1, 2])
 ```
 ~~~
 
-The above Markdown source creates an input Python code block and a PNG image:
-
-```python
-import matplotlib.pyplot as plt
-```
-
-```python
-plt.plot([1, 2, 4])
-```
-
-!!! Note
-    I'm not sure but `import` statement and `plot` function must be runned in a different cell to generate a PNG image for the first running time.
-
-You may want to display only graphics. You can set `display` option to a fenced code after language notation.
+The above Markdown source creates a standart stream and a PNG image. You may want to display only the image. You can set `display` option to a fenced code after language description.
 
 ~~~
 ```python display

@@ -1,9 +1,14 @@
+"""A parse module for detecting valid pattern blocks."""
+
 import re
 from typing import Callable, Generator, List, Match, Optional, Tuple, Union
 
 
-def splitter(pattern: str, source: str,
-             option=re.MULTILINE) -> Generator[Union[str, Match], None, None]:
+def splitter(
+    pattern: str,
+    source: str,
+    option=re.MULTILINE
+) -> Generator[Union[str, Match], None, None]:
     """Generate splitted text from `source` by `pattern`."""
     re_compile = re.compile(pattern, option)
 
@@ -21,25 +26,31 @@ def splitter(pattern: str, source: str,
             break
 
 
-def escaped_splitter(pattern: str,
-                     pattern_escape: str,
-                     source: str,
-                     option=re.MULTILINE,
-                     option_escape=re.MULTILINE | re.DOTALL
-                     ) -> Generator[Union[str, Match], None, None]:
+def escaped_splitter(
+    pattern: str,
+    pattern_escape: str,
+    source: str,
+    option=re.MULTILINE,
+    option_escape=re.MULTILINE | re.DOTALL,
+    escape_generator=None,
+) -> Generator[Union[str, Match, Tuple[str, str, List[str]]], None, None]:
     for splitted in splitter(pattern_escape, source, option_escape):
         if not isinstance(splitted, str):
-            yield splitted.group()
+            if escape_generator:
+                yield from escape_generator(splitted)
+            else:
+                yield splitted.group()
         else:
             yield from splitter(pattern, splitted, option)
 
 
-def escaped_splitter_join(pattern: str,
-                          pattern_escape: str,
-                          source: str,
-                          option=re.MULTILINE,
-                          option_escape=re.MULTILINE | re.DOTALL
-                          ) -> Generator[Union[str, Match], None, None]:
+def escaped_splitter_join(
+    pattern: str,
+    pattern_escape: str,
+    source: str,
+    option=re.MULTILINE,
+    option_escape=re.MULTILINE | re.DOTALL
+) -> Generator[Union[str, Match], None, None]:
     """Join escaped string with normal string."""
     text = ''
     for splitted in escaped_splitter(pattern, pattern_escape, source, option,
@@ -57,7 +68,7 @@ def escaped_splitter_join(pattern: str,
 def fenced_code_splitter(
         source: str,
         comment_option: bool = True,
-        escape: Optional[Callable[[str, str, list], str]] = None
+        escape: Optional[Callable[[str, str, list], str]] = None,
 ) -> Generator[Union[str, Tuple[str, str, List[str]]], None, None]:
     """Generate splitted markdown and jupyter notebook cell from `source`.
 
@@ -94,8 +105,11 @@ def fenced_code_splitter(
     re_option = re.DOTALL | re.MULTILINE
 
     for splitted in escaped_splitter(
-            pattern_source, pattern_escape, source, option=re_option):
-        if isinstance(splitted, str):
+            pattern_source, pattern_escape, source, option=re_option,
+            escape_generator=escape_generator):
+        if isinstance(splitted, tuple):
+            yield splitted
+        elif isinstance(splitted, str):
             if escape:
                 match = re.match(pattern_escape, splitted, flags=re_option)
                 if match:
@@ -110,8 +124,8 @@ def fenced_code_splitter(
                 yield language, source, options
 
 
-def from_match(match: Match,
-               comment_option: bool) -> Tuple[str, str, List[str]]:
+def from_match(match: Match, comment_option: bool
+               ) -> Tuple[str, str, List[str]]:
     language = match.group(1)
     source = match.group(3)
     options = match.group(2)
@@ -124,3 +138,14 @@ def from_match(match: Match,
     options = [option.strip() for option in options.split(' ')]
     options = [option for option in options if option]
     return language, source, options
+
+
+def escape_generator(
+    match: Match
+) -> Generator[Union[str, Tuple[str, str, List[str]]], None, None]:
+    if match.group(1) != 'copy':
+        yield match.group()
+    else:
+        source = match.group(3)
+        yield f'~~~\n{source}~~~\n\n'
+        yield from fenced_code_splitter(source)

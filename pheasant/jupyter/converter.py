@@ -75,7 +75,10 @@ def cell_runner(source: str) -> Generator[str, None, None]:
 
             if 'inline' in options:
                 cell.source = preprocess_fenced_code(cell.source)
-                yield run_and_render(cell, inline_render) + '\n\n'
+                if 'hide' in options:
+                    run_cell(cell)
+                else:
+                    yield run_and_render(cell, inline_render) + '\n\n'
             else:
                 yield run_and_render(cell, render)
 

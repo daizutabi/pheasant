@@ -26,11 +26,11 @@ def test_main(path):
     result = runner.invoke(cli, [path])
     # output = ('# Pheasant Standalone\n\n## Section 1\n\n'
     #           '$\\frac{\\partial f(x)}{\\partial x}$\n\n'
-    #           '<div class="pheasant-fenced-code pheasant-jupyter-input '
+    #           '<div class="pheasant-fenced-code pheasant-input '
     #           'codehilite"><pre><span></span><span class="kn">import'
     #           '</span> <span class="nn">matplotlib</span>\n'
     #           '<span class="n">matplotlib</span>\n</pre></div>')
     output = ('# Pheasant Standalone\n\n## Section 1\n\n'
               '$\\frac{\\partial f(x)}{\\partial x}$\n\n'
-              '```python .pheasant-fenced-code .pheasant-jupyter-input')
+              '```python .pheasant-fenced-code .pheasant-input')
     assert result.output.startswith(output)
