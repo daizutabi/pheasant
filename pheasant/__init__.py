@@ -1,14 +1,14 @@
 __version__ = '1.0.1'
 
-# import logging
 
-try:  # For import from jupyter kernel.
+# THIS IS NEEDED! For import from jupyter kernel inside.
+try:
     from pheasant.converters import convert
 except ImportError:
     pass
 
 
-__all__ = ['convert', 'register']
+__all__ = ['convert']
 
 # Test
 # logger = logging.getLogger('pheasant')

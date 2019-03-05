@@ -1,21 +1,23 @@
 import logging
 import os
 
-from mkdocs.config import config_options
+from mkdocs.config import config_options  # This import required for BasePlugin
 from mkdocs.plugins import BasePlugin
 
 from pheasant.converters import convert, update_pheasant_config
 
+config_options  # to avoid linter error.
 
-logger = logging.getLogger('pheasant')
-config_options  # for BasePlugin
+logger = logging.getLogger('mkdocs')
 
 
 class PheasantPlugin(BasePlugin):
     def on_config(self, config):
         if 'pheasant' in config['plugins']:
+            logger.debug('[Pheasant] Pheasant plugin enabled.')
             path = os.path.dirname(config['config_file_path'])
             path = os.path.join(path, 'pheasant.yml')
+            logger.debug(f'[Pheasant] Pheasant config file: {path}')
             update_pheasant_config(config, path)
 
         return config
