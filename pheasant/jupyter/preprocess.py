@@ -7,6 +7,7 @@ from nbformat import NotebookNode
 from pheasant.jupyter.config import config
 from pheasant.jupyter.renderer import inline_render, run_and_render
 from pheasant.number import config as config_number
+from pheasant.jupyter.client import run_cell
 
 
 """Execute `{{expr}}` in a markdown source and fenced code.
@@ -80,8 +81,7 @@ def replace(match: Match, ignore_equal: bool = False) -> str:
         source = '_pheasant_dummy'
         sources[-1] = f'{source} = {sources[-1]}'
         sources = '\n'.join(sources)
-        cell = nbformat.v4.new_code_cell(sources)
-        run_and_render(cell, inline_render)
+        run_cell(sources)
 
     return f'{convert}({source}, output="{output}")'
 
