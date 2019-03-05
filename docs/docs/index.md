@@ -188,7 +188,7 @@ You can use a special **"header"** statement for figure (`#Figure`) and table (`
 ![jpg](img/cat.jpg)
 
 !!! Note
-    In the above Markdown source, `{#<tag>#}` is a tag for hyperlink described below.
+    In the above Markdown source, `{#<tag>#}` is an ID tag for hyperlink described below.
 
 Off course, you can use any code to create a figure:
 
