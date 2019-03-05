@@ -171,7 +171,7 @@ html = renderer.html(curve)
 print(html[:40], '...')
 ```
 
-Extra assets which should be written in HTML `<head>` tag to embed the image are provided by the `renderer`'s class method of `html_assets()`.
+Extra assets which should be written in HTML `<head>` tag to embed the image are provided by the `renderer`'s class method: `html_assets()`.
 
 ```python
 js_html, css_html = renderer.html_assets()
@@ -181,7 +181,7 @@ print(js_html.strip()[:50])
 print(css_html.strip()[:50])
 ```
 
-The above process to show the image can be done by just one inline code like this.
+The above process to show the image can be done by just an inline code like this.
 
 ~~~copy
 {{curve}}

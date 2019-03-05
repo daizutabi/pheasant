@@ -1,5 +1,7 @@
 # Pheasant
 
+Welcome to Pheasant! In this section, overview and some interesting features of pheasant are presented.
+
 ## Overview
 
 Pheasant is a Markdown converter which is designed to work with [MkDocs](http://www.mkdocs.org/) as a plugin.
