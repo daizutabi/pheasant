@@ -44,9 +44,9 @@ def div(language: str, source: str, options: List[str],
     source = f'```{language}\n{source}```'  # No new line after {source}.
     source = markdown_convert(source)
     if cls:
-        source = f'<div class="{cls}">\n{source}\n</div>\n'
+        source = f'<div class="{cls}">\n{source}\n</div>'
     else:
-        source = f'<div>\n{source}\n</div>\n'
+        source = f'<div>\n{source}\n</div>'
 
     return source
 

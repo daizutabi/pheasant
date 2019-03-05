@@ -7,7 +7,7 @@ def test_convert():
 
     source = '```python\nprint(1)\n```\n'
     answer = '<div>\n<pre><code class="python">print(1)\n</code></pre>\n</div>'
-    assert convert(source)[:-1] == answer
+    assert convert(source) == answer
 
     source = '```display .test\n$$x=1$$\n```\n'
     assert convert(source) == '<div class="test">\n<p>$$x=1$$\n</p>\n</div>\n'
