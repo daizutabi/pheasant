@@ -106,7 +106,7 @@ plot = figure(plot_width=250, plot_height=250)
 plot.circle([1, 2, 3, 4, 5], [1, 2, 3, 4, 5], size=10)
 ```
 
-The last line of the above code block returns `GlyphRenderer` object. To show the bokeh's figure, we can use inline code described above:
+The last line of the above code block returns a `GlyphRenderer` object. To show the bokeh's figure instead of it, we can use an inline code described above:
 
 ~~~copy
 {{plot}}
@@ -168,7 +168,7 @@ Supported numbered headers are shown in the next table:
 
 #Table Supported numbered headers
 
-Name   | Markdown
+Type   | Markdown
 -------|-------------------------------
 Header | # (title)
 Figure | #Figure (title), #Fig (title)

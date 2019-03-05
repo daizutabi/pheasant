@@ -10,7 +10,7 @@ plugins:
 
 nav:
   - Home: index.md
-  # - Image: image.md
+  - Images: images.md
   # - Test2: test2.md
 
 markdown_extensions:

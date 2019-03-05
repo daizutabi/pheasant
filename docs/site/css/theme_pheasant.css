@@ -2,6 +2,13 @@ body {
   font-size: 100%;
 }
 
+code {
+  font-family: "Fira Code";
+  color: #00A;
+  background: #e0e0ff;
+}
+
+
 /**************************************************
  Display style
 **************************************************/
@@ -183,12 +190,6 @@ table.dataframe tbody td {
   background: transparent !important;
   border: none !important;
   padding: 6px 8px;
-}
-
-code {
-  font-family: "Fira Code";
-  color: #00A;
-  background: #eef;
 }
 
 .pheasant-fenced-code:before {
