@@ -39,7 +39,8 @@ setup(
                       'markdown'],
     extras_require={
         'develop': ['mkdocs', 'pytest', 'pytest-cov', 'matplotlib', 'bokeh',
-                    'holoviews', 'pandas', 'sympy', 'selenium', 'flake8']
+                    'holoviews', 'pandas', 'sympy', 'selenium', 'flake8',
+                    'openpyxl', 'python-pptx']
         },
     entry_points={
         'console_scripts': [
