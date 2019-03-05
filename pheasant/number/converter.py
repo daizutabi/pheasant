@@ -1,5 +1,4 @@
 import json
-import logging
 import os
 from typing import Any, Dict
 
@@ -9,10 +8,8 @@ from pheasant.number.config import config
 from pheasant.number.header import convert as convert_header
 from pheasant.number.reference import convert as convert_reference
 
-logger = logging.getLogger('pheasant')
 
-
-def initialize():
+def initialize() -> None:
     config['pages'] = []
     default_directory = os.path.join(os.path.dirname(__file__), 'templates')
 
@@ -34,8 +31,6 @@ def convert(source: str) -> str:
         page_index = [config['pages'].index(source_file) + 1]
     else:
         page_index = config['level']
-    # msg = f'Page index for {os.path.basename(source_file)}: {page_index}'
-    # logger.debug(msg)
 
     label: Dict[str, Any] = {}
     source, label = convert_header(source, label, page_index)

@@ -54,9 +54,11 @@ def escaped_splitter_join(
     """Join escaped string with normal string."""
     text = ''
     for splitted in escaped_splitter(pattern, pattern_escape, source, option,
-                                     option_escape):
+                                     option_escape, escape_generator=None):
         if isinstance(splitted, str):
             text += splitted
+        elif isinstance(splitted, tuple):
+            pass  # Never occur! Just for mypy.
         else:
             yield text
             yield splitted

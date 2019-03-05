@@ -1,12 +1,12 @@
 import re
-from typing import Generator, Tuple, Union
+from typing import Generator, Optional, Tuple, Union
 
 from pheasant.markdown.converter import markdown_convert
 from pheasant.markdown.splitter import escaped_splitter_join
 from pheasant.number.config import config
 
 
-def convert(source: str, label=None,
+def convert(source: str, label: Optional[dict] = None,
             page_index: Union[int, list] = 1) -> Tuple[str, dict]:
     """
     Convert markdown string or file into markdown with section number_listing.
@@ -158,7 +158,8 @@ def header_splitter(source: str) -> Generator[Union[str, dict], None, None]:
             yield context
 
 
-def normalize_number_list(kind, number_list, page_index=None):
+def normalize_number_list(kind: str, number_list: list,
+                          page_index: Union[int, list]) -> list:
     if isinstance(page_index, list):
         if kind == 'header':
             number_list = page_index + number_list[1:]
@@ -171,7 +172,7 @@ def normalize_number_list(kind, number_list, page_index=None):
     return number_list
 
 
-def split_label(text):
+def split_label(text: str) -> Tuple[str, str]:
     """
     Split a label from `text`. Label
 

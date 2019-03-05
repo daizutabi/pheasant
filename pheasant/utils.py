@@ -42,31 +42,3 @@ def read(root: str, filename: str) -> str:
 
     with open(path) as f:
         return f.read()
-
-
-# def delete_cr(root: str) -> None:
-#     """CRLF -> LF.
-#
-#     Usage:
-#         python -c "from pheasant.utils import delete_cr;delete_cr('.')"
-#     """
-#
-#     def valid(path: str) -> bool:
-#         ext = os.path.splitext(path)[1][1:]
-#         if ext in ['py', 'md', 'yml', 'css', 'in', 'cfg', 'json', 'jinja2']:
-#             return True
-#         else:
-#             return False
-#
-#     def iterfiles() -> Generator[str, None, None]:
-#         for path, dirs, files in os.walk(root):
-#             for fn in files:
-#                 if valid(fn):
-#                     yield os.path.join(path, fn)
-#
-#     for path in iterfiles():
-#         with open(path, 'r', encoding='utf-8') as file_text:
-#             text = file_text.read()
-#         text = text.replace('\r', '')
-#         with open(path, 'wb') as file_binary:
-#             file_binary.write(text.encode('utf-8'))
