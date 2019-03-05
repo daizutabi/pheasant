@@ -9,7 +9,7 @@ Highlights include:
 + Auto generation of outputs for a fenced code block or inline code in Markdown source using [Jupyter client](https://jupyter-client.readthedocs.io/en/stable/). The code language is not restricted to Python.
 + Auto numbering of headers, figures, and tables, and etc. Numbered objects can be linked from other Markdown sources.
 
-## How to install
+## Installation
 
 You can install Pheasant from PyPI.
 
@@ -23,7 +23,7 @@ If you use Pheasant as a plugin of MkDocs, you also need to install it.
 $ pip install mkdocs
 ~~~
 
-## Settings for a MkDocs plugin
+## Settings
 
 In your `mkdocs.yml`, add lines below:
 
@@ -35,7 +35,7 @@ plugins:
   - pheasant
 ~~~
 
-## Examples
+## Getting Started
 
 ### Auto generation of the executed outputs with Jupyter client
 
@@ -67,7 +67,7 @@ print(1)
 
 ### Inline code embeded in a Markdown source
 
-"Inline code" is a powerful feature of Pheasant. Any python codes surrounded by `{{#` and `}}` are executed and the result remains there. For example, `{{#3*5}}` becomes {{3*5}}. Variables can be assigned in an inline code: `{{#name='pheasant'}}`{{name='pheasant'}}. Then, `"I'm {{#name}}."` becomes "I'm {{name}}." Note that an inline code without outputs is not shown after execution.
+**"Inline code"** is a powerful feature of Pheasant. Any python codes surrounded by `{{#` and `}}` are executed and the result remains there. For example, `{{#3*5}}` becomes {{3*5}}. Variables can be assigned in an inline code: `{{#name='pheasant'}}`{{name='pheasant'}}. Then, `"I'm {{#name}}."` becomes "I'm {{name}}." Note that an inline code without outputs is not shown after execution.
 
 ### Visualization
 
@@ -95,12 +95,9 @@ plt.plot([1, 2])
 ```
 ~~~
 
-!!! Note
-    Matplotlib package has already been imported in the previous code block so that we don't need to import it again here.
-
+Note that Matplotlib package has already been imported in the previous code block so that we don't need to import it again here.
 
 Pheasant also supports Bokeh's HTML output.
-
 
 ```python
 from bokeh.plotting import figure
@@ -111,34 +108,26 @@ plot.circle([1, 2, 3, 4, 5], [1, 2, 3, 4, 5], size=10)
 
 The last line of the above code block returns `GlyphRenderer` object. To show the bokeh's figure, we can use inline code described above:
 
-~~~
+~~~copy
 {{plot}}
 ~~~
 
-{{plot}}
+In order to put the figure at the center, we can use inline code as **"display"** mode surrounded by `{{#!` and `}}`.
 
-In order to put the figure at the center, we can use inline code as "display" mode by adding a `!` marker.
-
-~~~
+~~~copy
 {{!plot}}
 ~~~
 
-{{!plot}}
+Furthermore, Pheasant supports HoloViews objects as well as interactive HoloMaps.
 
-
-Furthermore, Pheasant supports HoloViews including interactive HoloMap.
-
-
+~~~copy
 ```python
 import holoviews as hv
 curve = hv.Curve(((1, 2), (2, 3)))
 ```
 
-~~~
 {{!curve}}
 ~~~
-
-{{!curve}}
 
 HoloMap can work as in a Jupyter Notebook.
 
@@ -166,24 +155,30 @@ holomap = hv.HoloMap(curve_dict, kdims='Frequency')
 
 As you can see, all of headers are numbered in this document. This numbering has done by Pheasant automatically. In addition, Pheasant can count the number of figures, tables, *etc*. and give the identical number to each object.
 
-You can use a special **"header"** statement for figure (`#Figure`) and table (`#Table`) to number them like below:
+You can use a special **"header"** statement for figure, table, *etc*. to number them like below:
 
-~~~
+~~~copy
 #Figure This is a cat. {#cat#}
 
 ![jpg](img/cat.jpg)
 ~~~
 
-#Fig This is a cat. {#cat#}
+Supported numbered headers are shown in the next table:
 
-![jpg](img/cat.jpg)
 
-!!! Note
-    In the above Markdown source, `{#<tag>#}` is an ID tag for hyperlink described below.
+#Table Supported numbered headers
 
-Off course, you can use any code to create a figure:
+Name   | Markdown
+-------|-------------------------------
+Header | # (title)
+Figure | #Figure (title), #Fig (title)
+Table  | #Table (title), #Tab (title)
+Code   | #Code (title)
+File   | #File (title)
 
-~~~
+In the above Markdown source, `{#<tag>#}` is an ID tag for hyperlink described below. Off course, you can use any code to create a figure:
+
+~~~copy
 #Fig A Matplotlib figure
 
 ```python display
@@ -191,15 +186,9 @@ plt.plot([3, 2])
 ```
 ~~~
 
-#Fig A Matplotlib figure
-
-```python display
-plt.plot([3, 1])
-```
-
 Like figures, tables can be numbered.
 
-~~~
+~~~copy
 #Table A Markdown table
 
 a | b
@@ -208,33 +197,18 @@ a | b
 2 | 3
 ~~~
 
-#Table A Markdown table
+Pandas's DataFarme is useful to create a table programmatically.
 
-a | b
---|--
-0 | 1
-2 | 3
-
-Pandas DataFarme is useful to create a table programmatically.
-
-~~~
-#Table A Pandas DataFrame
+~~~copy
+#Table A Pandas's DataFrame
 
 ```python display
 import pandas as pd
-pd.DataFrame([[1, 2], [3, 4]], columns=list('ab')) * 2
+pd.DataFrame([[1, 2], [3, 4]], index=list('XY'), columns=list('ab'))
 ```
 ~~~
 
-#Table A Pandas DataFrame
-
-```python display
-import pandas as pd
-pd.DataFrame([[1, 2], [3, 4]], columns=list('ab')) * 2
-```
-
-A Markdown source for figures and tables is a source block separated by a blank line from following Markdown source. If a figure or table has blank lines within it, you have to explicitly write the content range with `<!-- begin -->` and `<!-- end -->` statements.
-
+A Markdown source for figures and tables is a source block separated by a blank line from following Markdown source. If a figure or table has blank lines within it, you have to explicitly declare the content range with `<!-- begin -->` and `<!-- end -->` statements.
 
 ~~~
 #Fig A Bokeh's HTML figure
@@ -242,7 +216,6 @@ A Markdown source for figures and tables is a source block separated by a blank 
 {{!plot}}
 &lt;!-- end --&gt;
 ~~~
-
 
 #Fig A Bokeh's HTML figure
 <!-- begin -->
@@ -256,10 +229,6 @@ However, Pheasant provides an easy way to number figures, tables, *etc*. regardl
 ~~~
 
 #Fig Inline numbering method {{curve}}
-
-!!! Note
-    You can use an abbreviation for iditifiers after '#'. Tab for Table and Fig for Figure.
-
 
 ### Hyperlink
 
