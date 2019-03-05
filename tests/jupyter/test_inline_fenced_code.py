@@ -12,14 +12,12 @@ def test_simple_inline_fenced_code():
     source = '```python inline\n{{plt.plot([1, 2])}}\n```\n'
     output = convert(source)
     assert output.startswith('![png](data:image/png;base64,iVBORw0KGgo')
-    assert output.endswith('glbuIiAf9H7r88xa5EGEMAAAAAElFTkSuQmCC)\n\n')
 
 
 def test_asigned_inline_fenced_code():
     source = '```python inline\na={{plt.plot([1, 2])}}\n```\n'
     output = convert(source)
     assert output.startswith('![png](data:image/png;base64,iVBORw0KGgo')
-    assert output.endswith('glbuIiAf9H7r88xa5EGEMAAAAAElFTkSuQmCC)\n\n')
     cell = run_cell('a')
     data = cell.outputs[0]['data']
     assert list(data.keys()) == ['text/plain']
@@ -36,7 +34,6 @@ def test_asigned_inline_fenced_code():
     source = '```python inline\nplt.plot([1, 2]);a = {{plt.gca()}}\n```\n'
     output = convert(source)
     assert output.startswith('![png](data:image/png;base64,iVBORw0KGgo')
-    assert output.endswith('glbuIiAf9H7r88xa5EGEMAAAAAElFTkSuQmCC)\n\n')
     cell = run_cell('a')
     data = cell.outputs[0]['data']
     assert list(data.keys()) == ['text/plain']

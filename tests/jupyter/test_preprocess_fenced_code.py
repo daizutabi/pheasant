@@ -39,7 +39,6 @@ def test_preprocess_fenced_code_with_semicolon():
     assert len(cell.outputs) == 1
     data = cell.outputs[0]['data']
     assert data['text/plain'].startswith('<Figure size ')
-    assert data['image/png'].endswith('buIiAf9H7r88xa5EGEMAAAAAElFTkSuQmCC\n')
 
     cell = run_cell(output)
     assert len(cell.outputs) == 1
@@ -58,12 +57,9 @@ def test_run_preprocess_fenced_code_with_for_loop():
     assert len(cell.outputs) == 1
     data = cell.outputs[0]['data']
     assert data['text/plain'].startswith('<Figure size ')
-    assert data['image/png'].endswith('RNLM/wdlA/DMIoRE0QAAAABJRU5ErkJggg==\n')
     cell = run_cell('a')
     assert len(cell.outputs) == 1
     output = cell.outputs[0]
     assert list(output['data'].keys()) == ['text/plain']
     a = eval(output['data']['text/plain'])
     assert isinstance(a, list)
-    assert a[0][-20:] == 'IPFAAAAAElFTkSuQmCC)'
-    assert a[1][-20:] == 'QAAAABJRU5ErkJggg==)'
