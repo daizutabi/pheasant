@@ -12,7 +12,7 @@ from nbformat.v4 import output_from_msg
 
 from pheasant.jupyter.config import config
 
-logger = logging.getLogger('pheasant')
+logger = logging.getLogger('mkdocs')
 
 kernel_names: Dict[str, Any] = {}
 kernel_managers: Dict[str, Any] = {}
@@ -136,7 +136,7 @@ def run_cell(cell_or_source: Union[NotebookNode, str],
 
     kernel_client = get_kernel_client(kernel_name)
     msg_id = kernel_client.execute(cell.source)
-    logger.debug(f'Executing cell:\n{cell.source}')
+    # logger.debug(f'Executing cell:\n{cell.source}')
     _wait_for_reply(kernel_name, msg_id)
 
     outs = cell.outputs = []
@@ -158,7 +158,7 @@ def run_cell(cell_or_source: Union[NotebookNode, str],
             continue
 
         msg_type = msg['msg_type']
-        logger.debug(f'output: {msg_type}')
+        # logger.debug(f'output: {msg_type}')
         content = msg['content']
 
         # set the prompt number for the input and the output
