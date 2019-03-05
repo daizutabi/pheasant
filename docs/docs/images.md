@@ -95,7 +95,7 @@ for k, color in enumerate(['red', 'blue']):
 Then,
 
 ~~~copy
-#Tab A Pandas's DataFrame with Maplotlib plot
+#Tab A Pandas's DataFrame with Matplotlib plot
 ```python inline
 import pandas as pd
 {{pd.DataFrame([axes], columns=['Red', 'Blue'])}}
