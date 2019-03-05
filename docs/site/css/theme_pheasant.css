@@ -99,6 +99,15 @@ div.pheasant-number-file .number {
 
 
 /**************************************************
+ Table style
+**************************************************/
+
+.rst-content table.docutils thead th,
+.rst-content table.docutils tbody td {
+  padding: 2px 10px;
+}
+
+/**************************************************
  Pandas DataFrame style
 **************************************************/
 
@@ -176,6 +185,12 @@ table.dataframe tbody td {
   padding: 6px 8px;
 }
 
+code {
+  font-family: "Fira Code";
+  color: #00A;
+  background: #eef;
+}
+
 .pheasant-fenced-code:before {
   content: "";
   position: absolute;
@@ -220,11 +235,14 @@ table.dataframe tbody td {
   border: 1px solid #bdb;
 }
 
-.pheasant-fenced-code + p,
+.pheasant-fenced-code + p {
+  margin-top: 8px
+}
+
 .pheasant-fenced-code + h1,
 .pheasant-fenced-code + h2,
 .pheasant-fenced-code + h3 {
-  margin-top: 1.2em;
+  margin-top: 1.4em;
 }
 
 p + .pheasant-fenced-code {
