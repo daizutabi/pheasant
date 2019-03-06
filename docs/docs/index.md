@@ -1,6 +1,6 @@
 # Pheasant
 
-Welcome to Pheasant! In this section, overview and some interesting features of pheasant are presented.
+Welcome to Pheasant! In this section, overview and some interesting features of Pheasant are presented.
 
 ## Overview
 
@@ -69,7 +69,7 @@ print(1)
 
 ### Inline code embeded in a Markdown source
 
-**"Inline code"** is a powerful feature of Pheasant. Any python codes surrounded by `{{#` and `}}` are executed and the result remains there. For example, `{{#3*5}}` becomes {{3*5}}. Variables can be assigned in an inline code: `{{#name='pheasant'}}`{{name='pheasant'}}. Then, `"I'm {{#name}}."` becomes "I'm {{name}}." Note that an inline code without outputs is not shown after execution.
+**"Inline code"** is a powerful feature of Pheasant. Any python codes surrounded by `{{#` and `}}` are executed and the result remains there. For example, `{{#3*5}}` becomes {{3*5}}. Variables can be assigned in an inline code: `{{#name='Pheasant'}}`{{name='Pheasant'}}. Then, `"I'm {{#name}}."` becomes "I'm {{name}}." Note that an inline code without outputs is not shown after execution.
 
 ### Visualization
 

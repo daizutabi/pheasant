@@ -35,7 +35,7 @@ Note that the standard stream output (`[<matplotlib.lines...]`) is omitted.
 
 An inline code statement (`{{#<expr>}}`) can be written in a fenced code block. In this case, the expression in the statement is evaluated dynamically during the evaluation of the whole block.
 
-In the next example, two plot is overlayed. `axes[0]` and `axes[1]` are the same image.
+In the next example, two plots are overlayed. `axes[0]` and `axes[1]` refer to the same image.
 
 ```python
 axes = []
@@ -45,7 +45,7 @@ for k, color in enumerate(['red', 'blue']):
 axes
 ```
 
-You can use the inline code to get different images at the evaluation time with `plt.cla()` method to clear the previous plot.
+You can use the inline code to get different images at the evaluation time with `plt.cla()` method to continuously clear the previous plot.
 
 ~~~copy
 ```python hide inline
@@ -65,7 +65,7 @@ Check the type of elements of the variable `axes`.
 [type(ax) for ax in axes]
 ```
 
-They are strings, not any Matplotlib objects. Actually, its content is a base64-encoded markdown image source:
+They are `str` objects, not any Matplotlib objects. Actually, their content is a base64-encoded markdown image source:
 
 ```python
 axes[0][:50]
@@ -104,9 +104,9 @@ import pandas as pd
 
 ## Bokeh
 
-You can embed [Bokeh](https://bokeh.pydata.org/en/latest/)'s plots into MkDocs HTML documents. Following [User Guide "Embedding Plots and Apps"](https://bokeh.pydata.org/en/latest/docs/user_guide/embed.html) from the official Bokeh documents, Pheasant automatically adds extra shtysheets and javascript in HTML `<head>` tag for you, so you don't need to configure your `mkdocs.yml` manually.
+You can embed [Bokeh](https://bokeh.pydata.org/en/latest/)'s plots into MkDocs HTML documents. Following [User Guide "Embedding Plots and Apps"](https://bokeh.pydata.org/en/latest/docs/user_guide/embed.html) from the official Bokeh documents, Pheasant automatically adds extra stylesheet and javascript in HTML `<head>` tag. You don't need to configure `extra_css` and `extra_javascript` in your `mkdocs.yml` manually.
 
-In order to embed plots in your documents, `bokeh.embed.components` function can be used. This function returns `<script>`  and `<div>` tags in HTML format. For example:
+In order to embed plots in your document, `bokeh.embed.components` function can be used. This function returns `<script>`  and `<div>` tags in HTML format. For example:
 
 ```python
 from bokeh.plotting import figure
@@ -131,7 +131,7 @@ A shortcut to this functionality is prepared.
 {{plot}}
 ~~~
 
-Just for your infomation, extra stylesheet and javascript files are obtained by the following commands.
+Just for your infomation, the extra stylesheet and javascript files provided by Bokeh are obtained by the following commands.
 
 ```python
 from bokeh.resources import CDN
@@ -141,13 +141,11 @@ CDN.css_files
 CDN.js_files
 ```
 
-In fact, Pheasant uses above API to embed Bokeh's plots.
-
-
+In fact, Pheasant uses above API to embed Bokeh's plots internally.
 
 ## HoloViews
 
-HoloViews provides an explorable multi-dimensional dictionary of HoloViews objects called [HoloMap](https://holoviews.org/reference/containers/bokeh/HoloMap.html). Pheasant can also embed this interactive object in your MkDocs Documents.
+HoloViews provides an explorable multi-dimensional dictionary of HoloViews objects called [HoloMap](https://holoviews.org/reference/containers/bokeh/HoloMap.html). Pheasant can also embed this interactive object in your MkDocs Documents as well as other HoloViews objects.
 
 First, a normal HoloViews object.
 
@@ -163,7 +161,7 @@ curve
 type(curve)
 ```
 
-As you can see, HoloView's `Curve` object doesn't supply any visual representation. To get a visual image, we have to render the object.
+As you can see, HoloView's `Curve` object doesn't supply any visual representation. To get a HTML source to visualize it, we have to render the object.
 
 ```python
 renderer = hv.renderer('bokeh')
@@ -181,7 +179,7 @@ print(js_html.strip()[:50])
 print(css_html.strip()[:50])
 ```
 
-The above process to show the image can be done by just an inline code like this.
+The above process to display the HTML image from a HoloViews object can be done by just an inline code like this.
 
 ~~~copy
 {{curve}}
