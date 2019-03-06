@@ -1,9 +1,17 @@
 site_name: Pheasant
 site_url: https://pheasant.daizutabi.net/
+site_description: Project documentation with MkDocs.
+site_author: daizutabi
+
 repo_url: https://github.com/daizutabi/pheasant/
+edit_uri: ""
 
 theme:
   name: rtd-pheasant
+  highlightjs: true
+  hljs_languages:
+    - yaml
+    - python
 
 plugins:
   - pheasant

@@ -122,4 +122,8 @@ def fenced_code(source: str, language: str = '') -> str:
     begin = config_number['begin_pattern']
     end = config_number['end_pattern']
     cls = '.pheasant-fenced-code .pheasant-code'
+
+    if not source.endswith('\n'):
+        source = source + '\n'
+
     return f'{begin}\n~~~{language} {cls}\n{source}~~~\n{end}\n'

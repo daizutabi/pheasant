@@ -96,4 +96,5 @@ def convert(source: str, config: Optional[dict] = None) -> str:
 
     logger.debug("[Pheasant] End conversion: %s",
                  pheasant_config['source_file'])
+
     return source
