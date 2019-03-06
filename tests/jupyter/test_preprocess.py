@@ -35,6 +35,7 @@ def test_evaluate_markdown_display():
 
 
 def test_update_extra_resources_for_bokeh():
+    pheasant_config['source_file'] = None  # for next test
     source = '\n'.join([
         "from bokeh.plotting import figure",
         "p = figure(title='Test', width=200, height=200)",
@@ -50,6 +51,9 @@ def test_update_extra_resources_for_bokeh():
     assert data['text/html'].startswith('<div style="display: table;">')
     assert preprocess_markdown('{{p}}').startswith('\n<script type="text/ja')
 
+    pheasant_config['source_file'] = 'example.md'  # for next test
+    preprocess_markdown('{{p}}')
+
 
 @pytest.mark.parametrize('key, values', [
     ('extra_css', CDN.css_files),
@@ -61,7 +65,18 @@ def test_update_extra_resources_for_bokeh_config(key, values):
     assert pheasant_config[key] == values
 
 
+@pytest.mark.parametrize('key, values', [
+    ('extra_css', CDN.css_files),
+    ('extra_raw_css', []),
+    ('extra_javascript', CDN.js_files),
+    ('extra_raw_javascript', []),
+])
+def test_update_extra_resources_for_page(key, values):
+    assert pheasant_config['extra_resources']['example.md'][key] == values
+
+
 def test_update_extra_resources_for_holoviews():
+    pheasant_config['source_file'] = None  # for next test
     source = '\n'.join([
         "import holoviews as hv",
         "import numpy as np",
