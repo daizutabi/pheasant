@@ -25,10 +25,10 @@ config: Dict[str, Any] = {
     'inline_display_character': '!',
 
     # Extra package directories that will be added to sys.path.
-    'sys_paths': [],
+    'extra_paths': [],
 
     # Extra modules that will be imported.
-    'import_modules': [],
+    'extra_modules': [],
 
     # Markdown Extension to render header title and inline code.
     'markdown_extensions': [],

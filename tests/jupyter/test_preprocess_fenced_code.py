@@ -11,28 +11,28 @@ def test_initialize():
 def test_preprocess_fenced_code():
     code = '{{plt.plot([1, 2])}}\n'
     output = preprocess_fenced_code(code)
-    assert output == ('pheasant.jupyter.display(plt.plot'
+    assert output == ('pheasant.jupyter.display.display(plt.plot'
                       '([1, 2]), output="markdown")\n')
 
 
 def test_preprocess_fenced_code_with_asign():
     code = 'a = {{plt.plot([1, 2])}}\n'
     output = preprocess_fenced_code(code)
-    assert output == ('a = pheasant.jupyter.display(plt.plot'
+    assert output == ('a = pheasant.jupyter.display.display(plt.plot'
                       '([1, 2]), output="markdown")\n')
 
 
 def test_preprocess_fenced_code_html():
     code = '{{^plt.plot([1, 2])}}\n'
     output = preprocess_fenced_code(code)
-    assert output == ('pheasant.jupyter.display(plt.plot'
+    assert output == ('pheasant.jupyter.display.display(plt.plot'
                       '([1, 2]), output="html")\n')
 
 
 def test_preprocess_fenced_code_with_semicolon():
     code = '{{plt.plot([1, 2]);plt.gcf()}}\n'
     output = preprocess_fenced_code(code)
-    assert output == ('pheasant.jupyter.display(_pheasant_dummy, '
+    assert output == ('pheasant.jupyter.display.display(_pheasant_dummy, '
                       'output="markdown")\n')
     outputs = execute('_pheasant_dummy')
     assert len(outputs) == 1
@@ -51,7 +51,7 @@ def test_run_preprocess_fenced_code_with_for_loop():
             '    plt.plot([1, k])\n'
             '    a.append({{plt.gcf()}})\n')
     output = preprocess_fenced_code(code)
-    assert output.endswith('.jupyter.display(plt.gcf(), output="markdown"))\n')
+    assert output.endswith('.display.display(plt.gcf(), output="markdown"))\n')
     outputs = execute(output)
     assert len(outputs) == 1
     data = outputs[0]['data']

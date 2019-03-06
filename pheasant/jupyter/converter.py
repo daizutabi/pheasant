@@ -15,8 +15,7 @@ from pheasant.markdown.splitter import fenced_code_splitter
 
 def initialize() -> None:
     set_template()
-    execute('import sys, importlib, inspect')
-    sys_path_insert()
+    extra_paths_insert()
     import_modules()
     run_init_codes()
 
@@ -87,30 +86,25 @@ def set_template() -> None:
         config[prefix + '_template'] = env.get_template(template_file)
 
 
-def sys_path_insert() -> None:
-    pheasant_dir = os.path.abspath(os.path.join(pheasant.__file__, '../..'))
-    pheasant_dir = pheasant_dir.replace('\\', '/')
-    for directory in config['sys_paths'] + [pheasant_dir]:
-        code = (f'if "{directory}" not in sys.path:\n'
-                f'    sys.path.insert(0, "{directory}")')
-        execute(code)
+def extra_paths_insert() -> None:
+    code = (f'import sys\n'
+            f'for path in {config["extra_paths"]}:\n'
+            f'    if path not in sys.path:\n'
+            f'        sys.path.insert(0, path)\n')
+    execute(code)
 
 
 def import_modules() -> None:
-    for package in config['import_modules'] + ['pheasant', 'pandas']:
-        code = (f'module = importlib.import_module("{package}")\n'
-                f'globals()["{package}"] = module')
-        execute(code)
+    modules = ', '.join(config['extra_modules']
+                        + ['pheasant.jupyter.display', 'importlib', 'inspect'])
+    execute(f'import {modules}')
 
 
 def run_init_codes() -> None:
-    for code in (config['init_codes']
-                 + ['pandas.options.display.max_colwidth = 0']):
-        execute(code)
+    execute('import pandas\npandas.options.display.max_colwidth = 0')
+    execute('\n'.join(config['init_codes']))
 
 
 def reload_modules() -> None:
-    for module in config['import_modules']:
-        code = (f'module = importlib.import_module("{module}")\n'
-                f'importlib.reload(module)')
-        execute(code)
+    for module in config['extra_modules']:
+        execute('importlib.reload(pandas)')

@@ -76,7 +76,7 @@ def replace(code: str, ignore_equal: bool = False) -> str:
         codes[-1] = f'{code} = {codes[-1]}'
         execute('\n'.join(codes))
 
-    return f'pheasant.jupyter.display({code}, output="{output}")'
+    return f'pheasant.jupyter.display.display({code}, output="{output}")'
 
 
 def update_extra_resources(outputs: list) -> None:
