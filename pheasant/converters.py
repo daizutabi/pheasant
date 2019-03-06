@@ -26,24 +26,28 @@ def get_converter_name(converter) -> str:
     return converter.__name__.split('.')[-1]
 
 
-def update_pheasant_config(config, path: str) -> None:
-    """Update phesant config with a YAML file.
+def update_pheasant_config(path: str = '',
+                           config: Optional[dict] = None) -> None:
+    """Update phesant config with a YAML file or config dict.
 
     Parameters
     ----------
-    config : dict-like
-        The plugin config.
     path
         YAML config file path.
+    config
+        The config dictionary.
     """
     if os.path.exists(path):
         with open(path) as f:
             pheasant_config.update(yaml.load(f))
+    elif path:
+        logger.warning("[Pheasant] Config file does not exist: '%s'", path)
+
+    if config:
+        pheasant_config.update(config)
 
     for key, value in pheasant_config.items():
         logger.debug("[Pheasant] Config value: '%s' = %r", key, value)
-
-    config['pheasant'] = pheasant_config
 
 
 def update_converter_config(converter, config: dict) -> None:
