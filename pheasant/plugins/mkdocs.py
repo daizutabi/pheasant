@@ -12,13 +12,17 @@ logger = logging.getLogger('mkdocs')
 
 
 class PheasantPlugin(BasePlugin):
+    def on_serve(self, server, config):
+        update_pheasant_config(config={'server': server})
+
+        return server
+
     def on_config(self, config):
-        if 'pheasant' in config['plugins']:
-            logger.debug('[Pheasant] Pheasant plugin enabled.')
-            path = os.path.dirname(config['config_file_path'])
-            path = os.path.join(path, 'pheasant.yml')
-            logger.debug(f'[Pheasant] Pheasant config file: {path}')
-            update_pheasant_config(config, path)
+        logger.debug('[Pheasant] Pheasant plugin enabled.')
+        path = os.path.dirname(config['config_file_path'])
+        path = os.path.join(path, 'pheasant.yml')
+        logger.debug(f'[Pheasant] Pheasant config file: {path}')
+        update_pheasant_config(path=path)
 
         return config
 
@@ -43,3 +47,10 @@ class PheasantPlugin(BasePlugin):
         source = convert(page.file.abs_src_path)
 
         return source
+
+    def on_page_context(self, context, page, config, nav):
+        # print('--------------------------------------------')
+        # print('path:', page.file.abs_src_path)
+        # print('config.keys:', list(context['config'].keys()))
+        # print('context.keys:', list(context.keys()))
+        return context
