@@ -27,8 +27,11 @@ def render(source: str, label: dict) -> Generator[str, None, None]:
     pattern_escape = r'(^```(.*?)^```$)|(^~~~(.*?)^~~~$)|(<pre>(.*?)</pre>)'
     pattern_label = config['label_pattern']
 
-    for splitted in escaped_splitter(pattern_label, pattern_escape, source):
-        if isinstance(splitted, str):
+    for splitted in escaped_splitter(pattern_label, pattern_escape, source,
+                                     escape_generator=None):
+        if isinstance(splitted, tuple):
+            pass  # Never occur. Just for mypy.
+        elif isinstance(splitted, str):
             yield splitted
         else:
             entity = splitted.group(1)
