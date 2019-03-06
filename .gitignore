@@ -3,8 +3,8 @@ dist/
 *.pyc
 .ipynb_checkpoints/
 *.egg-info/
-.coverage.*
-.coverage
+**/.coverage.*
+**/.coverage
 **/mkdocs/site/
 __pycache__/
 .ropeproject/
