@@ -7,5 +7,6 @@ jupyter:
     - example
 number:
   level: 0
+  ignore_pattern: ".*about.*"
 code:
 macro:

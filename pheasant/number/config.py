@@ -1,6 +1,15 @@
 from typing import Any, Dict
 
 config: Dict[str, Any] = {
+    # List of page absolute path in order.
+    'pages': [],
+
+    # Page path that matches this pattern will be ignored to number.
+    'ignore_pattern': None,
+
+    # List of ignored pages.
+    'ignore_pages': [],
+
     # Jinja2 template file for numbering.
     'template_file': 'basic.jinja2',
 

@@ -1,4 +1,4 @@
-__version__ = '1.0.1'
+__version__ = '1.0.2'
 
 
 # THIS IS NEEDED! For import from jupyter kernel inside.
@@ -9,11 +9,3 @@ except ImportError:
 
 
 __all__ = ['convert']
-
-# Test
-# logger = logging.getLogger('pheasant')
-# stream = logging.StreamHandler()
-# formatter = logging.Formatter("%(levelname)-7s -  [Pheasant] %(message)s ")
-# stream.setFormatter(formatter)
-# logger.addHandler(stream)
-# logger.setLevel('INFO')

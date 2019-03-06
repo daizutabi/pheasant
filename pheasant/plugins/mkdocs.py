@@ -6,6 +6,7 @@ from mkdocs.plugins import BasePlugin
 
 from pheasant.converters import (convert, update_page_config,
                                  update_pheasant_config)
+from pheasant.number.converter import register_pages
 
 config_options  # to avoid linter error.
 
@@ -27,6 +28,12 @@ class PheasantPlugin(BasePlugin):
 
         return config
 
+    def on_nav(self, nav, config, files):
+        source_files = [page.file.abs_src_path for page in nav.pages]
+        register_pages(source_files)
+
+        return nav
+
     def on_page_read_source(self, source, page, config):
         """
         The on_page_read_source event can replace the default mechanism
@@ -43,7 +50,7 @@ class PheasantPlugin(BasePlugin):
         The raw source for a page as unicode string. If None is returned, the
         default loading from a file will be performed.
         """
-        logger.info(f'Converting: {page.file.src_path}')
+        logger.info(f'[Pheasant] Converting: {page.file.src_path}')
 
         source = convert(page.file.abs_src_path)
 

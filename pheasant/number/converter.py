@@ -1,6 +1,8 @@
 import json
+import logging
 import os
-from typing import Any, Dict
+import re
+from typing import Any, Dict, List
 
 from jinja2 import Environment, FileSystemLoader
 
@@ -8,9 +10,32 @@ from pheasant.number.config import config
 from pheasant.number.header import convert as convert_header
 from pheasant.number.reference import convert as convert_reference
 
+logger = logging.getLogger('mkdocs')
+
+
+def register_pages(source_files: List[str]) -> None:
+    """Register pages before conversion due to maintain the order of pages.
+
+    Parameters
+    ----------
+    source_files
+        List of pages. Absolute file paths.
+    """
+    config['pages'] = source_files
+
 
 def initialize() -> None:
-    config['pages'] = []
+    for path in list(config['pages']):  # `list` is needed for iteration.
+        if (re.match(config['ignore_pattern'], path)
+                and path not in config['ignore_pages']):
+            config['ignore_pages'].append(path)
+            del config['pages'][config['pages'].index(path)]
+
+    logger.info(f'[Pheasant.number] {len(config["pages"])} pages are '
+                'registered.')
+    logger.info(f'[Pheasant.number] {len(config["ignore_pages"])} pages are '
+                'ignored.')
+
     default_directory = os.path.join(os.path.dirname(__file__), 'templates')
 
     abspath = os.path.abspath(config['template_file'])
@@ -24,7 +49,10 @@ def initialize() -> None:
 def convert(source: str) -> str:
     from pheasant.converters import get_source_file
     source_file = get_source_file()
-    if source_file not in config['pages']:
+
+    if source_file in config['ignore_pages']:
+        return source
+    elif source_file not in config['pages']:
         config['pages'].append(source_file)
 
     if config['level'] == 0:

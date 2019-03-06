@@ -63,7 +63,8 @@ def get_kernel_manager(kernel_name: str) -> KernelManager:
         if kernel_name not in kernel_specs:
             msg = f'Could not find kernel name: {kernel_name}'
             raise ValueError(msg)
-        logger.info(f'Creating kernel manager for kernel: {kernel_name}')
+        logger.info(f'[Pheasant] Creating kernel manager'
+                    f' for kernel: {kernel_name}')
         kernel_manager = jupyter_client.KernelManager(kernel_name=kernel_name)
         kernel_managers[kernel_name] = kernel_manager
         atexit.register(shutdown_kernels)
@@ -79,16 +80,20 @@ def get_kernel_client(kernel_name: str):
     if kernel_name in kernel_clients:
         return kernel_clients[kernel_name]
     else:
-        logger.info(f'Creating kernel client for kernel: {kernel_name}')
+        logger.info(f'[Pheasant] Creating kernel client'
+                    f' for kernel: {kernel_name}')
+        if not kernel_manager.is_alive():
+            kernel_manager.start_kernel()
         kernel_client = kernel_manager.client()
         kernel_client.start_channels()
-        try:
-            kernel_client.wait_for_ready(timeout=60)
-        except RuntimeError:
-            kernel_client.stop_channels()
-            kernel_manager.shutdown_kernel()
+        # try:
+        #     kernel_client.wait_for_ready(timeout=60)
+        # except RuntimeError:
+        #     logger.error(f"[Pheasant] Kernel can't start: {kernel_name}")
+        #     kernel_client.stop_channels()
+        #     kernel_manager.shutdown_kernel()
 
-        logger.info(f'Kernel client ready: {kernel_name}')
+        logger.info(f'[Pheasant] Kernel client ready: {kernel_name}')
         kernel_client.allow_stdin = False
         kernel_clients[kernel_name] = kernel_client
         return kernel_client
@@ -196,6 +201,6 @@ def run_cell(cell_or_source: Union[NotebookNode, str],
 
 def shutdown_kernels() -> None:
     for kernel_name in kernel_managers:
-        logger.info(f'Shutting down kernel: {kernel_name}')
+        logger.info(f'[Pheasant] Shutting down kernel: {kernel_name}')
         kernel_manager = kernel_managers[kernel_name]
         kernel_manager.shutdown_kernel()

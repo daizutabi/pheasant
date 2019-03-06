@@ -69,13 +69,13 @@
     <a class="current" href="./">Code</a>
     <ul class="subnav">
             
-    <li class="toctree-l3"><a href="#4-code">4 Code</a></li>
+    <li class="toctree-l3"><a href="#3-code">3 Code</a></li>
     
         <ul>
         
-            <li><a class="toctree-l4" href="#41-file-system">4.1 File system</a></li>
+            <li><a class="toctree-l4" href="#31-file-system">3.1 File system</a></li>
         
-            <li><a class="toctree-l4" href="#42-python-source">4.2 Python source</a></li>
+            <li><a class="toctree-l4" href="#32-python-source">3.2 Python source</a></li>
         
         </ul>
     
@@ -136,9 +136,9 @@
           <div role="main">
             <div class="section">
               
-                <h1 id="4-code"><span class="pheasant-header-number">4</span> <span class="pheasant-header-title">Code</span></h1>
+                <h1 id="3-code"><span class="pheasant-header-number">3</span> <span class="pheasant-header-title">Code</span></h1>
 <p>Pheasant can include codes from Python moudle or a file system.</p>
-<h2 id="41-file-system"><span class="pheasant-header-number">4.1</span> <span class="pheasant-header-title">File system</span></h2>
+<h2 id="31-file-system"><span class="pheasant-header-number">3.1</span> <span class="pheasant-header-title">File system</span></h2>
 <p>Any text files are read from file system by Pheasant's extended Markdown syntax. For example,</p>
 <div class="pheasant-fenced-code pheasant-source">
 <pre><code class="markdown">![file](mkdocs.yml)
@@ -220,7 +220,7 @@ theme:
 <div class="pheasant-number-file">
 <p class="pheasant-file">
 <span class="name">File</span>
-<span class="number">4.1</span>
+<span class="number">3.1</span>
 <span class="title">pheasant.yml</span></p>
 <div class="pheasant-fenced-code pheasant-code">
 <pre><code class="yaml">jupyter:
@@ -232,6 +232,7 @@ theme:
     - example
 number:
   level: 0
+  ignore_pattern: ".*about.*"
 code:
 macro:
 </code></pre>
@@ -239,7 +240,7 @@ macro:
 </div>
 
 <p>The above file is the real config file of this Pheasant document.</p>
-<h2 id="42-python-source"><span class="pheasant-header-number">4.2</span> <span class="pheasant-header-title">Python source</span></h2>
+<h2 id="32-python-source"><span class="pheasant-header-number">3.2</span> <span class="pheasant-header-title">Python source</span></h2>
 <p>Python module sources that the current Jupyter kernel can find are also inspected. Now Pheasant is configured like the above <code>phesant.yml</code> settings,
 the kernel's <code>sys.path</code> includes <code>scripts</code> directory and module <code>example</code> has already imported.</p>
 <div class="pheasant-fenced-code pheasant-input">
@@ -276,7 +277,7 @@ sys.path[:5]
 <div class="pheasant-number-code">
 <p class="pheasant-code">
 <span class="name">Code</span>
-<span class="number">4.1</span>
+<span class="number">3.1</span>
 <span class="title">example</span></p>
 <div class="pheasant-fenced-code pheasant-code">
 <pre><code class="python">"""An Example Module."""
@@ -300,7 +301,7 @@ def sub(x, y):
 <div class="pheasant-number-code">
 <p class="pheasant-code">
 <span class="name">Code</span>
-<span class="number">4.2</span>
+<span class="number">3.2</span>
 <span class="title">example.sub</span></p>
 <div class="pheasant-fenced-code pheasant-code">
 <pre><code class="python">def sub(x, y):
