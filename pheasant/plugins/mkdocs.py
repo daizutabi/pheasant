@@ -4,7 +4,8 @@ import os
 from mkdocs.config import config_options  # This import required for BasePlugin
 from mkdocs.plugins import BasePlugin
 
-from pheasant.converters import convert, update_pheasant_config
+from pheasant.converters import (convert, update_page_config,
+                                 update_pheasant_config)
 
 config_options  # to avoid linter error.
 
@@ -49,8 +50,5 @@ class PheasantPlugin(BasePlugin):
         return source
 
     def on_page_context(self, context, page, config, nav):
-        # print('--------------------------------------------')
-        # print('path:', page.file.abs_src_path)
-        # print('config.keys:', list(context['config'].keys()))
-        # print('context.keys:', list(context.keys()))
+        update_page_config(config, page.file.abs_src_path)
         return context

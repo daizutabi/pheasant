@@ -99,6 +99,7 @@ def update_extra_resources(cell: NotebookNode) -> None:
         Input cell after execution.
     """
     def replace(data: NotebookNode) -> None:
+        """Replace tuple output to html and register extra resources."""
         display = eval(data['text/plain'])
         if isinstance(display, tuple):
             html, resources = display
@@ -107,6 +108,12 @@ def update_extra_resources(cell: NotebookNode) -> None:
             del data['text/plain']
 
     def update(resources: dict) -> None:
+        """Update extra resources.
+
+        If `source_file` is not specified, global extra_XXXs are updated,
+        Otherwise, config['extre_resources'][<source_file>] updated.
+        """
+
         from pheasant.config import config as pheasant_config
 
         source_file = pheasant_config['source_file']

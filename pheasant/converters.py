@@ -50,6 +50,23 @@ def update_pheasant_config(path: str = '',
         logger.debug("[Pheasant] Config value: '%s' = %r", key, value)
 
 
+def update_page_config(config, source_file: str) -> None:
+    """Update page config.
+
+    Parameters
+    ----------
+    config
+        The plugin config.
+    source_file
+        The abs source path for page.
+    """
+    if source_file in pheasant_config['extra_resources']:
+        config['pheasant'] = pheasant_config['extra_resources'][source_file]
+        logger.debug("[Pheasant] Extra resources added: %s", source_file)
+    elif 'pheasant' in config:
+        del config['pheasant']
+
+
 def update_converter_config(converter, config: dict) -> None:
     if not hasattr(converter, 'config'):
         converter.config = {}
