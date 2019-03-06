@@ -1,2 +1,9 @@
-def func(x):
-    return 5 * x
+"""An Example Module."""
+
+
+def add(x, y):
+    return x + y
+
+
+def sub(x, y):
+    return x - y
