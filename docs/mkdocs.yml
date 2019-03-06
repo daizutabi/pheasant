@@ -11,7 +11,7 @@ plugins:
 nav:
   - Home: index.md
   - Images: images.md
-  # - Test2: test2.md
+  - Code: code.md
 
 markdown_extensions:
   - admonition

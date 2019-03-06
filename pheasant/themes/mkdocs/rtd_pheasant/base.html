@@ -38,6 +38,7 @@
 
   {%- if config.theme.highlightjs %}
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css" type="text/css"/>
+
   {%- endif %}
   {%- for path in config['extra_css'] %}
   <link href="{{ path|url }}" rel="stylesheet">
@@ -60,7 +61,9 @@
   {%- for lang in config.theme.hljs_languages %}
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/languages/{{lang}}.min.js"></script>
   {%- endfor %}
+  {# <script src="//cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.6.0/highlightjs-line-numbers.min.js"></script> #}
   <script>hljs.initHighlightingOnLoad();</script>
+  {# <script>hljs.initLineNumbersOnLoad();</script> #}
   {%- endif %}
   {%- endblock %}
 

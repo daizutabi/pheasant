@@ -250,6 +250,11 @@ p + .pheasant-fenced-code {
   margin-top: -16px;
 }
 
+p.pheasant-file + .pheasant-fenced-code,
+p.pheasant-code + .pheasant-fenced-code {
+  margin-top: 2px;
+}
+
 /**************************************************
  HoloViews
 **************************************************/

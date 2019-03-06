@@ -1,4 +1,5 @@
 import os
+import re
 from typing import Generator
 
 import nbformat
@@ -32,6 +33,8 @@ def render(source: str) -> Generator[str, None, None]:
                 yield inspect(language, reference)
             elif language == 'file':
                 yield read_file(reference)
+            elif language.startswith('#'):
+                yield splitted.group().replace('#', '')
             else:
                 yield splitted.group()
 
@@ -69,14 +72,22 @@ def inspect_render(cell: NotebookNode, language: str) -> str:
 def read_file(path: str) -> str:
     """Read a file from disc.
 
-    `path`: `<path_to_file>:<language>` form is avaiable.
+    `path`: `[path_to_file]<slice>?[language]` form is avaiable.
     Otherwise, the language is determined from the path's extension.
     For example, If the path is `a.py`, then the language is Python.
+
     """
-    if ':' in path:
-        path, language = path.split(':')
+    if '?' in path:
+        path, language = path.split('?')
     else:
         language = ''
+
+    match = re.match(r'(.+)<(.+?)>', path)
+
+    if match:
+        path, slice_str = match.groups()
+    else:
+        slice_str = ''
 
     if path.startswith('~'):
         path = os.path.expanduser(path)
@@ -95,6 +106,15 @@ def read_file(path: str) -> str:
             language = ''
 
     source = read_source(path)
+
+    if slice_str:
+        sources = source.split('\n')
+        if ':' not in slice_str:
+            source = sources[int(slice_str)]
+        else:
+            slice_list = [int(s) if s else None for s in slice_str.split(':')]
+            source = '\n'.join(sources[slice(*slice_list)])
+
     return fenced_code(source, language)
 
 
