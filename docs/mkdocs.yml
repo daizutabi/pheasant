@@ -10,8 +10,12 @@ plugins:
 
 nav:
   - Home: index.md
-  - Images: images.md
-  - Code: code.md
+  - User Guide:
+    - Images: user-guide/images.md
+    - Code: user-guide/code.md
+  - About:
+    - Release Notes: about/release-notes.md
+    - License: about/license.md
 
 markdown_extensions:
   - admonition

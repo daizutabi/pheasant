@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   
-  <link rel="shortcut icon" href="../img/favicon.ico">
+  <link rel="shortcut icon" href="../../img/favicon.ico">
   <title>Code - Pheasant</title>
   <link rel="stylesheet" href="https://cdn.pydata.org/bokeh/release/bokeh-1.0.4.min.css" type="text/css" />
   <link rel="stylesheet" href="https://cdn.pydata.org/bokeh/release/bokeh-widgets-1.0.4.min.css" type="text/css" />
@@ -124,20 +124,20 @@ div.hologroup {
 
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700" type="text/css"/>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/tonsky/FiraCode@1.206/distr/fira_code.css" type="text/css"/>
-  <link rel="stylesheet" href="../css/theme.css" type="text/css"/>
-  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css"/>
-  <link rel="stylesheet" href="../css/theme_pheasant.css" type="text/css"/>
+  <link rel="stylesheet" href="../../css/theme.css" type="text/css"/>
+  <link rel="stylesheet" href="../../css/theme_extra.css" type="text/css"/>
+  <link rel="stylesheet" href="../../css/theme_pheasant.css" type="text/css"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css" type="text/css"/>
   
   <script>
     // Current page data
     var mkdocs_page_name = "Code";
-    var mkdocs_page_input_path = "code.md";
-    var mkdocs_page_url = "/code/";
+    var mkdocs_page_input_path = "user-guide\\code.md";
+    var mkdocs_page_url = "/user-guide/code/";
   </script>
   
-  <script src="../js/jquery-2.1.1.min.js"></script>
-  <script src="../js/modernizr-2.8.3.min.js"></script>
+  <script src="../../js/jquery-2.1.1.min.js"></script>
+  <script src="../../js/modernizr-2.8.3.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js"></script>
   
   <script>hljs.initHighlightingOnLoad();</script>
@@ -810,7 +810,7 @@ window.HoloViews.BokehScrubberWidget = BokehScrubberWidget
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
       <div class="wy-side-nav-search">
-        <a href=".." class="icon icon-home"> Pheasant</a>
+        <a href="../.." class="icon icon-home"> Pheasant</a>
         
       </div>
 
@@ -820,30 +820,50 @@ window.HoloViews.BokehScrubberWidget = BokehScrubberWidget
           
             <li class="toctree-l1">
 		
-    <a class="" href="..">Home</a>
+    <a class="" href="../..">Home</a>
 	    </li>
           
             <li class="toctree-l1">
 		
+    <span class="caption-text">User Guide</span>
+    <ul class="subnav">
+                <li class="">
+                    
     <a class="" href="../images/">Images</a>
-	    </li>
-          
-            <li class="toctree-l1 current">
-		
+                </li>
+                <li class=" current">
+                    
     <a class="current" href="./">Code</a>
     <ul class="subnav">
             
-    <li class="toctree-l2"><a href="#2-code">2 Code</a></li>
+    <li class="toctree-l3"><a href="#4-code">4 Code</a></li>
     
         <ul>
         
-            <li><a class="toctree-l3" href="#21-file-system">2.1 File system</a></li>
+            <li><a class="toctree-l4" href="#41-file-system">4.1 File system</a></li>
         
-            <li><a class="toctree-l3" href="#22-python-source">2.2 Python source</a></li>
+            <li><a class="toctree-l4" href="#42-python-source">4.2 Python source</a></li>
         
         </ul>
     
 
+    </ul>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">About</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../../about/release-notes/">Release Notes</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../../about/license/">License</a>
+                </li>
     </ul>
 	    </li>
           
@@ -857,7 +877,7 @@ window.HoloViews.BokehScrubberWidget = BokehScrubberWidget
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
         <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="..">Pheasant</a>
+        <a href="../..">Pheasant</a>
       </nav>
 
       
@@ -865,15 +885,19 @@ window.HoloViews.BokehScrubberWidget = BokehScrubberWidget
         <div class="rst-content">
           <div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="..">Docs</a> &raquo;</li>
+    <li><a href="../..">Docs</a> &raquo;</li>
     
+      
+        
+          <li>User Guide &raquo;</li>
+        
       
     
     <li>Code</li>
 <!--
     <li class="wy-breadcrumbs-aside">
       
-        <a href="https://github.com/daizutabi/pheasant/edit/master/docs/code.md"
+        <a href="https://github.com/daizutabi/pheasant/edit/master/docs/user-guide/code.md"
           class="icon icon-github"> Edit on GitHub</a>
       
     </li>
@@ -884,9 +908,9 @@ window.HoloViews.BokehScrubberWidget = BokehScrubberWidget
           <div role="main">
             <div class="section">
               
-                <h1 id="2-code"><span class="pheasant-header-number">2</span> <span class="pheasant-header-title">Code</span></h1>
+                <h1 id="4-code"><span class="pheasant-header-number">4</span> <span class="pheasant-header-title">Code</span></h1>
 <p>Pheasant can include codes from Python moudle or a file system.</p>
-<h2 id="21-file-system"><span class="pheasant-header-number">2.1</span> <span class="pheasant-header-title">File system</span></h2>
+<h2 id="41-file-system"><span class="pheasant-header-number">4.1</span> <span class="pheasant-header-title">File system</span></h2>
 <p>Any text files are read from file system by Pheasant's extended Markdown syntax. For example,</p>
 <div class="pheasant-fenced-code pheasant-source">
 <pre><code class="markdown">![file](mkdocs.yml)
@@ -908,8 +932,12 @@ plugins:
 
 nav:
   - Home: index.md
-  - Images: images.md
-  - Code: code.md
+  - User Guide:
+    - Images: user-guide/images.md
+    - Code: user-guide/code.md
+  - About:
+    - Release Notes: about/release-notes.md
+    - License: about/license.md
 
 markdown_extensions:
   - admonition
@@ -955,7 +983,7 @@ plugins:
 <div class="pheasant-number-file">
 <p class="pheasant-file">
 <span class="name">File</span>
-<span class="number">2.1</span>
+<span class="number">4.1</span>
 <span class="title">pheasant.yml</span></p>
 <div class="pheasant-fenced-code pheasant-code">
 <pre><code class="yaml">jupyter:
@@ -974,7 +1002,7 @@ macro:
 </div>
 
 <p>The above file is the real config file of this Pheasant document.</p>
-<h2 id="22-python-source"><span class="pheasant-header-number">2.2</span> <span class="pheasant-header-title">Python source</span></h2>
+<h2 id="42-python-source"><span class="pheasant-header-number">4.2</span> <span class="pheasant-header-title">Python source</span></h2>
 <p>Python module sources that the current Jupyter kernel can find are also inspected. Now Pheasant is configured like the above <code>phesant.yml</code> settings,
 the kernel's <code>sys.path</code> includes <code>scripts</code> directory and module <code>example</code> has already imported.</p>
 <div class="pheasant-fenced-code pheasant-input">
@@ -1011,7 +1039,7 @@ sys.path[:5]
 <div class="pheasant-number-code">
 <p class="pheasant-code">
 <span class="name">Code</span>
-<span class="number">2.1</span>
+<span class="number">4.1</span>
 <span class="title">example</span></p>
 <div class="pheasant-fenced-code pheasant-code">
 <pre><code class="python">"""An Example Module."""
@@ -1035,7 +1063,7 @@ def sub(x, y):
 <div class="pheasant-number-code">
 <p class="pheasant-code">
 <span class="name">Code</span>
-<span class="number">2.2</span>
+<span class="number">4.2</span>
 <span class="title">example.sub</span></p>
 <div class="pheasant-fenced-code pheasant-code">
 <pre><code class="python">def sub(x, y):
@@ -1051,6 +1079,8 @@ def sub(x, y):
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../../about/release-notes/" class="btn btn-neutral float-right" title="Release Notes">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
         <a href="../images/" class="btn btn-neutral" title="Images"><span class="icon icon-circle-arrow-left"></span> Previous</a>
@@ -1084,10 +1114,12 @@ def sub(x, y):
         <span><a href="../images/" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
       
+        <span style="margin-left: 15px"><a href="../../about/release-notes/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
     </span>
 </div>
-    <script>var base_url = '..';</script>
-    <script src="../js/theme.js"></script>
+    <script>var base_url = '../..';</script>
+    <script src="../../js/theme.js"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML"></script>
 
 </body>

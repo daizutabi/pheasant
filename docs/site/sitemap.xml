@@ -6,12 +6,22 @@
      <changefreq>daily</changefreq>
     </url>
     <url>
-     <loc>https://pheasant.daizutabi.net/images/</loc>
+     <loc>https://pheasant.daizutabi.net/user-guide/images/</loc>
      <lastmod>2019-03-06</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
-     <loc>https://pheasant.daizutabi.net/code/</loc>
+     <loc>https://pheasant.daizutabi.net/user-guide/code/</loc>
+     <lastmod>2019-03-06</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    <url>
+     <loc>https://pheasant.daizutabi.net/about/release-notes/</loc>
+     <lastmod>2019-03-06</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    <url>
+     <loc>https://pheasant.daizutabi.net/about/license/</loc>
      <lastmod>2019-03-06</lastmod>
      <changefreq>daily</changefreq>
     </url>
