@@ -40,7 +40,7 @@ setup(
     extras_require={
         'develop': ['mkdocs', 'pytest', 'pytest-cov', 'matplotlib', 'bokeh',
                     'holoviews', 'pandas', 'sympy', 'selenium', 'flake8',
-                    'openpyxl', 'python-pptx']
+                    'openpyxl', 'python-pptx', 'mypy']
         },
     entry_points={
         'console_scripts': [

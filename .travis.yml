@@ -13,6 +13,7 @@ install:
 
 before_script:
   - flake8 pheasant
+  - mypy pheasant
   - python -m ipykernel install --user --name travis
 
 script:
