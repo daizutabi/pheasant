@@ -21,7 +21,7 @@ from pheasant.number import config as config_number
 
 def preprocess_fenced_code(source: str) -> str:
     def replace_(match: Match) -> str:
-        return replace(match, ignore_equal=True)
+        return replace(match.group(1), ignore_equal=True)
 
     return re.sub(config['inline_pattern'], replace_, source)
 
@@ -34,9 +34,14 @@ def preprocess_markdown(source: str) -> str:
         source = match.group(1)
         if source.startswith(config['inline_ignore_character']):
             return match.group().replace(source, source[1:])
+        elif source.startswith(config['inline_display_character']):
+            display = True
+            source = source[1:]
+        else:
+            display = False
 
-        cell = nbformat.v4.new_code_cell(replace(match))
-        display = source.startswith(config['inline_display_character'])
+        source = replace(source)
+        cell = nbformat.v4.new_code_cell(source)
 
         return run_and_render(cell, inline_render, display=display,
                               callback=update_extra_resources)
@@ -45,13 +50,13 @@ def preprocess_markdown(source: str) -> str:
     return re.sub(config['inline_pattern'], replace_and_run, source)
 
 
-def replace(match: Match, ignore_equal: bool = False) -> str:
+def replace(source: str, ignore_equal: bool = False) -> str:
     """Replace a match object with `display` function.
 
     Parameters
     ----------
-    match
-        The match object returned by the `re.sub` function for an inline cell.
+    source
+        The matched source given by the `re.sub` function for an inline cell.
     ignore_equal
         If True, do not replace the source which contains `=`.
 
@@ -61,7 +66,6 @@ def replace(match: Match, ignore_equal: bool = False) -> str:
         Replaced python source code but has not been executed yet.
     """
     convert = 'pheasant.jupyter.display'
-    source = match.group(1)
 
     if '=' in source and not ignore_equal:
         return source
@@ -72,15 +76,11 @@ def replace(match: Match, ignore_equal: bool = False) -> str:
     else:
         output = 'markdown'
 
-    if source.startswith(config['inline_display_character']):
-        source = source[1:]
-
     if ';' in source:
         sources = source.split(';')
         source = '_pheasant_dummy'
         sources[-1] = f'{source} = {sources[-1]}'
-        sources = '\n'.join(sources)
-        run_cell(sources)
+        run_cell('\n'.join(sources))
 
     return f'{convert}({source}, output="{output}")'
 
@@ -108,14 +108,27 @@ def update_extra_resources(cell: NotebookNode) -> None:
 
     def update(resources: dict) -> None:
         from pheasant.config import config as pheasant_config
-        extra_keys = [key for key in pheasant_config.keys()
-                      if key.startswith('extra_')]
+
+        source_file = pheasant_config['source_file']
+        if source_file is None:
+            config = pheasant_config
+        else:
+            extra_resources = pheasant_config['extra_resources']
+            if source_file not in extra_resources:
+                extra_resources[source_file] = {}
+            config = extra_resources[source_file]
+
+        extra_keys = ['extra_css', 'extra_raw_css',
+                      'extra_javascript', 'extra_raw_javascript']
 
         for key in extra_keys:
+            if key not in config:
+                config[key] = []
             if key in resources:
                 values = [value for value in resources[key]
-                          if value not in pheasant_config[key]]
-                pheasant_config[key].extend(values)
+                          if value not in config[key]]
+                if values:
+                    config[key].extend(values)
 
     for output in cell.outputs:
         if (output['output_type'] == 'execute_result'

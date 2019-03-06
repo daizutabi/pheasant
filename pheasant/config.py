@@ -2,24 +2,19 @@ from typing import Any, Dict
 
 from pheasant import code, jupyter, macro, number
 
-# from .markdown import office
-
 config: Dict[str, Any] = {
-    # 'converters': [macro, jupyter, code, office, number],
+    # converters list in order of process.
     'converters': [macro, jupyter, code, number],
 
     # current source file
     'source_file': None,
 
-    # extra css list
-    'extra_css': [],
+    # extra resources for each page.
+    # config['extra_resources'][abs_src_path]
+    # keys: 'extra_css', 'extra_raw_css',
+    #       'extra_javascript', 'extra_raw_javascript'
+    'extra_resources': {},
 
-    # extra raw css list
-    'extra_raw_css': [],
-
-    # extra javascript list
-    'extra_javascript': [],
-
-    # extra raw javascript list
-    'extra_raw_javascript': [],
+    # MkDocs server
+    'server': None
 }
