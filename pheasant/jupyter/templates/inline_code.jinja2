@@ -1,0 +1,13 @@
+{%- from 'macro.jinja2' import output_display with context -%}
+
+{%- set ns = namespace(found=false) -%}
+{%- for output in outputs if output.type == 'display_data' -%}
+  {%- set ns.found = true -%}
+{%- endfor -%}
+{%- for output in outputs -%}
+  {%- if ns.found and output.type == 'display_data' -%}
+    {{ output_display(output, display) }}
+  {%- elif not ns.found and output.type != 'display_data' -%}
+    {{ output_display(output, display) }}
+  {%- endif -%}
+{%- endfor -%}

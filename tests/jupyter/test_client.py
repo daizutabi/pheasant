@@ -2,7 +2,7 @@ import pytest
 
 from pheasant.jupyter.client import (find_kernel_names, get_kernel_client,
                                      get_kernel_manager, kernel_clients,
-                                     kernel_managers, run_cell)
+                                     kernel_managers, execute)
 
 
 def test_find_kernel_names():
@@ -29,9 +29,9 @@ def test_get_kernel_client(kernel_name):
     assert kernel_client is get_kernel_client(kernel_name)
 
 
-def test_run_cell():
-    cell = run_cell('print(1)')
-    output = cell['outputs'][0]
-    assert output['output_type'] == 'stream'
+def test_execute():
+    outputs = execute('print(1)')
+    output = outputs[0]
+    assert output['type'] == 'stream'
     assert output['name'] == 'stdout'
     assert output['text'] == '1\n'

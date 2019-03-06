@@ -1,7 +1,5 @@
-import nbformat
-
-from pheasant.code.inspect import convert, inspect_render
-from pheasant.jupyter.client import run_cell
+from pheasant.code.inspect import convert
+from pheasant.jupyter.client import execute
 from pheasant.jupyter.converter import initialize
 
 
@@ -11,13 +9,12 @@ def test_initialize():
 
 def test_inspect_convert():
     assert convert('abc') == 'abc'
-    source = 'def func(x):\n    return x + 1\n'
-    cell = nbformat.v4.new_code_cell(source)
-    run_cell(cell)
+    code = 'def func(x):\n    return x + 1\n'
+    execute(code)
     content = convert('![python](func)')
     answer = '<!-- begin -->\n~~~python .pheasant-fenced-code .pheasant-code\n'
     assert content.startswith(answer)
-    answer = f'{source}~~~\n<!-- end -->\n'
+    answer = f'{code}~~~\n<!-- end -->\n'
     assert content.endswith(answer)
 
     source = '![dummy](func)'
@@ -25,9 +22,6 @@ def test_inspect_convert():
 
     source = '![python](print)'
     assert convert(source) == ''
-
-    cell = nbformat.v4.new_code_cell('a = 1')
-    assert inspect_render(cell, 'python') == ''
 
 
 def test_inspect_convert_with_header():

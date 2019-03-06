@@ -119,11 +119,11 @@ def fenced_code_splitter(
                     continue
             yield splitted
         else:
-            language, source, options = from_match(splitted, comment_option)
+            language, code, options = from_match(splitted, comment_option)
             if select_kernel_name(language) is None and language != 'display':
                 yield splitted.group()
             else:
-                yield language, source, options
+                yield language, code, options
 
 
 def from_match(match: Match, comment_option: bool

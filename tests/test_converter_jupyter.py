@@ -29,7 +29,6 @@ def test_get_converter_name():
 
 
 def test_jupyter_config():
-    assert jupyter.config['format_version'] == 4
     assert jupyter.config['kernel_name'] == {'python': 'python3'}
     assert 'configured' not in jupyter.config
 

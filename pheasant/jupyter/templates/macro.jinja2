@@ -1,16 +1,16 @@
 {%- macro output_text(output) -%}
-  {%- if output.output_type == 'execute_result' -%}
+  {%- if output.type == 'execute_result' -%}
     {%- if 'text/html' not in output.data -%}
       {{ output.data['text/plain'] }}
     {%- endif -%}
-  {%- elif output.output_type == 'stream' and output.name != 'stderr' -%}
+  {%- elif output.type == 'stream' and output.name != 'stderr' -%}
     {%- if output.text[-1] == '\n' -%}
       {{ output.text[:-1] }}
     {%- else -%}
       {{ output.text }}
     {%- endif -%}
-  {%- elif output.output_type == 'error' -%}
-    {{ output.traceback[-1] | strip_ansi }}
+  {%- elif output.type == 'error' -%}
+    {{ output.traceback[-1] }}
   {%- endif -%}
 {%- endmacro -%}
 
@@ -35,8 +35,8 @@
   {%- if display -%}
     {{ '\n\n```display .pheasant-jupyter-display\n' }}
   {%- endif -%}
-  {%- if output.output_type == 'error' -%}
-    {{ output.traceback[-1] | strip_ansi }}
+  {%- if output.type == 'error' -%}
+    {{ output.traceback[-1] }}
   {%- endif -%}
   {%- for type in output.data -%}
     {%- if type == 'application/pdf' -%}

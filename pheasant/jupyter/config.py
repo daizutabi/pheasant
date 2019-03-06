@@ -1,17 +1,11 @@
 from typing import Any, Dict
 
 config: Dict[str, Any] = {
-    # Notebook format version as argument of nbformat.read function.
-    'format_version': 4,
-
-    # Jinja2 template file for Notebook conversion.
-    'template_file': 'output_text_outside.jinja2',
+    # Jinja2 template file for fenced code.
+    'fenced_code_template_file': 'fenced_code.jinja2',
 
     # Jinja2 template file for inline code.
-    'inline_template_file': 'inline.jinja2',
-
-    # Jupyter kernel time-out period in second.
-    'timeout': 600,
+    'inline_code_template_file': 'inline_code.jinja2',
 
     # Jupyter kernel names (key: language, value: kernel name).
     'kernel_name': {
@@ -49,6 +43,8 @@ config: Dict[str, Any] = {
     # Time that module was imported. (Not implemented.)
     # Dont't Edit.
     'module_imported_time': {},
+
+    # Format and backend.
     'matplotlib_format': 'png',
     'bokeh_format': 'html',
     'holoviews_backend': 'bokeh',

@@ -35,8 +35,7 @@ setup(
     license='MIT',
     packages=find_packages(exclude=['tests', 'docs']),
     include_package_data=True,
-    install_requires=['click', 'ipykernel', 'nbformat', 'nbconvert',
-                      'markdown'],
+    install_requires=['click', 'ipykernel', 'markdown'],
     extras_require={
         'develop': ['mkdocs', 'pytest', 'pytest-cov', 'matplotlib', 'bokeh',
                     'holoviews', 'pandas', 'sympy', 'selenium', 'flake8',

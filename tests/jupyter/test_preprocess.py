@@ -1,9 +1,8 @@
-import nbformat
 import pytest
 from bokeh.resources import CDN
 
 from pheasant.config import config as pheasant_config
-from pheasant.jupyter.client import run_cell
+from pheasant.jupyter.client import execute
 from pheasant.jupyter.config import config
 from pheasant.jupyter.converter import initialize
 from pheasant.jupyter.preprocess import move_from_header, preprocess_markdown
@@ -36,7 +35,7 @@ def test_evaluate_markdown_display():
 
 def test_update_extra_resources_for_bokeh():
     pheasant_config['source_file'] = None  # for next test
-    source = '\n'.join([
+    code = '\n'.join([
         "from bokeh.plotting import figure",
         "p = figure(title='Test', width=200, height=200)",
         "p.xaxis.axis_label = 'Petal Length'",
@@ -44,9 +43,7 @@ def test_update_extra_resources_for_bokeh():
         "p.circle([1, 2, 3], [4, 5, 6])",
         "p"
     ])
-    cell = nbformat.v4.new_code_cell(source)
-    run_cell(cell)
-    data = cell.outputs[0].data
+    data = execute(code)[0]['data']
     assert data['text/plain'].startswith("Figure(id='")
     assert data['text/html'].startswith('<div style="display: table;">')
     assert preprocess_markdown('{{p}}').startswith('\n<script type="text/ja')
@@ -77,7 +74,7 @@ def test_update_extra_resources_for_page(key, values):
 
 def test_update_extra_resources_for_holoviews():
     pheasant_config['source_file'] = None  # for next test
-    source = '\n'.join([
+    code = '\n'.join([
         "import holoviews as hv",
         "import numpy as np",
         "frequencies = [0.5, 0.75, 1.0, 1.25]",
@@ -87,9 +84,7 @@ def test_update_extra_resources_for_holoviews():
         "curve_dict = {f: sine_curve(0, f) for f in frequencies}",
         "hmap = hv.HoloMap(curve_dict, kdims='frequency')",
         "hmap"])
-    cell = nbformat.v4.new_code_cell(source)
-    run_cell(cell)
-    data = cell.outputs[0].data
+    data = execute(code)[0]['data']
     plain = ':HoloMap   [frequency]\n   :Curve   [x]   (y)'
     assert data['text/plain'] == plain
 
