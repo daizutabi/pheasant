@@ -24,6 +24,8 @@ nav:
   - About:
     - Release Notes: about/release-notes.md
     - License: about/license.md
+  - Test:
+    - Script: test/script.py
 
 markdown_extensions:
   - admonition

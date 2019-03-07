@@ -10,3 +10,4 @@ number:
   ignore_pattern: ".*about.*"
 code:
 macro:
+script:

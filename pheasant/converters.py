@@ -30,6 +30,11 @@ def update_pheasant_config(path: str = '',
                            config: Optional[dict] = None) -> None:
     """Update phesant config with a YAML file or config dict.
 
+    This function is called from a Plugin to configure Pheasant.
+
+    The `pheasant_config` is the master config dictionary and the settings
+    will be distributed to each converter later when it enables.
+
     Parameters
     ----------
     path
@@ -53,6 +58,10 @@ def update_pheasant_config(path: str = '',
 def update_page_config(config, source_file: str) -> None:
     """Update page config.
 
+    This function is called in order to set extra resources such as
+    css, javascript. Eash page has its own extra resources which the
+    page actually requires.
+
     Parameters
     ----------
     config
@@ -68,6 +77,11 @@ def update_page_config(config, source_file: str) -> None:
 
 
 def update_converter_config(converter, config: dict) -> None:
+    """Update each converter's specific config.
+
+    Configuration is made once for each converter. After configuration,
+    the `initialize` function is invoked if the converter has it.
+    """
     if not hasattr(converter, 'config'):
         converter.config = {}
 
@@ -102,6 +116,13 @@ def update_converter_config(converter, config: dict) -> None:
 
 
 def convert(source: str, config: Optional[dict] = None) -> str:
+    """Convert the source file by the sequential conveter chain.
+
+    This function is the starting point of conversion.
+    From this function, each convert function of converters is called.
+    Then finally the results are returned to the plugin for further
+    processing.
+    """
     logger.debug("[Pheasant] Start conversion: %s", source)
     pheasant_config['source_file'] = source
     source = read_source(source)  # Now source is always `str`.

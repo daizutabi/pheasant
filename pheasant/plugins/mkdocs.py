@@ -20,6 +20,9 @@ class PheasantPlugin(BasePlugin):
         return server
 
     def on_config(self, config):
+        from mkdocs.utils import markdown_extensions
+        markdown_extensions.append('.py')
+
         logger.debug('[Pheasant] Pheasant plugin enabled.')
         path = os.path.dirname(config['config_file_path'])
         path = os.path.join(path, 'pheasant.yml')
@@ -51,7 +54,6 @@ class PheasantPlugin(BasePlugin):
         default loading from a file will be performed.
         """
         logger.info(f'[Pheasant] Converting: {page.file.src_path}')
-
         source = convert(page.file.abs_src_path)
 
         return source

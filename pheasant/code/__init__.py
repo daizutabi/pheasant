@@ -1,4 +1,4 @@
-from .config import config
-from .converter import convert, initialize
+from pheasant.code.config import config
+from pheasant.code.converter import convert, initialize
 
 __all__ = ['config', 'convert', 'initialize']
