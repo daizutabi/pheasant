@@ -1,13 +1,13 @@
 import re
-from typing import Generator
+from typing import Iterator
 
-from pheasant.script.config import config, Cell
+from pheasant.script.config import Cell, config
 from pheasant.script.splitter import cell_splitter
 
 
 def initialize():
-    config['OPTIONS_PATTERN'] = re.compile(config['option_pattern'],
-                                           re.MULTILINE)
+    config['OPTION_PATTERN'] = re.compile(config['option_pattern'],
+                                          re.MULTILINE)
     config['SEPARATOR_PATTERN'] = re.compile(config['separator_pattern'])
     config['COMMENT_PATTERN'] = re.compile(config['comment_pattern'],
                                            re.MULTILINE)
@@ -23,7 +23,7 @@ def convert(source: str) -> str:
         return source
 
 
-def cell_generator(source: str) -> Generator[str, None, None]:
+def cell_generator(source: str) -> Iterator[str]:
     for cell_type, content in cell_splitter(source):
         if cell_type == Cell.MARKDOWN:
             yield re.sub(config['COMMENT_PATTERN'], '', content)

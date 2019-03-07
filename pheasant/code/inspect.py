@@ -1,6 +1,6 @@
 import os
 import re
-from typing import Generator
+from typing import Iterator
 
 from pheasant.code.config import config
 from pheasant.jupyter.renderer import execute_and_render
@@ -14,7 +14,7 @@ def convert(source: str) -> str:
     return source
 
 
-def render(source: str) -> Generator[str, None, None]:
+def render(source: str) -> Iterator[str]:
     pattern_escape = r'(```(.*?)```)|(~~~(.*?)~~~)'
     pattern_code = config['code_pattern']
 

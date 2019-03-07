@@ -1,14 +1,14 @@
 """A parse module for detecting valid pattern blocks."""
 
 import re
-from typing import Callable, Generator, List, Match, Optional, Tuple, Union
+from typing import Callable, Iterator, List, Match, Optional, Tuple, Union
 
 FenceTuple = Tuple[str, str, List[str]]  # language, code, options
 Compound = Union[Match, FenceTuple, str]
 
 
 def splitter(pattern: str, source: str, option=re.MULTILINE
-             ) -> Generator[Union[Match, str], None, None]:
+             ) -> Iterator[Union[Match, str]]:
     """Generate splitted text from `source` by `pattern`."""
     re_compile = re.compile(pattern, option)
 
@@ -29,7 +29,7 @@ def splitter(pattern: str, source: str, option=re.MULTILINE
 def escaped_splitter(pattern: str, pattern_escape: str, source: str,
                      option=re.MULTILINE,
                      option_escape=re.MULTILINE | re.DOTALL,
-                     escape_generator=None) -> Generator[Compound, None, None]:
+                     escape_generator=None) -> Iterator[Compound]:
     for splitted in splitter(pattern_escape, source, option_escape):
         if isinstance(splitted, str):
             yield from splitter(pattern, splitted, option)
@@ -43,7 +43,7 @@ def escaped_splitter(pattern: str, pattern_escape: str, source: str,
 def escaped_splitter_join(pattern: str, pattern_escape: str, source: str,
                           option=re.MULTILINE,
                           option_escape=re.MULTILINE | re.DOTALL
-                          ) -> Generator[Union[Match, str], None, None]:
+                          ) -> Iterator[Union[Match, str]]:
     """Join escaped string with normal string."""
     text = ''
     for splitted in escaped_splitter(pattern, pattern_escape, source, option,
@@ -62,7 +62,7 @@ def escaped_splitter_join(pattern: str, pattern_escape: str, source: str,
 
 def fenced_code_splitter(
         source: str, escape: Optional[Callable[[str, str, list], str]] = None
-        ) -> Generator[Union[FenceTuple, str], None, None]:
+        ) -> Iterator[Union[FenceTuple, str]]:
     """Generate splitted markdown and jupyter notebook cell from `source`.
 
     The type of generated value is str or tuple.
@@ -122,8 +122,7 @@ def from_match(match: Match) -> FenceTuple:
     return language, code, options
 
 
-def escape_generator(match: Match) -> Generator[Union[FenceTuple, str],
-                                                None, None]:
+def escape_generator(match: Match) -> Iterator[Union[FenceTuple, str]]:
     """Generate a copy of escaped fenced code.
 
     Input:

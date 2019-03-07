@@ -1,6 +1,6 @@
 import ast
 import re
-from typing import Generator, List, Tuple
+from typing import Iterator, List, Tuple
 
 from pheasant.script.config import Cell
 
@@ -9,7 +9,7 @@ AST_PATTERN = re.compile(r'<_ast\.(.+?) ')
 Element = Tuple[str, int, int]
 
 
-def cell_splitter(source: str) -> Generator[Tuple[Cell, str], None, None]:
+def cell_splitter(source: str) -> Iterator[Tuple[Cell, str]]:
 
     lines = source.split('\n')
 
@@ -31,11 +31,15 @@ def cell_splitter(source: str) -> Generator[Tuple[Cell, str], None, None]:
                 yield Cell.MARKDOWN, content(begin, end)
 
 
-def source_splitter(source: str) -> Generator[Element, None, None]:
+def source_splitter(source: str) -> Iterator[Element]:
     node = ast.parse(source)
     names = [ast_name(obj) for obj in node.body]
-
     lines = source.split('\n')
+
+    if not names:  # Markdown only.
+        yield from markdown_trimmer(lines, 0, len(lines) - 1)
+        return
+
     first_linenos = [obj.lineno - 1 for obj in node.body]  # 0-indexed
     last_linenos = [find_last_lineno(lines, no - 1)
                     for no in first_linenos[1:] + [len(lines) - 1]]
@@ -53,7 +57,7 @@ def source_splitter(source: str) -> Generator[Element, None, None]:
 
 
 def markdown_trimmer(lines: List[str], first: int,
-                     last: int) -> Generator[Element, None, None]:
+                     last: int) -> Iterator[Element]:
     begin = end = -1
     for cursor in range(first, last + 1):
         if lines[cursor]:

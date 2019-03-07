@@ -1,5 +1,5 @@
 import re
-from typing import Generator, Optional, Tuple, Union
+from typing import Iterator, Optional, Tuple, Union
 
 from pheasant.markdown.converter import markdown_convert
 from pheasant.markdown.splitter import escaped_splitter_join
@@ -31,7 +31,7 @@ def convert(source: str, label: Optional[dict] = None,
 
 
 def render(source: str, label: dict,
-           page_index: Union[int, list] = 1) -> Generator[str, None, None]:
+           page_index: Union[int, list] = 1) -> Iterator[str]:
     splitter = header_splitter(source)
     for splitted in splitter:
         if isinstance(splitted, str):
@@ -97,7 +97,7 @@ def render(source: str, label: dict,
                 yield rest
 
 
-def header_splitter(source: str) -> Generator[Union[str, dict], None, None]:
+def header_splitter(source: str) -> Iterator[Union[str, dict]]:
     """
     Generate splitted markdown header and body text from `source`.
 

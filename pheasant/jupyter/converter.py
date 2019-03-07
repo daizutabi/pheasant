@@ -1,5 +1,5 @@
 import os
-from typing import Generator
+from typing import Iterator
 
 from jinja2 import Environment, FileSystemLoader
 
@@ -38,7 +38,7 @@ def convert(source: str) -> str:
     return ''.join(code_runner(source))
 
 
-def code_runner(source: str) -> Generator[str, None, None]:
+def code_runner(source: str) -> Iterator[str]:
     """Generate markdown string with outputs after running the source.
 
     Parameters

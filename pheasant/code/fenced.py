@@ -1,4 +1,4 @@
-from typing import Generator, List
+from typing import Iterator, List
 
 from pheasant.markdown.converter import markdown_convert
 from pheasant.markdown.splitter import fenced_code_splitter
@@ -8,7 +8,7 @@ def convert(source: str) -> str:
     return ''.join(render(source))
 
 
-def render(source: str) -> Generator[str, None, None]:
+def render(source: str) -> Iterator[str]:
     """Add class to <div> of fenced code block.
 
     - Input:

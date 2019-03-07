@@ -1,5 +1,5 @@
 import re
-from typing import Dict, Generator
+from typing import Dict, Iterator
 
 from pheasant.macro.config import config
 from pheasant.utils import read_source
@@ -18,7 +18,7 @@ def convert_macro(source: str) -> str:
     return '\n'.join(render(source))
 
 
-def render(source: str) -> Generator[str, None, None]:
+def render(source: str) -> Iterator[str]:
     macros: Dict[str, str] = {}
 
     def replace(m):

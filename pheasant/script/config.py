@@ -12,7 +12,7 @@ config: Dict[str, Any] = {
     'comment_pattern': r'^# ',
 
     # re.compiled object.
-    'OPTIONS_PATTERN': None,
+    'OPTION_PATTERN': None,
 
     # re.compiled object
     'SEPARATOR_PATTERN': None,

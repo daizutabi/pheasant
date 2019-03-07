@@ -1,4 +1,4 @@
-from typing import Generator
+from typing import Iterator
 
 from pheasant.markdown.splitter import escaped_splitter
 from pheasant.number.config import config
@@ -8,7 +8,7 @@ def convert(source: str, label: dict) -> str:
     return ''.join(render(source, label))
 
 
-def render(source: str, label: dict) -> Generator[str, None, None]:
+def render(source: str, label: dict) -> Iterator[str]:
     """
     Generate splitted reference and body text from `source`.
 
