@@ -33,7 +33,7 @@
 
 {%- macro output_display(output, display) -%}
   {%- if display -%}
-    {{ '\n\n```display .pheasant-jupyter-display\n' }}
+    {{ '```display .pheasant-jupyter-display\n' }}
   {%- endif -%}
   {%- if output.type == 'error' -%}
     {{ output.traceback[-1] }}
@@ -66,6 +66,6 @@
     {%- endif -%}
   {%- endfor -%}
   {%- if display -%}
-    {{ '\n```\n\n' }}
+    {{ '\n```\n' }}
   {%- endif -%}
 {%- endmacro -%}

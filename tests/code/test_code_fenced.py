@@ -6,14 +6,14 @@ def test_convert():
     assert convert(source) == source
 
     source = '```python\nprint(1)\n```\n'
-    answer = '<div>\n<pre><code class="python">print(1)\n</code></pre>\n</div>'
+    answer = '<div>\n<pre><code class="python">print(1)\n</code></pre></div>\n'
     assert convert(source) == answer
 
     source = '```display .test\n$$x=1$$\n```\n'
-    assert convert(source) == '<div class="test">\n<p>$$x=1$$\n</p>\n</div>\n'
+    assert convert(source) == '<div class="test">\n<p>$$x=1$$</p></div>\n'
 
     source = '```display .test\na & b\n```\n'
-    answer = '<div class="test">\n<p>a &amp; b</p>\n</div>\n'
+    answer = '<div class="test">\n<p>a &amp; b</p></div>\n'
     assert convert(source) == answer
 
     source = '~~~\n```python\nprint(1)\n```\n~~~\n'
@@ -21,12 +21,12 @@ def test_convert():
     answer = '<div class="pheasant-fenced-code pheasant-source">\n<pre>'
     assert output.startswith(answer)
     answer = ('"markdown"><span class="pheasant-backquote">```</span>python\n'
-              'print(1)\n<span class="pheasant-backquote">```</span>\n</code>'
-              '</pre>\n</div>\n')
+              'print(1)\n<span class="pheasant-backquote">```</span></code>'
+              '</pre></div>\n')
     assert output.endswith(answer)
 
 
 def test_escaped_code():
     answer = ('<div class="class1 class2">\n'
-              '<pre><code class="language">source</code></pre>\n</div>\n')
+              '<pre><code class="language">source</code></pre></div>\n')
     assert escaped_code('language', 'source', ['.class1', '.class2']) == answer

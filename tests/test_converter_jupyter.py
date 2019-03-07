@@ -1,6 +1,7 @@
 import os
 
 import pytest
+
 from pheasant import jupyter
 from pheasant.converters import (get_converter_name, get_converters,
                                  set_converters, update_converter_config)

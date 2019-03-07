@@ -19,6 +19,8 @@ def test_fenced_code_splitter_copy():
         if k == 1:
             assert output == "~~~\n```python\nprint('abc')\n```\n~~~\n\n"
         if k == 2:
-            assert output == ('python', "print('abc')\n", [])
+            assert output == ('python', "print('abc')", [])
         if k == 3:
             assert output == '\nend\n'
+
+        output

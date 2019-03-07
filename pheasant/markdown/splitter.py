@@ -3,22 +3,22 @@
 import re
 from typing import Callable, Generator, List, Match, Optional, Tuple, Union
 
+FenceTuple = Tuple[str, str, List[str]]  # language, code, options
+Compound = Union[Match, FenceTuple, str]
 
-def splitter(
-    pattern: str,
-    source: str,
-    option=re.MULTILINE
-) -> Generator[Union[str, Match], None, None]:
+
+def splitter(pattern: str, source: str, option=re.MULTILINE
+             ) -> Generator[Union[Match, str], None, None]:
     """Generate splitted text from `source` by `pattern`."""
     re_compile = re.compile(pattern, option)
 
     while True:
-        m = re_compile.search(source)
-        if m:
-            start, end = m.span()
+        match = re_compile.search(source)
+        if match:
+            start, end = match.span()
             if start:
                 yield source[:start]
-            yield m
+            yield match
             source = source[end:]
         else:
             if source:
@@ -26,31 +26,24 @@ def splitter(
             break
 
 
-def escaped_splitter(
-    pattern: str,
-    pattern_escape: str,
-    source: str,
-    option=re.MULTILINE,
-    option_escape=re.MULTILINE | re.DOTALL,
-    escape_generator=None,
-) -> Generator[Union[str, Match, Tuple[str, str, List[str]]], None, None]:
+def escaped_splitter(pattern: str, pattern_escape: str, source: str,
+                     option=re.MULTILINE,
+                     option_escape=re.MULTILINE | re.DOTALL,
+                     escape_generator=None) -> Generator[Compound, None, None]:
     for splitted in splitter(pattern_escape, source, option_escape):
-        if not isinstance(splitted, str):
+        if isinstance(splitted, str):
+            yield from splitter(pattern, splitted, option)
+        else:
             if escape_generator:
                 yield from escape_generator(splitted)
             else:
                 yield splitted.group()
-        else:
-            yield from splitter(pattern, splitted, option)
 
 
-def escaped_splitter_join(
-    pattern: str,
-    pattern_escape: str,
-    source: str,
-    option=re.MULTILINE,
-    option_escape=re.MULTILINE | re.DOTALL
-) -> Generator[Union[str, Match], None, None]:
+def escaped_splitter_join(pattern: str, pattern_escape: str, source: str,
+                          option=re.MULTILINE,
+                          option_escape=re.MULTILINE | re.DOTALL
+                          ) -> Generator[Union[Match, str], None, None]:
     """Join escaped string with normal string."""
     text = ''
     for splitted in escaped_splitter(pattern, pattern_escape, source, option,
@@ -68,23 +61,18 @@ def escaped_splitter_join(
 
 
 def fenced_code_splitter(
-        source: str,
-        comment_option: bool = True,
-        escape: Optional[Callable[[str, str, list], str]] = None,
-) -> Generator[Union[str, Tuple[str, str, List[str]]], None, None]:
+        source: str, escape: Optional[Callable[[str, str, list], str]] = None
+        ) -> Generator[Union[FenceTuple, str], None, None]:
     """Generate splitted markdown and jupyter notebook cell from `source`.
 
     The type of generated value is str or tuple.
     If str, it is markdown.
-    If tuple, it is (language, source, option). See below:
-    If `comment_option` is True, the first line starting with `##` is
-    assumed extra option.
+    If tuple, it is (language, code, options). See below:
 
     source:
         <markdown>
 
         ```<language> <option1>, <option2>, ...
-        ## <option>
         <source>
         ```
         ...
@@ -102,10 +90,8 @@ def fenced_code_splitter(
     """
 
     from pheasant.jupyter.client import select_kernel_name
-    pattern_escape = r'^~~~(\S*)(.*?)\n(.*?\n)~~~\n'
-    pattern_source = r'^```(\S+)(.*?)\n(.*?\n)```\n'
-    # pattern_escape = r'^~~~(\S*)(.*?)\n(.*?)\n~~~\n'
-    # pattern_source = r'^```(\S+)(.*?)\n(.*?)\n```\n'
+    pattern_escape = r'^~~~(\S*)(.*?)\n(.*?)\n~~~\n'
+    pattern_source = r'^```(\S+)(.*?)\n(.*?)\n```\n'
     re_option = re.DOTALL | re.MULTILINE
 
     for splitted in escaped_splitter(
@@ -117,39 +103,43 @@ def fenced_code_splitter(
             if escape:
                 match = re.match(pattern_escape, splitted, flags=re_option)
                 if match:
-                    yield escape(*from_match(match, False))
+                    yield escape(*from_match(match))
                     continue
             yield splitted
         else:
-            language, code, options = from_match(splitted, comment_option)
+            language, code, options = from_match(splitted)
             if select_kernel_name(language) is None and language != 'display':
                 yield splitted.group()
             else:
                 yield language, code, options
 
 
-def from_match(match: Match, comment_option: bool
-               ) -> Tuple[str, str, List[str]]:
-    language = match.group(1)
-    source = match.group(3)
-    options = match.group(2)
-
-    # Phesant's special option syntax.
-    if comment_option and source.startswith('## '):
-        extra_options = source[3:source.find('\n')]
-        options = ' '.join([options, extra_options])
-
+def from_match(match: Match) -> FenceTuple:
+    """Get (language:str, code:str, options:List[str]) from a Match object."""
+    language, options, code = match.groups()
     options = [option.strip() for option in options.split(' ')]
     options = [option for option in options if option]
-    return language, source, options
+    return language, code, options
 
 
-def escape_generator(
-    match: Match
-) -> Generator[Union[str, Tuple[str, str, List[str]]], None, None]:
+def escape_generator(match: Match) -> Generator[Union[FenceTuple, str],
+                                                None, None]:
+    """Generate a copy of escaped fenced code.
+
+    Input:
+        ~~~copy
+        ```python inline
+        print(1)
+        ```
+        ~~~
+
+    Yields:
+        1st: '~~~\n```python inline\nprint(1)\n```\n\n'
+        2nd: ('python', 'print(1)', [inline])
+    """
     if match.group(1) != 'copy':
         yield match.group()
     else:
-        source = match.group(3)
-        yield f'~~~\n{source}~~~\n\n'
-        yield from fenced_code_splitter(source)
+        code = match.group(3)
+        yield f'~~~\n{code}\n~~~\n\n'
+        yield from fenced_code_splitter(code + '\n')

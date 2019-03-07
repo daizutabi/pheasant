@@ -28,27 +28,26 @@ def render(source: str) -> Generator[str, None, None]:
             yield div(*splitted)
 
 
-def div(language: str, source: str, options: List[str],
-        escaped: bool = False) -> str:
+def div(language: str, code: str, options: List[str]) -> str:
     """Convert fenced code into html with <div> classes."""
     cls = ' '.join(option[1:] for option in options if option.startswith('.'))
 
     if language == 'display':  # special lang to display figures, tables, etc.
-        if source.startswith('$$'):  # for latex
-            source = f'<p>{source}</p>'
+        if code.startswith('$$'):  # for latex
+            code = f'<p>{code}</p>'
         else:
-            source = markdown_convert(source)
-        source = f'<div class="{cls}">\n{source}\n</div>\n'
-        return source
+            code = markdown_convert(code)
+        code = f'<div class="{cls}">\n{code}</div>\n'
+        return code
 
-    source = f'```{language}\n{source}```'  # No new line after {source}.
-    source = markdown_convert(source)
+    code = f'```{language}\n{code}\n```'
+    code = markdown_convert(code)
     if cls:
-        source = f'<div class="{cls}">\n{source}\n</div>'
+        code = f'<div class="{cls}">\n{code}</div>\n'
     else:
-        source = f'<div>\n{source}\n</div>'
+        code = f'<div>\n{code}</div>\n'
 
-    return source
+    return code
 
 
 def escaped_code(language: str, source: str, options: List[str]) -> str:
@@ -73,5 +72,5 @@ def escaped_code(language: str, source: str, options: List[str]) -> str:
     escaped_backquotes = '<span class="pheasant-backquote">```</span>'
     source = source.replace('```', escaped_backquotes)
     source = (f'<div class="{cls}">\n<pre><code class="{language}">'
-              f'{source}</code></pre>\n</div>\n')
+              f'{source}</code></pre></div>\n')
     return source
