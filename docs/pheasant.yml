@@ -1,9 +1,9 @@
 jupyter:
   kernel_name:
     python: python3
-  sys_paths:
+  extra_paths:
     - scripts
-  import_modules:
+  extra_modules:
     - example
 number:
   level: 0

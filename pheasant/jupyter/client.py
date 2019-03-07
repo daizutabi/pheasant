@@ -1,7 +1,7 @@
 """A module provides jupyter client interface."""
-
 import atexit
 import logging
+import re
 from typing import Any, Dict, List, Optional
 
 import jupyter_client
@@ -67,7 +67,11 @@ def get_kernel_manager(kernel_name: str) -> KernelManager:
     logger.info(f'[Pheasant] Starting kernel: "{kernel_name}".')
     kernel_manager.start_kernel()
 
-    atexit.register(kernel_manager.shutdown_kernel)
+    def shutdown_kernel():
+        logger.info(f'[Pheasant] Shutting down kernel: "{kernel_name}".')
+        kernel_manager.shutdown_kernel()
+
+    atexit.register(shutdown_kernel)
     kernel_managers[kernel_name] = kernel_manager
     return kernel_manager
 
@@ -126,7 +130,23 @@ def output_from_msg(msg) -> Optional[dict]:
     elif msg_type == 'stream':
         return dict(type=msg_type, name=content['name'], text=content['text'])
     elif msg_type == 'error':
+        traceback = [strip_ansi(tr) for tr in content['traceback']]
         return dict(type=msg_type, ename=content['ename'],
-                    evalue=content['evalue'], traceback=content['traceback'])
+                    evalue=content['evalue'], traceback=traceback)
     else:
         return None
+
+
+# from nbconvert.filters.ansi
+_ANSI_RE = re.compile('\x1b\\[(.*?)([@-~])')
+
+
+def strip_ansi(source):
+    """
+    Remove ANSI escape codes from text.
+    Parameters
+    ----------
+    source : str
+        Source to remove the ANSI from
+    """
+    return _ANSI_RE.sub('', source)

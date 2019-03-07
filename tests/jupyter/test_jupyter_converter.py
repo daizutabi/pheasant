@@ -1,5 +1,6 @@
 from pheasant.jupyter.config import config
-from pheasant.jupyter.converter import code_runner, initialize, reload_modules
+from pheasant.jupyter.converter import (code_runner, initialize,
+                                        reload_extra_modules)
 
 
 def test_code_runner():
@@ -25,5 +26,5 @@ def test_code_runner():
 
 
 def test_reload_modules():
-    config['import_modules'] = ['pandas']
-    assert reload_modules() is None
+    config['extra_modules'] = ['pandas']
+    assert reload_extra_modules() is None

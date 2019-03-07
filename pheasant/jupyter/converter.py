@@ -3,7 +3,6 @@ from typing import Generator
 
 from jinja2 import Environment, FileSystemLoader
 
-import pheasant
 from pheasant.jupyter.client import execute
 from pheasant.jupyter.config import config
 from pheasant.jupyter.preprocess import (preprocess_fenced_code,
@@ -15,8 +14,8 @@ from pheasant.markdown.splitter import fenced_code_splitter
 
 def initialize() -> None:
     set_template()
-    extra_paths_insert()
-    import_modules()
+    insert_extra_paths()
+    import_extra_modules()
     run_init_codes()
 
 
@@ -33,7 +32,7 @@ def convert(source: str) -> str:
     results : str
         Markdown source with running results
     """
-    reload_modules()
+    reload_extra_modules()
 
     config['run_counter'] = 0  # used in the cache module. MOVE!!
     return ''.join(code_runner(source))
@@ -86,7 +85,7 @@ def set_template() -> None:
         config[prefix + '_template'] = env.get_template(template_file)
 
 
-def extra_paths_insert() -> None:
+def insert_extra_paths() -> None:
     code = (f'import sys\n'
             f'for path in {config["extra_paths"]}:\n'
             f'    if path not in sys.path:\n'
@@ -94,7 +93,7 @@ def extra_paths_insert() -> None:
     execute(code)
 
 
-def import_modules() -> None:
+def import_extra_modules() -> None:
     modules = ', '.join(config['extra_modules']
                         + ['pheasant.jupyter.display', 'importlib', 'inspect'])
     execute(f'import {modules}')
@@ -105,6 +104,6 @@ def run_init_codes() -> None:
     execute('\n'.join(config['init_codes']))
 
 
-def reload_modules() -> None:
+def reload_extra_modules() -> None:
     for module in config['extra_modules']:
         execute('importlib.reload(pandas)')

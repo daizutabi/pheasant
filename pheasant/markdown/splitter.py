@@ -104,6 +104,8 @@ def fenced_code_splitter(
     from pheasant.jupyter.client import select_kernel_name
     pattern_escape = r'^~~~(\S*)(.*?)\n(.*?\n)~~~\n'
     pattern_source = r'^```(\S+)(.*?)\n(.*?\n)```\n'
+    # pattern_escape = r'^~~~(\S*)(.*?)\n(.*?)\n~~~\n'
+    # pattern_source = r'^```(\S+)(.*?)\n(.*?)\n```\n'
     re_option = re.DOTALL | re.MULTILINE
 
     for splitted in escaped_splitter(

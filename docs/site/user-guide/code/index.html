@@ -9,8 +9,9 @@
   <meta name="author" content="daizutabi">
   <link rel="shortcut icon" href="../../img/favicon.ico">
   <title>Code - Pheasant</title>
-
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700" type="text/css"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700" type="text/css"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Slab:400,700" type="text/css"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata:400,700" type="text/css"/>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/tonsky/FiraCode@1.206/distr/fira_code.css" type="text/css"/>
   <link rel="stylesheet" href="../../css/theme.css" type="text/css"/>
   <link rel="stylesheet" href="../../css/theme_extra.css" type="text/css"/>
@@ -23,41 +24,28 @@
     var mkdocs_page_input_path = "user-guide\\code.md";
     var mkdocs_page_url = "/user-guide/code/";
   </script>
-  
   <script src="../../js/jquery-2.1.1.min.js"></script>
   <script src="../../js/modernizr-2.8.3.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/languages/yaml.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/languages/python.min.js"></script>
-  
   <script>hljs.initHighlightingOnLoad();</script>
-  
-  
-  
 </head>
 
-<body class="wy-body-for-nav" role="document">
-
+<body class="wy-body-for-nav">
   <div class="wy-grid-for-nav">
-
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
       <div class="wy-side-nav-search">
-        <a href="../.." class="icon icon-home"> Pheasant</a>
-        
+        <a href="../.." class="icon icon-home">Pheasant</a>
+	      
       </div>
-
-      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-	<ul class="current">
-	  
-          
-            <li class="toctree-l1">
-		
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" aria-label="main navigation"><ul class="current">
+          <li class="toctree-l1">
+		        
     <a class="" href="../..">Home</a>
-	    </li>
-          
-            <li class="toctree-l1">
-		
+	        </li>
+          <li class="toctree-l1">
+		        
     <span class="caption-text">User Guide</span>
     <ul class="subnav">
                 <li class="">
@@ -69,7 +57,7 @@
     <a class="current" href="./">Code</a>
     <ul class="subnav">
             
-    <li class="toctree-l3"><a href="#3-code">3 Code</a></li>
+    <li class="toctree-l3"><a href="#3-code">3 Code</a>
     
         <ul>
         
@@ -79,14 +67,14 @@
         
         </ul>
     
+    </li>
 
     </ul>
                 </li>
     </ul>
-	    </li>
-          
-            <li class="toctree-l1">
-		
+	        </li>
+          <li class="toctree-l1">
+		        
     <span class="caption-text">About</span>
     <ul class="subnav">
                 <li class="">
@@ -98,8 +86,7 @@
     <a class="" href="../../about/license/">License</a>
                 </li>
     </ul>
-	    </li>
-          
+	        </li>
         </ul>
       </div>
       &nbsp;
@@ -108,7 +95,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
         <a href="../..">Pheasant</a>
       </nav>
@@ -226,9 +213,9 @@ theme:
 <pre><code class="yaml">jupyter:
   kernel_name:
     python: python3
-  sys_paths:
+  extra_paths:
     - scripts
-  import_modules:
+  extra_modules:
     - example
 number:
   level: 0
@@ -250,11 +237,11 @@ sys.path[:5]
 </div>
 
 <div class="pheasant-fenced-code pheasant-output">
-<pre><code class="python">['c:/users/daizu/documents/github/pheasant',
- 'scripts',
+<pre><code class="python">['scripts',
  '',
  'C:\\Users\\daizu\\Documents\\GitHub\\pheasant\\docs',
- 'C:\\Users\\daizu\\Miniconda3\\envs\\daizu\\python37.zip']
+ 'C:\\Users\\daizu\\Miniconda3\\envs\\daizu\\python37.zip',
+ 'C:\\Users\\daizu\\Miniconda3\\envs\\daizu\\DLLs']
 </code></pre>
 </div>
 
@@ -311,6 +298,15 @@ def sub(x, y):
 </div>
 
 <p>With this functionality, you can guarantee the reproducible relation between your source code and results easily.</p>
+<div class="pheasant-fenced-code pheasant-input">
+<pre><code class="python">1/0
+</code></pre>
+</div>
+
+<div class="pheasant-fenced-code pheasant-error">
+<pre><code class="python">ZeroDivisionError: division by zero
+</code></pre>
+</div>
               
             </div>
           </div>

@@ -66,7 +66,6 @@ def bokeh_to_html(obj, **kwargs) -> Str_And_Dict:
 
     script, div = components(obj)
     resources = {'extra_css': CDN.css_files, 'extra_javascript': CDN.js_files}
-
     return script + div, resources
 
 

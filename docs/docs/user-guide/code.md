@@ -59,3 +59,8 @@ A part of the module can be specified as usual.
 ~~~
 
 With this functionality, you can guarantee the reproducible relation between your source code and results easily.
+
+
+```python
+1/0
+```
