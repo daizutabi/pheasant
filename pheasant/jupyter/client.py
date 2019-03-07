@@ -141,9 +141,10 @@ def output_from_msg(msg) -> Optional[dict]:
 _ANSI_RE = re.compile('\x1b\\[(.*?)([@-~])')
 
 
-def strip_ansi(source):
+def strip_ansi(source: str) -> str:
     """
     Remove ANSI escape codes from text.
+
     Parameters
     ----------
     source : str
