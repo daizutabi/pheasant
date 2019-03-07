@@ -83,10 +83,8 @@ def get_kernel_client(kernel_name: str):
     logger.info(f'[Pheasant] Creating kernel client for "{kernel_name}".')
     kernel_manager = get_kernel_manager(kernel_name)
     kernel_client = kernel_manager.client()
-
     kernel_client.start_channels()
     logger.info(f'[Pheasant] Kernel client ready: {kernel_name}.')
-    kernel_client.allow_stdin = False
     kernel_clients[kernel_name] = kernel_client
     return kernel_client
 
@@ -147,7 +145,7 @@ def strip_ansi(source: str) -> str:
 
     Parameters
     ----------
-    source : str
+    source
         Source to remove the ANSI from
     """
     return _ANSI_RE.sub('', source)

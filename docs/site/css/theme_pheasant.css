@@ -215,6 +215,10 @@ table.dataframe tbody td {
   content: "Out:";
   color: #bb9;
 }
+.pheasant-error:before {
+  content: "Err:";
+  color: red;
+}
 .pheasant-code:before {
  content: "";
  color: #9b9;
@@ -230,6 +234,10 @@ table.dataframe tbody td {
 .pheasant-output > pre {
   background-color: #ffd;
   border: 1px solid #ddb;
+}
+.pheasant-error > pre {
+  background-color: #fcc;
+  border: 1px solid red;
 }
 .pheasant-code > pre {
   background-color: #efd;

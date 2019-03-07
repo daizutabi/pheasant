@@ -89,7 +89,7 @@ plt.plot([1, 2])
 ```
 ~~~
 
-The above Markdown source creates a standart stream and a PNG image. You may want to display only the image. You can set `display` option to a fenced code after language description.
+The above Markdown source creates a standard stream and a PNG image. You may want to display only the image. You can set `display` option to a fenced code after language description.
 
 ~~~
 ```python display
