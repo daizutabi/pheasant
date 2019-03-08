@@ -15,6 +15,14 @@
 # Normal Python code is treated as a code cell as you expect. If a comment is not at the
 # begining of line, a code cell can contain comments.
 
+import holoviews as hv
+import matplotlib.pyplot as plt
+from bokeh.plotting import figure
+from mkdocs.plugins import BasePlugin
+
+# Import statements are colleted at the top of module because a linter says they should
+# be here.
+
 
 def add(x: int, y: int) -> int:
     """Add `x` and `y`."""
@@ -33,7 +41,7 @@ def sub(x: int, y: int) -> int:
 # Despite of a Markdown cell, you may want to devide a successive code into separate
 # cells. This can be done by putting a special marker between codes to tell Pheasant
 # your intention. The marker is `# -` [sharp-space-minus] at the begining of lines. In
-# this way you can divide the above two functions into separate cell (regardless of its
+# this way you can divide the above two functions into separate cells (regardless of its
 # usefullness.)
 
 
@@ -49,3 +57,46 @@ def sub2(x: int, y: int) -> int:
 
 
 # (continued)
+
+
+plt.plot([1, 2, 3])
+plot = figure(plot_width=250, plot_height=250)
+plot.circle([1, 2, 3, 4, 5], [1, 3, 0, 2, 4], size=10)
+
+# {{!plot}}
+
+
+curve = hv.Curve(((1, 2), (3, 4)))
+
+# {{!curve}}
+
+
+# ## Internal mechanism
+
+# By defaults, MkDocs processes Markdown files only for pages. This setting are defined
+# in the MkDocs's utility library: `mkdocs.utils.markdown_extensions`. Pheasant plugin
+# updates this setting in the Plugin's `on_config` event function:
+
+
+class PheasantPlugin(BasePlugin):
+    def on_config(self, config):
+        from mkdocs.utils import markdown_extensions
+
+        markdown_extensions.append(".py")
+
+
+# By this setting, MkDocs reads a '.py' file as a Markdown source. Then, Pheasant
+# converts it into a real Markdown formant in order to be processess by other converters
+# later.
+
+
+# ## Comment writing
+
+# In this scheme, we have to write many comments as Markdown cells. But a linter such as
+# pycodestyle doesn't allow us to write a very long comment in one line longer than (for
+# example) 79 characters. This means that we have to write 'Markdown source' with
+# several 'New Line' characters even we are writing 'one' paragraph. In order to
+# overcome this incovenient situation, a comment wrapping pakage was prepared. You can
+# install this package as `pip install pyls-cwrap`. In Atom, if you use `ide-python`,
+# just press [Ctrl]+[Shift]+[C] (Windows, default setting), sequential comments are
+# automatically formatted.
