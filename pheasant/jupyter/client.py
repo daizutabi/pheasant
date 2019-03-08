@@ -9,7 +9,7 @@ from jupyter_client.manager import KernelManager
 
 from pheasant.jupyter.config import config
 
-logger = logging.getLogger('mkdocs')
+logger = logging.getLogger("mkdocs")
 
 kernel_names: Dict[str, list] = {}
 kernel_managers: Dict[str, Any] = {}
@@ -41,18 +41,18 @@ def find_kernel_names() -> Dict[str, list]:
 
 def select_kernel_name(language: str) -> Optional[str]:
     """Select one kernel name for a language."""
-    if language in config['kernel_name']:
-        return config['kernel_name'][language]
+    if language in config["kernel_name"]:
+        return config["kernel_name"][language]
 
     kernel_names = find_kernel_names()
     if language not in kernel_names:
-        config['kernel_name'][language] = None
+        config["kernel_name"][language] = None
         return None
 
     kernel_name = kernel_names[language][0]
-    config['kernel_name'][language] = kernel_name
+    config["kernel_name"][language] = kernel_name
     if len(kernel_names[language]) > 1:
-        logger.warning(f'Multiple kernels are found for {language}.')
+        logger.warning(f"Multiple kernels are found for {language}.")
         logger.warning(f'Use kernel_name "{kernel_name}" for {language}.')
     return kernel_name
 
@@ -84,17 +84,18 @@ def get_kernel_client(kernel_name: str):
     kernel_manager = get_kernel_manager(kernel_name)
     kernel_client = kernel_manager.client()
     kernel_client.start_channels()
-    logger.info(f'[Pheasant] Kernel client ready: {kernel_name}.')
+    logger.info(f"[Pheasant] Kernel client ready: {kernel_name}.")
     kernel_clients[kernel_name] = kernel_client
     return kernel_client
 
 
-def execute(code: str, kernel_name: Optional[str] = None,
-            language: str = 'python') -> List[Dict[str, Any]]:
+def execute(
+    code: str, kernel_name: Optional[str] = None, language: str = "python"
+) -> List[Dict[str, Any]]:
     if kernel_name is None:
         kernel_name = select_kernel_name(language)
         if kernel_name is None:
-            raise ValueError(f'No kernel found for language {language}.')
+            raise ValueError(f"No kernel found for language {language}.")
 
     kernel_client = get_kernel_client(kernel_name)
 
@@ -105,8 +106,7 @@ def execute(code: str, kernel_name: Optional[str] = None,
         if output:
             outputs.append(output)
 
-    kernel_client.execute_interactive(code, allow_stdin=False,
-                                      output_hook=output_hook)
+    kernel_client.execute_interactive(code, allow_stdin=False, output_hook=output_hook)
 
     return outputs
 
@@ -118,25 +118,29 @@ def output_from_msg(msg) -> Optional[dict]:
     -------
     dict: the output as a dictionary.
     """
-    msg_type = msg['msg_type']
-    content = msg['content']
+    msg_type = msg["msg_type"]
+    content = msg["content"]
 
-    if msg_type == 'execute_result':
-        return dict(type=msg_type, data=content['data'])
-    elif msg_type == 'display_data':
-        return dict(type=msg_type, data=content['data'])
-    elif msg_type == 'stream':
-        return dict(type=msg_type, name=content['name'], text=content['text'])
-    elif msg_type == 'error':
-        traceback = [strip_ansi(tr) for tr in content['traceback']]
-        return dict(type=msg_type, ename=content['ename'],
-                    evalue=content['evalue'], traceback=traceback)
+    if msg_type == "execute_result":
+        return dict(type=msg_type, data=content["data"])
+    elif msg_type == "display_data":
+        return dict(type=msg_type, data=content["data"])
+    elif msg_type == "stream":
+        return dict(type=msg_type, name=content["name"], text=content["text"])
+    elif msg_type == "error":
+        traceback = [strip_ansi(tr) for tr in content["traceback"]]
+        return dict(
+            type=msg_type,
+            ename=content["ename"],
+            evalue=content["evalue"],
+            traceback=traceback,
+        )
     else:
         return None
 
 
 # from nbconvert.filters.ansi
-_ANSI_RE = re.compile('\x1b\\[(.*?)([@-~])')
+_ANSI_RE = re.compile("\x1b\\[(.*?)([@-~])")
 
 
 def strip_ansi(source: str) -> str:
@@ -148,4 +152,4 @@ def strip_ansi(source: str) -> str:
     source
         Source to remove the ANSI from
     """
-    return _ANSI_RE.sub('', source)
+    return _ANSI_RE.sub("", source)

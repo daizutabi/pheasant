@@ -15,7 +15,7 @@ def convert(source: str) -> str:
 
 
 def convert_macro(source: str) -> str:
-    return '\n'.join(render(source))
+    return "\n".join(render(source))
 
 
 def render(source: str) -> Iterator[str]:
@@ -23,11 +23,11 @@ def render(source: str) -> Iterator[str]:
 
     def replace(m):
         macro = m.group(1)
-        return macros.get(macro, 'XXX')
+        return macros.get(macro, "XXX")
 
-    re_match = re.compile('^' + config['tag_pattern'] + ':(.+)$')
-    re_sub = re.compile(config['tag_pattern'])
-    lines = source.split('\n')
+    re_match = re.compile("^" + config["tag_pattern"] + ":(.+)$")
+    re_sub = re.compile(config["tag_pattern"])
+    lines = source.split("\n")
     for line in lines:
         m = re_match.match(line)
         if m:

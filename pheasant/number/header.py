@@ -6,8 +6,9 @@ from pheasant.markdown.splitter import escaped_splitter_join
 from pheasant.number.config import config
 
 
-def convert(source: str, label: Optional[dict] = None,
-            page_index: Union[int, list] = 1) -> Tuple[str, dict]:
+def convert(
+    source: str, label: Optional[dict] = None, page_index: Union[int, list] = 1
+) -> Tuple[str, dict]:
     """
     Convert markdown string or file into markdown with section number_listing.
 
@@ -26,72 +27,68 @@ def convert(source: str, label: Optional[dict] = None,
         Markdown source
     """
     label = {} if label is None else label
-    source = '\n\n'.join(render(source, label, page_index=page_index))
+    source = "\n\n".join(render(source, label, page_index=page_index))
     return source, label
 
 
-def render(source: str, label: dict,
-           page_index: Union[int, list] = 1) -> Iterator[str]:
+def render(source: str, label: dict, page_index: Union[int, list] = 1) -> Iterator[str]:
     splitter = header_splitter(source)
     for splitted in splitter:
         if isinstance(splitted, str):
             yield splitted
             continue
 
-        kind = splitted['kind']
-        if kind == 'header':
-            splitted['prefix'] = '#' * len(splitted['number_list'])
+        kind = splitted["kind"]
+        if kind == "header":
+            splitted["prefix"] = "#" * len(splitted["number_list"])
         else:
             default_prefix = kind[0].upper() + kind[1:]
-            prefix = config['kind_prefix'].get(kind, default_prefix)
-            splitted['prefix'] = prefix
+            prefix = config["kind_prefix"].get(kind, default_prefix)
+            splitted["prefix"] = prefix
 
-        number_list = normalize_number_list(kind, splitted['number_list'],
-                                            page_index)
-        splitted['number_list'] = number_list
+        number_list = normalize_number_list(kind, splitted["number_list"], page_index)
+        splitted["number_list"] = number_list
 
-        cls = config['class'].format(kind=kind)
-        splitted['class'] = cls
+        cls = config["class"].format(kind=kind)
+        splitted["class"] = cls
 
-        if splitted['label']:
-            splitted['id'] = config['id'].format(label=splitted['label'])
-            label[splitted['label']] = {
-                'kind': kind,
-                'number_list': splitted['number_list'],
-                'id': splitted['id']
+        if splitted["label"]:
+            splitted["id"] = config["id"].format(label=splitted["label"])
+            label[splitted["label"]] = {
+                "kind": kind,
+                "number_list": splitted["number_list"],
+                "id": splitted["id"],
             }
 
-        if kind == 'header':
-            yield config['template'].render(**splitted, config=config)
+        if kind == "header":
+            yield config["template"].render(**splitted, config=config)
         else:
             # Detect the range of numbered object.
             next_source = next(splitter)
             if not isinstance(next_source, str):
-                raise ValueError('Invalid source')
-            elif next_source.startswith(config['begin_pattern']):
-                next_source = next_source[len(config['begin_pattern']):]
-                content, *rests = next_source.split(config['end_pattern'])
-                rest = config['end_pattern'].join(rests)
+                raise ValueError("Invalid source")
+            elif next_source.startswith(config["begin_pattern"]):
+                next_source = next_source[len(config["begin_pattern"]) :]
+                content, *rests = next_source.split(config["end_pattern"])
+                rest = config["end_pattern"].join(rests)
             else:
-                index = next_source.find('\n\n')
+                index = next_source.find("\n\n")
                 if index == -1:
-                    content, rest = next_source, ''
+                    content, rest = next_source, ""
                 else:
                     content = next_source[:index]
-                    rest = next_source[index + 2:]
+                    rest = next_source[index + 2 :]
 
-            extensions = ['tables'] + config['markdown_extensions']
+            extensions = ["tables"] + config["markdown_extensions"]
             content = markdown_convert(content, extensions=extensions)
 
-            if 'title' in splitted:  # for Math in title
-                title = markdown_convert(
-                    splitted['title'], extensions=extensions)
-                if title.startswith('<p>') and title.endswith('</p>'):
+            if "title" in splitted:  # for Math in title
+                title = markdown_convert(splitted["title"], extensions=extensions)
+                if title.startswith("<p>") and title.endswith("</p>"):
                     title = title[3:-4]
-                splitted['title'] = title
+                splitted["title"] = title
 
-            yield config['template'].render(
-                **splitted, content=content, config=config)
+            yield config["template"].render(**splitted, content=content, config=config)
 
             if rest:
                 yield rest
@@ -118,17 +115,18 @@ def header_splitter(source: str) -> Iterator[Union[str, dict]]:
     """
     number_list = {}
     header_kind = {}
-    for kind in config['kind']:
+    for kind in config["kind"]:
         number_list[kind] = [0] * 6
-        if kind == 'header':
-            header_kind[''] = 'header'
+        if kind == "header":
+            header_kind[""] = "header"
         else:
             header_kind[kind[:3].lower()] = kind
     cursor = 0
 
-    pattern_escape = (r'(```(.*?)```)|(~~~(.*?)~~~)|'
-                      r'(<div class="pheasant(.*?)</div>)')
-    pattern_header = r'^(#+)(\S*?) (.+?)$'
+    pattern_escape = (
+        r"(```(.*?)```)|(~~~(.*?)~~~)|" r'(<div class="pheasant(.*?)</div>)'
+    )
+    pattern_header = r"^(#+)(\S*?) (.+?)$"
 
     splitter = escaped_splitter_join(pattern_header, pattern_escape, source)
     for splitted in splitter:
@@ -143,31 +141,32 @@ def header_splitter(source: str) -> Iterator[Union[str, dict]]:
             depth = len(splitted.group(1)) - 1
             number_list[kind][depth] += 1
             reset = [0] * (len(number_list[kind]) - depth)
-            number_list[kind][depth + 1:] = reset
+            number_list[kind][depth + 1 :] = reset
             title, label = split_label(splitted.group(3))
 
             context = {
-                'kind': kind,
-                'title': title,
-                'label': label,
-                'cursor': cursor,
-                'number_list': number_list[kind][:depth + 1]
+                "kind": kind,
+                "title": title,
+                "label": label,
+                "cursor": cursor,
+                "number_list": number_list[kind][: depth + 1],
             }
             cursor += end
 
             yield context
 
 
-def normalize_number_list(kind: str, number_list: list,
-                          page_index: Union[int, list]) -> list:
+def normalize_number_list(
+    kind: str, number_list: list, page_index: Union[int, list]
+) -> list:
     if isinstance(page_index, list):
-        if kind == 'header':
+        if kind == "header":
             number_list = page_index + number_list[1:]
         else:
             number_list = page_index + number_list
     else:
-        if kind == 'header':
-            number_list = number_list[page_index - 1:]
+        if kind == "header":
+            number_list = number_list[page_index - 1 :]
 
     return number_list
 
@@ -188,8 +187,8 @@ def split_label(text: str) -> Tuple[str, str]:
     >>> split_label('text')
     ('text', '')
     """
-    m = re.search(config['label_pattern'], text)
+    m = re.search(config["label_pattern"], text)
     if not m:
-        return text, ''
+        return text, ""
     else:
-        return text.replace(m.group(), '').strip(), m.group(1)
+        return text.replace(m.group(), "").strip(), m.group(1)

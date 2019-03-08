@@ -4,6 +4,7 @@
 [![Travis][travis-image]][travis-link]
 [![AppVeyor][appveyor-image]][appveyor-link]
 [![Coverage Status][coveralls-image]][coveralls-link]
+[![Code style: black][black-image]][black-link]
 
 [pypi-image]: https://badge.fury.io/py/pheasant.svg
 [pypi-link]: https://pypi.org/project/pheasant
@@ -13,7 +14,8 @@
 [appveyor-link]: https://ci.appveyor.com/project/daizutabi/pheasant
 [coveralls-image]: https://coveralls.io/repos/github/daizutabi/pheasant/badge.svg?branch=master
 [coveralls-link]: https://coveralls.io/github/daizutabi/pheasant?branch=master
-
+[black-image]: https://img.shields.io/badge/code%20style-black-000000.svg
+[black-link]: https://github.com/ambv/black
 
 <!--
 [![Anaconda Version][anaconda-v-image]][anaconda-v-link]

@@ -2,7 +2,7 @@ from typing import Optional
 
 from markdown import Markdown
 
-markdown_converter = Markdown(extensions=['fenced_code', 'tables'])
+markdown_converter = Markdown(extensions=["fenced_code", "tables"])
 
 
 def markdown_convert(source: str, extensions: Optional[str] = None) -> str:

@@ -12,14 +12,14 @@ def main():
     title.text = "Hello, World!"
     subtitle.text = "python-pptx was here!"
 
-    prs.save('test.pptx')
+    prs.save("test.pptx")
 
     prs = Presentation()
     title_only_slide_layout = prs.slide_layouts[5]
     slide = prs.slides.add_slide(title_only_slide_layout)
     shapes = slide.shapes
 
-    shapes.title.text = 'Adding a Table'
+    shapes.title.text = "Adding a Table"
 
     rows = cols = 2
     left = top = Inches(2.0)
@@ -33,11 +33,11 @@ def main():
     table.columns[1].width = Inches(4.0)
 
     # write column headings
-    table.cell(0, 0).text = 'Foo'
-    table.cell(0, 1).text = 'Bar'
+    table.cell(0, 0).text = "Foo"
+    table.cell(0, 1).text = "Bar"
 
     # write body cells
-    table.cell(1, 0).text = 'Baz'
-    table.cell(1, 1).text = 'Qux'
+    table.cell(1, 0).text = "Baz"
+    table.cell(1, 1).text = "Qux"
 
-    prs.save('test.pptx')
+    prs.save("test.pptx")

@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 @click.option("--version", is_flag=True)
 def cli(inputs, format, output, to, verbose, version):
     if version:
-        print(f'Pheasant version: {pheasant.__version__}')
+        print(f"Pheasant version: {pheasant.__version__}")
         return
 
     # FIXME

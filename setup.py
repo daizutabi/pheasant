@@ -5,15 +5,16 @@ from setuptools import find_packages, setup
 
 
 def get_version(package):
-    path = os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                        package, '__init__.py')
-    with open(path, 'r') as file:
+    path = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), package, "__init__.py"
+    )
+    with open(path, "r") as file:
         source = file.read()
     m = re.search(r'__version__ = ["\'](.+)["\']', source)
     if m:
         return m.group(1)
     else:
-        return '0.0.0'
+        return "0.0.0"
 
 
 long_description = (
@@ -25,42 +26,48 @@ long_description = (
 )
 
 setup(
-    name='pheasant',
-    version=get_version('pheasant'),
-    description='Documentation tool for Pelican and MkDocs.',
+    name="pheasant",
+    version=get_version("pheasant"),
+    description="Documentation tool for Pelican and MkDocs.",
     long_description=long_description,
-    url='https://pheasant.daizutabi.net',
-    author='daizutabi',
-    author_email='daizutabi@gmail.com',
-    license='MIT',
-    packages=find_packages(exclude=['tests', 'docs']),
+    url="https://pheasant.daizutabi.net",
+    author="daizutabi",
+    author_email="daizutabi@gmail.com",
+    license="MIT",
+    packages=find_packages(exclude=["tests", "docs"]),
     include_package_data=True,
-    install_requires=['click', 'ipykernel', 'markdown'],
+    install_requires=["click", "ipykernel", "markdown"],
     extras_require={
-        'develop': ['mkdocs', 'pytest', 'pytest-cov', 'matplotlib', 'bokeh',
-                    'holoviews', 'pandas', 'sympy', 'selenium', 'flake8',
-                    'openpyxl', 'python-pptx', 'mypy', 'wbdata']
-        },
-    entry_points={
-        'console_scripts': [
-           'pheasant = pheasant.main:cli',
-        ],
-        'mkdocs.themes': [
-            'rtd-pheasant = pheasant.themes.mkdocs.rtd_pheasant',
-        ],
-        'mkdocs.plugins': [
-            'pheasant = pheasant.plugins.mkdocs:PheasantPlugin',
+        "develop": [
+            "mkdocs",
+            "pytest",
+            "pytest-cov",
+            "matplotlib",
+            "bokeh",
+            "holoviews",
+            "pandas",
+            "sympy",
+            "selenium",
+            "flake8",
+            "openpyxl",
+            "python-pptx",
+            "mypy",
         ]
     },
+    entry_points={
+        "console_scripts": ["pheasant = pheasant.main:cli"],
+        "mkdocs.themes": ["rtd-pheasant = pheasant.themes.mkdocs.rtd_pheasant"],
+        "mkdocs.plugins": ["pheasant = pheasant.plugins.mkdocs:PheasantPlugin"],
+    },
     classifiers=[
-        'Development Status :: 3 - Alpha',
-        'License :: OSI Approved :: MIT License',
-        'Operating System :: OS Independent',
-        'Programming Language :: Python',
-        'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.6',
-        'Programming Language :: Python :: 3.7',
-        'Topic :: Documentation',
+        "Development Status :: 3 - Alpha",
+        "License :: OSI Approved :: MIT License",
+        "Operating System :: OS Independent",
+        "Programming Language :: Python",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
+        "Topic :: Documentation",
     ],
 )
 

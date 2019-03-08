@@ -1,29 +1,40 @@
 import pytest
 
 from pheasant.number import initialize
-from pheasant.number.header import (convert, header_splitter,
-                                    normalize_number_list, render, split_label)
+from pheasant.number.header import (
+    convert,
+    header_splitter,
+    normalize_number_list,
+    render,
+    split_label,
+)
 
 
-@pytest.mark.parametrize('input,text,label', [
-    ('text', 'text', ''),
-    ('text {#label#}', 'text', 'label'),
-    ('{#label#} text', 'text', 'label'),
-])
+@pytest.mark.parametrize(
+    "input,text,label",
+    [
+        ("text", "text", ""),
+        ("text {#label#}", "text", "label"),
+        ("{#label#} text", "text", "label"),
+    ],
+)
 def test_split_label(input, text, label):
     assert split_label(input) == (text, label)
 
 
-@pytest.mark.parametrize('kind,number_list,page_index,output', [
-    ('header', [1], 1, [1]),
-    ('header', [1, 2], [3], [3, 2]),
-    ('header', [0, 2], 2, [2]),
-    ('header', [0, 2], 1, [0, 2]),
-    ('header', [0, 2, 1], 2, [2, 1]),
-    ('figure', [3], 1, [3]),
-    ('figure', [3], [4, 2], [4, 2, 3]),
-    ('figure', [3, 1], 2, [3, 1]),
-])
+@pytest.mark.parametrize(
+    "kind,number_list,page_index,output",
+    [
+        ("header", [1], 1, [1]),
+        ("header", [1, 2], [3], [3, 2]),
+        ("header", [0, 2], 2, [2]),
+        ("header", [0, 2], 1, [0, 2]),
+        ("header", [0, 2, 1], 2, [2, 1]),
+        ("figure", [3], 1, [3]),
+        ("figure", [3], [4, 2], [4, 2, 3]),
+        ("figure", [3, 1], 2, [3, 1]),
+    ],
+)
 def test_normalized_number_list(kind, number_list, page_index, output):
     assert normalize_number_list(kind, number_list, page_index) == output
 
@@ -62,53 +73,60 @@ A text
 def test_header_splitter(source):
     for k, splitted in enumerate(header_splitter(source)):
         if isinstance(splitted, str):
-            assert splitted == 'A text'
+            assert splitted == "A text"
         else:
-            assert splitted['title'] == splitted['kind']
-            number_list = '[' + splitted['label'][1:].replace('.', ',') + ']'
-            assert splitted['number_list'] == eval(number_list)
+            assert splitted["title"] == splitted["kind"]
+            number_list = "[" + splitted["label"][1:].replace(".", ",") + "]"
+            assert splitted["number_list"] == eval(number_list)
         if k == 0:
-            assert splitted['cursor'] == 0
+            assert splitted["cursor"] == 0
         elif k == 2:
-            assert splitted['cursor'] == 25
+            assert splitted["cursor"] == 25
         elif k == 3:
-            assert splitted['cursor'] == 55
+            assert splitted["cursor"] == 55
 
 
 def test_header_splitter_invalid_div_escape():
-    source = ('# a\n\n<div>\n\n# b\n</div>\n\n<div class="pheasant-code">\n'
-              '<pre>abc\n\n# c\ndef\n</pre></div>\n\n## d\n\ntext.\n')
+    source = (
+        '# a\n\n<div>\n\n# b\n</div>\n\n<div class="pheasant-code">\n'
+        "<pre>abc\n\n# c\ndef\n</pre></div>\n\n## d\n\ntext.\n"
+    )
     for k, splitted in enumerate(header_splitter(source)):
         if k == 0:
-            assert isinstance(splitted, dict) and splitted['title'] == 'a'
+            assert isinstance(splitted, dict) and splitted["title"] == "a"
         elif k == 1:
-            assert splitted == '<div>'
+            assert splitted == "<div>"
         elif k == 2:
-            assert isinstance(splitted, dict) and splitted['title'] == 'b'
+            assert isinstance(splitted, dict) and splitted["title"] == "b"
         elif k == 3:
-            answer = ('</div>\n\n<div class="pheasant-code">\n'
-                      '<pre>abc\n\n# c\ndef\n</pre></div>')
+            answer = (
+                '</div>\n\n<div class="pheasant-code">\n'
+                "<pre>abc\n\n# c\ndef\n</pre></div>"
+            )
             assert splitted == answer
         elif k == 4:
-            assert isinstance(splitted, dict) and splitted['title'] == 'd'
+            assert isinstance(splitted, dict) and splitted["title"] == "d"
         elif k == 5:
-            assert splitted == 'text.'
+            assert splitted == "text."
 
 
 def test_header_splitter_valid_div_escape():
-    source = ('# a\n\n<div class="pheasant-code">\n'
-              '<pre>abc\n\n# b\n\ndef\n</pre></div>\n\n## c\n\ntext.\n')
+    source = (
+        '# a\n\n<div class="pheasant-code">\n'
+        "<pre>abc\n\n# b\n\ndef\n</pre></div>\n\n## c\n\ntext.\n"
+    )
     for k, splitted in enumerate(header_splitter(source)):
         if k == 0:
-            assert isinstance(splitted, dict) and splitted['title'] == 'a'
+            assert isinstance(splitted, dict) and splitted["title"] == "a"
         elif k == 1:
-            answer = ('<div class="pheasant-code">\n<pre>abc\n\n'
-                      '# b\n\ndef\n</pre></div>')
+            answer = (
+                '<div class="pheasant-code">\n<pre>abc\n\n' "# b\n\ndef\n</pre></div>"
+            )
             assert splitted == answer
         elif k == 2:
-            assert isinstance(splitted, dict) and splitted['title'] == 'c'
+            assert isinstance(splitted, dict) and splitted["title"] == "c"
         elif k == 3:
-            assert splitted == 'text.'
+            assert splitted == "text."
 
 
 def test_initialize():
@@ -197,11 +215,11 @@ A text
 
 def test_renderer(source_input, source_output):
     label = {}
-    o = '\n'.join(list(render(source_input, label)))
-    o2 = source_output.replace('++\n', ' ')
+    o = "\n".join(list(render(source_input, label)))
+    o2 = source_output.replace("++\n", " ")
 
-    for x, y in zip(o.split('\n'), o2.split('\n')):
-        assert x.replace('pheasant-number', 'PN') == y
+    for x, y in zip(o.split("\n"), o2.split("\n")):
+        assert x.replace("pheasant-number", "PN") == y
 
 
 @pytest.fixture
@@ -226,20 +244,44 @@ A text
 
 def test_label(source_label):
     source, label = convert(source_label)
-    assert label['a'] == {'kind': 'header', 'number_list': [1],
-                          'id': 'pheasant-number-a'}
-    assert label['b'] == {'kind': 'header', 'number_list': [1, 1],
-                          'id': 'pheasant-number-b'}
-    assert label['c'] == {'kind': 'figure', 'number_list': [1],
-                          'id': 'pheasant-number-c'}
-    assert label['d'] == {'kind': 'figure', 'number_list': [2],
-                          'id': 'pheasant-number-d'}
+    assert label["a"] == {
+        "kind": "header",
+        "number_list": [1],
+        "id": "pheasant-number-a",
+    }
+    assert label["b"] == {
+        "kind": "header",
+        "number_list": [1, 1],
+        "id": "pheasant-number-b",
+    }
+    assert label["c"] == {
+        "kind": "figure",
+        "number_list": [1],
+        "id": "pheasant-number-c",
+    }
+    assert label["d"] == {
+        "kind": "figure",
+        "number_list": [2],
+        "id": "pheasant-number-d",
+    }
     source, label = convert(source_label, page_index=[5])
-    assert label['a'] == {'kind': 'header', 'number_list': [5],
-                          'id': 'pheasant-number-a'}
-    assert label['b'] == {'kind': 'header', 'number_list': [5, 1],
-                          'id': 'pheasant-number-b'}
-    assert label['c'] == {'kind': 'figure', 'number_list': [5, 1],
-                          'id': 'pheasant-number-c'}
-    assert label['d'] == {'kind': 'figure', 'number_list': [5, 2],
-                          'id': 'pheasant-number-d'}
+    assert label["a"] == {
+        "kind": "header",
+        "number_list": [5],
+        "id": "pheasant-number-a",
+    }
+    assert label["b"] == {
+        "kind": "header",
+        "number_list": [5, 1],
+        "id": "pheasant-number-b",
+    }
+    assert label["c"] == {
+        "kind": "figure",
+        "number_list": [5, 1],
+        "id": "pheasant-number-c",
+    }
+    assert label["d"] == {
+        "kind": "figure",
+        "number_list": [5, 2],
+        "id": "pheasant-number-d",
+    }

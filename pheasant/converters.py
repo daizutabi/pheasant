@@ -7,27 +7,26 @@ import yaml
 from pheasant.config import config as pheasant_config
 from pheasant.utils import read_source
 
-logger = logging.getLogger('mkdocs')
+logger = logging.getLogger("mkdocs")
 
 
 def get_converters() -> list:
-    return pheasant_config['converters']
+    return pheasant_config["converters"]
 
 
 def set_converters(converters: list) -> None:
-    pheasant_config['converters'] = converters
+    pheasant_config["converters"] = converters
 
 
 def get_source_file() -> Optional[str]:
-    return pheasant_config['source_file']
+    return pheasant_config["source_file"]
 
 
 def get_converter_name(converter) -> str:
-    return converter.__name__.split('.')[-1]
+    return converter.__name__.split(".")[-1]
 
 
-def update_pheasant_config(path: str = '',
-                           config: Optional[dict] = None) -> None:
+def update_pheasant_config(path: str = "", config: Optional[dict] = None) -> None:
     """Update phesant config with a YAML file or config dict.
 
     This function is called from a Plugin to configure Pheasant.
@@ -69,11 +68,11 @@ def update_page_config(config, source_file: str) -> None:
     source_file
         The abs source path for page.
     """
-    if source_file in pheasant_config['extra_resources']:
-        config['pheasant'] = pheasant_config['extra_resources'][source_file]
+    if source_file in pheasant_config["extra_resources"]:
+        config["pheasant"] = pheasant_config["extra_resources"][source_file]
         logger.debug("[Pheasant] Extra resources added: %s", source_file)
-    elif 'pheasant' in config:
-        del config['pheasant']
+    elif "pheasant" in config:
+        del config["pheasant"]
 
 
 def update_converter_config(converter, config: dict) -> None:
@@ -82,16 +81,16 @@ def update_converter_config(converter, config: dict) -> None:
     Configuration is made once for each converter. After configuration,
     the `initialize` function is invoked if the converter has it.
     """
-    if not hasattr(converter, 'config'):
+    if not hasattr(converter, "config"):
         converter.config = {}
 
-    if converter.config.get('configured', False):
+    if converter.config.get("configured", False):
         return
 
     name = get_converter_name(converter)
 
     if name in config:
-        converter.config['enabled'] = True
+        converter.config["enabled"] = True
         logger.debug("[Pheasant:%s] Enabled", name)
         if isinstance(config[name], dict):
             for key, value in config[name].items():
@@ -101,17 +100,16 @@ def update_converter_config(converter, config: dict) -> None:
                     converter.config[key] = value
 
         for key, value in converter.config.items():
-            logger.debug("[Pheasant:%s] Config value: '%s' = %r",
-                         name, key, value)
+            logger.debug("[Pheasant:%s] Config value: '%s' = %r", name, key, value)
     else:
-        converter.config['enabled'] = False
+        converter.config["enabled"] = False
         logger.debug("[Pheasant:%s] Disabled", name)
 
-    if hasattr(converter, 'initialize'):
+    if hasattr(converter, "initialize"):
         converter.initialize()  # invoke converter's initializer
         logger.debug("[Pheasant:%s] Initialized", name)
 
-    converter.config['configured'] = True
+    converter.config["configured"] = True
     logger.debug("[Pheasant:%s] Configured", name)
 
 
@@ -124,19 +122,18 @@ def convert(source: str, config: Optional[dict] = None) -> str:
     processing.
     """
     logger.debug("[Pheasant] Start conversion: %s", source)
-    pheasant_config['source_file'] = source
+    pheasant_config["source_file"] = source
     source = read_source(source)  # Now source is always `str`.
 
     # Converter chain
-    for converter in pheasant_config['converters']:
+    for converter in pheasant_config["converters"]:
         update_converter_config(converter, config or pheasant_config)
-        if converter.config['enabled']:
+        if converter.config["enabled"]:
             name = get_converter_name(converter)
             logger.debug("[Pheasant:%s] Start conversion", name)
             source = converter.convert(source) or source
             logger.debug("[Pheasant:%s] End conversion", name)
 
-    logger.debug("[Pheasant] End conversion: %s",
-                 pheasant_config['source_file'])
+    logger.debug("[Pheasant] End conversion: %s", pheasant_config["source_file"])
 
     return source

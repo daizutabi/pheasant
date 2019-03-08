@@ -9,7 +9,7 @@ from pheasant.plugins.mkdocs import PheasantPlugin
 from pheasant.utils import read
 
 
-@pytest.fixture(scope='function')
+@pytest.fixture(scope="function")
 def plugin():
     return PheasantPlugin()
 
@@ -21,22 +21,22 @@ def test_converters():
 
 @pytest.fixture
 def stream_input():
-    return read(__file__, 'mkdocs/docs/markdown_stream_input.md')
+    return read(__file__, "mkdocs/docs/markdown_stream_input.md")
 
 
 @pytest.fixture
 def stream_output():
-    return read(__file__, 'mkdocs/docs/markdown_stream_output.md')
+    return read(__file__, "mkdocs/docs/markdown_stream_output.md")
 
 
 @pytest.fixture
 def root():
     root = os.path.dirname(os.path.abspath(__file__))
-    root = os.path.abspath(os.path.join(root, '../resources/mkdocs'))
+    root = os.path.abspath(os.path.join(root, "../resources/mkdocs"))
     return root
 
 
-@pytest.fixture(scope='function')
+@pytest.fixture(scope="function")
 def config(root):
     curdir = os.curdir
     os.chdir(root)
@@ -44,9 +44,9 @@ def config(root):
     os.chdir(curdir)
 
 
-@pytest.fixture(scope='function')
+@pytest.fixture(scope="function")
 def jupyter_config(config):
-    return config['plugins']['pheasant'].config['jupyter']
+    return config["plugins"]["pheasant"].config["jupyter"]
 
 
 # def test_config(jupyter_config):

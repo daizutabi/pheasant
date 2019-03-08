@@ -6,5 +6,5 @@ def test_initialize():
 
 
 def test_convert():
-    assert convert('abc') == 'abc'
-    assert convert('text\n[=abc]:ABC\n[=abc]text') == 'text\nABCtext'
+    assert convert("abc") == "abc"
+    assert convert("text\n[=abc]:ABC\n[=abc]text") == "text\nABCtext"

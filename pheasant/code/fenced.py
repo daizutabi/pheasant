@@ -5,7 +5,7 @@ from pheasant.markdown.splitter import fenced_code_splitter
 
 
 def convert(source: str) -> str:
-    return ''.join(render(source))
+    return "".join(render(source))
 
 
 def render(source: str) -> Iterator[str]:
@@ -30,22 +30,22 @@ def render(source: str) -> Iterator[str]:
 
 def div(language: str, code: str, options: List[str]) -> str:
     """Convert fenced code into html with <div> classes."""
-    cls = ' '.join(option[1:] for option in options if option.startswith('.'))
+    cls = " ".join(option[1:] for option in options if option.startswith("."))
 
-    if language == 'display':  # special lang to display figures, tables, etc.
-        if code.startswith('$$'):  # for latex
-            code = f'<p>{code}</p>'
+    if language == "display":  # special lang to display figures, tables, etc.
+        if code.startswith("$$"):  # for latex
+            code = f"<p>{code}</p>"
         else:
             code = markdown_convert(code)
         code = f'<div class="{cls}">\n{code}</div>\n'
         return code
 
-    code = f'```{language}\n{code}\n```'
+    code = f"```{language}\n{code}\n```"
     code = markdown_convert(code)
     if cls:
         code = f'<div class="{cls}">\n{code}</div>\n'
     else:
-        code = f'<div>\n{code}</div>\n'
+        code = f"<div>\n{code}</div>\n"
 
     return code
 
@@ -62,15 +62,16 @@ def escaped_code(language: str, source: str, options: List[str]) -> str:
     Output:
     <div class="... pheasant-source"><pre> ... </pre></div>
     """
-    language = language or 'markdown'
+    language = language or "markdown"
     if options:
-        cls = ' '.join([option[1:] for option in options
-                        if option.startswith('.')])
+        cls = " ".join([option[1:] for option in options if option.startswith(".")])
     else:
-        cls = 'pheasant-fenced-code pheasant-source'
+        cls = "pheasant-fenced-code pheasant-source"
 
     escaped_backquotes = '<span class="pheasant-backquote">```</span>'
-    source = source.replace('```', escaped_backquotes)
-    source = (f'<div class="{cls}">\n<pre><code class="{language}">'
-              f'{source}</code></pre></div>\n')
+    source = source.replace("```", escaped_backquotes)
+    source = (
+        f'<div class="{cls}">\n<pre><code class="{language}">'
+        f"{source}</code></pre></div>\n"
+    )
     return source

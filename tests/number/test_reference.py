@@ -40,8 +40,8 @@ def test_renderer(source_input, source_output):
     initialize()
     source, tag = convert_header(source_input)
     for key in tag:
-        tag[key]['ref'] = '#' + tag[key]['id']
+        tag[key]["ref"] = "#" + tag[key]["id"]
     output = convert(source, tag)
-    source_output = source_output.replace('</span>\n<span ', '</span> <span ')
-    for lines in zip(output.split('\n'), source_output.split('\n')):
+    source_output = source_output.replace("</span>\n<span ", "</span> <span ")
+    for lines in zip(output.split("\n"), source_output.split("\n")):
         assert lines[0] == lines[1]
