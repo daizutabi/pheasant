@@ -18,6 +18,7 @@
 import holoviews as hv
 import matplotlib.pyplot as plt
 from bokeh.plotting import figure
+from mkdocs.config import config_options  # This import required for BasePlugin
 from mkdocs.plugins import BasePlugin
 
 # Import statements are colleted at the top of module because a linter says they should
@@ -96,7 +97,8 @@ class PheasantPlugin(BasePlugin):
 # pycodestyle doesn't allow us to write a very long comment in one line longer than (for
 # example) 79 characters. This means that we have to write 'Markdown source' with
 # several 'New Line' characters even we are writing 'one' paragraph. In order to
-# overcome this incovenient situation, a comment wrapping pakage was prepared. You can
-# install this package as `pip install pyls-cwrap`. In Atom, if you use `ide-python`,
-# just press [Ctrl]+[Shift]+[C] (Windows, default setting), sequential comments are
-# automatically formatted.
+# overcome this incovenient situation, a comment wrapping pakage
+# [`pyls-cwrap`](https://github.com/daizutabi/pyls-cwrap) was prepared. You can install
+# this package as `pip install pyls-cwrap`. In Atom, if you use
+# [`ide-python`](https://atom.io/packages/ide-python), just press [Ctrl]+[Shift]+[C]
+# (Windows, default setting), sequential comments are automatically formatted.
