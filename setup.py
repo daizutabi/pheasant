@@ -52,6 +52,7 @@ setup(
             "openpyxl",
             "python-pptx",
             "mypy",
+            "pycodestyle",
         ]
     },
     entry_points={

@@ -12,6 +12,7 @@ install:
   - pip install -e .[develop]
 
 before_script:
+  - pycodestyle pheasant
   - flake8 pheasant
   - mypy pheasant
   - python -m ipykernel install --user --name travis
