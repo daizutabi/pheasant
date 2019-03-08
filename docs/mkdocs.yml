@@ -21,11 +21,10 @@ nav:
   - User Guide:
     - Images: user-guide/images.md
     - Code: user-guide/code.md
+    - Script: user-guide/script.py
   - About:
     - Release Notes: about/release-notes.md
     - License: about/license.md
-  - Test:
-    - Script: test/script.py
 
 markdown_extensions:
   - admonition

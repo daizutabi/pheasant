@@ -1,4 +1,4 @@
-# Images
+# Image Processing
 
 In this section, we study how to embed images created by [Matplotlib](https://matplotlib.org/), [Bokeh](https://bokeh.pydata.org/en/latest/), and [HoloViews](https://holoviews.org/) libraries.
 

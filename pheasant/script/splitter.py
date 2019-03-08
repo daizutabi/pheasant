@@ -2,33 +2,27 @@ import ast
 import re
 from typing import Iterator, List, Tuple
 
-from pheasant.script.config import Cell
-
-AST_PATTERN = re.compile(r'<_ast\.(.+?) ')
+from pheasant.script.config import config
 
 Element = Tuple[str, int, int]
 
 
-def cell_splitter(source: str) -> Iterator[Tuple[Cell, str]]:
-
-    lines = source.split('\n')
-
-    def content(begin: int, end: int) -> str:
-        """Join the lines and add a new line at the end."""
-        return '\n'.join(lines[begin:end + 1]) + '\n'
-
+def cell_splitter(source: str) -> Iterator[Element]:
     splitter = source_splitter(source)
     for name, begin, end in splitter:
         if name == 'Markdown':
-            yield Cell.MARKDOWN, content(begin, end)
+            yield 'Markdown', begin, end
         else:
             first = begin
             while name not in ['Markdown', 'Separator']:
                 last = end
-                name, begin, end = next(splitter)
-            yield Cell.CODE, content(first, last)
+                try:
+                    name, begin, end = next(splitter)
+                except StopIteration:
+                    break
+            yield 'Code', first, last
             if name == 'Markdown':
-                yield Cell.MARKDOWN, content(begin, end)
+                yield 'Markdown', begin, end
 
 
 def source_splitter(source: str) -> Iterator[Element]:
@@ -65,10 +59,13 @@ def markdown_trimmer(lines: List[str], first: int,
                 begin = cursor
             end = cursor
     if begin != -1:
-        if begin == end and lines[begin].startswith('# -'):
+        if begin == end and lines[begin].startswith(config['separator_expr']):
             yield 'Separator', begin, end
         else:
             yield 'Markdown', begin, end
+
+
+AST_PATTERN = re.compile(r'<_ast\.(.+?) ')
 
 
 def ast_name(node: ast.AST) -> str:

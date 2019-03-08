@@ -1,4 +1,4 @@
-# Code
+# Inspect and Load Codes
 
 Pheasant can include codes from Python moudle or a file system.
 
