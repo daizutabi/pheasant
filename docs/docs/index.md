@@ -25,13 +25,10 @@ If you use Pheasant as a plugin of MkDocs, you also need to install it.
 $ pip install mkdocs
 ~~~
 
-## Settings
-
-In your `mkdocs.yml`, add lines below:
+Then, in your `mkdocs.yml`, add lines below to register Pheasant as a MkDocs plugin ant its theme based on [Read *the* Docs theme](https://sphinx-rtd-theme.readthedocs.io/en/stable/):
 
 ~~~yaml
-theme:
-  name: rtd-pheasant
+theme: rtd-pheasant
 
 plugins:
   - pheasant
@@ -61,7 +58,7 @@ print(1)
 ```
 ~~~
 
-after execution of `print` function via Jupyter client and finally rendered as:
+after execution of `print` function via [Jupyter client](https://jupyter-client.readthedocs.io/en/stable/) and finally rendered as:
 
 ```python
 print(1)
@@ -69,11 +66,11 @@ print(1)
 
 ### Inline code embeded in a Markdown source
 
-**"Inline code"** is a powerful feature of Pheasant. Any python codes surrounded by `{{#` and `}}` are executed and the result remains there. For example, `{{#3*5}}` becomes {{3*5}}. Variables can be assigned in an inline code: `{{#name='Pheasant'}}`{{name='Pheasant'}}. Then, `"I'm {{#name}}."` becomes "I'm {{name}}." Note that an inline code without outputs is not shown after execution.
+**"Inline code"** is a powerful feature of Pheasant. Any python codes surrounded by `{{#` and `}}` are executed and the result remains there. For example, `{{#3*5}}` becomes {{3*5}}. Variables can be assigned in an inline code like this: `{{#name='Pheasant'}}`{{name='Pheasant'}}. Then, `"I'm {{#name}}."` becomes "I'm {{name}}." Note that an inline code without outputs does not shown after execution.
 
 ### Visualization
 
-Pheasant supports various output formats other than standard stream. For example, you can create a PNG image using Matplotlib. First, import the Matplotlib plotting library.
+Pheasant supports various output formats other than standard stream or plain text output. For example, you can create a PNG image using Matplotlib. First, import Matplotlib plotting library.
 
 ~~~copy
 ```python
@@ -89,7 +86,7 @@ plt.plot([1, 2])
 ```
 ~~~
 
-The above Markdown source creates a standard stream and a PNG image. You may want to display only the image. You can set `display` option to a fenced code after language description.
+Executin of the above Markdown source on a Jupyter kernel creates a plain text output as a execute result and a PNG image as display data. You may want to display only the image. You can set `display` option to a fenced code after language description:
 
 ~~~
 ```python display

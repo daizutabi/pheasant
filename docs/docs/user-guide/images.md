@@ -13,13 +13,13 @@ figsize = mpl.rcParams['figure.figsize']
 mpl.rcParams['figure.figsize'] = [2, 1.6]
 ```
 
-Normal usage of `plt.plot` generates a standard output (a list of `Line` object in this example) and a PNG image as display data:
+A call of `plt.plot` generates a standard plain text output (a list of `Line` object in this example) and a PNG image as display data:
 
 ```python
-plt.plot([1, 3, 2], marker='o')
+plt.plot([1, 3, 5], marker='o')
 ```
 
-If you want to hide the input source and standard output, you can use a `display` option which only shows the display data such as an image or html:
+If you want to hide the input source and the standard output, you can use a `display` option to show just the display data such as an image or HTML:
 
 ~~~copy
 ```python display
@@ -27,13 +27,13 @@ plt.plot([4, 2, 3], marker='o')
 ```
 ~~~
 
-**"Inline code"** (display style) is useful to display plots in shorthand notation. `{{#!plt.plot([1, 2, 4])}}` generates:
+**"Inline code"** is useful to display a plot in shorthand notation. `{{#!plt.plot([1, 2, 4])}}` generates:
 
 {{!plt.plot([1, 2, 4])}}
 
-Note that the standard stream output (`[<matplotlib.lines...]`) is omitted.  
+Note that the standard plain text output (`[<matplotlib.lines...]`) is not displayed if the inline code generates display data.
 
-An inline code statement (`{{#<expr>}}`) can be written in a fenced code block. In this case, the expression in the statement is evaluated dynamically during the evaluation of the whole block.
+An inline code statement (`{{#<expr>}}`) can be written in a fenced code block. In this case, the expression in the statement is evaluated dynamically during the evaluation of the fenced code block.
 
 In the next example, two plots are overlayed. `axes[0]` and `axes[1]` refer to the same image.
 
@@ -45,7 +45,7 @@ for k, color in enumerate(['red', 'blue']):
 axes
 ```
 
-You can use the inline code to get different images at the evaluation time with `plt.cla()` method to continuously clear the previous plot.
+You can use the inline code to get different images at the every evaluation time while the iteration is going. You have to call `plt.cla()` method to continuously clear the previous plot.
 
 ~~~copy
 ```python hide inline
@@ -57,7 +57,7 @@ for k, color in enumerate(['red', 'blue']):
 ```
 ~~~
 
-Here, `hide` option disables the output of plot from the fenced code block.
+Here, `hide` option disables the output of plot from the fenced code block, which we don't need now.
 
 Check the type of elements of the variable `axes`.
 
@@ -71,7 +71,7 @@ They are `str` objects, not any Matplotlib objects. Actually, their content is a
 axes[0][:50]
 ```
 
-Thanks to this Pheasant feature, you can put images anywhere. For example,
+Thanks to this Pheasant feature, you can put images anywhere. For example, in a table:
 
 ~~~copy
 #Tab A Markdown table with Matplotlib plot
@@ -80,7 +80,7 @@ Thanks to this Pheasant feature, you can put images anywhere. For example,
 |{{axes[0]}} |{{axes[1]}}|
 ~~~
 
-If you prefer Panda's DataFrame, HTML-type inline code can be used with `{{#^` and `}}`.
+If you prefer a Pandas DataFrame, HTML-type inline code can be used with `{{#^` and `}}`.
 
 ~~~copy
 ```python hide inline
@@ -95,7 +95,7 @@ for k, color in enumerate(['red', 'blue']):
 Then,
 
 ~~~copy
-#Tab A Pandas's DataFrame with Matplotlib plot
+#Tab A Pandas DataFrame with a Matplotlib plot
 ```python inline
 import pandas as pd
 {{pd.DataFrame([axes], columns=['Red', 'Blue'])}}
@@ -115,8 +115,8 @@ from bokeh.embed import components
 plot = figure(plot_width=250, plot_height=250)
 plot.circle([1, 2, 3, 4, 5], [1, 3, 0, 2, 4], size=10)
 script, div = components(plot)
-print('script:', script[:140].strip(), '...')
-print('div:', div[:40].strip(), '...')
+print('*script:', script[:140].strip(), '...')
+print('*div:', div[:40].strip(), '...')
 ```
 
 These `<script>`  and `<div>` tags are used in an inline code like `{{#script}}{{#div}}` to get a plot as shown below:
@@ -141,7 +141,7 @@ CDN.css_files
 CDN.js_files
 ```
 
-In fact, Pheasant uses above API to embed Bokeh's plots internally.
+In fact, Pheasant uses the above API to embed Bokeh's plots internally.
 
 ## HoloViews
 
@@ -169,7 +169,7 @@ html = renderer.html(curve)
 print(html[:40], '...')
 ```
 
-Extra assets which should be written in HTML `<head>` tag to embed the image are provided by the `renderer`'s class method: `html_assets()`.
+Extra assets which should be written in HTML `<head>` tag to display the image are provided by the `renderer`'s class method: `html_assets()`.
 
 ```python
 js_html, css_html = renderer.html_assets()
@@ -179,13 +179,13 @@ print(js_html.strip()[:50])
 print(css_html.strip()[:50])
 ```
 
-The above process to display the HTML image from a HoloViews object can be done by just an inline code like this.
+The above process to display a HTML image from a HoloViews object can be done by just an inline code like this.
 
 ~~~copy
 {{curve}}
 ~~~
 
-Showing of a HoloMap is straightforward. From HoloViews' official documents,
+Showing a HoloMap is straightforward. From HoloViews's official documents,
 
 ```python
 frequencies = [0.5, 0.75, 1.0, 1.25]
