@@ -89,6 +89,9 @@ def get_kernel_client(kernel_name: str):
     return kernel_client
 
 
+executed = [False]
+
+
 def execute(
     code: str, kernel_name: Optional[str] = None, language: str = "python"
 ) -> List[Dict[str, Any]]:
@@ -106,7 +109,14 @@ def execute(
         if output:
             outputs.append(output)
 
+    if not executed[0]:
+        logger.info(f'[Pheasant] First execution started for "{kernel_name}".')
+
     kernel_client.execute_interactive(code, allow_stdin=False, output_hook=output_hook)
+
+    if not executed[0]:
+        executed[0] = True
+        logger.info(f'[Pheasant] First execution ended for "{kernel_name}".')
 
     return outputs
 
