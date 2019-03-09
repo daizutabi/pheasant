@@ -10,7 +10,7 @@ def test_version():
     runner = CliRunner()
     result = runner.invoke(cli, ["--version"])
     assert result.exit_code == 0
-    assert result.output.startswith("Pheasant version: ")
+    assert result.output.startswith("pheasant, version ")
 
 
 @pytest.fixture
