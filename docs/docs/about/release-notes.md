@@ -19,7 +19,7 @@ pheasant, version 1.1.0 from /path/to/pheasant (Python 3.7)
 
 ## Maintenance team
 
-The current member of the MkDocs team.
+The current member of the Pheasant team.
 
 * [@daizutabi](https://github.com/daizutabi/)
 
