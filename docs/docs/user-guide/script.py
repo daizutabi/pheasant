@@ -57,7 +57,7 @@ def sub2(x: int, y: int) -> int:
     return x - y  # a comment in a code cell.
 
 
-# (continued)
+# ## Plot libraries
 
 
 plt.plot([1, 2, 3])

@@ -14,7 +14,7 @@ You can determine your currently installed version using `pheasant --version`:
 
 ~~~
 $ pheasant --version
-pheasant, version 1.0.0 from /path/to/pheasant (Python 3.7)
+pheasant, version 1.1.0 from /path/to/pheasant (Python 3.7)
 ~~~
 
 ## Maintenance team

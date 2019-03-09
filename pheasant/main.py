@@ -1,6 +1,7 @@
 import glob
 import logging
 import os
+import sys
 
 import click
 
@@ -21,7 +22,7 @@ logger = logging.getLogger(__name__)
 @click.option("--version", is_flag=True)
 def cli(inputs, format, output, to, verbose, version):
     if version:
-        print(f"Pheasant version: {pheasant.__version__}")
+        print_version()
         return
 
     # FIXME
@@ -34,6 +35,14 @@ def cli(inputs, format, output, to, verbose, version):
         markdown += convert(path, config)
 
     print(markdown)
+
+
+def print_version():
+    pgk_dir = os.path.dirname(os.path.abspath(__file__))
+    print(
+        f"pheasant, version {pheasant.__version__} from "
+        f"{pgk_dir} (Python {sys.version[:3]})."
+    )
 
 
 def get_file(inputs):
