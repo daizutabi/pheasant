@@ -17,9 +17,9 @@ config: Dict[str, Any] = {
     "kind_prefix": {},
     # Label file of reference to record reference infomation.
     "label_file": ".pheasant-number.json",
-    # Begin patter
+    # Begin pattern
     "begin_pattern": "<!-- begin -->",
-    # End patter
+    # End pattern
     "end_pattern": "<!-- end -->",
     # Label pattern.
     "label_pattern": r"\{#(\S+?)#\}",
