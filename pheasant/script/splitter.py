@@ -69,15 +69,18 @@ def markdown_trimmer(lines: List[str], first: int, last: int) -> Iterator[Elemen
 def escape_splitter(lines: List[str], first: int, last: int) -> Iterator[Element]:
     begin = first
     in_escape = False
+    escape_prefix = ""
     for cursor in range(first, last + 1):
-        if lines[cursor].startswith(config["escape_pattern"]):
+        match = re.match(config["ESCAPE_PATTERN"], lines[cursor])
+        if match and (not in_escape or match.group() == escape_prefix):
             if in_escape:
                 yield "Escape", begin, cursor
-                in_escape = False
                 begin = cursor + 1
             else:
                 yield "Markdown", begin, cursor - 1
                 begin = cursor
+                escape_prefix = match.group()
+            in_escape = not in_escape
 
     yield "Escape" if in_escape else "Markdown", begin, cursor
 

@@ -14,7 +14,7 @@
 # as a Markdown cell, `#` must be at the begining of lines. But we can insert a blank
 # line in a Markdown cell without `#` to make a paragraph.
 
-# Normal Python code is treated as a code cell as you expect. If a comment is not at the
+# Python code block is treated as a code cell as you expect. If a comment is not at the
 # begining of line, a code cell can contain comments.
 
 
@@ -71,6 +71,42 @@ class PheasantPlugin(BasePlugin):
 # By this setting, MkDocs reads a ".py" file as a Markdown source. Then, Pheasant will
 # convert it into a real Markdown format in order to be processed by other converters
 # later.
+
+# ## Fenced code block
+
+# You can write a fenced code block in commented-Markdown source.
+
+
+# ~~~python
+# # <sapn>```</span>python
+# # print(1)
+# # <span>```</sanp>
+# ~~~
+
+# becomes:
+
+# ```python
+# print(1)
+# ```
+
+# And,
+
+# ~~~python
+# # <span>~~~</span>
+# # <sapn>```</span>python
+# # print(1)
+# # <span>```</sanp>
+# # <span>~~~</span>
+# ~~~
+
+
+# becomes:
+
+# ~~~
+# ```python
+# print(1)
+# ```
+# ~~~
 
 
 # ## Comment writing

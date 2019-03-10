@@ -35,8 +35,7 @@ class Formatter:
         Returns
         -------
         cell_content : Formatted cell content.
-         """
-
+        """
         if cell_type == "Markdown":
             return self.markdown(begin, end)
         elif cell_type == "Escape":
@@ -59,7 +58,7 @@ class Formatter:
             re.sub(self.COMMENT_PATTERN, "", line)
             for line in self.lines[begin : end + 1]
         ]
-        return "\n".join(body) + '\n'
+        return "\n".join(body) + "\n"
 
     def code(self, begin, end):
         source = self.content(begin, end)

@@ -7,10 +7,9 @@ from pheasant.script.splitter import cell_splitter
 
 
 def initialize():
-    if config["option_pattern"]:
-        Formatter.OPTION_PATTERN = re.compile(config["option_pattern"], re.MULTILINE)
-    if config["option_pattern"]:
-        Formatter.COMMENT_PATTERN = re.compile(config["comment_pattern"], re.MULTILINE)
+    Formatter.OPTION_PATTERN = re.compile(config["option_pattern"], re.MULTILINE)
+    Formatter.COMMENT_PATTERN = re.compile(config["comment_pattern"], re.MULTILINE)
+    config["ESCAPE_PATTERN"] = re.compile(config["escape_pattern"])
 
 
 def convert(source: str) -> str:

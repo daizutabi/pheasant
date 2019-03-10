@@ -8,5 +8,5 @@ config: Dict[str, Any] = {
     # Separator expression.
     "separator_expr": "# -",
     # escape pattern
-    "escape_pattern": "# ~~~",
+    "escape_pattern": r"# (~{3,}|`{3,})",
 }

@@ -1,3 +1,4 @@
+from pheasant.script.config import config
 from pheasant.script.converter import convert, initialize
 from pheasant.script.formatter import Formatter
 
@@ -6,6 +7,7 @@ def test_initialize():
     assert initialize() is None
     assert Formatter.OPTION_PATTERN is not None
     assert Formatter.COMMENT_PATTERN is not None
+    assert "ESCAPE_PATTERN" in config
 
 
 def test_converter_markdown_only():
@@ -47,5 +49,51 @@ def test_converter_option():
     answer = (
         "abc\n\n```python inline\na=1\nb=1\n```\n\n"
         "```python hide\nc=1\n```\n\nend.\n"
+    )
+    assert convert(source) == answer
+
+
+def test_converter_escape():
+    source = (
+        "# # Test\n"
+        "print(1)\n"
+        "print(2)\n"
+        "# xあ\n"
+        "# いy\n"
+        "# ```\n"
+        "# ~~~python\n"
+        "# a = 1\n"
+        "# b = 1\n"
+        "# ~~~\n"
+        "# a\n"
+        "# b\n"
+        "# ```\n"
+        "# abc\n"
+        "# def\n"
+    )
+    answer = (
+        "# Test\n\n```python\nprint(1)\nprint(2)\n```\n\nxあい"
+        "y\n\n```\n~~~python\na = 1\nb = 1\n~~~\na\nb\n```\n\nabc def\n"
+    )
+    assert convert(source) == answer
+
+
+def test_converter_escape_nest():
+    source = (
+        "# # Test\n"
+        "# ~~~~\n"
+        "# ~~~\n"
+        "# ```python\n"
+        "# a = 1\n"
+        "# b = 1\n"
+        "# ```\n"
+        "# a\n"
+        "# b\n"
+        "# ~~~\n"
+        "# ~~~~\n"
+        "# abc\n"
+    )
+    answer = (
+        "# Test\n\n~~~~\n~~~\n```python\na = 1\nb = 1\n```\na\nb\n~~~\n~~~~\n\nabc\n"
     )
     assert convert(source) == answer
