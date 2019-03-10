@@ -7,4 +7,6 @@ config: Dict[str, Any] = {
     "comment_pattern": r"^# ",
     # Separator expression.
     "separator_expr": "# -",
+    # escape pattern
+    "escape_pattern": "# ~~~",
 }

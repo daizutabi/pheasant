@@ -3,7 +3,7 @@
 import re
 import unicodedata
 from itertools import chain
-from typing import Iterator, Pattern, List
+from typing import Iterator, List, Pattern
 
 
 class Formatter:
@@ -39,8 +39,12 @@ class Formatter:
 
         if cell_type == "Markdown":
             return self.markdown(begin, end)
-        else:
+        elif cell_type == "Escape":
+            return self.escape(begin, end)
+        elif cell_type == "Code":
             return self.code(begin, end)
+        else:
+            raise ValueError(f"Unknown cell type: {cell_type}.")
 
     def markdown(self, begin: int, end: int) -> str:
         body = [
@@ -49,6 +53,13 @@ class Formatter:
         ]
         joiner = markdown_joiner(body)
         return "".join(chain(*zip(body, joiner)))
+
+    def escape(self, begin: int, end: int) -> str:
+        body = [
+            re.sub(self.COMMENT_PATTERN, "", line)
+            for line in self.lines[begin : end + 1]
+        ]
+        return "\n".join(body) + '\n'
 
     def code(self, begin, end):
         source = self.content(begin, end)

@@ -22,6 +22,17 @@ def test_formatter_markdown(source, output):
 @pytest.mark.parametrize(
     "source, output",
     [
+        ("# ~~~ python\n# def\n# ghi.\n# ~~~", "~~~ python\ndef\nghi.\n~~~\n"),
+    ],
+)
+def test_formatter_escape(source, output):
+    formatter = Formatter(source)
+    assert formatter("Escape", 0, len(formatter) - 1) == output
+
+
+@pytest.mark.parametrize(
+    "source, output",
+    [
         ("a = 1\nb = 1", "```python\na = 1\nb = 1\n```\n"),
         ("a = 1\n\n\nb = 1", "```python\na = 1\n\nb = 1\n```\n"),
         ("a = 1  # -option\n\n\nb = 1", "```python option\na = 1\n\nb = 1\n```\n"),
@@ -29,4 +40,4 @@ def test_formatter_markdown(source, output):
 )
 def test_formatter_code(source, output):
     formatter = Formatter(source)
-    assert formatter("code", 0, len(formatter) - 1) == output
+    assert formatter("Code", 0, len(formatter) - 1) == output
