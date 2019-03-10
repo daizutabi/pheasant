@@ -103,12 +103,12 @@ def strip_text(outputs: list) -> None:
                 break
 
 
-pandas_pattern = (
+PANDAS_PATTERN = (
     r'(<style scoped>.*?</style>)|( border="1")|' r'( style="text-align: right;")'
 )
-pandas_re_compile = re.compile(pandas_pattern, flags=re.DOTALL)
+pandas_re_compile = re.compile(PANDAS_PATTERN, flags=re.DOTALL)
 
 
 def delete_style(html: str) -> str:
     """Delete style from Pandas DataFrame html."""
-    return pandas_re_compile.sub("", html)
+    return re.sub(pandas_re_compile, "", html)
