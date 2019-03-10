@@ -25,7 +25,7 @@ If you use Pheasant as a plugin of MkDocs, you also need to install it.
 $ pip install mkdocs
 ~~~
 
-Then, in your `mkdocs.yml`, add lines below to register Pheasant as a MkDocs plugin ant its theme based on [Read *the* Docs theme](https://sphinx-rtd-theme.readthedocs.io/en/stable/):
+Then, in your `mkdocs.yml`, add lines below to register Pheasant as a MkDocs plugin and its theme based on [Read *the* Docs theme](https://sphinx-rtd-theme.readthedocs.io/en/stable/):
 
 ~~~yaml
 theme: rtd-pheasant

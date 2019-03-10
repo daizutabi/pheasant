@@ -61,15 +61,15 @@
     <a class="current" href="./">Script</a>
     <ul class="subnav">
             
-    <li class="toctree-l3"><a href="#4-standalone-script">4 Standalone Script</a>
+    <li class="toctree-l3"><a href="#4-standalone-script">4. Standalone Script</a>
     
         <ul>
         
-            <li><a class="toctree-l4" href="#41-how-to">4.1 How to</a></li>
+            <li><a class="toctree-l4" href="#41-how-to">4.1. How to</a></li>
         
-            <li><a class="toctree-l4" href="#42-internal-mechanism">4.2 Internal mechanism</a></li>
+            <li><a class="toctree-l4" href="#42-internal-mechanism">4.2. Internal mechanism</a></li>
         
-            <li><a class="toctree-l4" href="#43-comment-writing">4.3 Comment writing</a></li>
+            <li><a class="toctree-l4" href="#43-comment-writing">4.3. Comment writing</a></li>
         
         </ul>
     
@@ -129,9 +129,9 @@
           <div role="main">
             <div class="section">
               
-                <h1 id="4-standalone-script"><span class="pheasant-header-number">4</span> <span class="pheasant-header-title">Standalone Script</span></h1>
+                <h1 id="4-standalone-script"><span class="pheasant-header-number">4.</span> <span class="pheasant-header-title">Standalone Script</span></h1>
 <p>Using Atom's <a href="https://nteract.gitbooks.io/hydrogen/">Hydorgen</a> package, you can execute any Python script codes in a Markdown source. So you can edit your Markdown verifying its execution and outputs. But unfortunately (as long as I know), the entire Markdown source cannot be executed all at once as a standalone script and cannot be ran by Python interpreter. Pheasant connects between a pure Python script and a Markdown source for MkDocs. Actually, this page is written by a pure Python code.</p>
-<h2 id="41-how-to"><span class="pheasant-header-number">4.1</span> <span class="pheasant-header-title">How to</span></h2>
+<h2 id="41-how-to"><span class="pheasant-header-number">4.1.</span> <span class="pheasant-header-title">How to</span></h2>
 <p>A basic idea is that Markdown cells and code cells generally appear alternately. We can write a Markdown cell with a successive comment lines. In order to be recognized as a Markdown cell, <code>#</code> must be at the begining of lines. But we can insert a blank line in a Markdown cell without <code>#</code> to make a paragraph.</p>
 <p>Normal Python code is treated as a code cell as you expect. If a comment is not at the begining of line, a code cell can contain comments.</p>
 <div class="pheasant-fenced-code pheasant-input">
@@ -158,7 +158,7 @@ def sub(x: int, y: int) -&gt; int:
     return x - y  # a comment in a code cell.
 </code></pre></div>
 
-<h2 id="42-internal-mechanism"><span class="pheasant-header-number">4.2</span> <span class="pheasant-header-title">Internal mechanism</span></h2>
+<h2 id="42-internal-mechanism"><span class="pheasant-header-number">4.2.</span> <span class="pheasant-header-title">Internal mechanism</span></h2>
 <p>By defaults, MkDocs processes Markdown files only for pages. This setting is defined in the MkDocs's utility library: <code>mkdocs.utils.markdown_extensions</code>. Pheasant plugin updates this setting in the Plugin's <code>on_config</code> event function:</p>
 <div class="pheasant-fenced-code pheasant-input">
 <pre><code class="python">from mkdocs.config import config_options  # This import required for BasePlugin
@@ -172,7 +172,7 @@ class PheasantPlugin(BasePlugin):
 </code></pre></div>
 
 <p>By this setting, MkDocs reads a ".py" file as a Markdown source. Then, Pheasant will convert it into a real Markdown format in order to be processed by other converters later.</p>
-<h2 id="43-comment-writing"><span class="pheasant-header-number">4.3</span> <span class="pheasant-header-title">Comment writing</span></h2>
+<h2 id="43-comment-writing"><span class="pheasant-header-number">4.3.</span> <span class="pheasant-header-title">Comment writing</span></h2>
 <p>In this scheme, we have to write many comments for Markdown cells. But a linter such as pycodestyle doesn't allow us to write a very long comment in one line longer than (for example) 79 characters. This means that we have to write 'Markdown source' with several 'New Line' characters even we are writing 'one' paragraph. In order to overcome this incovenient situation, a comment wrapping pakage <a href="https://github.com/daizutabi/pyls-cwrap"><code>pyls-cwrap</code></a> was prepared. You can install this package as <code>pip install pyls-cwrap</code>. In Atom, if you use <a href="https://atom.io/packages/ide-python"><code>ide-python</code></a>, just press [Ctrl]+[Shift]+[C] (Windows, default setting), sequential comments are automatically formatted.</p>
               
             </div>
