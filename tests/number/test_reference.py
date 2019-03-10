@@ -24,12 +24,12 @@ def source_output():
     yield """
 [1.1](#pheasant-number-b)
 
-# <span id="pheasant-number-a"><span class="pheasant-header-number">1</span>
+# <span id="pheasant-number-a"><span class="pheasant-header-number">1.</span>
 <span class="pheasant-header-title">header</span></span>
 
 A Text [1.1](#pheasant-number-b)
 
-## <span id="pheasant-number-b"><span class="pheasant-header-number">1.1</span>
+## <span id="pheasant-number-b"><span class="pheasant-header-number">1.1.</span>
 <span class="pheasant-header-title">header</span></span>
 
 [1](#pheasant-number-a), [1.1](#pheasant-number-b)

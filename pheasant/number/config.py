@@ -11,6 +11,8 @@ config: Dict[str, Any] = {
     "template_file": "basic.jinja2",
     # List of numbered objects
     "kind": ["header", "figure", "table", "code", "file"],
+    # Whether header's number ends with a period or not
+    "header_period": True,
     # Numbering level. 0 for multiple pages, 2 for h2 etc.
     "level": 2,
     # Prefix for numbered object.

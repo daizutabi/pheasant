@@ -3,7 +3,7 @@
 {%- block number_string -%}
   {%- for number in number_list -%}
     {%- if loop.last -%}
-      {{ number }}
+      {{ number }}{% if kind == 'header' and config['header_period'] and not reference %}.{% endif %}
     {%- else -%}
       {{ number }}{% if kind == 'header' %}.{% else %}.{% endif %}
     {%- endif -%}

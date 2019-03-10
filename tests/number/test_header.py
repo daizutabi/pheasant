@@ -166,10 +166,10 @@ Content Cell | Content Cell
 @pytest.fixture
 def source_output():
     yield """
-# <span id="PN-H1"><span class="pheasant-header-number">1</span>++
+# <span id="PN-H1"><span class="pheasant-header-number">1.</span>++
 <span class="pheasant-header-title">header1</span></span>
 A text
-## <span id="PN-H1.1"><span class="pheasant-header-number">1.1</span>++
+## <span id="PN-H1.1"><span class="pheasant-header-number">1.1.</span>++
 <span class="pheasant-header-title">header2</span></span>
 <div class="PN-figure" id="PN-F1">
 <p><img alt="png" src="figure1.png" /></p>
