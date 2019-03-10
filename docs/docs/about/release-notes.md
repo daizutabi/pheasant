@@ -23,6 +23,10 @@ The current member of the Pheasant team.
 
 * [@daizutabi](https://github.com/daizutabi/)
 
+## Version 1.2.1 (2019-03-10)
+
+* Script converter: bug fix for escape code.
+
 ## Version 1.2.0 (2019-03-10)
 
 * New **Script** converter for pure Python code ('.py').
