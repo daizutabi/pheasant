@@ -8,7 +8,7 @@
   
   <meta name="author" content="daizutabi">
   <link rel="shortcut icon" href="../../img/favicon.ico">
-  <title>Release Notes - Pheasant</title>
+  <title>Macro - Pheasant</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700" type="text/css"/>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Slab:400,700" type="text/css"/>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata:400,700" type="text/css"/>
@@ -20,9 +20,9 @@
   
   <script>
     // Current page data
-    var mkdocs_page_name = "Release Notes";
-    var mkdocs_page_input_path = "about\\release-notes.md";
-    var mkdocs_page_url = "/about/release-notes/";
+    var mkdocs_page_name = "Macro";
+    var mkdocs_page_input_path = "user-guide\\macro.md";
+    var mkdocs_page_url = "/user-guide/macro/";
   </script>
   <script src="../../js/jquery-2.1.1.min.js"></script>
   <script src="../../js/modernizr-2.8.3.min.js"></script>
@@ -50,19 +50,26 @@
     <ul class="subnav">
                 <li class="">
                     
-    <a class="" href="../../user-guide/images/">Images</a>
+    <a class="" href="../images/">Images</a>
                 </li>
                 <li class="">
                     
-    <a class="" href="../../user-guide/code/">Code</a>
+    <a class="" href="../code/">Code</a>
                 </li>
                 <li class="">
                     
-    <a class="" href="../../user-guide/script/">Script</a>
+    <a class="" href="../script/">Script</a>
                 </li>
-                <li class="">
+                <li class=" current">
                     
-    <a class="" href="../../user-guide/macro/">Macro</a>
+    <a class="current" href="./">Macro</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l3"><a href="#5-macro">5. Macro</a>
+    
+    </li>
+
+    </ul>
                 </li>
     </ul>
 	        </li>
@@ -70,36 +77,13 @@
 		        
     <span class="caption-text">About</span>
     <ul class="subnav">
-                <li class=" current">
+                <li class="">
                     
-    <a class="current" href="./">Release Notes</a>
-    <ul class="subnav">
-            
-    <li class="toctree-l3"><a href="#release-notes">Release Notes</a>
-    
-        <ul>
-        
-            <li><a class="toctree-l4" href="#upgrading">Upgrading</a></li>
-        
-            <li><a class="toctree-l4" href="#maintenance-team">Maintenance team</a></li>
-        
-            <li><a class="toctree-l4" href="#version-121-2019-03-10">Version 1.2.1 (2019-03-10)</a></li>
-        
-            <li><a class="toctree-l4" href="#version-120-2019-03-10">Version 1.2.0 (2019-03-10)</a></li>
-        
-            <li><a class="toctree-l4" href="#version-110-2019-03-07">Version 1.1.0 (2019-03-07)</a></li>
-        
-            <li><a class="toctree-l4" href="#version-100-2019-03-05">Version 1.0.0 (2019-03-05)</a></li>
-        
-        </ul>
-    
-    </li>
-
-    </ul>
+    <a class="" href="../../about/release-notes/">Release Notes</a>
                 </li>
                 <li class="">
                     
-    <a class="" href="../license/">License</a>
+    <a class="" href="../../about/license/">License</a>
                 </li>
     </ul>
 	        </li>
@@ -125,11 +109,11 @@
     
       
         
-          <li>About &raquo;</li>
+          <li>User Guide &raquo;</li>
         
       
     
-    <li>Release Notes</li>
+    <li>Macro</li>
     <li class="wy-breadcrumbs-aside">
       
     </li>
@@ -139,41 +123,17 @@
           <div role="main">
             <div class="section">
               
-                <h1 id="release-notes">Release Notes</h1>
-<hr />
-<h2 id="upgrading">Upgrading</h2>
-<p>To upgrade Pheasant to the latest version, use pip:</p>
+                <h1 id="5-macro"><span class="pheasant-header-number">5.</span> <span class="pheasant-header-title">Macro</span></h1>
+<p>Default macro definition syntax is</p>
 <div class="pheasant-fenced-code pheasant-source">
-<pre><code class="markdown">pip install -U pheasant</code></pre></div>
+<pre><code class="text">[=tag]: **replaced text**</code></pre></div>
 
-<p>You can determine your currently installed version using <code>pheasant --version</code>:</p>
+<p>In this case, all occurence of '[=tag]' are replaced by '<strong>replaced text</strong>'</p>
+<p>You can use inline code like this:</p>
 <div class="pheasant-fenced-code pheasant-source">
-<pre><code class="markdown">$ pheasant --version
-pheasant, version 1.2.2 from /path/to/pheasant (Python 3.7)</code></pre></div>
+<pre><code class="markdown">[=2x4] {{2*4}}</code></pre></div>
 
-<h2 id="maintenance-team">Maintenance team</h2>
-<p>The current member of the Pheasant team.</p>
-<ul>
-<li><a href="https://github.com/daizutabi/">@daizutabi</a></li>
-</ul>
-<h2 id="version-121-2019-03-10">Version 1.2.1 (2019-03-10)</h2>
-<ul>
-<li>Script converter: bug fix for escape code.</li>
-</ul>
-<h2 id="version-120-2019-03-10">Version 1.2.0 (2019-03-10)</h2>
-<ul>
-<li>New <strong>Script</strong> converter for pure Python code ('.py').</li>
-</ul>
-<h2 id="version-110-2019-03-07">Version 1.1.0 (2019-03-07)</h2>
-<ul>
-<li><a href="https://github.com/ambv/black">Black</a> formatted.</li>
-<li>Drop dependency on <a href="https://nbconvert.readthedocs.io/en/latest/">nbconvert</a> and <a href="https://nbformat.readthedocs.io/en/latest/">nbformat</a>. Code is executed as a plain source instead of a Jupyter Notebook's cell.</li>
-<li>Kernel client's <code>execute_interactive</code> method invoked instead of <code>execute</code> method. The method is new in Version 5.0 of <a href="https://jupyter-client.readthedocs.io/en/stable/index.html">jupyter_client</a>.</li>
-</ul>
-<h2 id="version-100-2019-03-05">Version 1.0.0 (2019-03-05)</h2>
-<ul>
-<li>First major release.</li>
-</ul>
+<p>Then, '[=2x4]' are replaced by '8'</p>
               
             </div>
           </div>
@@ -181,10 +141,10 @@ pheasant, version 1.2.2 from /path/to/pheasant (Python 3.7)</code></pre></div>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../license/" class="btn btn-neutral float-right" title="License">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../../about/release-notes/" class="btn btn-neutral float-right" title="Release Notes">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
-        <a href="../../user-guide/macro/" class="btn btn-neutral" title="Macro"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../script/" class="btn btn-neutral" title="Script"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -212,10 +172,10 @@ pheasant, version 1.2.2 from /path/to/pheasant (Python 3.7)</code></pre></div>
           <a href="https://github.com/daizutabi/pheasant/" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
       
       
-        <span><a href="../../user-guide/macro/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+        <span><a href="../script/" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
       
-        <span style="margin-left: 15px"><a href="../license/" style="color: #fcfcfc">Next &raquo;</a></span>
+        <span style="margin-left: 15px"><a href="../../about/release-notes/" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>
