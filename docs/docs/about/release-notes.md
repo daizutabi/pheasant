@@ -25,6 +25,10 @@ The current member of the Pheasant team.
 
 * [@daizutabi](https://github.com/daizutabi/)
 
+## Version 1.2.2 (2019-03-10)
+
+* Macro converter: inline code enabled powered by Jupyter converter.
+
 ## Version 1.2.1 (2019-03-10)
 
 * Script converter: bug fix for escape code.
