@@ -166,16 +166,11 @@ def sub(x: int, y: int) -&gt; int:
 
 <h2 id="42-internal-mechanism"><span class="pheasant-header-number">4.2.</span> <span class="pheasant-header-title">Internal mechanism</span></h2>
 <p>By defaults, MkDocs processes Markdown files only for pages. This setting is defined in the MkDocs's utility library: <code>mkdocs.utils.markdown_extensions</code>. Pheasant plugin appends <code>.py</code> to this setting in the Plugin's <code>on_config</code> event function:</p>
-<div class="pheasant-fenced-code pheasant-input">
+<div class="pheasant-fenced-code pheasant-source">
 <pre><code class="python">class PheasantPlugin(BasePlugin):
     def on_config(self, config):
         from mkdocs.utils import markdown_extensions
-        markdown_extensions.append(&quot;.py&quot;)
-</code></pre></div>
-
-<div class="pheasant-fenced-code pheasant-error">
-<pre><code class="python">NameError: name 'BasePlugin' is not defined
-</code></pre></div>
+        markdown_extensions.append(".py")</code></pre></div>
 
 <p>By this setting, MkDocs reads a <code>.py</code> file as a Markdown source. Then, Pheasant will convert it into a real Markdown format in order to be processed by other converters later.</p>
 <h2 id="43-fenced-code-block"><span class="pheasant-header-number">4.3.</span> <span class="pheasant-header-title">Fenced code block</span></h2>
