@@ -3,7 +3,7 @@ import re
 from ast import literal_eval
 from typing import Iterator
 
-from pheasant.code.config import config
+from pheasant.code.config import ESCAPE_PATTERN, config
 from pheasant.jupyter.renderer import execute_and_render
 from pheasant.markdown.splitter import escaped_splitter_join
 from pheasant.number import config as config_number
@@ -16,10 +16,7 @@ def convert(source: str) -> str:
 
 
 def render(source: str) -> Iterator[str]:
-    pattern_escape = r"(```(.*?)```)|(~~~(.*?)~~~)"
-    pattern_code = config["code_pattern"]
-
-    splitter = escaped_splitter_join(pattern_code, pattern_escape, source)
+    splitter = escaped_splitter_join(config["CODE_PATTERN"], ESCAPE_PATTERN, source)
     for splitted in splitter:
         if isinstance(splitted, str):
             yield splitted

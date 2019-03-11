@@ -1,3 +1,4 @@
+import logging
 import os
 import re
 from typing import Iterator
@@ -11,6 +12,8 @@ from pheasant.jupyter.preprocess import (preprocess_fenced_code,
 from pheasant.jupyter.renderer import (execute_and_render, render_fenced_code,
                                        render_inline_code)
 from pheasant.markdown.splitter import fenced_code_splitter
+
+logger = logging.getLogger("mkdocs")
 
 
 def initialize() -> None:
@@ -81,7 +84,10 @@ def code_runner(source: str) -> Iterator[str]:
 def set_template() -> None:
     default_directory = os.path.join(os.path.dirname(__file__), "templates")
     for prefix in ["fenced_code", "inline_code"]:
+        if prefix + "_template" in config:
+            continue
         abspath = os.path.abspath(config[prefix + "_template_file"])
+        logger.info(f'[Pheasant.jupyter] Template path "{abspath}" for {prefix}.')
         template_directory, template_file = os.path.split(abspath)
         loader = FileSystemLoader([template_directory, default_directory])
         env = Environment(loader=loader, autoescape=False)
@@ -89,12 +95,16 @@ def set_template() -> None:
 
 
 def insert_extra_paths() -> None:
+    if not config["extra_paths"]:
+        return
+
     code = (
         f"import sys\n"
         f'for path in {config["extra_paths"]}:\n'
         f"    if path not in sys.path:\n"
         f"        sys.path.insert(0, path)\n"
     )
+    logger.info(f'[Pheasant.jupyter] Extra paths added: {config["extra_paths"]}.')
     execute(code)
 
 
@@ -103,13 +113,19 @@ def import_extra_modules() -> None:
         config["extra_modules"] + ["pheasant.jupyter.display", "importlib", "inspect"]
     )
     execute(f"import {modules}")
+    if config["extra_modules"]:
+        logger.info(
+            f'[Pheasant.jupyter] Extra modules imported: {config["extra_modules"]}.'
+        )
 
 
 def run_init_codes() -> None:
     execute("import pandas\npandas.options.display.max_colwidth = 0")
-    execute("\n".join(config["init_codes"]))
+    if config["init_codes"]:
+        execute("\n".join(config["init_codes"]))
+        logger.info(f'[Pheasant.jupyter] Init codes executed: {config["init_codes"]}.')
 
 
 def reload_extra_modules() -> None:
     for module in config["extra_modules"]:
-        execute("importlib.reload(pandas)")
+        execute(f"importlib.reload({module})")

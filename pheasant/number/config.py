@@ -1,3 +1,4 @@
+import re
 from typing import Any, Dict
 
 config: Dict[str, Any] = {
@@ -34,3 +35,12 @@ config: Dict[str, Any] = {
     # Markdown Extension to render header title.
     "markdown_extensions": [],
 }
+
+
+ESCAPE_PATTEN = re.compile(
+    r'(```(.*?)```)|(~~~(.*?)~~~)|(<div class="pheasant(.*?)</div>)',
+    re.MULTILINE | re.DOTALL,
+)
+
+
+HEADER_PATTERN = re.compile(r"^(#+)(\S*?) (.+?)$", re.MULTILINE)

@@ -56,13 +56,12 @@ def sub2(x: int, y: int) -> int:
 # in the MkDocs's utility library: `mkdocs.utils.markdown_extensions`. Pheasant plugin
 # appends `.py` to this setting in the Plugin's `on_config` event function:
 
-
-# ```python
+# ~~~python
 # class PheasantPlugin(BasePlugin):
 #     def on_config(self, config):
 #         from mkdocs.utils import markdown_extensions
 #         markdown_extensions.append(".py")
-# ```
+# ~~~
 
 
 # By this setting, MkDocs reads a `.py` file as a Markdown source. Then, Pheasant will

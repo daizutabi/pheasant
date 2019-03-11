@@ -27,6 +27,7 @@ def find_kernel_names() -> Dict[str, list]:
     if kernel_names:
         return kernel_names
 
+    logger.info(f"[Pheasant.jupyter] Finding Kernel names.")
     kernel_specs = jupyter_client.kernelspec.find_kernel_specs()
     for kernel_name in kernel_specs:
         kernel_spec = jupyter_client.kernelspec.get_kernel_spec(kernel_name)
@@ -35,6 +36,8 @@ def find_kernel_names() -> Dict[str, list]:
             kernel_names[language] = [kernel_name]
         else:
             kernel_names[language].append(kernel_name)
+
+    logger.info(f"[Pheasant.jupyter] Found kernels: {kernel_names}.")
 
     return kernel_names
 
@@ -59,16 +62,20 @@ def select_kernel_name(language: str) -> Optional[str]:
 
 def get_kernel_manager(kernel_name: str) -> KernelManager:
     if kernel_name in kernel_managers:
-        return kernel_managers[kernel_name]
+        kernel_manager = kernel_managers[kernel_name]
+        if not kernel_manager.is_alive():
+            logger.info(f'[Pheasant.jupyter] Restarting kernel: "{kernel_name}".')
+            kernel_manager.start_kernel()
+        return kernel_manager
 
-    logger.info(f'[Pheasant] Creating kernel manager for "{kernel_name}".')
+    logger.info(f'[Pheasant.jupyter] Creating kernel manager for "{kernel_name}".')
     kernel_manager = jupyter_client.KernelManager(kernel_name=kernel_name)
 
-    logger.info(f'[Pheasant] Starting kernel: "{kernel_name}".')
+    logger.info(f'[Pheasant.jupyter] Starting kernel "{kernel_name}".')
     kernel_manager.start_kernel()
 
     def shutdown_kernel():
-        logger.info(f'[Pheasant] Shutting down kernel: "{kernel_name}".')
+        logger.info(f'[Pheasant.jupyter] Shutting down kernel: "{kernel_name}".')
         kernel_manager.shutdown_kernel()
 
     atexit.register(shutdown_kernel)
@@ -80,11 +87,13 @@ def get_kernel_client(kernel_name: str):
     if kernel_name in kernel_clients:
         return kernel_clients[kernel_name]
 
-    logger.info(f'[Pheasant] Creating kernel client for "{kernel_name}".')
     kernel_manager = get_kernel_manager(kernel_name)
+    logger.info(f'[Pheasant.jupyter] Creating kernel client for "{kernel_name}".')
     kernel_client = kernel_manager.client()
     kernel_client.start_channels()
-    logger.info(f"[Pheasant] Kernel client ready: {kernel_name}.")
+    while not kernel_client.is_complete('print("OK")'):
+        pass
+    logger.info(f'[Pheasant.jupyter] Kernel client for "{kernel_name}" ready.')
     kernel_clients[kernel_name] = kernel_client
     return kernel_client
 
@@ -110,13 +119,13 @@ def execute(
             outputs.append(output)
 
     if not executed[0]:
-        logger.info(f'[Pheasant] First execution started for "{kernel_name}".')
+        logger.info(f'[Pheasant.jupyter] First execution started for "{kernel_name}".')
 
     kernel_client.execute_interactive(code, allow_stdin=False, output_hook=output_hook)
 
     if not executed[0]:
         executed[0] = True
-        logger.info(f'[Pheasant] First execution ended for "{kernel_name}".')
+        logger.info(f'[Pheasant.jupyter] First execution ended for "{kernel_name}".')
 
     return outputs
 

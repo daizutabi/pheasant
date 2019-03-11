@@ -3,7 +3,7 @@ from typing import Iterator, Optional, Tuple, Union
 
 from pheasant.markdown.converter import markdown_convert
 from pheasant.markdown.splitter import escaped_splitter_join
-from pheasant.number.config import config
+from pheasant.number.config import ESCAPE_PATTEN, HEADER_PATTERN, config
 
 
 def convert(
@@ -123,12 +123,7 @@ def header_splitter(source: str) -> Iterator[Union[str, dict]]:
             header_kind[kind[:3].lower()] = kind
     cursor = 0
 
-    pattern_escape = (
-        r"(```(.*?)```)|(~~~(.*?)~~~)|" r'(<div class="pheasant(.*?)</div>)'
-    )
-    pattern_header = r"^(#+)(\S*?) (.+?)$"
-
-    splitter = escaped_splitter_join(pattern_header, pattern_escape, source)
+    splitter = escaped_splitter_join(HEADER_PATTERN, ESCAPE_PATTEN, source)
     for splitted in splitter:
         if isinstance(splitted, str):
             splitted = splitted.strip()
