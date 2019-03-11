@@ -6,8 +6,8 @@ execution.
 
 Above settings is default values and configurable.
 """
-
 import re
+from ast import literal_eval
 from typing import Match
 
 from pheasant.jupyter.client import execute
@@ -99,7 +99,7 @@ def update_extra_resources(outputs: list) -> None:
 
     def replace(data: dict) -> None:
         """Replace tuple output to html and register extra resources."""
-        display = eval(data["text/plain"])
+        display = literal_eval(data["text/plain"])
         if isinstance(display, tuple):
             html, resources = display
             update(resources)

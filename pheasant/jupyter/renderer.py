@@ -1,6 +1,7 @@
 """Render a cell using the Jinja2 template engine."""
 
 import re
+from ast import literal_eval
 from typing import Callable, Optional
 
 from pheasant.jupyter.cache import memoize
@@ -19,8 +20,8 @@ def render_inline_code(context: dict) -> str:
     return config["inline_code_template"].render(**context)
 
 
-# `execute_and_render` function is 'memoize'-decorated in order to cache the
-# source and outputs to avoid rerunning the same cell unnecessarily.
+# `execute_and_render` function is 'memoize'-decorated in order to cache the source and
+# outputs to avoid rerunning the same cell unnecessarily.
 @memoize
 def execute_and_render(
     code: str,
@@ -98,7 +99,7 @@ def strip_text(outputs: list) -> None:
             elif "text/plain" in output["data"]:
                 text = output["data"]["text/plain"]
                 if text.startswith("'"):
-                    text = eval(text)
+                    text = literal_eval(text)
                 output["data"] = {"text/plain": text}
                 break
 
