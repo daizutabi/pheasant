@@ -1,14 +1,10 @@
-import pytest
 from ast import literal_eval
 
+import pytest
+
 from pheasant.number import initialize
-from pheasant.number.header import (
-    convert,
-    header_splitter,
-    normalize_number_list,
-    render,
-    split_label,
-)
+from pheasant.number.header import (convert, header_splitter,
+                                    normalize_number_list, render, split_label)
 
 
 @pytest.mark.parametrize(
