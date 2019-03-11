@@ -54,21 +54,18 @@ def sub2(x: int, y: int) -> int:
 
 # By defaults, MkDocs processes Markdown files only for pages. This setting is defined
 # in the MkDocs's utility library: `mkdocs.utils.markdown_extensions`. Pheasant plugin
-# updates this setting in the Plugin's `on_config` event function:
+# appends `.py` to this setting in the Plugin's `on_config` event function:
 
 
-from mkdocs.config import config_options  # This import required for BasePlugin
-from mkdocs.plugins import BasePlugin
+# ```python
+# class PheasantPlugin(BasePlugin):
+#     def on_config(self, config):
+#         from mkdocs.utils import markdown_extensions
+#         markdown_extensions.append(".py")
+# ```
 
 
-class PheasantPlugin(BasePlugin):
-    def on_config(self, config):
-        from mkdocs.utils import markdown_extensions
-
-        markdown_extensions.append(".py")
-
-
-# By this setting, MkDocs reads a ".py" file as a Markdown source. Then, Pheasant will
+# By this setting, MkDocs reads a `.py` file as a Markdown source. Then, Pheasant will
 # convert it into a real Markdown format in order to be processed by other converters
 # later.
 
@@ -109,7 +106,7 @@ class PheasantPlugin(BasePlugin):
 # ~~~
 
 
-# ## Comment writing
+# ## Comment writing package
 
 # In this scheme, we have to write many comments for Markdown cells. But a linter such
 # as pycodestyle doesn't allow us to write a very long comment in one line longer than

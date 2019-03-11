@@ -71,7 +71,7 @@
         
             <li><a class="toctree-l4" href="#43-fenced-code-block">4.3. Fenced code block</a></li>
         
-            <li><a class="toctree-l4" href="#44-comment-writing">4.4. Comment writing</a></li>
+            <li><a class="toctree-l4" href="#44-comment-writing-package">4.4. Comment writing package</a></li>
         
         </ul>
     
@@ -165,19 +165,19 @@ def sub(x: int, y: int) -&gt; int:
 </code></pre></div>
 
 <h2 id="42-internal-mechanism"><span class="pheasant-header-number">4.2.</span> <span class="pheasant-header-title">Internal mechanism</span></h2>
-<p>By defaults, MkDocs processes Markdown files only for pages. This setting is defined in the MkDocs's utility library: <code>mkdocs.utils.markdown_extensions</code>. Pheasant plugin updates this setting in the Plugin's <code>on_config</code> event function:</p>
+<p>By defaults, MkDocs processes Markdown files only for pages. This setting is defined in the MkDocs's utility library: <code>mkdocs.utils.markdown_extensions</code>. Pheasant plugin appends <code>.py</code> to this setting in the Plugin's <code>on_config</code> event function:</p>
 <div class="pheasant-fenced-code pheasant-input">
-<pre><code class="python">from mkdocs.config import config_options  # This import required for BasePlugin
-from mkdocs.plugins import BasePlugin
-
-class PheasantPlugin(BasePlugin):
+<pre><code class="python">class PheasantPlugin(BasePlugin):
     def on_config(self, config):
         from mkdocs.utils import markdown_extensions
-
         markdown_extensions.append(&quot;.py&quot;)
 </code></pre></div>
 
-<p>By this setting, MkDocs reads a ".py" file as a Markdown source. Then, Pheasant will convert it into a real Markdown format in order to be processed by other converters later.</p>
+<div class="pheasant-fenced-code pheasant-error">
+<pre><code class="python">NameError: name 'BasePlugin' is not defined
+</code></pre></div>
+
+<p>By this setting, MkDocs reads a <code>.py</code> file as a Markdown source. Then, Pheasant will convert it into a real Markdown format in order to be processed by other converters later.</p>
 <h2 id="43-fenced-code-block"><span class="pheasant-header-number">4.3.</span> <span class="pheasant-header-title">Fenced code block</span></h2>
 <p>You can write a fenced code block in commented-Markdown source.</p>
 <div class="pheasant-fenced-code pheasant-source">
@@ -208,7 +208,7 @@ class PheasantPlugin(BasePlugin):
 print(1)
 <span class="pheasant-backquote">```</span></code></pre></div>
 
-<h2 id="44-comment-writing"><span class="pheasant-header-number">4.4.</span> <span class="pheasant-header-title">Comment writing</span></h2>
+<h2 id="44-comment-writing-package"><span class="pheasant-header-number">4.4.</span> <span class="pheasant-header-title">Comment writing package</span></h2>
 <p>In this scheme, we have to write many comments for Markdown cells. But a linter such as pycodestyle doesn't allow us to write a very long comment in one line longer than (for example) 79 characters. This means that we have to write 'Markdown source' with several 'New Line' characters even we are writing 'one' paragraph. In order to overcome this incovenient situation, a comment wrapping pakage <a href="https://github.com/daizutabi/pyls-cwrap"><code>pyls-cwrap</code></a> was prepared. You can install this package as <code>pip install pyls-cwrap</code>. In Atom, if you use <a href="https://atom.io/packages/ide-python"><code>ide-python</code></a>, just press [Ctrl]+[Shift]+[C] (Windows, default setting), sequential comments are automatically formatted.</p>
               
             </div>
