@@ -38,7 +38,7 @@ config: Dict[str, Any] = {
 
 
 ESCAPE_PATTEN = re.compile(
-    r'(```(.*?)```)|(~~~(.*?)~~~)|(<div class="pheasant(.*?)</div>)',
+    r'(```(.*?)```)|(~~~(.*?)~~~)|(<div class="pheasant(.*?)</div>)|(<pre>(.*?)</pre>)',
     re.MULTILINE | re.DOTALL,
 )
 

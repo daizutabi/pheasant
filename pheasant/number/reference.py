@@ -1,7 +1,7 @@
 from typing import Iterator
 
 from pheasant.markdown.splitter import escaped_splitter
-from pheasant.number.config import config
+from pheasant.number.config import config, ESCAPE_PATTEN
 
 
 def convert(source: str, label: dict) -> str:
@@ -24,11 +24,11 @@ def render(source: str, label: dict) -> Iterator[str]:
     splitted source : str or dict
     """
 
-    pattern_escape = r"(^```(.*?)^```$)|(^~~~(.*?)^~~~$)|(<pre>(.*?)</pre>)"
-    pattern_label = config["label_pattern"]
+    # pattern_escape = r"(^```(.*?)^```$)|(^~~~(.*?)^~~~$)|(<pre>(.*?)</pre>)"
+    pattern_label = config["LABEL_PATTERN"]
 
     for splitted in escaped_splitter(
-        pattern_label, pattern_escape, source, escape_generator=None
+        pattern_label, ESCAPE_PATTEN, source, escape_generator=None
     ):
         if isinstance(splitted, tuple):
             pass  # Never occur. Just for mypy.

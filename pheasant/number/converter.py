@@ -48,6 +48,8 @@ def initialize() -> None:
     )
     config["template"] = env.get_template(template_file)
 
+    config["LABEL_PATTERN"] = re.compile(config["label_pattern"])
+
 
 def convert(source: str) -> str:
     from pheasant.converters import get_source_file
