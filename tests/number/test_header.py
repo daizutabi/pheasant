@@ -1,13 +1,10 @@
+from ast import literal_eval
+
 import pytest
 
 from pheasant.number import initialize
-from pheasant.number.header import (
-    convert,
-    header_splitter,
-    normalize_number_list,
-    render,
-    split_label,
-)
+from pheasant.number.header import (convert, header_splitter,
+                                    normalize_number_list, render, split_label)
 
 
 @pytest.mark.parametrize(
@@ -77,7 +74,7 @@ def test_header_splitter(source):
         else:
             assert splitted["title"] == splitted["kind"]
             number_list = "[" + splitted["label"][1:].replace(".", ",") + "]"
-            assert splitted["number_list"] == eval(number_list)
+            assert splitted["number_list"] == literal_eval(number_list)
         if k == 0:
             assert splitted["cursor"] == 0
         elif k == 2:

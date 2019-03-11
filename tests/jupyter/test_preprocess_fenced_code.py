@@ -1,3 +1,5 @@
+from ast import literal_eval
+
 from pheasant.jupyter.client import execute
 from pheasant.jupyter.converter import initialize
 from pheasant.jupyter.preprocess import preprocess_fenced_code
@@ -66,5 +68,5 @@ def test_run_preprocess_fenced_code_with_for_loop():
     assert len(outputs) == 1
     output = outputs[0]
     assert list(output["data"].keys()) == ["text/plain"]
-    a = eval(output["data"]["text/plain"])
+    a = literal_eval(output["data"]["text/plain"])
     assert isinstance(a, list)

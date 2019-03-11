@@ -6,8 +6,8 @@ execution.
 
 Above settings is default values and configurable.
 """
-
 import re
+from ast import literal_eval
 from typing import Match
 
 from pheasant.jupyter.client import execute
@@ -20,7 +20,7 @@ def preprocess_fenced_code(code: str) -> str:
     def replace_(match: Match) -> str:
         return replace(match.group(1), ignore_equal=True)
 
-    return re.sub(config["inline_pattern"], replace_, code)
+    return re.sub(config["INLINE_PATTERN"], replace_, code)
 
 
 def preprocess_markdown(code: str) -> str:
@@ -47,7 +47,7 @@ def preprocess_markdown(code: str) -> str:
         )
 
     code = move_from_header(code)  # Allows an inline expr in a header.
-    return re.sub(config["inline_pattern"], replace_and_run, code)
+    return re.sub(config["INLINE_PATTERN"], replace_and_run, code)
 
 
 def replace(code: str, ignore_equal: bool = False) -> str:
@@ -99,7 +99,7 @@ def update_extra_resources(outputs: list) -> None:
 
     def replace(data: dict) -> None:
         """Replace tuple output to html and register extra resources."""
-        display = eval(data["text/plain"])
+        display = literal_eval(data["text/plain"])
         if isinstance(display, tuple):
             html, resources = display
             update(resources)

@@ -1,20 +1,20 @@
 import os
+import re
 from typing import Iterator
 
 from jinja2 import Environment, FileSystemLoader
 
 from pheasant.jupyter.client import execute
 from pheasant.jupyter.config import config
-from pheasant.jupyter.preprocess import preprocess_fenced_code, preprocess_markdown
-from pheasant.jupyter.renderer import (
-    execute_and_render,
-    render_fenced_code,
-    render_inline_code,
-)
+from pheasant.jupyter.preprocess import (preprocess_fenced_code,
+                                         preprocess_markdown)
+from pheasant.jupyter.renderer import (execute_and_render, render_fenced_code,
+                                       render_inline_code)
 from pheasant.markdown.splitter import fenced_code_splitter
 
 
 def initialize() -> None:
+    config["INLINE_PATTERN"] = re.compile(config["inline_pattern"])
     set_template()
     insert_extra_paths()
     import_extra_modules()

@@ -181,6 +181,7 @@ table.dataframe tbody td {
 .pheasant-fenced-code pre {
   margin: 0px;
   padding: 0px;
+  border-radius: 4px;
 }
 
 .pheasant-fenced-code code {
