@@ -4,28 +4,19 @@ import re
 from ast import literal_eval
 from typing import Callable, Optional
 
-from pheasant.jupyter.cache import memoize
+# from pheasant.jupyter.cache import memoize
 from pheasant.jupyter.client import execute
-from pheasant.jupyter.config import config
 
-
-def render_fenced_code(context: dict) -> str:
-    """Convert a fenced code into markdown or html."""
-    return config["fenced_code_template"].render(**context)
-
-
-def render_inline_code(context: dict) -> str:
-    """Convert an inline code into markdown or html."""
-    strip_text(context["outputs"])
-    return config["inline_code_template"].render(**context)
+# from pheasant.jupyter.config import config
 
 
 # `execute_and_render` function is 'memoize'-decorated in order to cache the source and
 # outputs to avoid rerunning the same cell unnecessarily.
-@memoize
+
+# @memoize
 def execute_and_render(
-    code: str,
     render: Callable[[dict], str],
+    code: str,
     kernel_name: Optional[str] = None,
     language: str = "python",
     callback: Optional[Callable[[list], None]] = None,
@@ -56,6 +47,7 @@ def execute_and_render(
     str
         rendered string
     """
+    print(f'Code: >>{code}<<')
     outputs = execute(code, kernel_name=kernel_name, language=language)
     if select_display:
         select_display_data(outputs)

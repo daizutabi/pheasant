@@ -5,10 +5,10 @@ config: Dict[str, Any] = {
     "fenced_code_template_file": "fenced_code.jinja2",
     # Jinja2 template file for inline code.
     "inline_code_template_file": "inline_code.jinja2",
+    # Jinja2 template file for escaped code.
+    "escaped_code_template_file": "escaped_code.jinja2",
     # Jupyter kernel names (key: language, value: kernel name).
     "kernel_name": {"python": "python3"},
-    # Inline code pattern for inline evaluation.
-    "inline_pattern": r"\{\{(.+?)\}\}",
     # Character to convert markdown into html in an inline code.
     "inline_html_character": "^",
     # Character to ignore an inline code.

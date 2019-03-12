@@ -1,19 +1,12 @@
-"""Execute `{{expr}}` in a markdown source or fenced code.
-
-If `expr` starts with '#', `expr` is not executed: {{#abc}} -> {{abc}}.
-If `expr` starts with '^', `expr` is converted into a HTML source after
-execution.
-
-Above settings is default values and configurable.
-"""
 import re
 from ast import literal_eval
 from typing import Match
 
 from pheasant.jupyter.client import execute
 from pheasant.jupyter.config import config
-from pheasant.jupyter.renderer import execute_and_render, render_inline_code
-from pheasant.number import config as config_number
+
+# #from pheasant.jupyter.renderer import execute_and_render
+# #from pheasant.number import config as config_number
 
 
 def preprocess_fenced_code(code: str) -> str:
@@ -23,34 +16,9 @@ def preprocess_fenced_code(code: str) -> str:
     return re.sub(config["INLINE_PATTERN"], replace_, code)
 
 
-def preprocess_markdown(code: str) -> str:
-    if code[:3] in ["```", "~~~", "<di"]:  # escaped or already converted.
-        return code
-
-    def replace_and_run(match: Match) -> str:
-        code = match.group(1)
-        if code.startswith(config["inline_ignore_character"]):
-            return match.group().replace(code, code[1:])
-        elif code.startswith(config["inline_display_character"]):
-            display = True
-            code = code[1:]
-        else:
-            display = False
-
-        code = replace(code)
-        return execute_and_render(
-            code,
-            render_inline_code,
-            language="python",
-            callback=update_extra_resources,
-            display=display,
-        )
-
-    code = move_from_header(code)  # Allows an inline expr in a header.
-    return re.sub(config["INLINE_PATTERN"], replace_and_run, code)
-
-
-def replace(code: str, ignore_equal: bool = False) -> str:
+def replace(
+    code: str, ignore_equal: bool = False, inline_html_character: str = "^"
+) -> str:
     """Replace a match object with `display` function.
 
     Parameters
@@ -68,7 +36,7 @@ def replace(code: str, ignore_equal: bool = False) -> str:
     if "=" in code and not ignore_equal:
         return code
 
-    if code.startswith(config["inline_html_character"]):
+    if code.startswith(inline_html_character):
         code = code[1:]
         output = "html"
     else:
@@ -142,31 +110,3 @@ def update_extra_resources(outputs: list) -> None:
     for output in outputs:
         if output["type"] == "execute_result" and "text/plain" in output["data"]:
             replace(output["data"])
-
-
-def move_from_header(code: str) -> str:
-    """Inline cells are moved below header line.
-
-    Before:
-        #Fig title {{plot}}
-
-    After:
-        #Fig title
-        <!-- begin -->
-        {{plot}}
-        <!-- end -->
-    """
-    begin = config_number["begin_pattern"]
-    end = config_number["end_pattern"]
-
-    def replace(match):
-        header, inline, _, title = match.groups()
-        header = header.strip()
-        title = title.strip()
-        if title:
-            return f"{header} {title}\n{begin}\n{inline}\n{end}"
-        else:
-            return f"{header}\n{begin}\n{inline}\n{end}"
-
-    pattern = r"^(#.*?)(" + config["inline_pattern"] + r")(.*?)$"
-    return re.sub(pattern, replace, code, flags=re.MULTILINE)

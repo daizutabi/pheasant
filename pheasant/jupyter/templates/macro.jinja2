@@ -16,7 +16,7 @@
 
 
 {%- macro data_png(output) -%}
-![png](data:image/png;base64,{{ output.data['image/png'].replace('\n', '') }})
+<p><img alt="png" src="data:image/png;base64,{{ output.data['image/png'].replace('\n', '') }}" /></p>
 {%- endmacro -%}
 
 {%- macro data_html(output) -%}
@@ -33,7 +33,7 @@
 
 {%- macro output_display(output, display) -%}
   {%- if display -%}
-    {{ '```display .pheasant-jupyter-display\n' }}
+  <div class="pheasant-jupyter-display">{{"\n"}}
   {%- endif -%}
   {%- if output.type == 'error' -%}
     {{ output.traceback[-1] }}
@@ -66,6 +66,6 @@
     {%- endif -%}
   {%- endfor -%}
   {%- if display -%}
-    {{ '\n```\n' }}
+    </div>{{"\n"}}
   {%- endif -%}
 {%- endmacro -%}
