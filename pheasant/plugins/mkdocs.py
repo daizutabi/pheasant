@@ -1,11 +1,14 @@
 import logging
 import os
 
+import yaml
 from mkdocs.config import config_options  # This import required for BasePlugin
 from mkdocs.plugins import BasePlugin
 
-from pheasant.converters import convert, update_page_config, update_pheasant_config
-from pheasant.number.converter import register_pages
+from pheasant.core.config import update_page_config, update_client_config
+from pheasant.core.converter import convert
+
+# from pheasant.number.converter import register_pages
 
 config_options  # to avoid linter error.
 
@@ -13,10 +16,10 @@ logger = logging.getLogger("mkdocs")
 
 
 class PheasantPlugin(BasePlugin):
-    def on_serve(self, server, config):
-        update_pheasant_config(config={"server": server})
-
-        return server
+    # def on_serve(self, server, config):
+    #     update_pheasant_config(config={"server": server})
+    #
+    #     return server
 
     def on_config(self, config):
         from mkdocs.utils import markdown_extensions
@@ -26,14 +29,19 @@ class PheasantPlugin(BasePlugin):
         logger.debug("[Pheasant] Pheasant plugin enabled.")
         path = os.path.dirname(config["config_file_path"])
         path = os.path.join(path, "pheasant.yml")
-        logger.debug(f"[Pheasant] Pheasant config file: {path}")
-        update_pheasant_config(path=path)
+        if os.path.exists(path):
+            logger.debug(f"[Pheasant] Pheasant config file: {path}")
+            with open(path) as f:
+                client_config = yaml.load(f)
+            update_client_config(client_config)
+        elif path:
+            logger.warning("[Pheasant] Config file does not exist: '%s'", path)
 
         return config
 
     def on_nav(self, nav, config, files):
-        source_files = [page.file.abs_src_path for page in nav.pages]
-        register_pages(source_files)
+        # source_files = [page.file.abs_src_path for page in nav.pages]
+        # register_pages(source_files)
 
         return nav
 

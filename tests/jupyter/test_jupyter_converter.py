@@ -1,31 +1,16 @@
-from pheasant.jupyter.converter import Jupyter
-
-converter = Jupyter()
+from pheasant.jupyter.client import Jupyter
+jupyter = Jupyter()
 
 source = """
-text
+# Test
 ```python
 a = 1
 ```
->>{{a}}<<
-~~~
-```python
-print(1)
-```
-~~~
-text
-```python inline
-a = {{2*3}}
-```
-
 {{a}}
-
+XX`{{#a}}`YY
 
 """
 
 
-for a in converter.parse(source):
-    print(a)
 
-print('----------------------------')
-print(converter.convert(source))
+print(jupyter.converter.convert(source))

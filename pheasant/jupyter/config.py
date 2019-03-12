@@ -18,7 +18,7 @@ config: Dict[str, Any] = {
     # Extra package directories that will be added to sys.path.
     "extra_paths": [],
     # Extra modules that will be imported.
-    "extra_modules": [],
+    "extra_modules": ['pheasant.jupyter.display'],
     # Markdown Extension to render header title and inline code.
     "markdown_extensions": [],
     # Initializing code

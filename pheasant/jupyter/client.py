@@ -1,174 +1,150 @@
-"""A module provides jupyter client interface."""
-import atexit
 import logging
+import os
 import re
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, Iterable, Match, Optional
 
-import jupyter_client
-from jupyter_client.manager import KernelManager
+from jinja2 import Environment, FileSystemLoader
 
-from pheasant.jupyter.config import config
+from pheasant.core.converter import Client
+from pheasant.jupyter.kernel import execute
+from pheasant.jupyter.renderer import (execute_and_render, replace,
+                                       update_extra_resources)
+from pheasant.number.config import config as number_config
 
 logger = logging.getLogger("mkdocs")
 
-kernel_names: Dict[str, list] = {}
-kernel_managers: Dict[str, Any] = {}
-kernel_clients: Dict[str, Any] = {}
+
+BACKQUOTE_CODE_PATTERN = (
+    r"^(?P<pre>`{3,})(?P<language>\S*)" r"(?P<option>.*?)\n(?P<code>.*?)\n(?P=pre)\n"
+)
+
+TILDE_CODE_PATTEN = (
+    r"^(?P<pre>~{3,})(?P<language>\S*)" r"(?P<option>.*?)\n(?P<code>.*?)\n(?P=pre)\n"
+)
+
+INLINE_CODE_PATTERN = r"\{\{(?P<code>.+?)\}\}"
+HEADER_INLINE_CODE_PATTERN = r"^(?P<pre>#[^\n.]+)\{\{(?P<code>.+?)\}\}(?P<post>.*?)$"
 
 
-def find_kernel_names() -> Dict[str, list]:
-    """Find kernel names for languages.
-
-    Returns
-    -------
-    kernel_names
-        dict of {language: list of kernel name}.
-    """
-    if kernel_names:
-        return kernel_names
-
-    logger.info(f"[Pheasant.jupyter] Finding Kernel names.")
-    kernel_specs = jupyter_client.kernelspec.find_kernel_specs()
-    for kernel_name in kernel_specs:
-        kernel_spec = jupyter_client.kernelspec.get_kernel_spec(kernel_name)
-        language = kernel_spec.language
-        if language not in kernel_names:
-            kernel_names[language] = [kernel_name]
-        else:
-            kernel_names[language].append(kernel_name)
-
-    logger.info(f"[Pheasant.jupyter] Found kernels: {kernel_names}.")
-
-    return kernel_names
-
-
-def select_kernel_name(language: str) -> Optional[str]:
-    """Select one kernel name for a language."""
-    if language in config["kernel_name"]:
-        return config["kernel_name"][language]
-
-    kernel_names = find_kernel_names()
-    if language not in kernel_names:
-        config["kernel_name"][language] = None
-        return None
-
-    kernel_name = kernel_names[language][0]
-    config["kernel_name"][language] = kernel_name
-    if len(kernel_names[language]) > 1:
-        logger.warning(f"Multiple kernels are found for {language}.")
-        logger.warning(f'Use kernel_name "{kernel_name}" for {language}.')
-    return kernel_name
-
-
-def get_kernel_manager(kernel_name: str) -> KernelManager:
-    if kernel_name in kernel_managers:
-        kernel_manager = kernel_managers[kernel_name]
-        if not kernel_manager.is_alive():
-            logger.info(f'[Pheasant.jupyter] Restarting kernel: "{kernel_name}".')
-            kernel_manager.start_kernel()
-        return kernel_manager
-
-    logger.info(f'[Pheasant.jupyter] Creating kernel manager for "{kernel_name}".')
-    kernel_manager = jupyter_client.KernelManager(kernel_name=kernel_name)
-
-    logger.info(f'[Pheasant.jupyter] Starting kernel "{kernel_name}".')
-    kernel_manager.start_kernel()
-
-    def shutdown_kernel():
-        logger.info(f'[Pheasant.jupyter] Shutting down kernel: "{kernel_name}".')
-        kernel_manager.shutdown_kernel()
-
-    atexit.register(shutdown_kernel)
-    kernel_managers[kernel_name] = kernel_manager
-    return kernel_manager
-
-
-def get_kernel_client(kernel_name: str):
-    if kernel_name in kernel_clients:
-        return kernel_clients[kernel_name]
-
-    kernel_manager = get_kernel_manager(kernel_name)
-    logger.info(f'[Pheasant.jupyter] Creating kernel client for "{kernel_name}".')
-    kernel_client = kernel_manager.client()
-    kernel_client.start_channels()
-    while not kernel_client.is_complete('print("OK")'):
-        pass
-    logger.info(f'[Pheasant.jupyter] Kernel client for "{kernel_name}" ready.')
-    kernel_clients[kernel_name] = kernel_client
-    return kernel_client
-
-
-executed = [False]
-
-
-def execute(
-    code: str, kernel_name: Optional[str] = None, language: str = "python"
-) -> List[Dict[str, Any]]:
-    if kernel_name is None:
-        kernel_name = select_kernel_name(language)
-        if kernel_name is None:
-            raise ValueError(f"No kernel found for language {language}.")
-
-    kernel_client = get_kernel_client(kernel_name)
-
-    outputs = []
-
-    def output_hook(msg):
-        output = output_from_msg(msg)
-        if output:
-            outputs.append(output)
-
-    if not executed[0]:
-        logger.info(f'[Pheasant.jupyter] First execution started for "{kernel_name}".')
-
-    kernel_client.execute_interactive(code, allow_stdin=False, output_hook=output_hook)
-
-    if not executed[0]:
-        executed[0] = True
-        logger.info(f'[Pheasant.jupyter] First execution ended for "{kernel_name}".')
-
-    return outputs
-
-
-def output_from_msg(msg) -> Optional[dict]:
-    """Create an output dictionary from a kernel's IOPub message.
-
-    Returns
-    -------
-    dict: the output as a dictionary.
-    """
-    msg_type = msg["msg_type"]
-    content = msg["content"]
-
-    if msg_type == "execute_result":
-        return dict(type=msg_type, data=content["data"])
-    elif msg_type == "display_data":
-        return dict(type=msg_type, data=content["data"])
-    elif msg_type == "stream":
-        return dict(type=msg_type, name=content["name"], text=content["text"])
-    elif msg_type == "error":
-        traceback = [strip_ansi(tr) for tr in content["traceback"]]
-        return dict(
-            type=msg_type,
-            ename=content["ename"],
-            evalue=content["evalue"],
-            traceback=traceback,
+class Jupyter(Client):
+    def __init__(self, config: Optional[Dict[str, Any]] = None):
+        super().__init__("jupyter", config)
+        self.register("tilde", TILDE_CODE_PATTEN, self.tilde_code)
+        self.register("backquote", BACKQUOTE_CODE_PATTERN, self.backqoute_code)
+        self.register(
+            "header_inline", HEADER_INLINE_CODE_PATTERN, self.header_inline_code
         )
-    else:
-        return None
+        self.register("inline", INLINE_CODE_PATTERN, self.inline_code)
 
+        self.set_template()
+        self.insert_extra_paths()
+        self.import_extra_modules()
+        self.run_init_codes()
 
-# from nbconvert.filters.ansi
-_ANSI_RE = re.compile("\x1b\\[(.*?)([@-~])")
+    def backqoute_code(self, context: Dict[str, str]) -> Iterable[str]:
+        if "inline" in context["option"]:
 
+            def replace_(match: Match) -> str:
+                return replace(match.group("code"), ignore_equal=True)
 
-def strip_ansi(source: str) -> str:
-    """
-    Remove ANSI escape codes from text.
+            context["code"] = re.sub(INLINE_CODE_PATTERN, replace_, context["code"])
 
-    Parameters
-    ----------
-    source
-        Source to remove the ANSI from
-    """
-    return _ANSI_RE.sub("", source)
+            if "hide" in context["option"]:
+                execute(context["code"], language=context["language"])
+            else:
+                yield execute_and_render(
+                    self.config["inline_code_template"].render, strip=True, **context
+                )
+        else:
+            yield execute_and_render(
+                self.config["fenced_code_template"].render, **context
+            )
+
+    def tilde_code(self, context: Dict[str, str]) -> Iterable[str]:
+        context["language"] = context["language"] or "markdown"
+        escaped_backquotes = '<span class="pheasant-backquote">```</span>'
+        context["code"] = context["code"].replace("```", escaped_backquotes)
+        yield self.config["escaped_code_template"].render(**context)
+
+    def inline_code(self, context: Dict[str, str]) -> Iterable[str]:
+        code = context["code"]
+        if code.startswith(self.config["inline_ignore_character"]):
+            yield "{{" + code[1:] + "}}"
+            return
+
+        if code.startswith(self.config["inline_display_character"]):
+            display = True
+            code = code[1:]
+        else:
+            display = False
+
+        code = replace(code, self.config["inline_html_character"])
+        yield execute_and_render(
+            self.config["inline_code_template"].render,
+            code=code,
+            language="python",
+            callback=update_extra_resources,
+            display=display,
+            strip=True,
+        )
+
+    def header_inline_code(self, context: Dict[str, str]) -> Iterable[str]:
+        print('HERE', context)
+        source = "\n".join(
+            [
+                context["pre"] + context["post"],
+                number_config["begin_pattern"],
+                *self.inline_code(context),
+                number_config["end_pattern"],
+            ]
+        )
+        yield from self.renderer.parse(source)
+
+    def set_template(self) -> None:
+        default_directory = os.path.join(os.path.dirname(__file__), "templates")
+        for prefix in ["fenced_code", "inline_code", "escaped_code"]:
+            if prefix + "_template" in self.config:
+                continue
+            abspath = os.path.abspath(self.config[prefix + "_template_file"])
+            logger.info(f'[Pheasant.jupyter] Template path "{abspath}" for {prefix}.')
+            template_directory, template_file = os.path.split(abspath)
+            loader = FileSystemLoader([template_directory, default_directory])
+            env = Environment(loader=loader, autoescape=False)
+            self.config[prefix + "_template"] = env.get_template(template_file)
+
+    def insert_extra_paths(self) -> None:
+        if not self.config["extra_paths"]:
+            return
+
+        code = (
+            f"import sys\n"
+            f'for path in {self.config["extra_paths"]}:\n'
+            f"    if path not in sys.path:\n"
+            f"        sys.path.insert(0, path)\n"
+        )
+        logger.info(
+            f'[Pheasant.jupyter] Extra paths added: {self.config["extra_paths"]}.'
+        )
+        execute(code)
+
+    def import_extra_modules(self) -> None:
+        modules = ", ".join(
+            self.config["extra_modules"]
+            + ["pheasant.jupyter.display", "importlib", "inspect"]
+        )
+        execute(f"import {modules}")
+        if self.config["extra_modules"]:
+            names = f'{self.config["extra_modules"]}'
+            logger.info(f"[Pheasant.jupyter] Extra modules imported: {names}.")
+
+    def run_init_codes(self) -> None:
+        execute("import pandas\npandas.options.display.max_colwidth = 0")
+        if self.config["init_codes"]:
+            execute("\n".join(self.config["init_codes"]))
+            logger.info(
+                f'[Pheasant.jupyter] Init codes executed: {self.config["init_codes"]}.'
+            )
+
+    def reload_extra_modules(self) -> None:
+        for module in self.config["extra_modules"]:
+            execute(f"importlib.reload({module})")

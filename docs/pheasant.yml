@@ -5,9 +5,9 @@ jupyter:
     - scripts
   extra_modules:
     - example
-number:
-  level: 0
-  ignore_pattern: ".*about.*"
-code:
-macro:
-script:
+# number:
+#   level: 0
+#   ignore_pattern: ".*about.*"
+# code:
+# macro:
+# script:

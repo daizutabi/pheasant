@@ -19,7 +19,7 @@ def memoize(func):
     cache = {}
 
     @wraps(func)
-    def decorator(code, *args, **kwargs):
+    def decorator(*args, code='', **kwargs):
         from pheasant.converters import get_source_file
 
         source_file = get_source_file()

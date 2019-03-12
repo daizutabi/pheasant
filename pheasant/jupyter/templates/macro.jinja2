@@ -1,16 +1,16 @@
 {%- macro output_text(output) -%}
   {%- if output.type == 'execute_result' -%}
     {%- if 'text/html' not in output.data -%}
-      {{ output.data['text/plain'] }}
+      {{ output.data['text/plain']|e }}
     {%- endif -%}
   {%- elif output.type == 'stream' and output.name != 'stderr' -%}
     {%- if output.text[-1] == '\n' -%}
-      {{ output.text[:-1] }}
+      {{ output.text[:-1]|e }}
     {%- else -%}
-      {{ output.text }}
+      {{ output.text|e }}
     {%- endif -%}
   {%- elif output.type == 'error' -%}
-    {{ output.traceback[-1] }}
+    {{ output.traceback[-1]|e }}
   {%- endif -%}
 {%- endmacro -%}
 
