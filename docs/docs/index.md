@@ -162,18 +162,8 @@ You can use a special **"header"** statement for figure, table, *etc*. to number
 ![jpg](img/cat.jpg)
 ~~~
 
+
 Supported numbered headers are shown in the next table:
-
-
-#Table Supported numbered headers
-
-Type   | Markdown
--------|-------------------------------
-Header | # (title)
-Figure | #Figure (title), #Fig (title)
-Table  | #Table (title), #Tab (title)
-Code   | #Code (title)
-File   | #File (title)
 
 In the above Markdown source, `{#<tag>#}` is an ID tag for hyperlink described below. Off course, you can use any code to create a figure:
 
@@ -216,25 +206,4 @@ A Markdown source for figures and tables is a source block separated by a blank 
 &lt;!-- end --&gt;
 ~~~
 
-#Fig A Bokeh's HTML figure
-<!-- begin -->
-{{!plot}}
-<!-- end -->
-
-However, Pheasant provides an easy way to number figures, tables, *etc*. regardless of whether they actually have any blank lines or not. Try this:
-
-~~~
-#Figure {{curve}} Inline numbering method.
-~~~
-
-#Fig Inline numbering method {{curve}}
-
-### Hyperlink
-
-Numbered objects are linked from Markdown source using `{#<tag>#}`:
-
-~~~markdown
-For example, go to Fig. {#cat#}
-~~~
-
-For example, go to Fig. {#cat#}
+#Fig A {{1}}

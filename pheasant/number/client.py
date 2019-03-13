@@ -6,10 +6,10 @@ from typing import Any, Dict, List, Optional, Union, Iterable, Tuple
 from jinja2 import Environment, FileSystemLoader
 
 from pheasant.core.converter import Client
-
+from pheasant.markdown.converter import markdown_convert
 logger = logging.getLogger("mkdocs")
 
-HEADER_PATTERN = r"^(?P<sharp>#+)(?P<kind>\S*?)\s+(?P<title>[^\n.]+?)\s+$"
+HEADER_PATTERN = r"^(?P<sharp>#+)(?P<kind>\S*?)\s+(?P<title>[^\n.]+?)$"
 LABEL_PATTERN = r"\{#(?P<label>\S+?)#\}"
 
 
@@ -87,6 +87,9 @@ class Number(Client):
         pass
 
     def header(self, context: Dict[str, str]) -> Iterable[str]:
+        print('!!!!!!!!!!!!!!!!!!!!')
+        print(context)
+        print('!!!!!!!!!!!!!!!!!!!!')
         kind = context["kind"]
         kind = self.header_kind[kind[:3].lower()]
         context["kind"] = kind
@@ -145,10 +148,10 @@ class Number(Client):
                     content = next_source[:index]
                     rest = next_source[index + 2 :]
             extensions = ["tables"] + self.config["markdown_extensions"]
-            # content = markdown_convert(content, extensions=extensions)
+            content = markdown_convert(content, extensions=extensions)
 
             if "title" in context:  # for Math in title
-                # title = markdown_convert(context["title"], extensions=extensions)
+                title = markdown_convert(context["title"], extensions=extensions)
                 if title.startswith("<p>") and title.endswith("</p>"):
                     title = title[3:-4]
                 context["title"] = title

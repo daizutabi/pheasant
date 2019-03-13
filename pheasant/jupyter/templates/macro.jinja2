@@ -24,7 +24,7 @@
 {%- endmacro -%}
 
 {%- macro data_plain(output) -%}
-{{ output.data['text/plain'] }}
+{{ output.data['text/plain']|e }}
 {%- endmacro -%}
 
 {%- macro data_latex(output) -%}
@@ -36,7 +36,7 @@
   <div class="pheasant-jupyter-display">{{"\n"}}
   {%- endif -%}
   {%- if output.type == 'error' -%}
-    {{ output.traceback[-1] }}
+    {{ output.traceback[-1]|e }}
   {%- endif -%}
   {%- for type in output.data -%}
     {%- if type == 'application/pdf' -%}

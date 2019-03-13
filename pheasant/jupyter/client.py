@@ -42,6 +42,9 @@ class Jupyter(Client):
         self.run_init_codes()
 
     def backqoute_code(self, context: Dict[str, str]) -> Iterable[str]:
+        print('#==========================')
+        print(context)
+        print('#==========================')
         if "inline" in context["option"]:
 
             def replace_(match: Match) -> str:
@@ -64,9 +67,21 @@ class Jupyter(Client):
 
     def tilde_code(self, context: Dict[str, str]) -> Iterable[str]:
         context["language"] = context["language"] or "markdown"
+        if context["language"] == "copy":
+            copy = True
+            context["language"] = "markdown"
+            code = context["code"] + "\n"
+        else:
+            copy = False
+
         escaped_backquotes = '<span class="pheasant-backquote">```</span>'
         context["code"] = context["code"].replace("```", escaped_backquotes)
         yield self.config["escaped_code_template"].render(**context)
+        if copy:
+            print('==========================')
+            print(code)
+            print('==========================')
+            yield from self.renderer.render(code)
 
     def inline_code(self, context: Dict[str, str]) -> Iterable[str]:
         code = context["code"]
@@ -83,6 +98,7 @@ class Jupyter(Client):
         context_.update(context)
 
         code = replace(code, self.config["inline_html_character"])
+        context_["code"] = code
         yield execute_and_render(
             self.config["inline_code_template"].render,
             context_,
