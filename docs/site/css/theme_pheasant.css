@@ -4,8 +4,10 @@ body {
 
 code {
   font-family: "Fira Code";
-  color: #00A;
-  background: #e0e0ff;
+  color: #03E;
+  border: none;
+  font-size: 90%;
+  /* background: #e0e0ff; */
 }
 
 

@@ -158,7 +158,6 @@ You can use a special **"header"** statement for figure, table, *etc*. to number
 
 ~~~copy
 #Figure This is a cat. {#cat#}
-
 ![jpg](img/cat.jpg)
 ~~~
 
@@ -166,7 +165,6 @@ Supported numbered headers are shown in the next table:
 
 
 #Table Supported numbered headers
-
 Type   | Markdown
 -------|-------------------------------
 Header | # (title)
@@ -179,7 +177,6 @@ In the above Markdown source, `{#<tag>#}` is an ID tag for hyperlink described b
 
 ~~~copy
 #Fig A Matplotlib figure
-
 ```python display
 plt.plot([3, 2])
 ```
@@ -189,7 +186,6 @@ Like figures, tables can be numbered.
 
 ~~~copy
 #Table A Markdown table
-
 a | b
 --|--
 0 | 1
@@ -200,7 +196,6 @@ Pandas's DataFarme is useful to create a table programmatically.
 
 ~~~copy
 #Table A Pandas's DataFrame
-
 ```python display
 import pandas as pd
 pd.DataFrame([[1, 2], [3, 4]], index=list('XY'), columns=list('ab'))

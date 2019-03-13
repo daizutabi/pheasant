@@ -7,10 +7,9 @@ In this section, we study how to embed images created by [Matplotlib](https://ma
 First, `figsize` of `figure` is set to `[2, 1.6]` to show small figures for saving space.
 
 ```python
-import matplotlib as mpl
+import matplotlib
 import matplotlib.pyplot as plt
-figsize = mpl.rcParams['figure.figsize']
-mpl.rcParams['figure.figsize'] = [2, 1.6]
+matplotlib.rcParams['figure.figsize'] = [2, 1.6]
 ```
 
 A call of `plt.plot` generates a standard plain text output (a list of `Line` object in this example) and a PNG image as display data:
@@ -115,8 +114,8 @@ from bokeh.embed import components
 plot = figure(plot_width=250, plot_height=250)
 plot.circle([1, 2, 3, 4, 5], [1, 3, 0, 2, 4], size=10)
 script, div = components(plot)
-print('*script:', script[:140].strip(), '...')
-print('*div:', div[:40].strip(), '...')
+print('[script]:', script[:140].strip(), '...')
+print('[div]:', div[:40].strip(), '...')
 ```
 
 These `<script>`  and `<div>` tags are used in an inline code like `{{#script}}{{#div}}` to get a plot as shown below:
