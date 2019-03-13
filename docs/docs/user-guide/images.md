@@ -188,6 +188,7 @@ The above process to display a HTML image from a HoloViews object can be done by
 Showing a HoloMap is straightforward. From HoloViews's official documents,
 
 ```python
+import numpy as np
 frequencies = [0.5, 0.75, 1.0, 1.25]
 
 def sine_curve(phase, freq):
