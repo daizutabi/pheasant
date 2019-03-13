@@ -10,6 +10,9 @@ code {
   /* background: #e0e0ff; */
 }
 
+.wy-nav-content {
+    max-width: none;
+}
 
 /**************************************************
  Display style
