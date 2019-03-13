@@ -2,7 +2,7 @@
 
 import re
 from ast import literal_eval
-from typing import Callable, Dict, Optional
+from typing import Any, Callable, Dict, Optional
 
 from pheasant.jupyter.kernel import execute
 
@@ -14,13 +14,10 @@ from pheasant.jupyter.kernel import execute
 # @memoize
 def execute_and_render(
     render: Callable[..., str],
-    code: str = "",
-    kernel_name: Optional[str] = None,
-    language: str = "python",
-    callback: Optional[Callable[[list], None]] = None,
+    context: Dict[str, Any],
     select_display: bool = True,
+    callback: Optional[Callable[[list], None]] = None,
     strip: bool = False,
-    **kwargs: dict
 ) -> str:
     """Run a code and render the code and outputs into markdown.
 
@@ -28,8 +25,9 @@ def execute_and_render(
     ----------
     render
         Rendering function for the code and outputs.
-    code
-        The code to execute.
+    context
+        The dictinonay of code context. `context` should contain `code` and
+        `language`.
     kernel_name
         Name of a Jupyter kernel to execute the code.
     language
@@ -46,16 +44,20 @@ def execute_and_render(
     str
         rendered string
     """
-    # print(f"Code: >>{code}<<")
+    code = context.get("code", "")
+    language = context.get("language", "python")
+    kernel_name = context.get("kernel_name", None)
     outputs = execute(code, kernel_name=kernel_name, language=language)
-    # print(f"Output: >>{outputs}<<")
     if select_display:
         select_display_data(outputs)
     if callback:
         callback(outputs)
     if strip:
         strip_text(outputs)
-    context = dict(code=code, outputs=outputs, language=language, **kwargs)
+    context = context or {}
+    context.update(
+        code=code, outputs=outputs, language=language, kernel_name=kernel_name
+    )
     return render(**context)
 
 

@@ -23,7 +23,7 @@ TILDE_CODE_PATTEN = (
 )
 
 INLINE_CODE_PATTERN = r"\{\{(?P<code>.+?)\}\}"
-HEADER_INLINE_CODE_PATTERN = r"^(?P<pre>#[^\n.]+)\{\{(?P<code>.+?)\}\}(?P<post>.*?)$"
+HEADER_INLINE_CODE_PATTERN = r"^(?P<pre>#[^\n.]+?)\{\{(?P<code>.+?)\}\}(?P<post>.*?)$"
 
 
 class Jupyter(Client):
@@ -53,11 +53,13 @@ class Jupyter(Client):
                 execute(context["code"], language=context["language"])
             else:
                 yield execute_and_render(
-                    self.config["inline_code_template"].render, strip=True, **context
+                    self.config["inline_code_template"].render,
+                    context,
+                    strip=True,
                 )
         else:
             yield execute_and_render(
-                self.config["fenced_code_template"].render, **context
+                self.config["fenced_code_template"].render, context
             )
 
     def tilde_code(self, context: Dict[str, str]) -> Iterable[str]:
@@ -72,24 +74,23 @@ class Jupyter(Client):
             yield "{{" + code[1:] + "}}"
             return
 
+        context_: Dict[str, Any] = {}
         if code.startswith(self.config["inline_display_character"]):
-            display = True
+            context_["display"] = True
             code = code[1:]
         else:
-            display = False
+            context_["display"] = False
+        context_.update(context)
 
         code = replace(code, self.config["inline_html_character"])
         yield execute_and_render(
             self.config["inline_code_template"].render,
-            code=code,
-            language="python",
+            context_,
             callback=update_extra_resources,
-            display=display,
             strip=True,
         )
 
     def header_inline_code(self, context: Dict[str, str]) -> Iterable[str]:
-        print('HERE', context)
         source = "\n".join(
             [
                 context["pre"] + context["post"],
@@ -98,7 +99,7 @@ class Jupyter(Client):
                 number_config["end_pattern"],
             ]
         )
-        yield from self.renderer.parse(source)
+        yield from self.renderer.render(source)
 
     def set_template(self) -> None:
         default_directory = os.path.join(os.path.dirname(__file__), "templates")

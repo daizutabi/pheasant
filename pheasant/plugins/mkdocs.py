@@ -5,8 +5,8 @@ import yaml
 from mkdocs.config import config_options  # This import required for BasePlugin
 from mkdocs.plugins import BasePlugin
 
-from pheasant.core.config import update_page_config, update_client_config
-from pheasant.core.converter import convert
+from pheasant.core.config import update_page_config
+from pheasant.core.converter import convert, converter, start_client
 
 # from pheasant.number.converter import register_pages
 
@@ -33,15 +33,20 @@ class PheasantPlugin(BasePlugin):
             logger.debug(f"[Pheasant] Pheasant config file: {path}")
             with open(path) as f:
                 client_config = yaml.load(f)
-            update_client_config(client_config)
         elif path:
             logger.warning("[Pheasant] Config file does not exist: '%s'", path)
+            client_config = {"jupyter": None}
+
+        for name, config_ in client_config.items():
+            start_client(name, config_)
 
         return config
 
     def on_nav(self, nav, config, files):
-        # source_files = [page.file.abs_src_path for page in nav.pages]
-        # register_pages(source_files)
+        if "number" in converter.clients:
+            client = converter.clients["number"]
+            abs_src_paths = [page.file.abs_src_path for page in nav.pages]
+            client.register_pages(abs_src_paths)
 
         return nav
 
@@ -62,6 +67,9 @@ class PheasantPlugin(BasePlugin):
         default loading from a file will be performed.
         """
         logger.info(f"[Pheasant] Converting: {page.file.src_path}")
+        if "number" in converter.clients:
+            client = converter.clients["number"]
+            client.on_page_read_source(page.file.abs_src_path)
         source = convert(page.file.abs_src_path)
 
         return source
