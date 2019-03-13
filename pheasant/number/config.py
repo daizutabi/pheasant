@@ -8,7 +8,7 @@ config: Dict[str, Any] = {
     # List of ignored pages.
     "ignore_pages": [],
     # Jinja2 template file for numbering.
-    "template_file": "basic.jinja2",
+    "header_template_file": "basic.jinja2",
     # List of numbered objects
     "kind": ["header", "figure", "table", "code", "file"],
     # Whether header's number ends with a period or not
