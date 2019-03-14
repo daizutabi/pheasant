@@ -1,15 +1,13 @@
 import importlib
-import logging
 import os
-import re
-from typing import Any, Dict, Iterable, List, Match, Optional, Union
+from typing import Any, Dict, List, Optional, Union
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 from pheasant.core.parser import Parser
 
 Context = Dict[str, str]
-Config= Dict[str, Any]
+Config = Dict[str, Any]
 
 
 def update_config(config: Config, update: Config) -> None:
@@ -25,7 +23,11 @@ def update_config(config: Config, update: Config) -> None:
 
 
 class Renderer:
-    def __init__(self, parser: Parser, config: Optional[Config] = None):
+    def __init__(
+        self, parser: Optional[Parser] = None, config: Optional[Config] = None
+    ):
+        if parser is None:
+            parser = Parser()
         self.parser = parser
         self.config: Dict[str, Any] = {}
         config_module = ".".join(self.__module__.split(".")[:-1]) + ".config"
@@ -46,8 +48,6 @@ class Renderer:
         for prefix_ in [f"{p}_" if p else "" for p in prefix]:
             template = f"{prefix_}template"
             template_file = f"{template}_file"
-            if template in self.config:
-                continue
             abspath = os.path.abspath(self.config[template_file])
             template_directory, template_file = os.path.split(abspath)
             loader = FileSystemLoader([template_directory, default_directory])

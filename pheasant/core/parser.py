@@ -16,7 +16,7 @@ Selected = Dict[str, Any]
 Splitted = Union[str, Selected, Match[str]]
 Splitter = Generator[Splitted, Any, None]
 Render = Callable[[Dict[str, str], "Parser"], Iterable[str]]
-Gen = Generator[Optional[Splitted], Optional[type], None]
+Gen = Generator[Any, Optional[type], None]
 
 
 def rename(pattern: str, name: str) -> str:
@@ -36,14 +36,14 @@ def rename(pattern: str, name: str) -> str:
 
 def object_name(obj: Any) -> str:
     name = str(obj)
-    if 'method' in str(type(obj)):
-        return str(obj).split(' ')[2].replace('.', '_')
+    if "method" in str(type(obj)):
+        return str(obj).split(" ")[2].replace(".", "_")
     elif "." in name:
         names = name.split(".")[-1].split(" ")
-        if 'function' in str(type(obj)):
+        if "function" in str(type(obj)):
             return "_".join([names[0], names[2][:-1]])
         else:
-            raise TypeError(f'Unknown type: {obj}')
+            raise TypeError(f"Unknown type: {obj}")
     else:
         names = name.split(" ")
         return "_".join([names[1], names[3][:-1]])
@@ -71,6 +71,9 @@ class Parser:
             elif isinstance(splitted, Match):
                 cell = self._reap(splitted)
                 yield from cell["render"](cell["context"], self)
+
+    def send(self, arg):
+        return self.generator.send(arg)
 
     def splitter(self, source: str) -> Gen:
         self.pattern = re.compile(
@@ -123,6 +126,13 @@ class Parser:
             rename(key): value for key, value in groupdict.items() if value is not None
         }
         source = context.pop("__group__")
+        render = self.renders[name]
+
+        # def join(context: Dict[str, str], parser: Parser) -> str:
+        #     return "".join(render(context, parser))
+        def result() -> str:
+            return "".join(render(context, self))
+
         return dict(
-            name=name, render=self.renders[name], source=source, context=context
+            name=name, render=render, result=result, source=source, context=context
         )

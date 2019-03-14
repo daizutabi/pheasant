@@ -1,47 +1,46 @@
 import pytest
-from pheasant.number import initialize
-from pheasant.number.header import convert as convert_header
-from pheasant.number.reference import convert
+
+from pheasant.core.parser import Parser
+from pheasant.number.renderer import Number
 
 
-@pytest.fixture
-def source_input():
-    yield """
-{#b#}
-
-# header {#a#}
-
-A Text {#b#}
-
-## header {#b#}
-
-{#a#}, {#b#}
-""".strip()
+@pytest.fixture()
+def parser():
+    parser = Parser()
+    return parser
 
 
-@pytest.fixture
-def source_output():
-    yield """
-[1.1](#pheasant-number-b)
-
-# <span id="pheasant-number-a"><span class="pheasant-header-number">1.</span>
-<span class="pheasant-header-title">header</span></span>
-
-A Text [1.1](#pheasant-number-b)
-
-## <span id="pheasant-number-b"><span class="pheasant-header-number">1.1.</span>
-<span class="pheasant-header-title">header</span></span>
-
-[1](#pheasant-number-a), [1.1](#pheasant-number-b)
-""".strip()
+@pytest.fixture()
+def number(parser):
+    number = Number(parser)
+    number.config["header_template_file"] = "simple.jinja2"
+    number.set_template("header")
+    return number
 
 
-def test_renderer(source_input, source_output):
-    initialize()
-    source, tag = convert_header(source_input)
-    for key in tag:
-        tag[key]["ref"] = "#" + tag[key]["id"]
-    output = convert(source, tag)
-    source_output = source_output.replace("</span>\n<span ", "</span> <span ")
-    for lines in zip(output.split("\n"), source_output.split("\n")):
-        assert lines[0] == lines[1]
+@pytest.fixture()
+def source_simple():
+    source_simple = "\n".join(
+        [
+            "begin\n# title {#label-a#}\ntext a {#label-b#}",
+            "## section a\ntext b {#label-c#}\n### subsection\n## section b\ntext c",
+            "#Fig figure title a\n\nfigure content a1\nfigure content a2\n",
+            "text d{#label-a#}\n#Fig {#label-b#}figure title b",
+            "figure content b1\nfigure content b2\n\nend",
+        ]
+    )
+    return source_simple
+
+
+def test_render_label(parser, number, source_simple):
+    pass
+    # number.reset_number_list()
+    # output = "".join(parser.parse(source_simple))
+    # number.save_label_context()
+    # number.reset_number_list()
+    # output = "".join(parser.parse(source_simple))
+    # number.save_label_context()
+    # number.reset_number_list()
+    # output = "".join(parser.parse(source_simple))
+    # print(output)
+    print(source_simple)

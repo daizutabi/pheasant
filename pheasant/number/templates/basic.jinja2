@@ -1,51 +1,37 @@
-{% extends 'base.jinja2' %}
-
-{%- block number_string -%}
-  {%- for number in number_list -%}
-    {%- if loop.last -%}
-      {{ number }}{% if kind == 'header' and config['header_period'] and not reference %}.{% endif %}
-    {%- else -%}
-      {{ number }}{% if kind == 'header' %}.{% else %}.{% endif %}
-    {%- endif -%}
-  {%- endfor -%}
-{%- endblock -%}
+{%- extends 'base.jinja2' -%}
 
 {%- block header -%}
 <span class="pheasant-header-number">{{ number_string }}</span> <span class="pheasant-header-title">{{ title }}</span>
 {%- endblock -%}
 
 {%- block figure -%}
-{{ content }}
+{% autoescape false %}{{ content }}{% endautoescape %}
 <p class="pheasant-figure">
-<span class="name">{% block figure_prefix %}{{ prefix }}{% endblock %}</span>
-<span class="number">{{ number_string }}</span>
-<span class="title">{{ title }}</span></p>
+<span class="name">{% block figure_prefix %}{{ prefix }}{% endblock %}</span><span class="number">{{ number_string }}</span><span class="title">{{ title }}</span></p>
 {%- endblock -%}
 
 {%- block table -%}
 <p class="pheasant-table">
-<span class="name">{% block table_prefix %}{{ prefix }}{% endblock %}</span>
-<span class="number">{{ number_string }}</span>
-<span class="title">{{ title }}</span></p>
-{{ content }}
+<span class="name">{% block table_prefix %}{{ prefix }}{% endblock %}</span><span class="number">{{ number_string }}</span><span class="title">{{ title }}</span></p>
+{% autoescape false %}{{ content }}{% endautoescape %}
 {%- endblock -%}
 
 {%- block code -%}
 <p class="pheasant-code">
-<span class="name">{% block code_prefix %}{{ prefix }}{% endblock %}</span>
-<span class="number">{{ number_string }}</span>
-<span class="title">{{ title }}</span></p>
-{{ content }}
+<span class="name">{% block code_prefix %}{{ prefix }}{% endblock %}</span><span class="number">{{ number_string }}</span><span class="title">{{ title }}</span></p>
+{% autoescape false %}{{ content }}{% endautoescape %}
 {%- endblock -%}
 
 {%- block file -%}
 <p class="pheasant-file">
-<span class="name">{% block file_prefix %}{{ prefix }}{% endblock %}</span>
-<span class="number">{{ number_string }}</span>
-<span class="title">{{ title }}</span></p>
-{{ content }}
+<span class="name">{% block file_prefix %}{{ prefix }}{% endblock %}</span><span class="number">{{ number_string }}</span><span class="title">{{ title }}</span></p>
+{% autoescape false %}{{ content }}{% endautoescape %}
 {%- endblock -%}
 
 {%- block reference -%}
+{%- if found -%}
 [{{ number_string }}]({{ ref }})
+{%- else -%}
+<span style="color: red;">Unknown label: {{ label }}</span>
+{%- endif -%}
 {%- endblock -%}

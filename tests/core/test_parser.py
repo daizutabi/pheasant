@@ -15,12 +15,13 @@ def parser():
         if len(context["sharp"]) <= 2:
             yield content
         else:
-            splitted = parser.generator.send(all)
+            splitted = parser.send(all)
             if splitted["match"] is None:
                 yield "abc"
             else:
                 yield "<div>" + content
                 yield from splitted["render"](splitted["context"], parser)
+                # yield "".join(splitted["render"](splitted["context"], parser))
                 yield "</div>"
 
     parser.register(pattern, render)
@@ -112,6 +113,7 @@ def test_splitter_send(parser, source_simple):
 
 def test_parse(parser, source_complex):
     outputs = list(parser.parse(source_complex))
+    outputs
     answers = [
         "begin\n",
         "<div>### <span>title</span>",
@@ -123,3 +125,12 @@ def test_parse(parser, source_complex):
     ]
     for output, answer in zip(outputs, answers):
         assert output == answer
+
+
+def test_result(parser, source_complex):
+    splitter = parser.splitter(source_complex)
+    next(splitter)
+    next(splitter)
+    next(splitter)
+    cell = splitter.send(all)
+    assert cell["result"]() == "<pre><code>print(1)</code></pre>"
