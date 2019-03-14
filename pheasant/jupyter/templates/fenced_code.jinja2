@@ -1,14 +1,14 @@
 {%- from 'macro.jinja2' import output_display with context -%}
 {%- from 'macro.jinja2' import output_text with context -%}
 
-{%- if 'hide' not in options -%}
-  {%- if 'display' not in options -%}
-    {{ '```' + language + ' .pheasant-fenced-code .pheasant-input\n' + code + '\n```\n' }}
+{%- if 'hide' not in option -%}
+  {%- if 'display' not in option -%}
+    <div class="pheasant-fenced-code pheasant-input"><pre><code class="{{ language  }}">{{ code }}</code></pre></div>
     {%- for output in outputs if output.type != 'display_data' and 'text/html' not in output.data and 'text/latex' not in output.data -%}
       {%- if output.type == 'error' -%}
-        {{ '```' + language + ' .pheasant-fenced-code .pheasant-error\n' + output_text(output)  + '\n```\n' }}
+          <div class="pheasant-fenced-code pheasant-error"><pre><code class="{{ language }}">{{ output_text(output) }}</code></pre></div>
       {%- else -%}
-        {{ '```' + language + ' .pheasant-fenced-code .pheasant-output\n' + output_text(output)  + '\n```\n' }}
+          <div class="pheasant-fenced-code pheasant-output"><pre><code class="{{ language }}">{{ output_text(output) }}</code></pre></div>
       {%- endif -%}
     {%- endfor -%}
   {%- endif -%}

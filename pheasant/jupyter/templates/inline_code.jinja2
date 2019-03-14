@@ -1,16 +1,10 @@
 {%- from 'macro.jinja2' import output_display with context -%}
 {%- from 'macro.jinja2' import output_text with context -%}
 
-{%- set ns = namespace(found=false) -%}
-{%- for output in outputs if output.type == 'display_data' -%}
-  {%- set ns.found = true -%}
-{%- endfor -%}
 {%- for output in outputs -%}
   {%- if output.type == 'error' -%}
     <span style="color: red; font-weight: bold;">{{ '&#x00AB;' + output_text(output) + '&#x00BB;' }}</span>
-  {%- elif ns.found and output.type == 'display_data' -%}
-    {%- if display -%}{{ '\n' }}{%- endif -%}{{ output_display(output, display) }}
-  {%- elif not ns.found and output.type != 'display_data' -%}
-    {%- if display -%}{{ '\n' }}{%- endif -%}{{ output_display(output, display) }}
+  {%- else -%}
+    {{ output_display(output, display) }}
   {%- endif -%}
 {%- endfor -%}

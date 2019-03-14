@@ -1,5 +1,3 @@
-import pytest
-
 from pheasant.jupyter.client import execute
 from pheasant.jupyter.renderer import select_display_data, strip_text
 
@@ -25,7 +23,7 @@ def test_select_display_data_text():
 
     outputs = execute("print(1)")
     select_display_data(outputs)
-    assert outputs == [{"type": "stream", "name": "stdout", "text": "1\n"}]
+    assert outputs == [{"type": "stream", "name": "stdout", "text": "1"}]
 
     outputs = execute("1/0")
     select_display_data(outputs)
@@ -41,7 +39,7 @@ def test_select_display_data_text_with_display():
 
     outputs = execute("display(print(1))")
     select_display_data(outputs)
-    assert outputs == [{"type": "stream", "name": "stdout", "text": "1\n"}]
+    assert outputs == [{"type": "stream", "name": "stdout", "text": "1"}]
 
     outputs = execute("display(1/0)")
     select_display_data(outputs)

@@ -40,4 +40,4 @@ def test_execute():
     output = outputs[0]
     assert output["type"] == "stream"
     assert output["name"] == "stdout"
-    assert output["text"] == "1\n"
+    assert output["text"] == "1"

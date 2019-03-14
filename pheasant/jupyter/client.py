@@ -142,7 +142,7 @@ def output_from_msg(msg) -> Optional[dict]:
     elif msg_type == "display_data":
         return dict(type=msg_type, data=content["data"])
     elif msg_type == "stream":
-        return dict(type=msg_type, name=content["name"], text=content["text"])
+        return dict(type=msg_type, name=content["name"], text=content["text"].strip())
     elif msg_type == "error":
         return dict(
             type=msg_type,
