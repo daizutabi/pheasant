@@ -121,8 +121,7 @@ class Number(Renderer):
                     else:
                         content, rest = content[:index], content[index + 2 :]
 
-                extensions = ["tables"] + self.config["markdown_extensions"]
-                content = markdown.convert(content, extensions=extensions)
+                content = markdown.convert(content)
 
             yield self.config["header_template"].render(
                 **context_, content=content, config=self.config
@@ -143,6 +142,27 @@ class Number(Renderer):
 def normalize_number_list(
     kind: str, number_list: List[int], page_index: Union[int, List[int]]
 ) -> List[int]:
+    """
+
+    Examples
+    --------
+    >>> normalize_number_list("header", [1], 1)
+    [1]
+    >>> normalize_number_list("header", [1, 2], [3])
+    [3, 2]
+    >>> normalize_number_list("header", [0, 2], 2)
+    [2]
+    >>> normalize_number_list("header", [0, 2], 1)
+    [0, 2]
+    >>> normalize_number_list("header", [0, 2, 1], 2)
+    [2, 1]
+    >>> normalize_number_list("figure", [3], 1)
+    [3]
+    >>> normalize_number_list("figure", [3], [4, 2])
+    [4, 2, 3]
+    >>> normalize_number_list("figure", [3, 1], 2)
+    [3, 1]
+    """
     if isinstance(page_index, list):
         if kind == "header":
             number_list = page_index + number_list[1:]
@@ -156,7 +176,7 @@ def normalize_number_list(
 
 
 def split_label(title: str) -> Tuple[str, str]:
-    """Split a label from `title`. Return (title, label) - tuple.
+    """Split a label from `title`. Return (title, label).
 
     Parameters
     ----------

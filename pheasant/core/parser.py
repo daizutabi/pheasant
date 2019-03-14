@@ -1,52 +1,11 @@
 import re
+from typing import (Any, Callable, Dict, Generator, Iterable, Match, Optional,
+                    Pattern, Union)
 
-from typing import (
-    Callable,
-    Dict,
-    Pattern,
-    Generator,
-    Iterable,
-    Match,
-    Optional,
-    Union,
-    Any,
-)
-
-Selected = Dict[str, Any]
-Splitted = Union[str, Selected, Match[str]]
+Splitted = Union[str, Dict[str, Any], Match[str]]
 Splitter = Generator[Splitted, Any, None]
 Render = Callable[[Dict[str, str], "Parser"], Iterable[str]]
 Gen = Generator[Any, Optional[type], None]
-
-
-def rename(pattern: str, name: str) -> str:
-    """Rename with prefix.
-
-    >>> rename(r"(?P<name>A.*?Z)(?P=name)", "abc")
-    '(?P<abc__name>A.*?Z)(?P=abc__name)'
-    """
-    name_pattern = r"\(\?P<(.+?)>(.+?)\)"
-    replace = f"(?P<{name}__\\1>\\2)"
-    pattern = re.sub(name_pattern, replace, pattern)
-    name_pattern = r"\(\?P=(.+?)\)"
-    replace = f"(?P={name}__\\1)"
-    pattern = re.sub(name_pattern, replace, pattern)
-    return pattern
-
-
-def object_name(obj: Any) -> str:
-    name = str(obj)
-    if "method" in str(type(obj)):
-        return str(obj).split(" ")[2].replace(".", "_")
-    elif "." in name:
-        names = name.split(".")[-1].split(" ")
-        if "function" in str(type(obj)):
-            return "_".join([names[0], names[2][:-1]])
-        else:
-            raise TypeError(f"Unknown type: {obj}")
-    else:
-        names = name.split(" ")
-        return "_".join([names[1], names[3][:-1]])
 
 
 class Parser:
@@ -58,7 +17,7 @@ class Parser:
 
     def register(self, pattern: str, render: Render) -> None:
         name = object_name(render)
-        pattern = rename(pattern, name)
+        pattern = rename_pattern(pattern, name)
         self.patterns[name] = f"(?P<{name}>{pattern})"
         self.renders[name] = render
 
@@ -114,7 +73,7 @@ class Parser:
         groupdict = match.groupdict()
         name = ""
 
-        def rename(key):
+        def rename_for_render(key):
             nonlocal name
             if "__" in key:
                 return key.split("__")[1]
@@ -123,16 +82,48 @@ class Parser:
                 return "__group__"
 
         context = {
-            rename(key): value for key, value in groupdict.items() if value is not None
+            rename_for_render(key): value
+            for key, value in groupdict.items()
+            if value is not None
         }
         source = context.pop("__group__")
         render = self.renders[name]
 
-        # def join(context: Dict[str, str], parser: Parser) -> str:
-        #     return "".join(render(context, parser))
         def result() -> str:
             return "".join(render(context, self))
 
         return dict(
             name=name, render=render, result=result, source=source, context=context
         )
+
+
+def rename_pattern(pattern: str, name: str) -> str:
+    """Rename with prefix.
+
+    Examples
+    --------
+    >>> rename_pattern(r"(?P<name>A.*?Z)(?P=name)", "abc")
+    '(?P<abc__name>A.*?Z)(?P=abc__name)'
+    """
+    name_pattern = r"\(\?P<(.+?)>(.+?)\)"
+    replace = f"(?P<{name}__\\1>\\2)"
+    pattern = re.sub(name_pattern, replace, pattern)
+    name_pattern = r"\(\?P=(.+?)\)"
+    replace = f"(?P={name}__\\1)"
+    pattern = re.sub(name_pattern, replace, pattern)
+    return pattern
+
+
+def object_name(obj: Any) -> str:
+    name = str(obj)
+    if "method" in str(type(obj)):
+        return str(obj).split(" ")[2].replace(".", "_")
+    elif "." in name:
+        names = name.split(".")[-1].split(" ")
+        if "function" in str(type(obj)):
+            return "_".join([names[0], names[2][:-1]])
+        else:
+            raise TypeError(f"Unknown type: {obj}")
+    else:
+        names = name.split(" ")
+        return "_".join([names[1], names[3][:-1]])

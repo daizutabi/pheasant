@@ -1,13 +1,5 @@
 import pytest
 
-from pheasant.jupyter.renderer import Jupyter
-
-
-@pytest.fixture()
-def jupyter():
-    jupyter = Jupyter()
-    return jupyter
-
 
 def fenced_code(code):
     return f"```python\n{code}\n```\n"
@@ -67,7 +59,7 @@ def test_jupyter_parse_text(parse):
             '<pre><code class="python">1/0</code></pre></div>'
             '<div class="pheasant-fenced-code pheasant-error">'
             '<pre><code class="python">ZeroDivisionError: division by zero'
-            '</code></pre></div>'
+            "</code></pre></div>"
         ]
     )
     assert output == answer

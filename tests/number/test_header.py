@@ -3,24 +3,7 @@ from typing import Pattern
 
 import pytest
 
-from pheasant.core.parser import Parser
-from pheasant.number.renderer import Number, split_label
-
-
-def test_split_label():
-    assert split_label("title {#label#}") == ("title", "label")
-
-
-@pytest.fixture()
-def parser():
-    parser = Parser()
-    return parser
-
-
-@pytest.fixture()
-def number(parser):
-    number = Number(parser, {"__dummy__": "test"})
-    return number
+from pheasant.number.renderer import Number
 
 
 @pytest.fixture()
