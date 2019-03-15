@@ -1,3 +1,4 @@
+import os
 import re
 from typing import Any, Dict, Iterable, List, Optional, Tuple, Union
 
@@ -19,7 +20,7 @@ class Number(Renderer):
         self.label_context: Dict[str, Any] = {}
         self.number_list: Dict[str, List[int]] = {}
         self.header_kind: Dict[str, str] = {}
-        self.abs_src_path = "."
+        self.abs_src_path = "."  # should be set the real path later
         self.config["kind_prefix"] = {}
         for kind in self.config["kind"]:
             if kind == "header":
@@ -106,29 +107,36 @@ class Linker(Renderer):
         self.register(Number.LABEL_PATTERN, self.render_label)
         self.set_template("header")
         self.number: Optional[Number] = None
+        self.abs_src_path = "."  # should be set the real path later
 
     def set_number(self, number: Number) -> None:
         self.number = number
 
     def render_label(self, context: Context, parser: Parser) -> Iterable[str]:
         if self.number is None:
-            raise ValueError('A Number instance has not set yet.')
+            raise ValueError("A Number instance has not set yet.")
         label = context["label"]
-        found = label in self.number.label_context
-        context = self.number.label_context[label] if found else {"label": label}
+        context = self.resolve(label)
         yield self.config["header_template"].render(
-            reference=True, found=found, config=self.config, **context
+            reference=True, config=self.config, **context
         )
 
-        # for key in label_context_all:
-        #     label_context = label_context_all[key]
-        #     relpath = os.path.relpath(
-        #         label_context["abs_src_path"], os.path.dirname(self.abs_src_path)
-        #     )
-        #     relpath = relpath.replace("\\", "/")
-        #     if self.config["relpath_function"]:
-        #         relpath = self.config["relpath_function"](relpath)
-        #     label_context["ref"] = "#".join([relpath, label_context["id"]])
+    def resolve(self, label: str) -> Dict[str, Any]:
+        label_context = self.number.label_context  # type: ignore
+        found = label in label_context
+        if found:
+            context = label_context[label]
+            context["found"] = True
+            relpath = os.path.relpath(
+                context["abs_src_path"], os.path.dirname(self.abs_src_path)
+            )
+            relpath = relpath.replace("\\", "/")
+            if self.config["relpath_function"]:
+                relpath = self.config["relpath_function"](relpath)
+            context["ref"] = "#".join([relpath, context["id"]])
+        else:
+            context = {"found": False, "label": label}
+        return context
 
 
 def normalize_number_list(

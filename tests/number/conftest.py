@@ -48,7 +48,7 @@ def source_simple():
             "## section a\ntext b\n### subsection\n## section b\ntext c",
             "#Fig figure title a\n\nfigure content a1\nfigure content a2",
             "text d\n#Fig {#label-b#}figure title b Section {#label-a#}",
-            "figure content b1\nfigure content b2\n\nend",
+            "figure content b1\nfigure content b2\n\nend {#label-c#}",
         ]
     )
     return source_simple

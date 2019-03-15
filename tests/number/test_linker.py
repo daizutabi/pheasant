@@ -53,16 +53,39 @@ def test_render_linker(linker, parser_linker, source_parsed):
     cell = splitter.send(dict)
     assert cell["name"] is None
     assert cell["context"] == {}
-    answer = ('begin\n# <span id="pheasant-number-label-a">1. title</span>\n'
-              'text a Figure ')
+    answer = (
+        'begin\n# <span id="pheasant-number-label-a">1. title</span>\n' "text a Figure "
+    )
     assert cell["source"] == answer
     cell = splitter.send(dict)
     assert cell["name"] == "Linker_render_label"
-    assert cell["context"] == {'label': 'label-b'}
+    assert cell["context"] == {"label": "label-b"}
     assert cell["context"]["label"] in linker.number.label_context
 
 
 def test_parse_linker(linker, parser_linker, source_parsed):
     source = "".join(parser_linker.parse(source_parsed))
-    print(source)
-    assert False
+
+    answer = """begin
+        # <span id="pheasant-number-label-a">1. title</span>
+        text a Figure [2](.#pheasant-number-label-b)
+        ## 1.1. section a
+        text b
+        ### 1.1.1. subsection
+        ## 1.2. section b
+        text c
+        <div class="pheasant-number-figure">
+        <p>figure content a1
+        figure content a2
+        text d</p>
+        <p>Figure 1 figure title a</p>
+        </div>
+        <div class="pheasant-number-figure" id="pheasant-number-label-b">
+        <p>figure content b1
+        figure content b2</p>
+        <p>Figure 2 figure title b Section [1](.#pheasant-number-label-a)</p>
+        </div>
+        end <span style="color: red;">Unknown label: 'label-c'</span>""".replace(
+        "        ", ""
+    )
+    assert source == answer

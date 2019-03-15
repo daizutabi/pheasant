@@ -63,7 +63,7 @@ def test_join(parser_number, number, source_simple):
         figure content b2</p>
         <p>Figure 2 figure title b Section {#label-a#}</p>
         </div>
-        end""".replace(
+        end {#label-c#}""".replace(
         "        ", ""
     )
     assert output == answer
