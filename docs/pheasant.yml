@@ -1,9 +1,5 @@
 jupyter:
   kernel_name:
     python: python3
-# number:
-#   level: 0
-#   ignore_pattern: ".*about.*"
-# code:
-# macro:
-# script:
+number:
+  ignore: ".*about.*"

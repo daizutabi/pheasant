@@ -25,20 +25,3 @@ def read_source(source: str) -> str:
             source = file.read()
             source = source.replace("\r\n", "\n").replace("\r", "\n")
     return source
-
-
-def read(root: str, filename: str) -> str:
-    """Utility function to read a file under `tests` directory."""
-    root = os.path.dirname(os.path.abspath(root))
-
-    basename = ""
-    while basename != "tests":
-        root, basename = os.path.split(root)
-        if basename == "":
-            raise ValueError("Could not find `tests` directory.", root)
-
-    path = os.path.join(root, basename, "resources", filename)
-    path = os.path.abspath(path)
-
-    with open(path) as f:
-        return f.read()

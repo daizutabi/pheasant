@@ -9,15 +9,14 @@ Seed = Dict[str, Any]
 
 
 class Parser:
-    def __init__(self, name: str = "default"):
-        self.name = name
+    def __init__(self):
         self.patterns: Dict[str, str] = {}
         self.renders: Dict[str, Render] = {}
         self.pattern: Optional[Pattern] = None
         self.generator: Optional[Splitter] = None
 
     def __repr__(self):
-        return f"<Parser({self.name}#{len(self.patterns)})>"
+        return f"<{self.__class__.__qualname__}#{len(self.patterns)})>"
 
     def register(self, pattern: str, render: Render) -> None:
         name = object_name(render)

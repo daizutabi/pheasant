@@ -1,11 +1,12 @@
 import logging
 import os
+from typing import Dict
 
-from mkdocs.config import config_options  # This import required for BasePlugin
+import yaml
+from mkdocs.config import config_options
 from mkdocs.plugins import BasePlugin
 
-# from pheasant.converters import convert, update_page_config, update_pheasant_config
-# from pheasant.number.converter import register_pages
+from pheasant.core.converter import Converter
 
 config_options  # to avoid linter error.
 
@@ -13,8 +14,15 @@ logger = logging.getLogger("mkdocs")
 
 
 class PheasantPlugin(BasePlugin):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.config: Dict[str, Dict[str, str]] = {}
+        self.converter = Converter()
+        self.served = False
+        logger.debug("[Pheasant] Plugin created.")
+
     def on_serve(self, server, config):
-        # update_pheasant_config(config={"server": server})
+        self.served = True
 
         return server
 
@@ -23,19 +31,24 @@ class PheasantPlugin(BasePlugin):
 
         markdown_extensions.append(".py")
 
-        logger.debug("[Pheasant] Pheasant plugin enabled.")
-        # path = os.path.dirname(config["config_file_path"])
-        # path = os.path.join(path, "pheasant.yml")
-        # logger.debug(f"[Pheasant] Pheasant config file: {path}")
-        # update_pheasant_config(path=path)
+        logger.debug("[Pheasant] Plugin enabled.")
+        path = os.path.dirname(config["config_file_path"])
+        path = os.path.join(path, "pheasant.yml")
+        if os.path.exists(path):
+            logger.debug(f"[Pheasant] config file: {path}")
+            with open(path, "r") as f:
+                self.config = yaml.load(f)
+            for key, value in self.config.items():
+                for key_, value_ in value.items():
+                    logger.debug(f"[Pheasant.{key}] Config value: '{key_}' = {value_}.")
 
         return config
 
     def on_nav(self, nav, config, files):
-        abs_src_paths = [page.file.abs_src_path for page in nav.pages]
-        for abs_srs_path in abs_src_paths:
-            logger.debug("[Pheasant] %s.", abs_srs_path)
-        # register_pages(source_files)
+        self.config["abs_src_paths"] = [page.file.abs_src_path for page in nav.pages]
+        self.config["src_paths"] = [page.file.src_path for page in nav.pages]
+        for k, srs_path in enumerate(self.config["src_paths"]):
+            logger.debug(f"[Pheasant] Page #{k + 1}: {srs_path}")
 
         return nav
 
@@ -55,12 +68,12 @@ class PheasantPlugin(BasePlugin):
         The raw source for a page as unicode string. If None is returned, the
         default loading from a file will be performed.
         """
-        logger.info(f"Uso [Pheasant] Converting: {page.file.src_path}")
-        # source = convert(page.file.abs_src_path)
+        logger.info(f"[Pheasant] Converting: {page.file.src_path}")
+        source = self.converter.convert(page.file.abs_src_path)
 
         return source
 
     def on_page_context(self, context, page, config, nav):
-        logger.info(f"Uso [Pheasant] Updating context: {page.file.src_path}")
+        logger.info(f"Uso [Pheasant] Updating config: {page.file.src_path}")
         # update_page_config(config, page.file.abs_src_path)
         return context
