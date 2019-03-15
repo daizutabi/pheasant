@@ -1,7 +1,7 @@
 import pytest
 
 
-def test_without_number(linker, parser_linker, source_simple):
+def test_without_number(linker, parser_number, parser_linker, source_simple):
     assert linker.number is None
 
     with pytest.raises(ValueError):

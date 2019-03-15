@@ -8,7 +8,7 @@ from pheasant.jupyter.renderer import Jupyter
 from pheasant.number.renderer import Linker, Number
 
 
-@pytest.mark.parametrize("renderers", [[Jupyter(), Number()], ["jupyter", "number"]])
+@pytest.mark.parametrize("renderers", [[Jupyter(), Number()], ("jupyter", "number")])
 def test_converter(renderers):
     converter = Converter()
     assert converter.convert("abc") == "abc"
@@ -44,7 +44,6 @@ def test_converter_other_special(converter):
     assert callable(converter())
     assert callable(converter("preprocess"))
     assert callable(converter("preprocess", "postprocess"))
-    assert converter()("# title\n").startswith("# <span")
 
 
 def test_multiple_parser(converter):
@@ -52,8 +51,18 @@ def test_multiple_parser(converter):
     number = converter['preprocess'][1]
     linker = converter['postprocess'][0]
     linker.number = number
-    output = converter()(source)
+    output = converter.convert(source, "preprocess")
+    output = re.sub(r"(\<.*?\>)|\n", "", output)
+    answer = ("# 1. titletext {#a#}## 1.1. "
+              "section1/0ZeroDivisionError: division by zero")
+    assert output == answer
+    number.reset()
+    output = converter.convert(source, ["preprocess", "postprocess"])
     output = re.sub(r"(\<.*?\>)|\n", "", output)
     answer = ("# 1. titletext [1](.#pheasant-number-a)## 1.1. "
               "section1/0ZeroDivisionError: division by zero")
+    assert output == answer
+    number.reset()
+    output = converter.convert(source)
+    output = re.sub(r"(\<.*?\>)|\n", "", output)
     assert output == answer

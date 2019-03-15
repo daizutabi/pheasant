@@ -32,8 +32,6 @@ class Jupyter(Renderer):
     def init(self) -> None:
         code = "\n".join(
             [
-                "import importlib",
-                "import inspect",
                 "import pheasant.jupyter.display",
                 "import pandas",
                 "pandas.options.display.max_colwidth = 0",
