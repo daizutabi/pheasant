@@ -11,6 +11,16 @@ from typing import Any, Callable, Dict, List
 from IPython.display import HTML, Latex
 
 
+class BokehHTML(HTML):
+    def __repr__(self):
+        return "bokeh"
+
+
+class HoloviewsHTML(HTML):
+    def __repr__(self):
+        return "holoviews"
+
+
 def matplotlib_to_base64(obj, output: str = "markdown") -> str:
     """Convert a Matplotlib's figure into base64 string."""
 
@@ -58,7 +68,7 @@ def bokeh_to_html(obj, **kwargs) -> HTML:
     from bokeh.embed import components
 
     script, div = components(obj)
-    return HTML("<bokeh/>" + script + div)
+    return BokehHTML(script + div)
 
 
 def bokeh_extra_resources() -> Dict[str, List[str]]:
@@ -72,7 +82,7 @@ def holoviews_to_html(obj, **kwargs) -> HTML:
 
     renderer = hv.renderer("bokeh")
     html = renderer.html(obj, fmt=None)  # fmt=None is important!
-    return HTML("<holoviews/>" + html)
+    return HoloviewsHTML(html)
 
 
 def holoviews_extra_resources() -> Dict[str, List[str]]:

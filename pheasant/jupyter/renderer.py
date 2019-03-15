@@ -72,8 +72,8 @@ class Jupyter(Renderer):
         if language not in self.config["kernel_name"]:
             return []
         outputs = execute(code, self.config["kernel_name"][language])
-        select_display_data(outputs)
         self.update_extra_resourse(outputs)
+        select_display_data(outputs)
         return outputs
 
     def update_extra_resourse(self, outputs):
@@ -82,27 +82,35 @@ class Jupyter(Renderer):
             "holoviews": holoviews_extra_resources,
         }
         extra_resources = self.config["extra_resources"]
+        if len(extra_resources["module"]) == len(module_dict):
+            return
+
         new_modules = []
         for output in outputs:
-            if "data" in output and "text/html" in output["data"]:
-                html = output["data"]["text/html"]
-                for module in module_dict.keys():
-                    if html.startswith(f"<{module}/>"):
-                        output["data"]["text/html"] = html[len(module) + 3 :]
-                        if module not in extra_resources["module"]:
-                            new_modules.append(module)
+            if (
+                "data" in output
+                and "text/html" in output["data"]
+                and "text/plain" in output["data"]
+            ):
+                module = output["data"]["text/plain"]
+                if (
+                    module in module_dict.keys()
+                    and module not in extra_resources["module"]
+                ):
+                    new_modules.append(module)
+
         for module in new_modules:
             extra_resources["module"].append(module)
             resources = module_dict[module]()
             for key in extra_resources:
                 if key in resources:
-                    values = [
-                        value
-                        for value in resources[key]
-                        if value not in extra_resources[key]
-                    ]
-                    if values:
-                        extra_resources[key].extend(values)
+                    extra_resources[key].extend(
+                        [
+                            value
+                            for value in resources[key]
+                            if value not in extra_resources[key]
+                        ]
+                    )
 
 
 def preprocess_fenced_code(code: str) -> str:

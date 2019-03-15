@@ -7,7 +7,8 @@ from bokeh.plotting import figure
 from IPython.display import HTML, Latex
 
 from pheasant.jupyter.display import (base64image, bokeh_extra_resources,
-                                      display, holoviews_extra_resources)
+                                      display, holoviews_extra_resources,
+                                      BokehHTML, HoloviewsHTML)
 
 
 def test_display_matplotlib():
@@ -31,7 +32,7 @@ def test_display_bokeh():
     plot.circle([1, 2, 3, 4, 5], [1, 2, 3, 4, 5], size=10)
 
     html = display(plot)
-    assert isinstance(html, HTML)
+    assert isinstance(html, BokehHTML)
 
 
 def test_bokeh_extra_resources():
@@ -45,7 +46,7 @@ def test_bokeh_extra_resources():
 def test_display_holoviews():
     curve = hv.Curve(((1, 2), (3, 4)))
     html = display(curve)
-    assert isinstance(html, HTML)
+    assert isinstance(html, HoloviewsHTML)
 
 
 def test_holoviews_extra_resources():

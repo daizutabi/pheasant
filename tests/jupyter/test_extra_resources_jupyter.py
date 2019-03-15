@@ -50,3 +50,15 @@ def test_extra_resources(jupyter, render):
     assert len(extra["extra_javascript"]) == 8
     assert len(extra["extra_raw_css"]) == 1
     assert len(extra["extra_raw_javascript"]) == 2
+
+
+execute("from IPython.display import HTML")
+execute("class A(HTML):\n    def __repr__(self):\n        return 'bokeh'\n")
+execute("A('<p>abc</p>')")
+execute("A()")
+execute("HTML()")
+class A:
+    def __repr__(self):
+        return 'abcd'
+a = A()
+a
