@@ -11,8 +11,6 @@ kind:
 header_period: True
 # Numbering level. 0 for multiple pages 2 for h2 etc.
 level: 0
-# Label file of reference to record reference information.
-label_file: .pheasant-number.json
 # Begin pattern
 begin_pattern: <!-- begin -->
 # End pattern

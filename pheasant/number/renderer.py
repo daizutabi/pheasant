@@ -1,5 +1,3 @@
-import json
-import os
 import re
 from typing import Any, Dict, Iterable, List, Optional, Tuple, Union
 
@@ -14,9 +12,8 @@ class Number(Renderer):
     LABEL_PATTERN = r"\{#(?P<label>\S+?)#\}"
 
     def __init__(self, config: Optional[Config] = None):
-        super().__init__(config)
+        super().__init__("number", config)
         self.register(Number.HEADER_PATTERN, self.render_header)
-        self.register(Number.LABEL_PATTERN, self.render_label)
         self.set_template("header")
         self.page_index: Union[int, List[int]] = 1
         self.label_context: Dict[str, Any] = {}
@@ -32,38 +29,12 @@ class Number(Renderer):
                 self.config["kind_prefix"][kind] = kind[0].upper() + kind[1:]
         self.reset_number_list()
 
+    def reset(self) -> None:
+        self.reset_number_list()
+
     def reset_number_list(self) -> None:
         for kind in self.config["kind"]:
             self.number_list[kind] = [0] * 6
-
-    def save_label_context(self):
-        for key in self.label_context:
-            self.label_context[key].update(abs_src_path=self.abs_src_path)
-
-        label_file = self.config["label_file"]
-        if os.path.exists(label_file):
-            with open(label_file, "r") as file:
-                label_context_all = json.load(file)
-                label_context_all.update(self.label_context)
-        else:
-            label_context_all = self.label_context
-
-        if os.path.exists(label_file):
-            os.remove(label_file)
-        with open(label_file, "w") as file:
-            json.dump(label_context_all, file)
-
-        for key in label_context_all:
-            label_context = label_context_all[key]
-            relpath = os.path.relpath(
-                label_context["abs_src_path"], os.path.dirname(self.abs_src_path)
-            )
-            relpath = relpath.replace("\\", "/")
-            if self.config["relpath_function"]:
-                relpath = self.config["relpath_function"](relpath)
-            label_context["ref"] = "#".join([relpath, label_context["id"]])
-
-        self.label_context = label_context_all
 
     def render_header(self, context: Context, parser: Parser) -> Iterable[str]:
         kind = self.header_kind[context["kind"][:3].lower()]
@@ -128,13 +99,36 @@ class Number(Renderer):
             if rest:
                 yield rest
 
+
+class Linker(Renderer):
+    def __init__(self, config: Optional[Config] = None):
+        super().__init__("number", config)
+        self.register(Number.LABEL_PATTERN, self.render_label)
+        self.set_template("header")
+        self.number: Optional[Number] = None
+
+    def set_number(self, number: Number) -> None:
+        self.number = number
+
     def render_label(self, context: Context, parser: Parser) -> Iterable[str]:
+        if self.number is None:
+            raise ValueError('A Number instance has not set yet.')
         label = context["label"]
-        found = label in self.label_context
-        context = self.label_context[label] if found else {"label": label}
+        found = label in self.number.label_context
+        context = self.number.label_context[label] if found else {"label": label}
         yield self.config["header_template"].render(
             reference=True, found=found, config=self.config, **context
         )
+
+        # for key in label_context_all:
+        #     label_context = label_context_all[key]
+        #     relpath = os.path.relpath(
+        #         label_context["abs_src_path"], os.path.dirname(self.abs_src_path)
+        #     )
+        #     relpath = relpath.replace("\\", "/")
+        #     if self.config["relpath_function"]:
+        #         relpath = self.config["relpath_function"](relpath)
+        #     label_context["ref"] = "#".join([relpath, label_context["id"]])
 
 
 def normalize_number_list(

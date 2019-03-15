@@ -1,22 +1,6 @@
 import re
 from typing import Pattern
 
-import pytest
-
-
-@pytest.fixture()
-def source_simple():
-    source_simple = "\n".join(
-        [
-            "begin\n# title {#label-a#}\ntext a",
-            "## section a\ntext b\n### subsection\n## section b\ntext c",
-            "#Fig figure title a\n\nfigure content a1\nfigure content a2",
-            "text d\n#Fig {#label-b#}figure title b",
-            "figure content b1\nfigure content b2\n\nend",
-        ]
-    )
-    return source_simple
-
 
 def test_complile_pattern():
     from pheasant.number.renderer import Number
@@ -39,15 +23,14 @@ def test_renderer(number):
     }
 
 
-def test_render_header(parser, number, source_simple):
-    assert "Number_render_header" in parser.patterns
-    assert "Number_render_label" in parser.patterns
-    assert parser.patterns["Number_render_header"].startswith(
+def test_render_header(parser_number, number, source_simple):
+    assert "Number_render_header" in parser_number.patterns
+    assert parser_number.patterns["Number_render_header"].startswith(
         "(?P<Number_render_header>"
     )
-    assert parser.renders["Number_render_header"] == number.render_header
+    assert parser_number.renders["Number_render_header"] == number.render_header
 
-    splitter = parser.splitter(source_simple)
+    splitter = parser_number.splitter(source_simple)
     next(splitter)
     cell = splitter.send(dict)
     assert cell["name"] is None
@@ -59,11 +42,11 @@ def test_render_header(parser, number, source_simple):
     assert cell["source"] == "# title {#label-a#}\n"
 
 
-def test_join(parser, number, source_simple):
-    output = "".join(parser.parse(source_simple))
+def test_join(parser_number, number, source_simple):
+    output = "".join(parser_number.parse(source_simple))
     answer = """begin
         # <span id="pheasant-number-label-a">1. title</span>
-        text a
+        text a Figure {#label-b#}
         ## 1.1. section a
         text b
         ### 1.1.1. subsection
@@ -78,7 +61,7 @@ def test_join(parser, number, source_simple):
         <div class="pheasant-number-figure" id="pheasant-number-label-b">
         <p>figure content b1
         figure content b2</p>
-        <p>Figure 2 figure title b</p>
+        <p>Figure 2 figure title b Section {#label-a#}</p>
         </div>
         end""".replace(
         "        ", ""

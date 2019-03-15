@@ -11,8 +11,10 @@ def test_converter():
 
     jupyter = Jupyter()
     number = Number()
-    converter.register(jupyter, number)
-    assert len(converter.parser.patterns) == 4
+    converter.register('markdown', [jupyter, number])
+    converter.parsers
+    converter.renderers
+    assert len(converter.parsers) == 1
 
     output = converter.convert("abd\n# a\n## b\n```python\n2*3\n```\n")
     output = re.sub(r"(\<.*?\>)|\n", "", output)

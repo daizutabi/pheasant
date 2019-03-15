@@ -20,27 +20,14 @@ class Jupyter(Renderer):
     RE_INLINE_CODE_PATTERN = re.compile(INLINE_CODE_PATTERN)
 
     def __init__(self, config: Optional[Config] = None):
-        super().__init__(config)
+        super().__init__('jupyter', config)
         self.register(Jupyter.FENCED_CODE_PATTERN, self.render_fenced_code)
         self.register(Jupyter.INLINE_CODE_PATTERN, self.render_inline_code)
         self.set_template(["fenced_code", "inline_code"])
-        self.reset_config()
-
-    def reset_config(self):
-        if "kernel_name" not in self.config:
-            self.config["kernel_name"] = {
-                key: values[0] for key, values in find_kernel_names().items()
-            }
-        if "extra_resources" not in self.config:
-            self.config["extra_resources"] = {}
-        for key in [
-            "module",
-            "extra_css",
-            "extra_javascript",
-            "extra_raw_css",
-            "extra_raw_javascript",
-        ]:
-            self.config["extra_resources"][key] = []
+        self.config["kernel_name"] = {
+            key: values[0] for key, values in find_kernel_names().items()
+        }
+        self.reset()
 
     def init(self) -> None:
         code = "\n".join(
@@ -53,6 +40,17 @@ class Jupyter(Renderer):
             ]
         )
         self.execute(code, "python")
+
+    def reset(self):
+        self.config["extra_resources"] = {}
+        for key in [
+            "module",
+            "extra_css",
+            "extra_javascript",
+            "extra_raw_css",
+            "extra_raw_javascript",
+        ]:
+            self.config["extra_resources"][key] = []
 
     def render_fenced_code(self, context: Context, parser: Parser) -> Iterable[str]:
         if "inline" in context["option"]:

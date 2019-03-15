@@ -12,14 +12,26 @@ Config = Dict[str, Any]
 
 
 class Renderer:
-    def __init__(self, config: Optional[Config] = None):
+    def __init__(self, name: str = "default", config: Optional[Config] = None):
+        self.name = name
         self.renders: Dict[str, Render] = {}
         self.config: Dict[str, Any] = {}
         self.load_config()
         self.update_config(config)
 
+    def __repr__(self):
+        return f"<Renderer({self.name}#{len(self.renders)})>"
+
     def register(self, pattern: str, render: Render) -> None:
         self.renders[pattern] = render
+
+    def init(self) -> None:
+        """Called once on build."""
+        pass
+
+    def reset(self) -> None:
+        """Called per page."""
+        pass
 
     def set_template(self, prefix: Union[str, List[str]] = "") -> None:
         module = importlib.import_module(self.__module__)

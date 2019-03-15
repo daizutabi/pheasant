@@ -5,6 +5,11 @@ import pytest
 from pheasant.core.parser import Parser, object_name
 
 
+def test_parser_without_pattern():
+    parser = Parser()
+    assert "".join(parser.parse("Text")) == "Text"
+
+
 @pytest.fixture()
 def parser():
     parser = Parser()

@@ -7,6 +7,10 @@
     {%- for output in outputs if output.type != 'display_data' and 'text/html' not in output.data and 'text/latex' not in output.data -%}
       {%- if output.type == 'error' -%}
           <div class="pheasant-fenced-code pheasant-error"><pre><code class="{{ language }}">{{ output_text(output) }}</code></pre></div>
+      {%- elif output.type == 'stream' and output.name == 'stdout' -%}
+          <div class="pheasant-fenced-code pheasant-stdout"><pre><code class="{{ language }}">{{ output_text(output) }}</code></pre></div>
+      {%- elif output.type == 'stream' and output.name == 'stderr' -%}
+          <div class="pheasant-fenced-code pheasant-stderr"><pre><code class="{{ language }}">{{ output_text(output) }}</code></pre></div>
       {%- else -%}
           <div class="pheasant-fenced-code pheasant-output"><pre><code class="{{ language }}">{{ output_text(output) }}</code></pre></div>
       {%- endif -%}

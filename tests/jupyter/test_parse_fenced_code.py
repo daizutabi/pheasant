@@ -24,7 +24,7 @@ def test_jupyter_parse_text(parse):
         [
             '<div class="pheasant-fenced-code pheasant-input">'
             '<pre><code class="python">print(1)</code></pre></div>'
-            '<div class="pheasant-fenced-code pheasant-output">'
+            '<div class="pheasant-fenced-code pheasant-stdout">'
             '<pre><code class="python">1</code></pre></div>'
         ]
     )
