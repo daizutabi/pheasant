@@ -34,11 +34,11 @@ def test_render_fenced_code(parser, jupyter, source_simple):
 
     splitter = parser.splitter(source_simple)
     next(splitter)
-    cell = splitter.send(all)
+    cell = splitter.send(dict)
     assert cell["name"] is None
     assert cell["context"] == {}
     assert cell["source"] == "begin\n"
-    cell = splitter.send(all)
+    cell = splitter.send(dict)
     assert cell["name"] == "Jupyter_render_fenced_code"
     assert cell["context"] == {
         "mark": "```",
@@ -46,16 +46,16 @@ def test_render_fenced_code(parser, jupyter, source_simple):
         "option": "",
         "code": "a=1\nb=1",
     }
-    cell = splitter.send(all)
-    cell = splitter.send(all)
+    cell = splitter.send(dict)
+    cell = splitter.send(dict)
     assert cell["context"] == {
         "mark": "```",
         "language": "ruby",
         "option": "inline",
         "code": "a=1\nb=1",
     }
-    cell = splitter.send(all)
-    cell = splitter.send(all)
+    cell = splitter.send(dict)
+    cell = splitter.send(dict)
     assert cell["context"] == {
         "mark": "~~~",
         "language": "bash",

@@ -102,7 +102,7 @@ class Number(Renderer):
             yield self.config["header_template"].render(**context_, config=self.config)
         else:
             # Need to detect the range of a numbered object.
-            content = parser.send(all)
+            content = parser.send(dict)
             if content["match"]:
                 content = content["result"]()
                 rest = ""

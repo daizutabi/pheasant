@@ -15,7 +15,7 @@ def parser():
         if len(context["sharp"]) <= 2:
             yield content
         else:
-            splitted = parser.send(all)
+            splitted = parser.send(dict)
             if splitted["match"] is None:
                 yield "abc"
             else:
@@ -107,8 +107,8 @@ def test_splitter_send(parser, source_simple):
     assert splitter.send(dict)["source"] == "end"
     splitter = parser.splitter(source_simple)
     next(splitter)
-    assert splitter.send(all)["source"] == "begin\n"
-    assert splitter.send(all)["match"].group() == "## title\n"
+    assert splitter.send(dict)["source"] == "begin\n"
+    assert splitter.send(dict)["match"].group() == "## title\n"
 
 
 def test_parse(parser, source_complex):
@@ -132,5 +132,5 @@ def test_result(parser, source_complex):
     next(splitter)
     next(splitter)
     next(splitter)
-    cell = splitter.send(all)
+    cell = splitter.send(dict)
     assert cell["result"]() == "<pre><code>print(1)</code></pre>"

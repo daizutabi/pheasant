@@ -49,11 +49,11 @@ def test_render_header(parser, number, source_simple):
 
     splitter = parser.splitter(source_simple)
     next(splitter)
-    cell = splitter.send(all)
+    cell = splitter.send(dict)
     assert cell["name"] is None
     assert cell["context"] == {}
     assert cell["source"] == "begin\n"
-    cell = splitter.send(all)
+    cell = splitter.send(dict)
     assert cell["name"] == "Number_render_header"
     assert cell["context"] == {"prefix": "#", "kind": "", "title": "title {#label-a#}"}
     assert cell["source"] == "# title {#label-a#}\n"

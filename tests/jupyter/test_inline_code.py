@@ -10,9 +10,9 @@ def source_simple():
 def test_render_inline_code(parser, jupyter, source_simple):
     splitter = parser.splitter(source_simple)
     next(splitter)
-    cell = splitter.send(all)
-    cell = splitter.send(all)
+    cell = splitter.send(dict)
+    cell = splitter.send(dict)
     assert cell["context"] == {"code": "a=1"}
-    cell = splitter.send(all)
-    cell = splitter.send(all)
+    cell = splitter.send(dict)
+    cell = splitter.send(dict)
     assert cell["context"] == {"code": "a;b"}

@@ -4,7 +4,7 @@ from typing import (Any, Callable, Dict, Generator, Iterable, Match, Optional,
 
 Render = Callable[[Dict[str, str], "Parser"], Iterable[str]]
 Cell = Union[str, Dict[str, Any], Match[str]]
-Splitter = Generator[Optional[Cell], Any, None]
+Splitter = Generator[Optional[Cell], Optional[type], None]
 Seed = Dict[str, Any]
 
 
@@ -23,15 +23,16 @@ class Parser:
 
     def parse(self, source: str) -> Iterable[str]:
         self.generator = self.splitter(source)
-        next(self.generator)
+        next(self.generator)  # go to the first yield.
         for cell in self.generator:
             if isinstance(cell, str):
                 yield cell
             elif isinstance(cell, Match):
                 seed = self.sow(cell)
-                yield from seed["render"](seed["context"], self)
+                yield from seed["render"](seed["context"], self)  # Deligates to render
 
-    def send(self, arg) -> Optional[Cell]:
+    def send(self, arg):
+        """Shortcut to self.generator.send"""
         if self.generator:
             return self.generator.send(arg)
         else:
@@ -52,7 +53,9 @@ class Parser:
         if cursor < len(source):
             yield self.reap(source[cursor:], None, type_)
 
-    def reap(self, source: str, match: Optional[Match[str]], type_: Any) -> Cell:
+    def reap(
+        self, source: str, match: Optional[Match[str]], type_: Optional[type]
+    ) -> Cell:
         """Reap the matched source and match object according to what the client
         wants to send.
 
@@ -63,9 +66,9 @@ class Parser:
         match
             The match object
         type_
-            str for a plain text source, dict for a dictionary, all for all
-            information as a dictionay, any other for a plain text source or
-            a Match object according to whether current source does match any
+            str for a plain text source, dict for a dictionary which contains
+            contents for rendering, and None for a plain text source or
+            a Match object according to whether current source matches any
             patterns or not.
 
         Returns
@@ -76,11 +79,6 @@ class Parser:
         if type_ == str:
             return source
         elif type_ == dict:
-            if match:
-                return self.sow(match)
-            else:
-                return dict(name=None, render=None, source=source, context={})
-        elif type_ == all:
             if match:
                 return dict(match=match, **self.sow(match))
             else:
