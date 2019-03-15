@@ -23,13 +23,13 @@ class Number(Renderer):
         self.number_list: Dict[str, List[int]] = {}
         self.header_kind: Dict[str, str] = {}
         self.abs_src_path = "."
+        self.config["kind_prefix"] = {}
         for kind in self.config["kind"]:
             if kind == "header":
                 self.header_kind[""] = "header"
             else:
                 self.header_kind[kind[:3].lower()] = kind
-                default_prefix = kind[0].upper() + kind[1:]
-                self.config["kind_prefix"].setdefault(kind, default_prefix)
+                self.config["kind_prefix"][kind] = kind[0].upper() + kind[1:]
         self.reset_number_list()
 
     def reset_number_list(self) -> None:

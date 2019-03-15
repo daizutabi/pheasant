@@ -2,6 +2,7 @@ import importlib
 import os
 from typing import Any, Dict, List, Optional, Union
 
+import yaml
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 from pheasant.core.parser import Render
@@ -14,15 +15,9 @@ class Renderer:
     def __init__(self, config: Optional[Config] = None):
         self.renders: Dict[str, Render] = {}
         self.config: Dict[str, Any] = {}
-        config_module = ".".join(self.__module__.split(".")[:-1]) + ".config"
-        try:
-            module = importlib.import_module(config_module)
-            if hasattr(module, "config"):
-                self.config.update(getattr(module, "config"))  # for multiple instantes
-        except Exception:
-            pass
+        self.read_config()
         if config:
-            update_config(self.config, config)
+            self.update_config(config)
 
     def register(self, pattern: str, render: Render) -> None:
         self.renders[pattern] = render
@@ -41,14 +36,22 @@ class Renderer:
             env = Environment(loader=loader, autoescape=select_autoescape(["jinja2"]))
             self.config[template] = env.get_template(template_file)
 
+    def read_config(self, path: Optional[str] = None) -> None:
+        if path is None:
+            module = importlib.import_module(self.__module__)
+            path = os.path.join(os.path.dirname(module.__file__), "config.yml")
+        if os.path.exists(path):
+            with open(path, "r") as f:
+                config = yaml.load(f)
+            self.update_config(config)
 
-def update_config(config: Config, update: Config) -> None:
-    for key, value in update.items():
-        if key not in config:
-            config[key] = value
-        elif isinstance(value, list):
-            config[key].extend(value)
-        elif isinstance(value, dict):
-            config[key].update(value)
-        else:
-            config[key] = value
+    def update_config(self, config) -> None:
+        for key, value in config.items():
+            if key not in self.config:
+                self.config[key] = value
+            elif isinstance(value, list):
+                self.config[key].extend(value)
+            elif isinstance(value, dict):
+                self.config[key].update(value)
+            else:
+                self.config[key] = value
