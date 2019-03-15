@@ -56,13 +56,13 @@ def test_execute_display_bokeh():
         ]
     )
     outputs = execute(code)
-    assert outputs[0]["data"]["text/html"].startswith("\n<script")
+    assert outputs[0]["data"]["text/html"].startswith("<bokeh/>\n<script")
 
 
 def test_execute_display_holoviews():
     code = "curve = hv.Curve(((1, 2), (3, 4)))\ndisplay(curve)"
     outputs = execute(code)
-    assert outputs[0]["data"]["text/html"].startswith("<div style")
+    assert outputs[0]["data"]["text/html"].startswith("<holoviews/><div style")
 
 
 def test_execute_display_sympy():

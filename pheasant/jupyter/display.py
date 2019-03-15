@@ -5,11 +5,10 @@ IMPORTANT: `display` function is called from jupyter kernel.
 import base64
 import io
 import re
+from ast import literal_eval
 from typing import Any, Callable, Dict, List
 
 from IPython.display import HTML, Latex
-
-from pheasant.jupyter.renderer import delete_style
 
 
 def matplotlib_to_base64(obj, output: str = "markdown") -> str:
@@ -59,7 +58,7 @@ def bokeh_to_html(obj, **kwargs) -> HTML:
     from bokeh.embed import components
 
     script, div = components(obj)
-    return HTML(script + div)
+    return HTML("<bokeh/>" + script + div)
 
 
 def bokeh_extra_resources() -> Dict[str, List[str]]:
@@ -73,7 +72,7 @@ def holoviews_to_html(obj, **kwargs) -> HTML:
 
     renderer = hv.renderer("bokeh")
     html = renderer.html(obj, fmt=None)  # fmt=None is important!
-    return HTML(html)
+    return HTML("<holoviews/>" + html)
 
 
 def holoviews_extra_resources() -> Dict[str, List[str]]:
@@ -129,3 +128,53 @@ def display(obj: Any, **kwargs: Any) -> Any:
         return converter(obj, **kwargs)
     else:
         return obj
+
+
+DISPLAY_DATA_PRIORITY = [
+    # "application/vnd.jupyter.widget-state+json",
+    # "application/vnd.jupyter.widget-view+json",
+    "application/javascript",
+    "text/html",
+    "text/markdown",
+    "image/svg+xml",
+    "text/latex",
+    "image/png",
+    "image/jpeg",
+    "text/plain",
+]
+
+
+def select_display_data(outputs: List[Dict]) -> None:
+    """Select display data with the highest priority."""
+    for output in outputs:
+        for data_type in DISPLAY_DATA_PRIORITY:
+            if "data" in output and data_type in output["data"]:
+                text = output["data"][data_type]
+                if data_type == "text/html" and '"dataframe"' in text:
+                    text = delete_style(text)
+                output["data"] = {data_type: text}
+                break
+
+
+PANDAS_PATTERN = re.compile(
+    r'(<style scoped>.*?</style>)|( border="1")|( style="text-align: right;")',
+    flags=re.DOTALL,
+)
+
+
+def delete_style(html: str) -> str:
+    """Delete style from Pandas DataFrame html."""
+    return PANDAS_PATTERN.sub("", html)
+
+
+def strip_text(outputs: list) -> None:
+    for output in outputs:
+        if output["type"] == "execute_result":
+            if "text/html" in output["data"]:
+                return
+            elif "text/plain" in output["data"]:
+                text = output["data"]["text/plain"]
+                if text.startswith("'"):
+                    text = literal_eval(text)
+                output["data"] = {"text/plain": text}
+                break

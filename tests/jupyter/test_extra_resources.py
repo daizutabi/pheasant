@@ -1,7 +1,6 @@
 import pytest
 from bokeh.resources import CDN
 
-from pheasant.jupyter.client import execute
 from pheasant.jupyter.display import (bokeh_extra_resources,
                                       holoviews_extra_resources)
 

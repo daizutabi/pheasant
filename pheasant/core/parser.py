@@ -39,11 +39,18 @@ class Parser:
             return None
 
     def splitter(self, source: str) -> Splitter:
+        """Split the source into a cell and yield it
+
+        The type of the cell depends on the sent arg `type_`.
+        """
+        type_ = yield None
+        if not self.patterns:
+            yield source
+            return
         self.pattern = re.compile(
             "|".join(self.patterns.values()), re.MULTILINE | re.DOTALL
         )
         cursor = 0
-        type_ = yield None
         for match in self.pattern.finditer(source):
             start, end = match.start(), match.end()
             if cursor < start:

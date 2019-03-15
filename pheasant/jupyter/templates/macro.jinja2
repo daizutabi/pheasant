@@ -14,11 +14,11 @@
   {% endif -%}
   {%- for type in output.data -%}
     {%- if type == 'text/html' -%}
-        {{ output.data['text/html'] }}
+      {%- autoescape false -%}{{ output.data['text/html'] }}{%- endautoescape -%}
     {%- elif type == 'text/plain' -%}
         {{ output.data['text/plain'] }}
     {%- elif type == 'text/latex' -%}
-        {{ output.data['text/latex'] }}
+      {%- autoescape false -%}{{ output.data['text/latex'] }}{%- endautoescape -%}
     {%- endif -%}
   {%- endfor -%}
   {%- if display -%}

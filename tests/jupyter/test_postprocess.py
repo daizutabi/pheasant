@@ -1,5 +1,5 @@
 from pheasant.jupyter.client import execute
-from pheasant.jupyter.renderer import select_display_data, strip_text
+from pheasant.jupyter.display import select_display_data, strip_text
 
 
 def test_import():

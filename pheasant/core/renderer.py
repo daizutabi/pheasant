@@ -15,9 +15,8 @@ class Renderer:
     def __init__(self, config: Optional[Config] = None):
         self.renders: Dict[str, Render] = {}
         self.config: Dict[str, Any] = {}
-        self.read_config()
-        if config:
-            self.update_config(config)
+        self.load_config()
+        self.update_config(config)
 
     def register(self, pattern: str, render: Render) -> None:
         self.renders[pattern] = render
@@ -36,7 +35,7 @@ class Renderer:
             env = Environment(loader=loader, autoescape=select_autoescape(["jinja2"]))
             self.config[template] = env.get_template(template_file)
 
-    def read_config(self, path: Optional[str] = None) -> None:
+    def load_config(self, path: Optional[str] = None) -> None:
         if path is None:
             module = importlib.import_module(self.__module__)
             path = os.path.join(os.path.dirname(module.__file__), "config.yml")
@@ -45,7 +44,9 @@ class Renderer:
                 config = yaml.load(f)
             self.update_config(config)
 
-    def update_config(self, config) -> None:
+    def update_config(self, config: Optional[Config]) -> None:
+        if config is None:
+            return
         for key, value in config.items():
             if key not in self.config:
                 self.config[key] = value

@@ -1,11 +1,13 @@
 import re
-from ast import literal_eval
 from typing import Any, Dict, Iterable, List, Match, Optional
 
-from pheasant.core import markdown
+# from pheasant.core import markdown
 from pheasant.core.parser import Parser
 from pheasant.core.renderer import Config, Context, Renderer
 from pheasant.jupyter.client import execute, find_kernel_names
+from pheasant.jupyter.display import (bokeh_extra_resources,
+                                      holoviews_extra_resources,
+                                      select_display_data)
 
 
 class Jupyter(Renderer):
@@ -22,10 +24,23 @@ class Jupyter(Renderer):
         self.register(Jupyter.FENCED_CODE_PATTERN, self.render_fenced_code)
         self.register(Jupyter.INLINE_CODE_PATTERN, self.render_inline_code)
         self.set_template(["fenced_code", "inline_code"])
+        self.reset_config()
+
+    def reset_config(self):
         if "kernel_name" not in self.config:
             self.config["kernel_name"] = {
                 key: values[0] for key, values in find_kernel_names().items()
             }
+        if "extra_resources" not in self.config:
+            self.config["extra_resources"] = {}
+        for key in [
+            "module",
+            "extra_css",
+            "extra_javascript",
+            "extra_raw_css",
+            "extra_raw_javascript",
+        ]:
+            self.config["extra_resources"][key] = []
 
     def init(self) -> None:
         code = "\n".join(
@@ -42,13 +57,13 @@ class Jupyter(Renderer):
     def render_fenced_code(self, context: Context, parser: Parser) -> Iterable[str]:
         if "inline" in context["option"]:
             context["code"] = preprocess_fenced_code(context["code"])
-        yield self.render(context, self.config["fenced_code_template"])
+        yield self.render(self.config["fenced_code_template"], context)
 
     def render_inline_code(self, context: Context, parser: Parser) -> Iterable[str]:
         context["code"] = preprocess_inline_code(context["code"])
-        yield self.render(context, self.config["inline_code_template"])
+        yield self.render(self.config["inline_code_template"], context)
 
-    def render(self, context: Dict[str, Any], template) -> str:
+    def render(self, template, context: Dict[str, Any]) -> str:
         outputs = self.execute(code=context["code"], language=context["language"])
         context.update(outputs=outputs, config=self.config)
         return template.render(**context)
@@ -58,12 +73,36 @@ class Jupyter(Renderer):
             return []
         outputs = execute(code, self.config["kernel_name"][language])
         select_display_data(outputs)
+        self.update_extra_resourse(outputs)
         return outputs
 
-        # 3type: stream, name: stdout, text: output
-        # 3type: error, ename, evalue
-        # 3type: execute_result, data:
-        # 3type: display_data, data
+    def update_extra_resourse(self, outputs):
+        module_dict = {
+            "bokeh": bokeh_extra_resources,
+            "holoviews": holoviews_extra_resources,
+        }
+        extra_resources = self.config["extra_resources"]
+        new_modules = []
+        for output in outputs:
+            if "data" in output and "text/html" in output["data"]:
+                html = output["data"]["text/html"]
+                for module in module_dict.keys():
+                    if html.startswith(f"<{module}/>"):
+                        output["data"]["text/html"] = html[len(module) + 3 :]
+                        if module not in extra_resources["module"]:
+                            new_modules.append(module)
+        for module in new_modules:
+            extra_resources["module"].append(module)
+            resources = module_dict[module]()
+            for key in extra_resources:
+                if key in resources:
+                    values = [
+                        value
+                        for value in resources[key]
+                        if value not in extra_resources[key]
+                    ]
+                    if values:
+                        extra_resources[key].extend(values)
 
 
 def preprocess_fenced_code(code: str) -> str:
@@ -112,53 +151,3 @@ def replace_for_display(code: str, ignore_equal: bool = False) -> str:
         precode = ""
 
     return f'{precode}pheasant.jupyter.display.display({code}, output="{output}")'
-
-
-DISPLAY_DATA_PRIORITY = [
-    # "application/vnd.jupyter.widget-state+json",
-    # "application/vnd.jupyter.widget-view+json",
-    "application/javascript",
-    "text/html",
-    "text/markdown",
-    "image/svg+xml",
-    "text/latex",
-    "image/png",
-    "image/jpeg",
-    "text/plain",
-]
-
-
-def select_display_data(outputs: List[Dict]) -> None:
-    """Select display data with the highest priority."""
-    for output in outputs:
-        for data_type in DISPLAY_DATA_PRIORITY:
-            if "data" in output and data_type in output["data"]:
-                text = output["data"][data_type]
-                if data_type == "text/html" and '"dataframe"' in text:
-                    text = delete_style(text)
-                output["data"] = {data_type: text}
-                break
-
-
-PANDAS_PATTERN = re.compile(
-    r'(<style scoped>.*?</style>)|( border="1")|( style="text-align: right;")',
-    flags=re.DOTALL,
-)
-
-
-def delete_style(html: str) -> str:
-    """Delete style from Pandas DataFrame html."""
-    return PANDAS_PATTERN.sub("", html)
-
-
-def strip_text(outputs: list) -> None:
-    for output in outputs:
-        if output["type"] == "execute_result":
-            if "text/html" in output["data"]:
-                return
-            elif "text/plain" in output["data"]:
-                text = output["data"]["text/plain"]
-                if text.startswith("'"):
-                    text = literal_eval(text)
-                output["data"] = {"text/plain": text}
-                break
