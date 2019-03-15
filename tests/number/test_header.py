@@ -3,8 +3,6 @@ from typing import Pattern
 
 import pytest
 
-from pheasant.number.renderer import Number
-
 
 @pytest.fixture()
 def source_simple():
@@ -21,6 +19,8 @@ def source_simple():
 
 
 def test_complile_pattern():
+    from pheasant.number.renderer import Number
+
     assert isinstance(re.compile(Number.HEADER_PATTERN), Pattern)
     assert isinstance(re.compile(Number.LABEL_PATTERN), Pattern)
 
@@ -60,8 +60,6 @@ def test_render_header(parser, number, source_simple):
 
 
 def test_join(parser, number, source_simple):
-    number.config["header_template_file"] = "simple.jinja2"
-    number.set_template("header")
     output = "".join(parser.parse(source_simple))
     answer = """begin
         # <span id="pheasant-number-label-a">1. title</span>

@@ -17,12 +17,10 @@ class Jupyter(Renderer):
     INLINE_CODE_PATTERN = r"\{\{(?P<code>.+?)\}\}"
     RE_INLINE_CODE_PATTERN = re.compile(INLINE_CODE_PATTERN)
 
-    def __init__(
-        self, parser: Optional[Parser] = None, config: Optional[Config] = None
-    ):
-        super().__init__(parser, config)
-        self.parser.register(Jupyter.FENCED_CODE_PATTERN, self.render_fenced_code)
-        self.parser.register(Jupyter.INLINE_CODE_PATTERN, self.render_inline_code)
+    def __init__(self, config: Optional[Config] = None):
+        super().__init__(config)
+        self.register(Jupyter.FENCED_CODE_PATTERN, self.render_fenced_code)
+        self.register(Jupyter.INLINE_CODE_PATTERN, self.render_inline_code)
         self.set_template(["fenced_code", "inline_code"])
         if "kernel_name" not in self.config:
             self.config["kernel_name"] = {

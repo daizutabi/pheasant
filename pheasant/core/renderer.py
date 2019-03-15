@@ -4,17 +4,15 @@ from typing import Any, Dict, List, Optional, Union
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
-from pheasant.core.parser import Parser, Render
+from pheasant.core.parser import Render
 
 Context = Dict[str, str]
 Config = Dict[str, Any]
 
 
 class Renderer:
-    def __init__(
-        self, parser: Optional[Parser] = None, config: Optional[Config] = None
-    ):
-        self.parser = parser
+    def __init__(self, config: Optional[Config] = None):
+        self.renders: Dict[str, Render] = {}
         self.config: Dict[str, Any] = {}
         config_module = ".".join(self.__module__.split(".")[:-1]) + ".config"
         try:
@@ -27,8 +25,7 @@ class Renderer:
             update_config(self.config, config)
 
     def register(self, pattern: str, render: Render) -> None:
-        if self.parser:
-            self.parser.register(pattern, render)
+        self.renders[pattern] = render
 
     def set_template(self, prefix: Union[str, List[str]] = "") -> None:
         module = importlib.import_module(self.__module__)

@@ -5,12 +5,16 @@ from pheasant.jupyter.renderer import Jupyter
 
 
 @pytest.fixture()
-def parser():
-    parser = Parser()
-    return parser
+def jupyter():
+    jupyter = Jupyter()
+    return jupyter
 
 
 @pytest.fixture()
-def jupyter(parser):
-    jupyter = Jupyter(parser)
-    return jupyter
+def parser(jupyter):
+    parser = Parser()
+
+    for pattern, render in jupyter.renders.items():
+        parser.register(pattern, render)
+
+    return parser

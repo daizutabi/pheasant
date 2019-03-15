@@ -13,12 +13,10 @@ class Number(Renderer):
     HEADER_PATTERN = r"^(?P<prefix>#+)(?P<kind>\S*?) +(?P<title>.+?)\n"
     LABEL_PATTERN = r"\{#(?P<label>\S+?)#\}"
 
-    def __init__(
-        self, parser: Optional[Parser] = None, config: Optional[Config] = None
-    ):
-        super().__init__(parser, config)
-        self.parser.register(Number.HEADER_PATTERN, self.render_header)
-        self.parser.register(Number.LABEL_PATTERN, self.render_label)
+    def __init__(self, config: Optional[Config] = None):
+        super().__init__(config)
+        self.register(Number.HEADER_PATTERN, self.render_header)
+        self.register(Number.LABEL_PATTERN, self.render_label)
         self.set_template("header")
         self.page_index: Union[int, List[int]] = 1
         self.label_context: Dict[str, Any] = {}
