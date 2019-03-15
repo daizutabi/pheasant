@@ -84,16 +84,16 @@ def test_reap(parser, source_simple):
     next(splitter)
     for k, match in enumerate(splitter):
         if k == 1:
-            cell = parser._reap(match)
-            assert cell["name"] == object_name(cell["render"])
-            context = cell["context"]
-            assert cell["source"] == "## title\n"
+            seed = parser.sow(match)
+            assert seed["name"] == object_name(seed["render"])
+            context = seed["context"]
+            assert seed["source"] == "## title\n"
             assert context["sharp"] == "##"
             assert context["title"] == "title"
         elif k == 2:
-            cell = parser._reap(match)
-            context = cell["context"]
-            assert cell["source"] == "```\nprint(1)\n```\n"
+            seed = parser.sow(match)
+            context = seed["context"]
+            assert seed["source"] == "```\nprint(1)\n```\n"
             assert context["prefix"] == "```"
             assert context["code"] == "print(1)"
 

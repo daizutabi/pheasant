@@ -2,10 +2,10 @@ import re
 from typing import (Any, Callable, Dict, Generator, Iterable, Match, Optional,
                     Pattern, Union)
 
-Splitted = Union[str, Dict[str, Any], Match[str]]
-Splitter = Generator[Splitted, Any, None]
 Render = Callable[[Dict[str, str], "Parser"], Iterable[str]]
-Gen = Generator[Any, Optional[type], None]
+Cell = Union[str, Dict[str, Any], Match[str]]
+Splitter = Generator[Optional[Cell], Any, None]
+Seed = Dict[str, Any]
 
 
 class Parser:
@@ -13,7 +13,7 @@ class Parser:
         self.patterns: Dict[str, str] = {}
         self.renders: Dict[str, Render] = {}
         self.pattern: Optional[Pattern] = None
-        self.generator: Optional[Gen] = None
+        self.generator: Optional[Splitter] = None
 
     def register(self, pattern: str, render: Render) -> None:
         name = object_name(render)
@@ -24,17 +24,20 @@ class Parser:
     def parse(self, source: str) -> Iterable[str]:
         self.generator = self.splitter(source)
         next(self.generator)
-        for splitted in self.generator:
-            if isinstance(splitted, str):
-                yield splitted
-            elif isinstance(splitted, Match):
-                cell = self._reap(splitted)
-                yield from cell["render"](cell["context"], self)
+        for cell in self.generator:
+            if isinstance(cell, str):
+                yield cell
+            elif isinstance(cell, Match):
+                seed = self.sow(cell)
+                yield from seed["render"](seed["context"], self)
 
-    def send(self, arg):
-        return self.generator.send(arg)
+    def send(self, arg) -> Optional[Cell]:
+        if self.generator:
+            return self.generator.send(arg)
+        else:
+            return None
 
-    def splitter(self, source: str) -> Gen:
+    def splitter(self, source: str) -> Splitter:
         self.pattern = re.compile(
             "|".join(self.patterns.values()), re.MULTILINE | re.DOTALL
         )
@@ -43,25 +46,43 @@ class Parser:
         for match in self.pattern.finditer(source):
             start, end = match.start(), match.end()
             if cursor < start:
-                type_ = yield self._sow(source[cursor:start], None, type_)
-            type_ = yield self._sow(match.group(), match, type_)
+                type_ = yield self.reap(source[cursor:start], None, type_)
+            type_ = yield self.reap(match.group(), match, type_)
             cursor = end
         if cursor < len(source):
-            yield self._sow(source[cursor:], None, type_)
+            yield self.reap(source[cursor:], None, type_)
 
-    def _sow(
-        self, source: str, match: Optional[Match[str]], type_: Optional[type]
-    ) -> Splitted:
+    def reap(self, source: str, match: Optional[Match[str]], type_: Any) -> Cell:
+        """Reap the matched source and match object according to what the client
+        wants to send.
+
+        Parameters
+        ----------
+        source
+            The matched source
+        match
+            The match object
+        type_
+            str for a plain text source, dict for a dictionary, all for all
+            information as a dictionay, any other for a plain text source or
+            a Match object according to whether current source does match any
+            patterns or not.
+
+        Returns
+        -------
+        str, dict, or Match
+            Return type depends on the `type_` arg that was sent from a client.
+        """
         if type_ == str:
             return source
         elif type_ == dict:
             if match:
-                return self._reap(match)
+                return self.sow(match)
             else:
                 return dict(name=None, render=None, source=source, context={})
         elif type_ == all:
             if match:
-                return dict(match=match, **self._reap(match))
+                return dict(match=match, **self.sow(match))
             else:
                 return dict(
                     name=None, render=None, source=source, context={}, match=None
@@ -69,7 +90,22 @@ class Parser:
         else:
             return match or source
 
-    def _reap(self, match: Match[str]) -> Dict[str, Any]:
+    def sow(self, match: Match[str]) -> Seed:
+        """Sow a `seed` (render or other information) suitable for the match object
+        according to the pattern name.
+
+        Return a dictionary which contains the required and helpful information for
+        rendering the match object such as pattern's name, render, context, etc.
+
+        Parameters
+        ----------
+        match
+            A match object.
+
+        Returns
+        -------
+        dict
+        """
         groupdict = match.groupdict()
         name = ""
 
@@ -98,7 +134,9 @@ class Parser:
 
 
 def rename_pattern(pattern: str, name: str) -> str:
-    """Rename with prefix.
+    """Rename a pattern with a prefix to enable to determine the render which
+    should process the pattern. Double underscore divides the pattern name into
+    a render name to determine a render and a real name for a render's processing.
 
     Examples
     --------
@@ -115,6 +153,31 @@ def rename_pattern(pattern: str, name: str) -> str:
 
 
 def object_name(obj: Any) -> str:
+    """Return a suitable object name as a pattern name.
+
+    Parameters
+    ----------
+    obj
+        Named object for a pattern.
+
+    Returns
+    -------
+    str
+        The suitable object name as a pattern name.
+
+    Examples
+    --------
+    >>> class A:
+    ...   def func(self):
+    ...      passs
+    >>> a = A()
+    >>> object_name(a.func)
+    'A_func'
+    >>> def func():
+    ...   pass
+    >>> object_name(func).startswith('func_0x')
+    True
+    """
     name = str(obj)
     if "method" in str(type(obj)):
         return str(obj).split(" ")[2].replace(".", "_")
