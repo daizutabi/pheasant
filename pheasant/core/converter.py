@@ -1,3 +1,4 @@
+import codecs
 import importlib
 from functools import partial
 from typing import Callable, Dict, Iterable, List, Optional, Union
@@ -63,7 +64,25 @@ class Converter:
             for pattern, render in renderer.renders.items():
                 parser.register(pattern, render)
 
-    def convert(self, source: str, names: Optional[Iterable[str]] = None) -> str:
+    def convert(
+        self, source: str, names: Optional[Union[str, Iterable[str]]] = None
+    ) -> str:
+        """Convert source text.
+
+        Parameters
+        ----------
+        source
+            The text string to be converted.
+        names
+            Parser names to be used. If not specified. all of the registered
+            parsers will be used.
+
+        Returns
+        -------
+        Converted source text.
+        """
+        if isinstance(names, str):
+            names = [names]
         names = names or self.names
         for name in names:
             parser = self.parsers[name]
@@ -71,8 +90,30 @@ class Converter:
 
         return source
 
+    def convert_from_file(
+        self, path: str, names: Optional[Iterable[str]] = None
+    ) -> str:
+        """Convert source text from file.
+
+        Parameters
+        ----------
+        source
+            The text string to be converted.
+        names
+            Parser names to be used. If not specified. all of the registered
+            parsers will be used.
+
+        Returns
+        -------
+        converted source text.
+        """
+        with codecs.open(path, "r", "utf8") as file:
+            source = file.read()
+        source = source.replace("\r\n", "\n").replace("\r", "\n")
+        return self.convert(source, names)
+
     def __call__(self, *names: str) -> Callable[[str], str]:
-        return partial(self.convert, names=names)
+        return partial(self.convert_from_file, names=names)
 
 
 def resolve_renderer(name: str) -> Renderer:
