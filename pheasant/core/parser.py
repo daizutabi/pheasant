@@ -16,7 +16,7 @@ class Parser:
         self.generator: Optional[Splitter] = None
 
     def __repr__(self):
-        return f"<{self.__class__.__qualname__}#{len(self.patterns)})>"
+        return f"<{self.__class__.__qualname__}[{len(self.patterns)}])>"
 
     def register(self, pattern: str, render: Render) -> None:
         name = object_name(render)

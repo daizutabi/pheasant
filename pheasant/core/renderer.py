@@ -19,7 +19,7 @@ class Renderer:
         self.update_config(config)
 
     def __repr__(self):
-        return f"<{self.__class__.__qualname__}#{len(self.renders)})>"
+        return f"<{self.__class__.__qualname__}[{len(self.renders)}])>"
 
     def register(self, pattern: str, render: Render) -> None:
         self.renders[pattern] = render

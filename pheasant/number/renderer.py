@@ -38,6 +38,7 @@ class Number(Renderer):
             self.number_list[kind] = [0] * 6
 
     def render_header(self, context: Context, parser: Parser) -> Iterable[str]:
+        print("====================here==========================")
         kind = self.header_kind[context["kind"][:3].lower()]
         depth = len(context["prefix"]) - 1
         self.number_list[kind][depth] += 1
