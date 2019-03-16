@@ -1,9 +1,11 @@
 import codecs
 import os
+from ast import literal_eval
 from typing import Any, Dict, Iterable, Optional
 
 from pheasant.core.parser import Parser
 from pheasant.core.renderer import Config, Context, Renderer
+from pheasant.jupyter.client import execute, get_kernel_name
 
 
 class Code(Renderer):
@@ -33,21 +35,27 @@ class Code(Renderer):
             yield from parser.parse(context["source"] + "\n")
 
     def render_inline_code(self, context: Context, parser: Parser) -> Iterable[str]:
-        if context["language"] == "file":
+        language = context["language"]
+        if language == "file":
             path = context["source"]
             # path, language, slice_str = resolve_path(path)
             if not os.path.exists(path):
                 yield f'<p style="font-color:red">File not found: {path}</p>\n'
             else:
                 context["source"] = read_file(path)
-                context["language"] == "python"  # FIXME
+                context["language"] = "python"  # FIXME
+                yield from self.render_fenced_code(context, parser)
+                yield "\n"
+        elif language == "python":
+            kernel_name = get_kernel_name(language)
+            if kernel_name is None:
+                yield f'<p style="font-color:red">Kernel not found for {language}</p>\n'
+            else:
+                context["source"] = inspect(kernel_name, context["source"])
                 yield from self.render_fenced_code(context, parser)
                 yield "\n"
         else:
-
-            yield "abc"
-        # context["code"] = preprocess_inline_code(context["code"])
-        # yield self.render(self.config["inline_code_template"], context)
+            yield f'<p style="font-color:red">{language} not supported</p>\n'
 
     def render(self, template, context: Dict[str, Any]) -> str:
         context.update(config=self.config)
@@ -58,6 +66,15 @@ def read_file(path):
     with codecs.open(path, "r", "utf8") as file:
         source = file.read()
     return source.replace("\r\n", "\n").replace("\r", "\n").strip()
+
+
+def inspect(kernel_name: str, obj: str) -> str:
+    """Inspect source code."""
+    code = f"import inspect\ninspect.getsourcelines({obj})"
+    outputs = execute(code, kernel_name=kernel_name)
+    # FIXME: when error occurs
+    lines, lineno = literal_eval(outputs[0]["data"]["text/plain"])
+    return "".join(lines)
 
 
 # CODE LATER

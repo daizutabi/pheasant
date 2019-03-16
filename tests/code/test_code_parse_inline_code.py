@@ -2,6 +2,8 @@ import os
 
 import pytest
 
+from pheasant.jupyter.client import execute
+
 
 def inline_code(header, language, source):
     return f"{header}![{language}]({source})\n"
@@ -12,9 +14,7 @@ def parse(parser):
     def func(header, language, source, pre="", post=""):
         if pre:
             pre += "\n"
-        return "".join(
-            parser.parse(pre + inline_code(header, language, source) + post)
-        )
+        return "".join(parser.parse(pre + inline_code(header, language, source) + post))
 
     return func
 
@@ -39,7 +39,7 @@ def test_code_parse_file(file):
     output = file("", path, source)
     answer = (
         '<div class="pheasant-fenced-code pheasant-source"><pre>'
-        '<code class="file">def func(x):\n    return 2 * x\n\nprint(f(3))'
+        '<code class="python">def func(x):\n    return 2 * x\n\nprint(f(3))'
         "</code></pre></div>\n"
     )
     assert output == answer
@@ -49,3 +49,18 @@ def test_code_parse_file_not_founed(parse):
     path = "xxx.py"
     output = parse("", "file", path)
     assert output == '<p style="font-color:red">File not found: xxx.py</p>\n'
+
+
+def test_code_parse_inspect(parse):
+    execute("import pheasant")
+    output = parse("", "python", "pheasant")
+    answer = (
+        '<div class="pheasant-fenced-code pheasant-source">'
+        '<pre><code class="python">__version__ ='
+    )
+    assert output.startswith(answer)
+
+
+def test_code_parse_inspect_not_found(parse):
+    output = parse("", "xxx", "xxx")
+    assert output == '<p style="font-color:red">xxx not supported</p>\n'
