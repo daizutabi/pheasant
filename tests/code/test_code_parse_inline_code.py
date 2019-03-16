@@ -64,3 +64,11 @@ def test_code_parse_inspect(parse):
 def test_code_parse_inspect_not_found(parse):
     output = parse("", "xxx", "xxx")
     assert output == '<p style="font-color:red">xxx not supported</p>\n'
+
+
+def test_code_parse_file_with_header(file):
+    path = "hello.py"
+    source = "def func(x):\n    return 2 * x\n\nprint(f(3))\n"
+    output = file("#", path, source)
+    assert output.startswith('<div class="pheasant-number-file">')
+    assert output.endswith('print(f(3))</code></pre></div>\n</div>\n')

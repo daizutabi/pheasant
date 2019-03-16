@@ -7,6 +7,8 @@ Cell = Union[str, Dict[str, Any], Match[str]]
 Splitter = Generator[Optional[Cell], Optional[type], None]
 Seed = Dict[str, Any]
 
+SPACE_PATTERN = re.compile(r"^\s+$")
+
 
 class Parser:
     def __init__(self):
@@ -57,11 +59,15 @@ class Parser:
         for match in self.pattern.finditer(source):
             start, end = match.start(), match.end()
             if cursor < start:
-                type_ = yield self.reap(source[cursor:start], None, type_)
+                plain = source[cursor:start]
+                if not SPACE_PATTERN.match(plain):
+                    type_ = yield self.reap(plain, None, type_)
             type_ = yield self.reap(match.group(), match, type_)
             cursor = end
         if cursor < len(source):
-            yield self.reap(source[cursor:], None, type_)
+            plain = source[cursor:]
+            if not SPACE_PATTERN.match(plain):
+                yield self.reap(plain, None, type_)
 
     def reap(
         self, source: str, match: Optional[Match[str]], type_: Optional[type]

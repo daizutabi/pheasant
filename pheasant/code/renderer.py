@@ -36,7 +36,12 @@ class Code(Renderer):
 
     def render_inline_code(self, context: Context, parser: Parser) -> Iterable[str]:
         language = context["language"]
-        if language == "file":
+        if context["header"]:
+            header = "Code" if language == 'python' else "File"
+            source = context['source']
+            source = f"#{header} {source}\n![{language}]({source})\n"
+            yield from parser.parse(source)
+        elif language == "file":
             path = context["source"]
             # path, language, slice_str = resolve_path(path)
             if not os.path.exists(path):
