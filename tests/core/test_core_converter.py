@@ -38,7 +38,7 @@ def test_converter_getitem(converter):
 def test_converter_other_special(converter):
     assert len(converter) == 2
     assert [name for name in converter] == ["preprocess", "postprocess"]
-    assert repr(converter) == "<Converter['preprocess'->'postprocess'])>"
+    assert repr(converter) == "<Converter['preprocess', 'postprocess'])>"
     assert repr(converter["preprocess"][0]) == "<Jupyter[2])>"
 
     assert callable(converter())

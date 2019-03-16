@@ -17,9 +17,22 @@ class PheasantPlugin(BasePlugin):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.config: Dict[str, Dict[str, str]] = {}
-        self.converter = Converter()
         self.served = False
         logger.debug("[Pheasant] Plugin created.")
+        self.setup()
+
+    def setup(self):
+        self.converter = Converter()
+        self.converter.register("script", "python")
+        self.converter.register("markdown", ["jupyter", "number", "code"])
+        self.converter.register("linker", "linker")
+        logger.debug(f"[Pheasant] Converter created: {self.converter}.")
+        logger.debug("[Pheasant] Parser registered.")
+        for name, parser in self.converter.parsers.items():
+            logger.debug(f"[Pheasant] Parser for '{name}' = {parser}.")
+        logger.debug("[Pheasant] Renderer registered.")
+        for name, renderers in self.converter.renderers.items():
+            logger.debug(f"[Pheasant] Renderers for '{name}' = {renderers}.")
 
     def on_serve(self, server, config):
         self.served = True
@@ -27,11 +40,13 @@ class PheasantPlugin(BasePlugin):
         return server
 
     def on_config(self, config):
+        logger.debug("[Pheasant] Plugin enabled.")
+
         from mkdocs.utils import markdown_extensions
 
         markdown_extensions.append(".py")
+        logger.debug("[Pheasant] Python source files will be captured.")
 
-        logger.debug("[Pheasant] Plugin enabled.")
         path = os.path.dirname(config["config_file_path"])
         path = os.path.join(path, "pheasant.yml")
         if os.path.exists(path):
@@ -45,35 +60,34 @@ class PheasantPlugin(BasePlugin):
         return config
 
     def on_nav(self, nav, config, files):
+        logger.debug(f"[Pheasant] Page order for numbering.")
         self.config["abs_src_paths"] = [page.file.abs_src_path for page in nav.pages]
         self.config["src_paths"] = [page.file.src_path for page in nav.pages]
         for k, srs_path in enumerate(self.config["src_paths"]):
-            logger.debug(f"[Pheasant] Page #{k + 1}: {srs_path}")
+            logger.debug(f"[Pheasant] Page number {k + 1}: {srs_path}")
 
         return nav
 
     def on_page_read_source(self, source, page, config):
-        """
-        The on_page_read_source event can replace the default mechanism
-        to read the contents of a page's source from the filesystem.
+        logger.info(f"[Pheasant] on_page_read_source: {page.file.src_path}")
+        # source = self.converter.convert(page.file.abs_src_path)
+        # assert source is Non
+        # return source
 
-        Parameters
-        ----------
-        source: None
-        page: mkdocs.nav.Page instance
-        config: global configuration object
+    def on_page_markdown(self, markdown, page, config, files):
+        logger.info(f"[Pheasant] on_page_markdown: {page.file.src_path}")
+        print(markdown)
+        return
 
-        Returns
-        -------
-        The raw source for a page as unicode string. If None is returned, the
-        default loading from a file will be performed.
-        """
-        logger.info(f"[Pheasant] Converting: {page.file.src_path}")
-        source = self.converter.convert(page.file.abs_src_path)
-
-        return source
+    def on_page_content(self, content, page, config, files):
+        logger.info(f"[Pheasant] on_page_content: {page.file.src_path}")
+        print(content)
+        return
 
     def on_page_context(self, context, page, config, nav):
-        logger.info(f"Uso [Pheasant] Updating config: {page.file.src_path}")
+        logger.info(f"[Pheasant] on_page_context: {page.file.src_path}")
+        print(page)
+        print(dir(page))
+        print(page.content)
         # update_page_config(config, page.file.abs_src_path)
         return context

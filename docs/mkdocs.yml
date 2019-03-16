@@ -18,7 +18,7 @@ plugins:
 
 nav:
   - Home: index.md
-  # - Test: test.md
+  - Test: test.md
   # - User Guide:
   #   - Images: user-guide/images.md
   #  - Code: user-guide/code.md

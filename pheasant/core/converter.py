@@ -14,7 +14,7 @@ class Converter:
         self.names: List[str] = []
 
     def __repr__(self):
-        run = "->".join(f"'{name}'" for name in self.names)
+        run = ", ".join(f"'{name}'" for name in self.names)
         return f"<{self.__class__.__qualname__}[{run}])>"
 
     def __len__(self):
@@ -49,7 +49,7 @@ class Converter:
         renderers
             List of Renderer's instance or name of Renderer
         """
-        if not isinstance(renderers, Iterable):
+        if not isinstance(renderers, Iterable) or isinstance(renderers, str):
             renderers = [renderers]
         if name in self.parsers:
             raise ValueError
