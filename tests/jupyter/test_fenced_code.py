@@ -12,7 +12,6 @@ def source_simple():
         [
             "begin\n```python\na=1\nb=1\n```\ntext",
             "begin\n```ruby inline\na=1\nb=1\n```\ntext",
-            "begin\n~~~bash display copy\na=1\nb=1\n~~~\ntext",
         ]
     )
     return source_simple
@@ -52,13 +51,5 @@ def test_render_fenced_code(parser, jupyter, source_simple):
         "mark": "```",
         "language": "ruby",
         "option": "inline",
-        "code": "a=1\nb=1",
-    }
-    cell = splitter.send(dict)
-    cell = splitter.send(dict)
-    assert cell["context"] == {
-        "mark": "~~~",
-        "language": "bash",
-        "option": "display copy",
         "code": "a=1\nb=1",
     }

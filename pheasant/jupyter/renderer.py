@@ -13,7 +13,7 @@ from pheasant.jupyter.display import (bokeh_extra_resources,
 class Jupyter(Renderer):
 
     FENCED_CODE_PATTERN = (
-        r"^(?P<mark>`{3,}|~{3,})(?P<language>\w+) ?(?P<option>.*?)\n"
+        r"^(?P<mark>`{3,})(?P<language>\w+) ?(?P<option>.*?)\n"
         r"(?P<code>.*?)\n(?P=mark)\n"
     )
     INLINE_CODE_PATTERN = r"\{\{(?P<code>.+?)\}\}"
