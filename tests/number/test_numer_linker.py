@@ -65,27 +65,16 @@ def test_render_linker(linker, parser_linker, source_parsed):
 
 def test_parse_linker(linker, parser_linker, source_parsed):
     source = "".join(parser_linker.parse(source_parsed))
-
-    answer = """begin
-        # <span id="pheasant-number-label-a">1. title</span>
-        text a Figure [2](.#pheasant-number-label-b)
-        ## 1.1. section a
-        text b
-        ### 1.1.1. subsection
-        ## 1.2. section b
-        text c
-        <div class="pheasant-number-figure">
-        <p>figure content a1
-        figure content a2
-        text d</p>
-        <p>Figure 1 figure title a</p>
-        </div>
-        <div class="pheasant-number-figure" id="pheasant-number-label-b">
-        <p>figure content b1
-        figure content b2</p>
-        <p>Figure 2 figure title b Section [1](.#pheasant-number-label-a)</p>
-        </div>
-        end <span style="color: red;">Unknown label: 'label-c'</span>""".replace(
-        "        ", ""
+    answer = (
+        'begin\n# <span id="pheasant-number-label-a">1. title</span>\n'
+        'text a Figure [2](.#pheasant-number-label-b)\n'
+        '## 1.1. section a\ntext b\n### 1.1.1. subsection\n'
+        '## 1.2. section b\ntext c\n<div class="pheasant-number-figure">'
+        '<p>figure content a1\nfigure content a2\ntext d</p>\n'
+        '<p>Figure 1 figure title a</p></div>\n'
+        '<div class="pheasant-number-figure" id="pheasant-number-label-b">'
+        '<p>figure content b1\nfigure content b2</p>\n'
+        '<p>Figure 2 figure title b Section [1](.#pheasant-number-label-a)</p></div>\n'
+        'end <span style="color: red;">' "Unknown label: 'label-c'</span>"
     )
     assert source == answer

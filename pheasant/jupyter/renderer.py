@@ -62,7 +62,7 @@ class Jupyter(Renderer):
     def render(self, template, context: Dict[str, Any]) -> str:
         outputs = self.execute(code=context["code"], language=context["language"])
         context.update(outputs=outputs, config=self.config)
-        return template.render(**context)
+        return template.render(**context) + "\n"
 
     def execute(self, code: str, language: str = "python") -> List:
         if language not in self.config["kernel_name"]:

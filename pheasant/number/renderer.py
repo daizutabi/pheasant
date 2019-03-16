@@ -71,7 +71,9 @@ class Number(Renderer):
             context_.update(label=label, id=id_)
 
         if kind == "header":
-            yield self.config["header_template"].render(**context_, config=self.config)
+            yield self.config["header_template"].render(
+                **context_, config=self.config
+            ) + "\n"
         else:
             # Need to detect the range of a numbered object.
             content = parser.send(dict)
@@ -95,7 +97,7 @@ class Number(Renderer):
 
             yield self.config["header_template"].render(
                 **context_, content=content, config=self.config
-            )
+            ) + "\n"
 
             if rest:
                 yield rest

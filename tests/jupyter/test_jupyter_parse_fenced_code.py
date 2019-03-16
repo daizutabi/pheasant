@@ -25,7 +25,7 @@ def test_jupyter_parse_text(parse):
             '<div class="pheasant-fenced-code pheasant-input">'
             '<pre><code class="python">print(1)</code></pre></div>'
             '<div class="pheasant-fenced-code pheasant-stdout">'
-            '<pre><code class="python">1</code></pre></div>'
+            '<pre><code class="python">1</code></pre></div>\n'
         ]
     )
     assert output == answer
@@ -36,7 +36,7 @@ def test_jupyter_parse_text(parse):
             '<div class="pheasant-fenced-code pheasant-input">'
             '<pre><code class="python">1</code></pre></div>'
             '<div class="pheasant-fenced-code pheasant-output">'
-            '<pre><code class="python">1</code></pre></div>'
+            '<pre><code class="python">1</code></pre></div>\n'
         ]
     )
     assert output == answer
@@ -47,7 +47,7 @@ def test_jupyter_parse_text(parse):
             '<div class="pheasant-fenced-code pheasant-input">'
             '<pre><code class="python">&#39;abc&#39;</code></pre></div>'
             '<div class="pheasant-fenced-code pheasant-output">'
-            '<pre><code class="python">&#39;abc&#39;</code></pre></div>'
+            '<pre><code class="python">&#39;abc&#39;</code></pre></div>\n'
         ]
     )
     assert output == answer
@@ -59,7 +59,7 @@ def test_jupyter_parse_text(parse):
             '<pre><code class="python">1/0</code></pre></div>'
             '<div class="pheasant-fenced-code pheasant-error">'
             '<pre><code class="python">ZeroDivisionError: division by zero'
-            "</code></pre></div>"
+            "</code></pre></div>\n"
         ]
     )
     assert output == answer

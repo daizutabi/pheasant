@@ -44,27 +44,19 @@ def test_render_header(parser_number, number, source_simple):
 
 def test_join(parser_number, number, source_simple):
     output = "".join(parser_number.parse(source_simple))
-    answer = """begin
-        # <span id="pheasant-number-label-a">1. title</span>
-        text a Figure {#label-b#}
-        ## 1.1. section a
-        text b
-        ### 1.1.1. subsection
-        ## 1.2. section b
-        text c
-        <div class="pheasant-number-figure">
-        <p>figure content a1
-        figure content a2
-        text d</p>
-        <p>Figure 1 figure title a</p>
-        </div>
-        <div class="pheasant-number-figure" id="pheasant-number-label-b">
-        <p>figure content b1
-        figure content b2</p>
-        <p>Figure 2 figure title b Section {#label-a#}</p>
-        </div>
-        end {#label-c#}""".replace(
-        "        ", ""
+    answer = "".join(
+        [
+            'begin\n# <span id="pheasant-number-label-a">1. title</span>\n',
+            "text a Figure {#label-b#}\n## 1.1. section a\ntext b\n",
+            "### 1.1.1. subsection\n## 1.2. section b\ntext c\n",
+            '<div class="pheasant-number-figure">',
+            "<p>figure content a1\nfigure content a2\ntext d</p>\n",
+            "<p>Figure 1 figure title a</p></div>\n",
+            '<div class="pheasant-number-figure" id="pheasant-number-label-b">',
+            "<p>figure content b1\nfigure content b2</p>\n",
+            "<p>Figure 2 figure title b Section {#label-a#}</p></div>\n",
+            'end {#label-c#}',
+        ]
     )
     assert output == answer
     label_context = {
