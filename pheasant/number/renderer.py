@@ -11,11 +11,12 @@ class Number(Renderer):
 
     HEADER_PATTERN = r"^(?P<prefix>#+)(?P<kind>\w*?) +(?P<title>.+?)\n"
     LABEL_PATTERN = r"\{#(?P<label>\S+?)#\}"
+    SPACE_PATTERN_COMPILED = re.compile(r"\s+$", re.DOTALL)
 
     def __init__(self, config: Optional[Config] = None):
         super().__init__(config)
         self.register(Number.HEADER_PATTERN, self.render_header)
-        self.register(Number.LABEL_PATTERN, self.render_label)
+        # self.register(Number.LABEL_PATTERN, self.render_label)
         self.set_template("header")
         self.page_index: Union[int, List[int]] = 1
         self.label_context: Dict[str, Any] = {}
@@ -77,7 +78,10 @@ class Number(Renderer):
             ) + "\n"
         else:
             # Need to detect the range of a numbered object.
-            content = parser.send(dict)
+            while True:
+                content = parser.send(dict)
+                if not self.SPACE_PATTERN_COMPILED.match(content["source"]):
+                    break
             if content["match"]:
                 content = content["result"]()
                 rest = ""
@@ -103,8 +107,8 @@ class Number(Renderer):
             if rest:
                 yield rest
 
-    def render_label(self, context: Context, parser: Parser) -> Iterable[str]:
-        yield context["_source"]
+    # def render_label(self, context: Context, parser: Parser) -> Iterable[str]:
+    #     yield context["_source"]
 
 
 class Linker(Renderer):
