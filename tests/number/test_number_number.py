@@ -38,8 +38,12 @@ def test_render_header(parser_number, number, source_simple):
     assert cell["source"] == "begin\n"
     cell = splitter.send(dict)
     assert cell["name"] == "Number_render_header"
-    assert cell["context"] == {"prefix": "#", "kind": "", "title": "title {#label-a#}",
-                               "_source": cell["source"]}
+    assert cell["context"] == {
+        "prefix": "#",
+        "kind": "",
+        "title": "title {#label-a#}",
+        "_source": cell["source"],
+    }
     assert cell["source"] == "# title {#label-a#}\n"
 
 
@@ -47,19 +51,18 @@ def test_join(parser_number, number, source_simple):
     output = "".join(parser_number.parse(source_simple))
     answer = "".join(
         [
-            'begin\n<h1 id="pheasant-number-label-a">1. title</h1>\n',
-            "text a Figure {#label-b#}\n<h2>1.1. section a</h2>\ntext b\n",
-            "<h3>1.1.1. subsection</h3>\n<h2>1.2. section b</h2>\ntext c\n",
+            'begin\n# <span id="pheasant-number-label-a">1. title</span>\n',
+            "text a Figure {#label-b#}\n## 1.1. section a\ntext b\n",
+            "### 1.1.1. subsection\n## 1.2. section b\ntext c\n",
             '<div class="pheasant-number-figure">',
             "<p>figure content a1\nfigure content a2\ntext d</p>\n",
             "<p>Figure 1 figure title a</p></div>\n",
             '<div class="pheasant-number-figure" id="pheasant-number-label-b">',
             "<p>figure content b1\nfigure content b2</p>\n",
             "<p>Figure 2 figure title b Section {#label-a#}</p></div>\n",
-            'end {#label-c#}',
+            "end {#label-c#}",
         ]
     )
-    print(output)
     assert output == answer
     label_context = {
         "label-a": {

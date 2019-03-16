@@ -18,7 +18,7 @@ def test_converter(renderers):
 
     output = converter.convert("abd\n# a\n## b\n```python\n2*3\n```\n")
     output = re.sub(r"(\<.*?\>)|\n", "", output)
-    assert output == "abd1. a1.1. b2*36"
+    assert output == "abd# 1. a## 1.1. b2*36"
 
 
 def test_converter_getitem(converter):
@@ -53,13 +53,13 @@ def test_multiple_parser(converter):
     linker.number = number
     output = converter.convert(source, "preprocess")
     output = re.sub(r"(\<.*?\>)|\n", "", output)
-    answer = ("1. titletext {#a#}1.1. "
+    answer = ("# 1. titletext {#a#}## 1.1. "
               "section1/0ZeroDivisionError: division by zero")
     assert output == answer
     number.reset()
     output = converter.convert(source, ["preprocess", "postprocess"])
     output = re.sub(r"(\<.*?\>)|\n", "", output)
-    answer = ("1. titletext 11.1. "
+    answer = ("# 1. titletext 1## 1.1. "
               "section1/0ZeroDivisionError: division by zero")
     assert output == answer
     number.reset()
