@@ -3,7 +3,7 @@
 
 {%- if 'hide' not in option -%}
   {%- if 'display' not in option -%}
-    <div class="pheasant-fenced-code pheasant-input"><pre><code class="{{ language  }}">{{ code }}</code></pre></div>
+    <div class="pheasant-fenced-code pheasant-input"><pre><code class="{{ language }}">{{ code }}</code></pre></div>
     {%- for output in outputs if output.type != 'display_data' and 'text/html' not in output.data and 'text/latex' not in output.data -%}
       {%- if output.type == 'error' -%}
           <div class="pheasant-fenced-code pheasant-error"><pre><code class="{{ language }}">{{ output_text(output) }}</code></pre></div>
