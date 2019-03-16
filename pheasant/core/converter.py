@@ -1,7 +1,7 @@
 import codecs
 import importlib
 from functools import partial
-from typing import Callable, Dict, Iterable, List, Optional, Union
+from typing import Callable, Dict, Iterable, List, Optional, Type, Union
 
 from pheasant.core.parser import Parser
 from pheasant.core.renderer import Renderer
@@ -57,7 +57,7 @@ class Converter:
         parser = Parser()
         self.parsers[name] = parser
         self.renderers[name] = [
-            resolve_renderer(renderer) if isinstance(renderer, str) else renderer
+            resolve_renderer(renderer)() if isinstance(renderer, str) else renderer
             for renderer in renderers
         ]
         for renderer in self.renderers[name]:
@@ -116,11 +116,14 @@ class Converter:
         return partial(self.convert_from_file, names=names)
 
 
-def resolve_renderer(name: str) -> Renderer:
-    name = name[0].upper() + name[1:]
+def resolve_renderer(name: str) -> Type[Renderer]:
+    return find_renderers()[name]
+
+
+def find_renderers() -> Dict[str, Type[Renderer]]:
     module = importlib.import_module("pheasant")
-    if hasattr(module, name):
-        Renderer_ = getattr(module, name)
-        if issubclass(Renderer_, Renderer):
-            return Renderer_()
-    raise ImportError(f"Renderer '{name}' not found.")
+    return {
+        name.lower(): getattr(module, name)
+        for name in module.__dict__["__all__"]  # for mypy
+        if issubclass(getattr(module, name), Renderer)
+    }
