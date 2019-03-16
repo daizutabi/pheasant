@@ -59,6 +59,7 @@ def test_join(parser_number, number, source_simple):
             'end {#label-c#}',
         ]
     )
+    print(output)
     assert output == answer
     label_context = {
         "label-a": {
