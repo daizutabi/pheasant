@@ -20,13 +20,13 @@ def parser():
         if len(context["sharp"]) <= 2:
             yield content
         else:
-            splitted = parser.send(dict)
-            if splitted["match"] is None:
+            cell = parser.send(dict)
+            if cell["match"] is None:
                 yield "abc"
             else:
                 yield "<div>" + content
-                yield from splitted["render"](splitted["context"], parser)
-                # yield "".join(splitted["render"](splitted["context"], parser))
+                yield from cell["render"](cell["context"], parser)
+                # yield "".join(cell["render"](cell["context"], parser))
                 yield "</div>"
 
     parser.register(pattern, render)
@@ -71,17 +71,17 @@ def test_register(parser):
 def test_splitter_for_loop(parser, source_simple):
     splitter = parser.splitter(source_simple)
     next(splitter)
-    for k, splitted in enumerate(splitter):
+    for k, cell in enumerate(splitter):
         if k == 0:
-            assert splitted == "begin\n"
+            assert cell == "begin\n"
         elif k == 1:
-            assert isinstance(splitted, Match)
-            assert splitted.group() == "## title\n"
+            assert isinstance(cell, Match)
+            assert cell.group() == "## title\n"
         elif k == 2:
-            assert isinstance(splitted, Match)
-            assert splitted.group() == "```\nprint(1)\n```\n"
+            assert isinstance(cell, Match)
+            assert cell.group() == "```\nprint(1)\n```\n"
         elif k == 3:
-            assert splitted == "end"
+            assert cell == "end"
 
 
 def test_reap(parser, source_simple):

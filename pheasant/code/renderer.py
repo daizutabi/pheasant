@@ -8,7 +8,7 @@ class Code(Renderer):
 
     FENCED_CODE_PATTERN = (
         r"^(?P<mark>~{3,})(?P<language>\w+) ?(?P<option>.*?)\n"
-        r"(?P<code>.*?)\n(?P=mark)\n"
+        r"(?P<source>.*?)\n(?P=mark)\n"
     )
     INLINE_CODE_PATTERN = r"#?!\[(\w+?)\]\((.+?)\)"
 
@@ -19,7 +19,15 @@ class Code(Renderer):
         self.set_template("fenced_code")
 
     def render_fenced_code(self, context: Context, parser: Parser) -> Iterable[str]:
+        # if context["language"] == 'copy':
+        #     context["language"] == ""
+        #
+        #     source = context["source"].replace
+        #
+        # if
         yield self.render(self.config["fenced_code_template"], context)
+
+        # yield "".join(splitted["render"](splitted["context"], parser))
 
     def render_inline_code(self, context: Context, parser: Parser) -> Iterable[str]:
         yield 'abc'

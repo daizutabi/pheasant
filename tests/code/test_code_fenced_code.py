@@ -42,7 +42,7 @@ def test_render_fenced_code(parser, code, source_simple):
         "mark": "~~~",
         "language": "python",
         "option": "",
-        "code": "a=1\nb=1",
+        "source": "a=1\nb=1",
     }
     cell = splitter.send(dict)
     cell = splitter.send(dict)
@@ -50,5 +50,5 @@ def test_render_fenced_code(parser, code, source_simple):
         "mark": "~~~",
         "language": "ruby",
         "option": "inline",
-        "code": "a=1\nb=1",
+        "source": "a=1\nb=1",
     }
