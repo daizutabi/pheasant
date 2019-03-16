@@ -15,6 +15,7 @@ class Number(Renderer):
     def __init__(self, config: Optional[Config] = None):
         super().__init__(config)
         self.register(Number.HEADER_PATTERN, self.render_header)
+        self.register(Number.LABEL_PATTERN, self.render_label)
         self.set_template("header")
         self.page_index: Union[int, List[int]] = 1
         self.label_context: Dict[str, Any] = {}
@@ -45,7 +46,7 @@ class Number(Renderer):
         self.number_list[kind][depth + 1 :] = reset
         number_list = self.number_list[kind][: depth + 1]
         if kind == "header":
-            prefix = "#" * len(number_list)
+            prefix = f"h{depth+1}"
         else:
             prefix = self.config["kind_prefix"][kind]
         number_list = normalize_number_list(kind, number_list, self.page_index)
@@ -101,6 +102,9 @@ class Number(Renderer):
 
             if rest:
                 yield rest
+
+    def render_label(self, context: Context, parser: Parser) -> Iterable[str]:
+        yield context["_source"]
 
 
 class Linker(Renderer):

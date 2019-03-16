@@ -58,10 +58,10 @@ def test_code_parse_source_copy_number(parse):
         [
             '<div class="pheasant-fenced-code pheasant-source">'
             '<pre><code class="markdown"># Title\n## Section\nText</code></pre></div>\n'
-            '# <span class="pheasant-header-number">1.</span> '
-            '<span class="pheasant-header-title">Title</span>\n'
-            '## <span class="pheasant-header-number">1.1.</span> '
-            '<span class="pheasant-header-title">Section</span>\nText\n'
+            '<h1><span class="pheasant-header-number">1.</span> '
+            '<span class="pheasant-header-title">Title</span></h1>\n'
+            '<h2><span class="pheasant-header-number">1.1.</span> '
+            '<span class="pheasant-header-title">Section</span></h2>\nText\n'
         ]
     )
     print(output)
@@ -103,13 +103,13 @@ def test_code_parse_source_copy_pre_post_number(parse):
     output = parse("copy", "text.", "# title", "## section\n")
     answer = "".join(
         [
-            '# <span class="pheasant-header-number">1.</span> '
-            '<span class="pheasant-header-title">title</span>\n'
+            '<h1><span class="pheasant-header-number">1.</span> '
+            '<span class="pheasant-header-title">title</span></h1>\n'
             '<div class="pheasant-fenced-code pheasant-source">'
             '<pre><code class="markdown">text.</code></pre></div>\n'
             'text.\n'
-            '## <span class="pheasant-header-number">1.1.</span> '
-            '<span class="pheasant-header-title">section</span>\n'
+            '<h2><span class="pheasant-header-number">1.1.</span> '
+            '<span class="pheasant-header-title">section</span></h2>\n'
         ]
     )
     assert output == answer

@@ -12,7 +12,7 @@ def test_render_inline_code(parser, jupyter, source_simple):
     next(splitter)
     cell = splitter.send(dict)
     cell = splitter.send(dict)
-    assert cell["context"] == {"code": "a=1"}
+    assert cell["context"] == {"code": "a=1", "_source": cell["source"]}
     cell = splitter.send(dict)
     cell = splitter.send(dict)
-    assert cell["context"] == {"code": "a;b"}
+    assert cell["context"] == {"code": "a;b", "_source": cell["source"]}

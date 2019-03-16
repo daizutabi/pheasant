@@ -44,6 +44,7 @@ def test_render_fenced_code(parser, jupyter, source_simple):
         "language": "python",
         "option": "",
         "code": "a=1\nb=1",
+        "_source": cell["source"],
     }
     cell = splitter.send(dict)
     cell = splitter.send(dict)
@@ -52,4 +53,5 @@ def test_render_fenced_code(parser, jupyter, source_simple):
         "language": "ruby",
         "option": "inline",
         "code": "a=1\nb=1",
+        "_source": cell["source"],
     }

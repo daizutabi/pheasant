@@ -13,7 +13,7 @@
 {%- if reference -%}
   {%- block reference -%}{%- endblock -%}
 {%- elif kind == 'header' -%}
-  {{ prefix }} {% if id %}<span id="{{ id }}">{% endif %}{%- block header -%}{%- endblock -%}{% if id %}</span>{% endif %}
+  <{{ prefix }}{% if id %} id="{{ id }}"{% endif %}>{%- block header -%}{%- endblock -%}</{{ prefix }}>
 {%- elif kind == 'figure' -%}
   <div class="{{ class }}"{% if id %} id="{{ id }}"{% endif %}>{%- block figure -%}{%- endblock -%}</div>
 {%- elif kind == 'table' -%}

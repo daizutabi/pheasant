@@ -14,10 +14,30 @@ def test_render_inline_code(parser, code, source_simple):
     next(splitter)
     cell = splitter.send(dict)
     assert cell["name"] == "Code_render_inline_code"
-    assert cell["context"] == {"header": "", "language": "file", "source": "abc"}
+    assert cell["context"] == {
+        "header": "",
+        "language": "file",
+        "source": "abc",
+        "_source": cell["source"],
+    }
     cell = splitter.send(dict)
-    assert cell["context"] == {"header": "#", "language": "file", "source": "abc"}
+    assert cell["context"] == {
+        "header": "#",
+        "language": "file",
+        "source": "abc",
+        "_source": cell["source"],
+    }
     cell = splitter.send(dict)
-    assert cell["context"] == {"header": "", "language": "python", "source": "abc"}
+    assert cell["context"] == {
+        "header": "",
+        "language": "python",
+        "source": "abc",
+        "_source": cell["source"],
+    }
     cell = splitter.send(dict)
-    assert cell["context"] == {"header": "#", "language": "python", "source": "abc"}
+    assert cell["context"] == {
+        "header": "#",
+        "language": "python",
+        "source": "abc",
+        "_source": cell["source"],
+    }
