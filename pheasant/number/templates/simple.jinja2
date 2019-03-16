@@ -26,7 +26,7 @@
 
 {%- block reference -%}
 {%- if found -%}
-[{{ number_string }}]({{ ref }})
+<a href="{{ ref }}">{{ number_string }}</a>
 {%- else -%}
 <span style="color: red;">Unknown label: '{{ label }}'</span>
 {%- endif -%}

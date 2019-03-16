@@ -59,7 +59,7 @@ def test_multiple_parser(converter):
     number.reset()
     output = converter.convert(source, ["preprocess", "postprocess"])
     output = re.sub(r"(\<.*?\>)|\n", "", output)
-    answer = ("1. titletext [1](.#pheasant-number-a)1.1. "
+    answer = ("1. titletext 11.1. "
               "section1/0ZeroDivisionError: division by zero")
     assert output == answer
     number.reset()
