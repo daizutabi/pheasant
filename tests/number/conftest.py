@@ -1,40 +1,40 @@
 import pytest
 
 from pheasant.core.parser import Parser
-from pheasant.number.renderer import Linker, Number
+from pheasant.number.renderer import Anchor, Header
 
 
 @pytest.fixture(scope="module")
-def number():
-    number = Number(config={"__dummy__": "test"})
-    number.config["header_template_file"] = "simple.jinja2"
-    number.set_template("header")
-    return number
+def header():
+    header = Header(config={"__dummy__": "test"})
+    header.config["header_template_file"] = "simple.jinja2"
+    header.set_template("header")
+    return header
 
 
 @pytest.fixture(scope="module")
-def linker():
-    linker = Linker()
-    linker.config["header_template_file"] = "simple.jinja2"
-    linker.set_template("header")
-    return linker
+def anchor():
+    anchor = Anchor()
+    anchor.config["header_template_file"] = "simple.jinja2"
+    anchor.set_template("header")
+    return anchor
 
 
 @pytest.fixture()
-def parser_number(number):
+def parser_header(header):
     parser = Parser()
 
-    for pattern, render in number.renders.items():
+    for pattern, render in header.renders.items():
         parser.register(pattern, render)
 
     return parser
 
 
 @pytest.fixture()
-def parser_linker(linker):
+def parser_anchor(anchor):
     parser = Parser()
 
-    for pattern, render in linker.renders.items():
+    for pattern, render in anchor.renders.items():
         parser.register(pattern, render)
 
     return parser

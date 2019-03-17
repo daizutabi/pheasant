@@ -1,6 +1,9 @@
 import re
+from dataclasses import dataclass, field
 from typing import (Any, Callable, Dict, Generator, Iterator, Match, Optional,
                     Pattern, Union)
+
+from pheasant.core.base import Base
 
 Render = Callable[[Dict[str, str], "Parser"], Iterator[str]]
 Cell = Union[str, Dict[str, Any], Match[str]]
@@ -8,16 +11,14 @@ Splitter = Generator[Optional[Cell], Optional[type], None]
 Seed = Dict[str, Any]
 
 
-class Parser:
-    def __init__(self, name: str = ""):
-        self.name = name or self.__class__.__qualname__.lower()
-        self.patterns: Dict[str, str] = {}
-        self.renders: Dict[str, Render] = {}
-        self.pattern: Optional[Pattern] = None
-        self.generator: Optional[Splitter] = None
+@dataclass(repr=False)
+class Parser(Base):
+    patterns: Dict[str, str] = field(default_factory=dict)
+    renders: Dict[str, Render] = field(default_factory=dict)
+    pattern: Optional[Pattern] = None
 
-    def __repr__(self):
-        return f"<{self.__class__.__qualname__}#{self.name}[{len(self.patterns)}]>"
+    def __post_repr__(self):
+        return len(self.patterns)
 
     def register(self, pattern: str, render: Render) -> None:
         name = object_name(render)
@@ -51,9 +52,10 @@ class Parser:
         if not self.patterns:
             yield source
             return
-        self.pattern = re.compile(
-            "|".join(self.patterns.values()), re.MULTILINE | re.DOTALL
-        )
+        if self.pattern is None:
+            self.pattern = re.compile(
+                "|".join(self.patterns.values()), re.MULTILINE | re.DOTALL
+            )
         cursor = 0
         for match in self.pattern.finditer(source):
             start, end = match.start(), match.end()
@@ -69,15 +71,16 @@ class Parser:
     def reap(
         self, source: str, match: Optional[Match[str]], type_: Optional[type]
     ) -> Cell:
-        """Reap the matched source and match object according to what the client
-        wants to send.
+        """Reap a plain source or `Match` object according to what the client
+        wants to be sent.
 
         Parameters
         ----------
         source
-            The matched source
+            Plain soure or matched source. If `match` is None, `source` is a string
+            which is not matched by any patterns registered.
         match
-            The match object
+            Match object.
         type_
             str for a plain text source, dict for a dictionary which contains
             contents for rendering, and None for a plain text source or

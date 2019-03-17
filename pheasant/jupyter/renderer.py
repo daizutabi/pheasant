@@ -1,15 +1,16 @@
 import re
-from typing import Any, Dict, Iterator, List, Match, Optional
+from dataclasses import dataclass
+from typing import Any, Dict, Iterator, List, Match
 
-# from pheasant.core import markdown
 from pheasant.core.parser import Parser
-from pheasant.core.renderer import Config, Context, Renderer
+from pheasant.core.renderer import Renderer
 from pheasant.jupyter.client import execute, find_kernel_names
 from pheasant.jupyter.display import (bokeh_extra_resources,
                                       holoviews_extra_resources,
                                       select_display_data)
 
 
+@dataclass(repr=False)
 class Jupyter(Renderer):
 
     FENCED_CODE_PATTERN = (
@@ -19,8 +20,8 @@ class Jupyter(Renderer):
     INLINE_CODE_PATTERN = r"\{\{(?P<code>.+?)\}\}"
     RE_INLINE_CODE_PATTERN = re.compile(INLINE_CODE_PATTERN)
 
-    def __init__(self, name: str = "", config: Optional[Config] = None):
-        super().__init__(name, config)
+    def __post_init__(self):
+        super().__post_init__()
         self.register(Jupyter.FENCED_CODE_PATTERN, self.render_fenced_code)
         self.register(Jupyter.INLINE_CODE_PATTERN, self.render_inline_code)
         self.set_template(["fenced_code", "inline_code"])
@@ -50,12 +51,16 @@ class Jupyter(Renderer):
         ]:
             self.config["extra_resources"][key] = []
 
-    def render_fenced_code(self, context: Context, parser: Parser) -> Iterator[str]:
+    def render_fenced_code(
+        self, context: Dict[str, str], parser: Parser
+    ) -> Iterator[str]:
         if "inline" in context["option"]:
             context["code"] = preprocess_fenced_code(context["code"])
         yield self.render(self.config["fenced_code_template"], context)
 
-    def render_inline_code(self, context: Context, parser: Parser) -> Iterator[str]:
+    def render_inline_code(
+        self, context: Dict[str, str], parser: Parser
+    ) -> Iterator[str]:
         context["code"] = preprocess_inline_code(context["code"])
         yield self.render(self.config["inline_code_template"], context)
 

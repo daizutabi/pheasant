@@ -1,26 +1,30 @@
 import importlib
 import os
-from typing import Any, Dict, List, Optional, Union
+from dataclasses import dataclass, field
+from typing import Dict, List, Union
 
 import yaml
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
-from pheasant.core.parser import Render
-
-Context = Dict[str, str]
-Config = Dict[str, Any]
+from pheasant.core.base import Base
+from pheasant.core.parser import Render  # type, not class
 
 
-class Renderer:
-    def __init__(self, name: str = "", config: Optional[Config] = None):
-        self.name = name or self.__class__.__qualname__.lower()
-        self.renders: Dict[str, Render] = {}
-        self.config: Dict[str, Any] = {}
-        self.load_config()
-        self.update_config(config)
+@dataclass(repr=False)
+class Renderer(Base):
+    renders: Dict[str, Render] = field(default_factory=dict)
 
-    def __repr__(self):
-        return f"<{self.__class__.__qualname__}#{self.name}[{len(self.renders)}]>"
+    def __post_init__(self) -> None:
+        super().__post_init__()
+        module = importlib.import_module(self.__module__)
+        path = os.path.join(os.path.dirname(module.__file__), "config.yml")
+        if os.path.exists(path):
+            with open(path, "r") as f:
+                config = yaml.load(f)
+            self.update_config(config)
+
+    def __post_repr__(self):
+        return len(self.renders)
 
     def register(self, pattern: str, render: Render) -> None:
         self.renders[pattern] = render
@@ -33,9 +37,11 @@ class Renderer:
         """Called per page."""
         pass
 
-    def set_template(self, prefix: Union[str, List[str]] = "") -> None:
+    def set_template(
+        self, prefix: Union[str, List[str]] = "", directory: str = "templates"
+    ) -> None:
         module = importlib.import_module(self.__module__)
-        default_directory = os.path.join(os.path.dirname(module.__file__), "templates")
+        default_directory = os.path.join(os.path.dirname(module.__file__), directory)
         if isinstance(prefix, str):
             prefix = [prefix]
         for prefix_ in [f"{p}_" if p else "" for p in prefix]:
@@ -46,25 +52,3 @@ class Renderer:
             loader = FileSystemLoader([template_directory, default_directory])
             env = Environment(loader=loader, autoescape=select_autoescape(["jinja2"]))
             self.config[template] = env.get_template(template_file)
-
-    def load_config(self, path: Optional[str] = None) -> None:
-        if path is None:
-            module = importlib.import_module(self.__module__)
-            path = os.path.join(os.path.dirname(module.__file__), "config.yml")
-        if os.path.exists(path):
-            with open(path, "r") as f:
-                config = yaml.load(f)
-            self.update_config(config)
-
-    def update_config(self, config: Optional[Config]) -> None:
-        if config is None:
-            return
-        for key, value in config.items():
-            if key not in self.config:
-                self.config[key] = value
-            elif isinstance(value, list):
-                self.config[key].extend(value)
-            elif isinstance(value, dict):
-                self.config[key].update(value)
-            else:
-                self.config[key] = value

@@ -3,18 +3,18 @@ from typing import Pattern
 
 
 def test_complile_pattern():
-    from pheasant.number.renderer import Number
+    from pheasant.number.renderer import Header
 
-    assert isinstance(re.compile(Number.HEADER_PATTERN), Pattern)
-    assert isinstance(re.compile(Number.LABEL_PATTERN), Pattern)
+    assert isinstance(re.compile(Header.HEADER_PATTERN), Pattern)
+    assert isinstance(re.compile(Header.LABEL_PATTERN), Pattern)
 
 
-def test_renderer(number):
-    assert number.config["__dummy__"] == "test"
-    assert "kind" in number.config
-    assert number.config["header_template"] is not None
-    assert number.page_index == 1
-    assert number.header_kind == {
+def test_renderer(header):
+    assert header.config["__dummy__"] == "test"
+    assert "kind" in header.config
+    assert header.config["header_template"] is not None
+    assert header.page_index == 1
+    assert header.header_kind == {
         "": "header",
         "fig": "figure",
         "tab": "table",
@@ -23,14 +23,14 @@ def test_renderer(number):
     }
 
 
-def test_render_header(parser_number, number, source_simple):
-    assert "Number_render_header" in parser_number.patterns
-    assert parser_number.patterns["Number_render_header"].startswith(
+def test_render_header(parser_header, number, source_simple):
+    assert "Number_render_header" in parser_header.patterns
+    assert parser_header.patterns["Number_render_header"].startswith(
         "(?P<Number_render_header>"
     )
-    assert parser_number.renders["Number_render_header"] == number.render_header
+    assert parser_header.renders["Number_render_header"] == number.render_header
 
-    splitter = parser_number.splitter(source_simple)
+    splitter = parser_header.splitter(source_simple)
     next(splitter)
     cell = splitter.send(dict)
     assert cell["name"] is None
@@ -47,8 +47,8 @@ def test_render_header(parser_number, number, source_simple):
     assert cell["source"] == "# title {#label-a#}\n"
 
 
-def test_join(parser_number, number, source_simple):
-    output = "".join(parser_number.parse(source_simple))
+def test_join(parser_header, number, source_simple):
+    output = "".join(parser_header.parse(source_simple))
     answer = "".join(
         [
             'begin\n# <span id="pheasant-number-label-a">1. title</span>\n',

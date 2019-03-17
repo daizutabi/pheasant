@@ -1,26 +1,28 @@
 import os
 import re
+from dataclasses import dataclass, field
 from typing import Any, Dict, Iterator, List, Optional, Tuple, Union
 
 from pheasant.core import markdown
 from pheasant.core.parser import Parser
-from pheasant.core.renderer import Config, Context, Renderer
+from pheasant.core.renderer import Renderer
 
 
-class Number(Renderer):
+@dataclass(repr=False)
+class Header(Renderer):
+    page_index: Union[int, List[int]] = field(default=1)
+    label_context: Dict[str, Any] = field(default_factory=dict)
+    number_list: Dict[str, List[int]] = field(default_factory=dict)
+    header_kind: Dict[str, str] = field(default_factory=dict)
+    abs_src_path: str = field(default=".")  # should be set the real path later
 
     HEADER_PATTERN = r"^(?P<prefix>#+)(?P<kind>\w*?) +(?P<title>.+?)\n"
     LABEL_PATTERN = r"\{#(?P<label>\S+?)#\}"
 
-    def __init__(self, name: str = "", config: Optional[Config] = None):
-        super().__init__(name, config)
-        self.register(Number.HEADER_PATTERN, self.render_header)
+    def __post_init__(self):
+        super().__post_init__()
+        self.register(Header.HEADER_PATTERN, self.render_header)
         self.set_template("header")
-        self.page_index: Union[int, List[int]] = 1
-        self.label_context: Dict[str, Any] = {}
-        self.number_list: Dict[str, List[int]] = {}
-        self.header_kind: Dict[str, str] = {}
-        self.abs_src_path = "."  # should be set the real path later
         self.config["kind_prefix"] = {}
         for kind in self.config["kind"]:
             if kind == "header":
@@ -37,7 +39,7 @@ class Number(Renderer):
         for kind in self.config["kind"]:
             self.number_list[kind] = [0] * 6
 
-    def render_header(self, context: Context, parser: Parser) -> Iterator[str]:
+    def render_header(self, context: Dict[str, str], parser: Parser) -> Iterator[str]:
         kind = self.header_kind[context["kind"][:3].lower()]
         depth = len(context["prefix"]) - 1
         self.number_list[kind][depth] += 1
@@ -103,20 +105,22 @@ class Number(Renderer):
                 yield rest
 
 
-class Linker(Renderer):
-    def __init__(self, name: str = "", config: Optional[Config] = None):
-        super().__init__(name, config)
-        self.register(Number.LABEL_PATTERN, self.render_label)
+@dataclass(repr=False)
+class Anchor(Renderer):
+    header: Optional[Header] = field(default=None)
+    abs_src_path: str = field(default=".")  # should be set the real path later
+
+    def __post_init__(self):
+        super().__post_init__()
+        self.register(Header.LABEL_PATTERN, self.render_label)
         self.set_template("header")
-        self.number: Optional[Number] = None
-        self.abs_src_path = "."  # should be set the real path later
 
-    def set_number(self, number: Number) -> None:
-        self.number = number
+    def set_header(self, header: Header) -> None:
+        self.header = header
 
-    def render_label(self, context: Context, parser: Parser) -> Iterator[str]:
-        if self.number is None:
-            raise ValueError("A Number instance has not set yet.")
+    def render_label(self, context: Dict[str, str], parser: Parser) -> Iterator[str]:
+        if self.header is None:
+            raise ValueError("A Header instance has not set yet.")
         label = context["label"]
         context = self.resolve(label)
         yield self.config["header_template"].render(
@@ -124,7 +128,7 @@ class Linker(Renderer):
         )
 
     def resolve(self, label: str) -> Dict[str, Any]:
-        label_context = self.number.label_context  # type: ignore
+        label_context = self.header.label_context  # type: ignore
         found = label in label_context
         if found:
             context = label_context[label]
@@ -196,7 +200,7 @@ def split_label(title: str) -> Tuple[str, str]:
     >>> split_label('text')
     ('text', '')
     """
-    match = re.search(Number.LABEL_PATTERN, title)
+    match = re.search(Header.LABEL_PATTERN, title)
     if match:
         return title.replace(match.group(), "").strip(), match.group(1)
     else:

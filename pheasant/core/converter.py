@@ -1,22 +1,21 @@
-import codecs
 from collections import OrderedDict
+from dataclasses import dataclass, field
 from functools import partial
 from typing import Callable, Iterable, Optional, Union
 
+from pheasant.core.base import Base
 from pheasant.core.parser import Parser
 from pheasant.core.renderer import Renderer
 from pheasant.core.renderers import Renderers
 
 
-class Converter:
-    def __init__(self, name: str = ""):
-        self.name = name or self.__class__.__qualname__.lower()
-        self.parsers: OrderedDict[str, Parser] = OrderedDict()
-        self.renderers = Renderers()
+@dataclass(repr=False)
+class Converter(Base):
+    parsers: OrderedDict[str, Parser] = field(default_factory=OrderedDict)
+    renderers: Renderers = field(default_factory=Renderers)
 
-    def __repr__(self):
-        parsers = ", ".join(f"'{name}'" for name in self.parsers)
-        return f"<{self.__class__.__qualname__}#{self.name}[{parsers}]>"
+    def __post_repr__(self):
+        return ", ".join(f"'{name}'" for name in self.parsers)
 
     def __getitem__(self, item):
         if isinstance(item, str):
