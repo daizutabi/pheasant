@@ -15,8 +15,6 @@ def header():
 @pytest.fixture(scope="module")
 def anchor():
     anchor = Anchor()
-    anchor.config["header_template_file"] = "simple.jinja2"
-    anchor.set_template("header")
     return anchor
 
 
@@ -44,11 +42,11 @@ def parser_anchor(anchor):
 def source_simple():
     source_simple = "\n".join(
         [
-            "begin\n# title {#label-a#}\ntext a Figure {#label-b#}",
+            "begin\n# title {#tag-a#}\ntext a Figure {#tag-b#}",
             "## section a\ntext b\n### subsection\n## section b\ntext c",
             "#Fig figure title a\n\nfigure content a1\nfigure content a2",
-            "text d\n#Fig {#label-b#}figure title b Section {#label-a#}",
-            "figure content b1\nfigure content b2\n\nend {#label-c#}",
+            "text d\n#Fig {#tag-b#}figure title b Section {#tag-a#}",
+            "figure content b1\nfigure content b2\n\nend {#tag-c#}",
         ]
     )
     return source_simple

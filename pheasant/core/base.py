@@ -2,8 +2,13 @@ from dataclasses import dataclass, field
 from typing import Any, Dict
 
 
-@dataclass(repr=False)
-class Base:
+class MetaClass(type):
+    def __new__(cls, name, bases, dict):
+        decorator = dataclass(repr=False, eq=False)
+        return decorator(type.__new__(cls, name, bases, dict))
+
+
+class Base(metaclass=MetaClass):
     name: str = field(default="")
     config: Dict[str, Any] = field(default_factory=dict)
 

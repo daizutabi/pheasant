@@ -1,15 +1,13 @@
 import codecs
 import os
 from ast import literal_eval
-from dataclasses import dataclass
-from typing import Any, Dict, Iterator, Optional
+from typing import Any, Dict, Iterator
 
 from pheasant.core.parser import Parser
 from pheasant.core.renderer import Renderer
 from pheasant.jupyter.client import execute, get_kernel_name
 
 
-@dataclass
 class Code(Renderer):
 
     FENCED_CODE_PATTERN = (

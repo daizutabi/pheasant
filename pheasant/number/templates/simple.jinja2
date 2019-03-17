@@ -23,11 +23,3 @@
 <p>{{ prefix }} {{ number_string }} {{ title }}</p>
 {% autoescape false %}{{ content }}{% endautoescape %}
 {%- endblock -%}
-
-{%- block reference -%}
-{%- if found -%}
-<a href="{{ ref }}">{{ number_string }}</a>
-{%- else -%}
-<span style="color: red;">Unknown label: '{{ label }}'</span>
-{%- endif -%}
-{%- endblock -%}

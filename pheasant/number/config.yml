@@ -1,5 +1,6 @@
 # Jinja2 template file for numbering.
-header_template_file: basic.jinja2
+header_template_file: header.jinja2
+anchor_template_file: anchor.jinja2
 # List of numbered objects
 kind:
   - header
@@ -7,8 +8,6 @@ kind:
   - table
   - code
   - file
-# Whether header's number ends with a period or not
-header_period: True
 # Numbering level. 0 for multiple pages 2 for h2 etc.
 level: 0
 # Begin pattern
@@ -18,6 +17,6 @@ end_pattern: <!-- end -->
 # <div> class name for numbered objects.
 class: pheasant-header-{kind}
 # <div> id name for numbered objects.
-id: pheasant-header-{label}
+id: pheasant-header-{tag}
 # relpath function
 relpath_function: null

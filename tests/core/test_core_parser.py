@@ -13,11 +13,11 @@ def test_parser_without_pattern():
 @pytest.fixture()
 def parser():
     parser = Parser()
-    pattern = r"^(?P<sharp>#+)\s+(?P<title>.*?)\n"
+    pattern = r"^(?P<prefix>#+)\s+(?P<title>.*?)\n"
 
     def render(context, parser):
-        content = f"{context['sharp']} <span>{context['title']}</span>"
-        if len(context["sharp"]) <= 2:
+        content = f"{context['prefix']} <span>{context['title']}</span>"
+        if len(context["prefix"]) <= 2:
             yield content
         else:
             cell = next(parser)
@@ -26,7 +26,7 @@ def parser():
             else:
                 yield "<div>" + content
                 # yield "".join(cell.render(cell.context, parser))
-                yield cell.result()  # same result above
+                yield cell.convert()  # same result above
                 yield "</div>"
 
     parser.register(pattern, render)
@@ -97,9 +97,9 @@ def test_parse(parser, source_complex):
         assert output == answer
 
 
-def test_result(parser, source_complex):
+def test_cell_parse(parser, source_complex):
     splitter = parser.split(source_complex)
     next(splitter)
     next(splitter)
     cell = next(splitter)
-    assert cell.result() == "<pre><code>print(1)</code></pre>"
+    assert cell.convert() == "<pre><code>print(1)</code></pre>"

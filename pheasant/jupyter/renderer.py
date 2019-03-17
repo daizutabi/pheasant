@@ -1,5 +1,4 @@
 import re
-from dataclasses import dataclass
 from typing import Any, Dict, Iterator, List, Match
 
 from pheasant.core.parser import Parser
@@ -10,7 +9,6 @@ from pheasant.jupyter.display import (bokeh_extra_resources,
                                       select_display_data)
 
 
-@dataclass(repr=False)
 class Jupyter(Renderer):
 
     FENCED_CODE_PATTERN = (

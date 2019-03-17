@@ -1,18 +1,18 @@
 import pytest
 
-from pheasant.number.renderer import normalize_number_list, split_label
+from pheasant.number.renderer import normalize_number_list, split_tag
 
 
 @pytest.mark.parametrize(
-    "input,text,label",
+    "input,text,tag",
     [
         ("text", "text", ""),
-        ("text {#label#}", "text", "label"),
-        ("{#label#} text", "text", "label"),
+        ("text {#tag#}", "text", "tag"),
+        ("{#tag#} text", "text", "tag"),
     ],
 )
-def test_split_label(input, text, label):
-    assert split_label(input) == (text, label)
+def test_split_label(input, text, tag):
+    assert split_tag(input) == (text, tag)
 
 
 @pytest.mark.parametrize(

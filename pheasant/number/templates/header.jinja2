@@ -23,12 +23,3 @@
 <p class="pheasant-file"><span class="name">{% block file_prefix %}{{ prefix }}{% endblock %}</span><span class="number">{{ number_string }}</span><span class="title">{{ title }}</span></p>
 {% autoescape false %}{{ content }}{% endautoescape %}
 {%- endblock -%}
-
-{%- block reference -%}
-  {%- if found -%}
-    <a href="{{ ref }}">{{ number_string }}</a>
-  {%- else -%}
-    <span style="color: red;">Unknown label: '{{ label }}'</span>
-  {%- endif -%}
-{%- endblock -%}
-<a href="{{ ref }}">{{ number_string }}</a>

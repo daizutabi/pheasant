@@ -1,18 +1,4 @@
-{%- set number_string -%}
-  {%- block number_string -%}
-    {%- for number in number_list -%}
-      {%- if loop.last -%}
-        {{ number }}{% if kind == 'header' and config['header_period'] and not reference %}.{% endif %}
-      {%- else -%}
-        {{ number }}.
-      {%- endif -%}
-    {%- endfor -%}
-  {%- endblock -%}
-{%- endset -%}
-
-{%- if reference -%}
-  {%- block reference -%}{%- endblock -%}
-{%- elif kind == 'header' -%}
+{%- if kind == 'header' -%}
   {{ prefix }} {% if id %}<span id="{{ id }}">{% endif %}{%- block header -%}{%- endblock -%}{% if id %}</span>{% endif %}
 {%- elif kind == 'figure' -%}
   <div class="{{ class }}"{% if id %} id="{{ id }}"{% endif %}>{%- block figure -%}{%- endblock -%}</div>

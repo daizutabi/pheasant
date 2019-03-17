@@ -6,7 +6,7 @@ def test_complile_pattern():
     from pheasant.number.renderer import Header
 
     assert isinstance(re.compile(Header.HEADER_PATTERN), Pattern)
-    assert isinstance(re.compile(Header.LABEL_PATTERN), Pattern)
+    assert isinstance(re.compile(Header.TAG_PATTERN), Pattern)
 
 
 def test_renderer(header):
@@ -40,26 +40,26 @@ def test_render_header(parser_header, header, source_simple):
     assert cell.context == {
         "prefix": "#",
         "kind": "",
-        "title": "title {#label-a#}",
+        "title": "title {#tag-a#}",
         "_source": cell.source,
     }
-    assert cell.source == "# title {#label-a#}\n"
+    assert cell.source == "# title {#tag-a#}\n"
 
 
 def test_join(parser_header, header, source_simple):
     output = "".join(parser_header.parse(source_simple))
     answer = "".join(
         [
-            'begin\n# <span id="pheasant-header-label-a">1. title</span>\n',
-            "text a Figure {#label-b#}\n## 1.1. section a\ntext b\n",
-            "### 1.1.1. subsection\n## 1.2. section b\ntext c\n",
+            'begin\n# <span id="pheasant-header-tag-a">1 title</span>\n',
+            "text a Figure {#tag-b#}\n## 1.1 section a\ntext b\n",
+            "### 1.1.1 subsection\n## 1.2 section b\ntext c\n",
             '<div class="pheasant-header-figure">',
             "<p>figure content a1\nfigure content a2\ntext d</p>\n",
             "<p>Figure 1 figure title a</p></div>\n",
-            '<div class="pheasant-header-figure" id="pheasant-header-label-b">',
+            '<div class="pheasant-header-figure" id="pheasant-header-tag-b">',
             "<p>figure content b1\nfigure content b2</p>\n",
-            "<p>Figure 2 figure title b Section {#label-a#}</p></div>\n",
-            "end {#label-c#}",
+            "<p>Figure 2 figure title b Section {#tag-a#}</p></div>\n",
+            "end {#tag-c#}",
         ]
     )
     assert output == answer

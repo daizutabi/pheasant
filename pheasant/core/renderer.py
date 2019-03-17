@@ -1,6 +1,6 @@
 import importlib
 import os
-from dataclasses import dataclass, field
+from dataclasses import field
 from typing import Dict, List, Union
 
 import yaml
@@ -10,7 +10,6 @@ from pheasant.core.base import Base
 from pheasant.core.parser import Render  # type, not class
 
 
-@dataclass(repr=False)
 class Renderer(Base):
     renders: Dict[str, Render] = field(default_factory=dict)
 

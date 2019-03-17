@@ -1,6 +1,6 @@
 import os
 import re
-from dataclasses import dataclass, field
+from dataclasses import field
 from typing import Any, Dict, Iterator, List, Optional, Tuple, Union
 
 from pheasant.core import markdown
@@ -8,16 +8,15 @@ from pheasant.core.parser import Parser
 from pheasant.core.renderer import Renderer
 
 
-@dataclass(repr=False)
 class Header(Renderer):
     page_index: Union[int, List[int]] = field(default=1)
-    label_context: Dict[str, Any] = field(default_factory=dict)
+    tag_context: Dict[str, Any] = field(default_factory=dict)
     number_list: Dict[str, List[int]] = field(default_factory=dict)
     header_kind: Dict[str, str] = field(default_factory=dict)
     abs_src_path: str = field(default=".")  # should be set the real path later
 
     HEADER_PATTERN = r"^(?P<prefix>#+)(?P<kind>\w*?) +(?P<title>.+?)\n"
-    LABEL_PATTERN = r"\{#(?P<label>\S+?)#\}"
+    TAG_PATTERN = r"\{#(?P<tag>\S+?)#\}"
 
     def __post_init__(self):
         super().__post_init__()
@@ -51,26 +50,29 @@ class Header(Renderer):
         else:
             prefix = self.config["kind_prefix"][kind]
         number_list = normalize_number_list(kind, number_list, self.page_index)
+        number_string = number_list_format(number_list)
         cls = self.config["class"].format(kind=kind)
-        title, label = split_label(context["title"])
+        title, tag = split_tag(context["title"])
 
         context_ = {
+            "kind": kind,
             "prefix": prefix,
             "title": title,
             "class": cls,
-            "kind": kind,
             "number_list": number_list,
+            "number_string": number_string,
         }
 
-        if label:
-            id_ = self.config["id"].format(label=label)
-            self.label_context[label] = {
+        if tag:
+            id_ = self.config["id"].format(tag=tag)
+            self.tag_context[tag] = {
                 "kind": kind,
                 "number_list": number_list,
+                "number_string": number_string,
                 "id": id_,
                 "abs_src_path": self.abs_src_path,
             }
-            context_.update(label=label, id=id_)
+            context_.update(tag=tag, id=id_)
 
         if kind == "header":
             yield self.config["header_template"].render(
@@ -80,7 +82,7 @@ class Header(Renderer):
             # Need to detect the range of a numbered object.
             cell = next(parser)
             if cell.match:
-                content = cell.result()
+                content = cell.convert()
                 rest = ""
             else:
                 content = cell.source
@@ -105,33 +107,32 @@ class Header(Renderer):
                 yield rest
 
 
-@dataclass(repr=False)
 class Anchor(Renderer):
     header: Optional[Header] = field(default=None)
     abs_src_path: str = field(default=".")  # should be set the real path later
 
     def __post_init__(self):
         super().__post_init__()
-        self.register(Header.LABEL_PATTERN, self.render_label)
-        self.set_template("header")
+        self.register(Header.TAG_PATTERN, self.render_tag)
+        self.set_template("anchor")
 
     def set_header(self, header: Header) -> None:
         self.header = header
 
-    def render_label(self, context: Dict[str, str], parser: Parser) -> Iterator[str]:
+    def render_tag(self, context: Dict[str, str], parser: Parser) -> Iterator[str]:
         if self.header is None:
             raise ValueError("A Header instance has not set yet.")
-        label = context["label"]
-        context = self.resolve(label)
-        yield self.config["header_template"].render(
+        tag = context["tag"]
+        context = self.resolve(tag)
+        yield self.config["anchor_template"].render(
             reference=True, config=self.config, **context
         )
 
-    def resolve(self, label: str) -> Dict[str, Any]:
-        label_context = self.header.label_context  # type: ignore
-        found = label in label_context
+    def resolve(self, tag: str) -> Dict[str, Any]:
+        tag_context = self.header.tag_context  # type: ignore
+        found = tag in tag_context
         if found:
-            context = label_context[label]
+            context = tag_context[tag]
             context["found"] = True
             relpath = os.path.relpath(
                 context["abs_src_path"], os.path.dirname(self.abs_src_path)
@@ -141,7 +142,7 @@ class Anchor(Renderer):
                 relpath = self.config["relpath_function"](relpath)
             context["ref"] = "#".join([relpath, context["id"]])
         else:
-            context = {"found": False, "label": label}
+            context = {"found": False, "tag": tag}
         return context
 
 
@@ -181,8 +182,12 @@ def normalize_number_list(
     return number_list
 
 
-def split_label(title: str) -> Tuple[str, str]:
-    """Split a label from `title`. Return (title, label).
+def number_list_format(number_list: List[int]) -> str:
+    return ".".join([str(x) for x in number_list])
+
+
+def split_tag(title: str) -> Tuple[str, str]:
+    """Split a tag from `title`. Return (title, tag).
 
     Parameters
     ----------
@@ -191,16 +196,16 @@ def split_label(title: str) -> Tuple[str, str]:
 
     Returns
     -------
-    (title, label)
+    (title, tag)
 
     Examples
     --------
-    >>> split_label('{#label#} text')
-    ('text', 'label')
-    >>> split_label('text')
+    >>> split_tag('{#tag#} text')
+    ('text', 'tag')
+    >>> split_tag('text')
     ('text', '')
     """
-    match = re.search(Header.LABEL_PATTERN, title)
+    match = re.search(Header.TAG_PATTERN, title)
     if match:
         return title.replace(match.group(), "").strip(), match.group(1)
     else:

@@ -14,10 +14,9 @@ class Cell:
     name: Optional[str] = None
     context: Dict[str, str] = field(default_factory=dict)
     render: Optional[Render] = None
-    result: Optional[Callable[[], str]] = None
+    convert: Optional[Callable[[], str]] = field(default=None, repr=False)
 
 
-@dataclass(repr=False)
 class Parser(Base):
     patterns: Dict[str, str] = field(default_factory=dict)
     renders: Dict[str, Render] = field(default_factory=dict)
@@ -39,6 +38,9 @@ class Parser(Base):
                 yield from cell.render(cell.context, self)  # Deligates to render
             else:
                 yield cell.source
+
+    def __iter__(self):
+        return self
 
     def __next__(self):
         if self.splitter:
@@ -105,7 +107,7 @@ class Parser(Base):
         assert match.group() == context["_source"]  # Just for debug. Delete later!
         render = self.renders[name]
 
-        def result() -> str:
+        def convert() -> str:
             return "".join(render(context, self))
 
         return Cell(
@@ -114,7 +116,7 @@ class Parser(Base):
             name=name,
             context=context,
             render=render,
-            result=result,
+            convert=convert,
         )
 
 
