@@ -7,7 +7,7 @@ class Base:
     name: str = field(default="")
     config: Dict[str, Any] = field(default_factory=dict)
 
-    def __post_init__(self) -> None:
+    def __post_init__(self):
         self.name = self.name or self.__class__.__qualname__.lower()
 
     def __repr__(self):
