@@ -10,20 +10,22 @@
 
 {%- macro output_display(output, display) -%}
   {%- if display -%}
-<div class="pheasant-jupyter-display">
+    <div class="pheasant-jupyter-display">
   {% endif -%}
   {%- for type in output.data -%}
     {%- if type == 'text/html' -%}
-      {%- autoescape false -%}{{ output.data['text/html'] }}{%- endautoescape -%}
+      {%- autoescape false -%}{{ output.data[type] }}{%- endautoescape -%}
     {%- elif type == 'text/latex' -%}
-      {%- autoescape false -%}{{ output.data['text/latex'] }}{%- endautoescape -%}
+      {%- autoescape false -%}{{ output.data[type] }}{%- endautoescape -%}
     {%- elif type == 'text/plain' -%}
         {{ output.data['text/plain'] }}
+    {%- elif type == 'image/png' -%}
+        <img alt="{{ type }}" src="data:image/{{ type }};base64,{{ output.data[type] }}"/>
     {%- else -%}
         <p><span style="color: red;">Unspported data type: '{{ type }}'</span></p>
     {%- endif -%}
   {%- endfor -%}
   {%- if display -%}
-<div>
+    </div>
   {% endif -%}
 {%- endmacro -%}

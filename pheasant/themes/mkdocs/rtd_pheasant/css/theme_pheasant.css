@@ -196,10 +196,10 @@ table.dataframe tbody td {
 .pheasant-fenced-code:before {
   content: "";
   position: absolute;
-  left: -2.5em;
+  left: -3.5em;
   font-size: 90%;
   color: #669;
-  width: 2.3em;
+  width: 3.3em;
   text-align: right;
   margin-top: 5px;
 }
@@ -211,6 +211,14 @@ table.dataframe tbody td {
 .pheasant-input:before {
   content: "In:";
   color: #9bb;
+}
+.pheasant-stdout:before {
+  content: "Stdout:";
+  color: #bb9;
+}
+.pheasant-stderr:before {
+  content: "Stderr:";
+  color: #fdd;
 }
 .pheasant-output:before {
   content: "Out:";
@@ -231,6 +239,14 @@ table.dataframe tbody td {
 .pheasant-input > pre {
   background-color: #dff;
   border: 1px solid #bdd;
+}
+.pheasant-stdout > pre {
+  background-color: #ffd;
+  border: 1px solid #ddb;
+}
+.pheasant-stderr > pre {
+  background-color: #fdd;
+  border: 1px solid #fcc;
 }
 .pheasant-output > pre {
   background-color: #ffd;

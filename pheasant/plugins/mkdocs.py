@@ -6,7 +6,7 @@ import yaml
 from mkdocs.config import config_options
 from mkdocs.plugins import BasePlugin
 
-from pheasant.core.converter import Converter
+from pheasant import Code, Converter, Jupyter, Linker, Number, Python
 
 config_options  # to avoid linter error.
 
@@ -23,9 +23,16 @@ class PheasantPlugin(BasePlugin):
 
     def setup(self):
         self.converter = Converter()
-        self.converter.register("script", "python")
-        self.converter.register("markdown", ["jupyter", "number", "code"])
-        self.converter.register("linker", "linker")
+        python = Python()
+        jupyter = Jupyter()
+        number = Number()
+        code = Code()
+        linker = Linker()
+        linker.number = number
+        self.converter.register("preprocess", python)
+        self.converter.register("numbered", [jupyter, number, code])
+        self.converter.register("unnumbered", [jupyter, code])
+        self.converter.register("postprocess", linker)
         logger.debug(f"[Pheasant] Converter created: {self.converter}.")
         logger.debug("[Pheasant] Parser registered.")
         for name, parser in self.converter.parsers.items():
@@ -58,9 +65,7 @@ class PheasantPlugin(BasePlugin):
                 if name in config_:
                     renderer.update_config(config_[name])
                 for key, value in renderer.config.items():
-                    logger.debug(
-                        f"[Pheasant.{name}] Config value: '{key}' = {value}."
-                    )
+                    logger.debug(f"[Pheasant.{name}] Config value: '{key}' = {value}.")
         return config
 
     def on_nav(self, nav, config, files):
@@ -74,23 +79,25 @@ class PheasantPlugin(BasePlugin):
 
     def on_page_read_source(self, source, page, config):
         logger.info(f"[Pheasant] on_page_read_source: {page.file.src_path}")
-        source = self.converter("markdown")(page.file.abs_src_path)
         return source
 
     def on_page_markdown(self, markdown, page, config, files):
         logger.info(f"[Pheasant] on_page_markdown: {page.file.src_path}")
         print(markdown)
-        return
+        # page.file.abs_src_path
+        markdown = self.converter("numbered")(markdown)
+        print(markdown)
+        return markdown
 
     def on_page_content(self, content, page, config, files):
         logger.info(f"[Pheasant] on_page_content: {page.file.src_path}")
         print(content)
-        return
+        content = self.converter("postprocess")(content)
+        print(content)
+        return content
 
     def on_page_context(self, context, page, config, nav):
         logger.info(f"[Pheasant] on_page_context: {page.file.src_path}")
-        print(page)
-        print(dir(page))
-        print(page.content)
+        print(context)
         # update_page_config(config, page.file.abs_src_path)
         return context
