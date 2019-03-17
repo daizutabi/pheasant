@@ -1,11 +1,11 @@
 import pytest
 
-from pheasant.core.converter import Converter
+from pheasant import Converter, Jupyter, Linker, Number
 
 
 @pytest.fixture()
 def converter():
     converter = Converter()
-    converter.register("preprocess", ["jupyter", "number"])
-    converter.register("postprocess", ["linker"])
+    converter.register("preprocess", [Jupyter(), Number()])
+    converter.register("postprocess", Linker())
     return converter

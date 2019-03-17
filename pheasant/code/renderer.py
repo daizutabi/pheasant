@@ -1,7 +1,7 @@
 import codecs
 import os
 from ast import literal_eval
-from typing import Any, Dict, Iterable, Optional
+from typing import Any, Dict, Iterator, Optional
 
 from pheasant.core.parser import Parser
 from pheasant.core.renderer import Config, Context, Renderer
@@ -22,7 +22,7 @@ class Code(Renderer):
         self.register(Code.INLINE_CODE_PATTERN, self.render_inline_code)
         self.set_template("fenced_code")
 
-    def render_fenced_code(self, context: Context, parser: Parser) -> Iterable[str]:
+    def render_fenced_code(self, context: Context, parser: Parser) -> Iterator[str]:
         if context["language"] == "copy":
             context["language"] = "markdown"
             copy = True
@@ -34,7 +34,7 @@ class Code(Renderer):
             yield "\n"  # important.
             yield from parser.parse(context["source"] + "\n")
 
-    def render_inline_code(self, context: Context, parser: Parser) -> Iterable[str]:
+    def render_inline_code(self, context: Context, parser: Parser) -> Iterator[str]:
         language = context["language"]
         if context["header"]:
             header = "Code" if language == "python" else "File"

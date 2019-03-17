@@ -24,11 +24,7 @@ class Converter:
         elif isinstance(item, tuple):
             return self.renderers[item]
 
-    def register(
-        self,
-        name: str,
-        renderers: Union[Union[Renderer, str], Iterable[Union[Renderer, str]]],
-    ):
+    def register(self, name: str, renderers: Union[Renderer, Iterable[Renderer]]):
         """Register renderer's processes
 
         Parameters
@@ -42,8 +38,10 @@ class Converter:
             raise ValueError(f"Duplicated parser name '{name}'")
         parser = Parser(name)
         self.parsers[name] = parser
+        if isinstance(renderers, Renderer):
+            renderers = [renderers]
         self.renderers.register(name, renderers)
-        for renderer in self.renderers[name]:
+        for renderer in self.renderers[name]:  # type: ignore
             for pattern, render in renderer.renders.items():
                 parser.register(pattern, render)
 

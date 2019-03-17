@@ -1,5 +1,5 @@
 import re
-from typing import Any, Dict, Iterable, List, Match, Optional
+from typing import Any, Dict, Iterator, List, Match, Optional
 
 # from pheasant.core import markdown
 from pheasant.core.parser import Parser
@@ -50,12 +50,12 @@ class Jupyter(Renderer):
         ]:
             self.config["extra_resources"][key] = []
 
-    def render_fenced_code(self, context: Context, parser: Parser) -> Iterable[str]:
+    def render_fenced_code(self, context: Context, parser: Parser) -> Iterator[str]:
         if "inline" in context["option"]:
             context["code"] = preprocess_fenced_code(context["code"])
         yield self.render(self.config["fenced_code_template"], context)
 
-    def render_inline_code(self, context: Context, parser: Parser) -> Iterable[str]:
+    def render_inline_code(self, context: Context, parser: Parser) -> Iterator[str]:
         context["code"] = preprocess_inline_code(context["code"])
         yield self.render(self.config["inline_code_template"], context)
 

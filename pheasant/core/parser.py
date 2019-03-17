@@ -1,8 +1,8 @@
 import re
-from typing import (Any, Callable, Dict, Generator, Iterable, Match, Optional,
+from typing import (Any, Callable, Dict, Generator, Iterator, Match, Optional,
                     Pattern, Union)
 
-Render = Callable[[Dict[str, str], "Parser"], Iterable[str]]
+Render = Callable[[Dict[str, str], "Parser"], Iterator[str]]
 Cell = Union[str, Dict[str, Any], Match[str]]
 Splitter = Generator[Optional[Cell], Optional[type], None]
 Seed = Dict[str, Any]
@@ -25,7 +25,7 @@ class Parser:
         self.patterns[name] = f"(?P<{name}>{pattern})"
         self.renders[name] = render
 
-    def parse(self, source: str) -> Iterable[str]:
+    def parse(self, source: str) -> Iterator[str]:
         self.generator = self.splitter(source)
         next(self.generator)  # go to the first yield.
         for cell in self.generator:

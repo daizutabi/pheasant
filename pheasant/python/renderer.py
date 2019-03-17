@@ -1,4 +1,4 @@
-from typing import Iterable, Optional
+from typing import Iterator, Optional
 
 from pheasant.core.parser import Parser
 from pheasant.core.renderer import Config, Context, Renderer
@@ -14,7 +14,7 @@ class Python(Renderer):
         super().__init__(name, config)
         self.register(Python.PYTHON_CODE_PATTERN, self.render_python_code)
 
-    def render_python_code(self, context: Context, parser: Parser) -> Iterable[str]:
+    def render_python_code(self, context: Context, parser: Parser) -> Iterator[str]:
         formatter = Formatter(context["source"])
         for cell_type, begin, end in splitter(context["source"]):
             yield formatter(cell_type, begin, end)

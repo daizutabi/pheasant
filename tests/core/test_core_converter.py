@@ -1,18 +1,16 @@
 import re
 
-import pytest
 
 from pheasant.core.converter import Converter
 from pheasant.jupyter.renderer import Jupyter
 from pheasant.number.renderer import Number
 
 
-@pytest.mark.parametrize("renderers", [[Jupyter(), Number()], ("jupyter", "number")])
-def test_converter(renderers):
+def test_converter():
     converter = Converter()
     assert converter.convert("abc") == "abc"
 
-    converter.register("markdown", renderers)
+    converter.register("markdown", [Jupyter(), Number()])
     assert len(converter.parsers) == 1
 
     output = converter.convert("abd\n# a\n## b\n```python\n2*3\n```\n")

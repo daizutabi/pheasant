@@ -1,22 +1,14 @@
-import importlib
 from collections import OrderedDict
-from typing import Dict, Iterable, List, Type, Union
+from typing import Iterable, Iterator, List, Union
 
 from pheasant.core.renderer import Renderer
 
 
 class Renderers:
-    renderer_types: Dict[str, Type[Renderer]]
-
     def __init__(self):
-        self.update_renderer_types()
         self.renderers: OrderedDict[str, List[Renderer]] = OrderedDict()
 
-    def register(
-        self,
-        name: str,
-        renderers: Union[Union[Renderer, str], Iterable[Union[Renderer, str]]],
-    ):
+    def register(self, name: str, renderers: Iterable[Renderer]):
         """
         Parameters
         ----------
@@ -25,16 +17,7 @@ class Renderers:
         renderers
             List of Renderer's instance
         """
-        if not isinstance(renderers, Iterable) or isinstance(renderers, str):
-            renderers = [renderers]
-
-        def to_renderer(renderer: Union[Renderer, str]) -> Renderer:
-            if isinstance(renderer, str):
-                return Renderers.renderer_types[renderer]()
-            else:
-                return renderer
-
-        self.renderers[name] = [to_renderer(renderer) for renderer in renderers]
+        self.renderers[name] = list(renderers)
 
     def __getitem__(self, item) -> Union[List[Renderer], Renderer]:
         if isinstance(item, str):
@@ -51,7 +34,7 @@ class Renderers:
                     raise KeyError
         raise IndexError
 
-    def __iter__(self) -> Iterable[Renderer]:
+    def __iter__(self) -> Iterator[Renderer]:
         return (
             renderer for renderers in self.renderers.values() for renderer in renderers
         )
@@ -64,12 +47,3 @@ class Renderers:
 
     def values(self):
         return self.renderers.values()
-
-    @classmethod
-    def update_renderer_types(cls):
-        module = importlib.import_module("pheasant")
-        cls.renderer_types = {
-            name.lower(): getattr(module, name)
-            for name in module.__dict__["__all__"]  # for mypy
-            if issubclass(getattr(module, name), Renderer)
-        }

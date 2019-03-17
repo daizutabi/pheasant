@@ -50,17 +50,17 @@ class PheasantPlugin(BasePlugin):
         path = os.path.dirname(config["config_file_path"])
         path = os.path.join(path, "pheasant.yml")
         if os.path.exists(path):
-            logger.debug(f"[Pheasant] config file: {path}")
+            logger.debug(f"[Pheasant] Config file: {path}")
             with open(path, "r") as f:
-                config = yaml.load(f)
+                config_ = yaml.load(f)
             for renderer in self.converter.renderers:
                 name = renderer.name
-                if name in config:
-                    renderer.update_config(config[name])
-                    for key, value in renderer.config.items():
-                        logger.debug(
-                            f"[Pheasant.{name}] Config value: '{key}' = {value}."
-                        )
+                if name in config_:
+                    renderer.update_config(config_[name])
+                for key, value in renderer.config.items():
+                    logger.debug(
+                        f"[Pheasant.{name}] Config value: '{key}' = {value}."
+                    )
         return config
 
     def on_nav(self, nav, config, files):

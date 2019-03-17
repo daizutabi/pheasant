@@ -1,6 +1,6 @@
 import os
 import re
-from typing import Any, Dict, Iterable, List, Optional, Tuple, Union
+from typing import Any, Dict, Iterator, List, Optional, Tuple, Union
 
 from pheasant.core import markdown
 from pheasant.core.parser import Parser
@@ -37,7 +37,7 @@ class Number(Renderer):
         for kind in self.config["kind"]:
             self.number_list[kind] = [0] * 6
 
-    def render_header(self, context: Context, parser: Parser) -> Iterable[str]:
+    def render_header(self, context: Context, parser: Parser) -> Iterator[str]:
         kind = self.header_kind[context["kind"][:3].lower()]
         depth = len(context["prefix"]) - 1
         self.number_list[kind][depth] += 1
@@ -114,7 +114,7 @@ class Linker(Renderer):
     def set_number(self, number: Number) -> None:
         self.number = number
 
-    def render_label(self, context: Context, parser: Parser) -> Iterable[str]:
+    def render_label(self, context: Context, parser: Parser) -> Iterator[str]:
         if self.number is None:
             raise ValueError("A Number instance has not set yet.")
         label = context["label"]

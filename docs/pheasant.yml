@@ -2,4 +2,4 @@ jupyter:
   kernel_name:
     python: python3
 number:
-  ignore: ".*about.*"
+  ignored_path: "*/about/*"

@@ -2,13 +2,12 @@ import pytest
 
 from pheasant.core.renderers import Renderers
 from pheasant.jupyter.renderer import Jupyter
-from pheasant.number.renderer import Number
+from pheasant.number.renderer import Linker, Number
 
 
-@pytest.mark.parametrize("renderers_", [[Jupyter(), Number()], ("jupyter", "number")])
-def test_renderers(renderers_):
+def test_renderers():
     renderers = Renderers()
-    renderers.register("markdown", renderers_)
+    renderers.register("markdown", [Jupyter(), Number()])
     assert list(renderers.renderers.keys()) == ["markdown"]
     assert len(renderers.renderers["markdown"]) == 2
 
@@ -16,8 +15,8 @@ def test_renderers(renderers_):
 @pytest.fixture()
 def renderers():
     renderers = Renderers()
-    renderers.register("preprocess", ["jupyter", "number"])
-    renderers.register("postprocess", "linker")
+    renderers.register("preprocess", [Jupyter(), Number()])
+    renderers.register("postprocess", [Linker()])
     return renderers
 
 
@@ -32,6 +31,7 @@ def test_converter_special_function(renderers):
     ]
 
 
-# def test_converter_dict_function(renderers):
-#     assert list(renderers.keys()) == ["preprocess", "postprocess"]
-#     assert list(renderers.values()) == ["preprocess", "postprocess"]
+def test_converter_dict_function(renderers):
+    assert list(renderers.keys()) == list(renderers.renderers.keys())
+    assert list(renderers.values()) == list(renderers.renderers.values())
+    assert list(renderers.items()) == list(renderers.renderers.items())
