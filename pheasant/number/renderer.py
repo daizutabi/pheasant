@@ -78,12 +78,12 @@ class Header(Renderer):
             ) + "\n"
         else:
             # Need to detect the range of a numbered object.
-            content = parser.send(dict)
-            if content["match"]:
-                content = content["result"]()
+            cell = next(parser)
+            if cell.match:
+                content = cell.result()
                 rest = ""
             else:
-                content = content["source"]
+                content = cell.source
                 if content.startswith(self.config["begin_pattern"]):
                     content = content[len(self.config["begin_pattern"]) :]
                     content, *rests = content.split(self.config["end_pattern"])

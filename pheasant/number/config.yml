@@ -16,8 +16,8 @@ begin_pattern: <!-- begin -->
 # End pattern
 end_pattern: <!-- end -->
 # <div> class name for numbered objects.
-class: pheasant-number-{kind}
+class: pheasant-header-{kind}
 # <div> id name for numbered objects.
-id: pheasant-number-{label}
+id: pheasant-header-{label}
 # relpath function
 relpath_function: null

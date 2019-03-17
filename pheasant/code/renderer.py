@@ -1,13 +1,15 @@
 import codecs
 import os
 from ast import literal_eval
+from dataclasses import dataclass
 from typing import Any, Dict, Iterator, Optional
 
 from pheasant.core.parser import Parser
-from pheasant.core.renderer import Config, Context, Renderer
+from pheasant.core.renderer import Renderer
 from pheasant.jupyter.client import execute, get_kernel_name
 
 
+@dataclass
 class Code(Renderer):
 
     FENCED_CODE_PATTERN = (
@@ -16,13 +18,15 @@ class Code(Renderer):
     )
     INLINE_CODE_PATTERN = r"^(?P<header>#?)!\[(?P<language>\w+?)\]\((?P<source>.+?)\)\n"
 
-    def __init__(self, name: str = "", config: Optional[Config] = None):
-        super().__init__(name, config)
+    def __post_init__(self):
+        super().__post_init__()
         self.register(Code.FENCED_CODE_PATTERN, self.render_fenced_code)
         self.register(Code.INLINE_CODE_PATTERN, self.render_inline_code)
         self.set_template("fenced_code")
 
-    def render_fenced_code(self, context: Context, parser: Parser) -> Iterator[str]:
+    def render_fenced_code(
+        self, context: Dict[str, str], parser: Parser
+    ) -> Iterator[str]:
         if context["language"] == "copy":
             context["language"] = "markdown"
             copy = True
@@ -34,7 +38,9 @@ class Code(Renderer):
             yield "\n"  # important.
             yield from parser.parse(context["source"] + "\n")
 
-    def render_inline_code(self, context: Context, parser: Parser) -> Iterator[str]:
+    def render_inline_code(
+        self, context: Dict[str, str], parser: Parser
+    ) -> Iterator[str]:
         language = context["language"]
         if context["header"]:
             header = "Code" if language == "python" else "File"
