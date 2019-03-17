@@ -70,9 +70,8 @@ class PheasantPlugin(BasePlugin):
 
     def on_page_read_source(self, source, page, config):
         logger.info(f"[Pheasant] on_page_read_source: {page.file.src_path}")
-        # source = self.converter.convert(page.file.abs_src_path)
-        # assert source is Non
-        # return source
+        source = self.converter("markdown")(page.file.abs_src_path)
+        return source
 
     def on_page_markdown(self, markdown, page, config, files):
         logger.info(f"[Pheasant] on_page_markdown: {page.file.src_path}")

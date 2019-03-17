@@ -1,39 +1,28 @@
 import codecs
 import importlib
+from collections import OrderedDict
 from functools import partial
-from typing import Callable, Dict, Iterable, List, Optional, Type, Union
+from typing import Callable, Dict, Iterable, Optional, Type, Union
 
 from pheasant.core.parser import Parser
 from pheasant.core.renderer import Renderer
 
 
 class Converter:
-    def __init__(self):
-        self.parsers: Dict[str, Parser] = {}
-        self.renderers: Dict[str, List[Renderer]] = {}
-        self.names: List[str] = []
+    def __init__(self, name: str = ""):
+        self.name = name or self.__class__.__qualname__.lower()
+        self.parsers: OrderedDict[str, Parser] = OrderedDict()
+        self.renderers: OrderedDict[str, Dict[str, Renderer]] = OrderedDict()
 
     def __repr__(self):
-        run = ", ".join(f"'{name}'" for name in self.names)
-        return f"<{self.__class__.__qualname__}[{run}])>"
-
-    def __len__(self):
-        return len(self.names)
+        parsers = ", ".join(f"'{name}'" for name in self.parsers.keys())
+        return f"<{self.__class__.__qualname__}#{self.name}[{parsers}]>"
 
     def __getitem__(self, item):
-        if isinstance(item, int):
-            return self.names[item]
-        elif isinstance(item, str):
-            return self.renderers[item]
+        if isinstance(item, str):
+            return self.parsers[item]
         elif isinstance(item, tuple):
-            if len(item) == 2:
-                if isinstance(item[1], str):
-                    return getattr(self, item[1] + "s")[item[0]]
-                else:
-                    return self.renderers[item[0]][item[1]]
-            else:
-                return self.__getitem__(item[:2])[item[2]]
-        raise IndexError("converter index out of range")
+            return self.renderers[item[0]][item[1]]
 
     def register(
         self,
@@ -52,15 +41,14 @@ class Converter:
         if not isinstance(renderers, Iterable) or isinstance(renderers, str):
             renderers = [renderers]
         if name in self.parsers:
-            raise ValueError
-        self.names.append(name)
-        parser = Parser()
+            raise ValueError(f"Duplicated parser name '{name}'")
+        parser = Parser(name)
         self.parsers[name] = parser
-        self.renderers[name] = [
-            resolve_renderer(renderer)() if isinstance(renderer, str) else renderer
-            for renderer in renderers
-        ]
-        for renderer in self.renderers[name]:
+        self.renderers[name] = {}
+        for renderer in renderers:
+            if isinstance(renderer, str):
+                renderer = resolve_renderer(renderer)()
+            self.renderers[name][renderer.name] = renderer
             for pattern, render in renderer.renders.items():
                 parser.register(pattern, render)
 
@@ -83,7 +71,7 @@ class Converter:
         """
         if isinstance(names, str):
             names = [names]
-        names = names or self.names
+        names = names or self.parsers.keys()
         for name in names:
             parser = self.parsers[name]
             source = "".join(parser.parse(source))

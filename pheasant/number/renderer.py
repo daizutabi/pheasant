@@ -12,8 +12,8 @@ class Number(Renderer):
     HEADER_PATTERN = r"^(?P<prefix>#+)(?P<kind>\w*?) +(?P<title>.+?)\n"
     LABEL_PATTERN = r"\{#(?P<label>\S+?)#\}"
 
-    def __init__(self, config: Optional[Config] = None):
-        super().__init__(config)
+    def __init__(self, name: str = "", config: Optional[Config] = None):
+        super().__init__(name, config)
         self.register(Number.HEADER_PATTERN, self.render_header)
         self.set_template("header")
         self.page_index: Union[int, List[int]] = 1
@@ -104,8 +104,8 @@ class Number(Renderer):
 
 
 class Linker(Renderer):
-    def __init__(self, config: Optional[Config] = None):
-        super().__init__(config)
+    def __init__(self, name: str = "", config: Optional[Config] = None):
+        super().__init__(name, config)
         self.register(Number.LABEL_PATTERN, self.render_label)
         self.set_template("header")
         self.number: Optional[Number] = None

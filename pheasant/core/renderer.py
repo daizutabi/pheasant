@@ -12,14 +12,15 @@ Config = Dict[str, Any]
 
 
 class Renderer:
-    def __init__(self, config: Optional[Config] = None):
+    def __init__(self, name: str = "", config: Optional[Config] = None):
+        self.name = name or self.__class__.__qualname__.lower()
         self.renders: Dict[str, Render] = {}
         self.config: Dict[str, Any] = {}
         self.load_config()
         self.update_config(config)
 
     def __repr__(self):
-        return f"<{self.__class__.__qualname__}[{len(self.renders)}])>"
+        return f"<{self.__class__.__qualname__}#{self.name}[{len(self.renders)}]>"
 
     def register(self, pattern: str, render: Render) -> None:
         self.renders[pattern] = render

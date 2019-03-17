@@ -6,7 +6,7 @@ from pheasant.number.renderer import Linker, Number
 
 @pytest.fixture(scope="module")
 def number():
-    number = Number({"__dummy__": "test"})
+    number = Number(config={"__dummy__": "test"})
     number.config["header_template_file"] = "simple.jinja2"
     number.set_template("header")
     return number
@@ -52,5 +52,3 @@ def source_simple():
         ]
     )
     return source_simple
-
-#print(source_simple)

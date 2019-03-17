@@ -16,8 +16,8 @@ class Code(Renderer):
     )
     INLINE_CODE_PATTERN = r"^(?P<header>#?)!\[(?P<language>\w+?)\]\((?P<source>.+?)\)\n"
 
-    def __init__(self, config: Optional[Config] = None):
-        super().__init__(config)
+    def __init__(self, name: str = "", config: Optional[Config] = None):
+        super().__init__(name, config)
         self.register(Code.FENCED_CODE_PATTERN, self.render_fenced_code)
         self.register(Code.INLINE_CODE_PATTERN, self.render_inline_code)
         self.set_template("fenced_code")
@@ -37,8 +37,8 @@ class Code(Renderer):
     def render_inline_code(self, context: Context, parser: Parser) -> Iterable[str]:
         language = context["language"]
         if context["header"]:
-            header = "Code" if language == 'python' else "File"
-            source = context['source']
+            header = "Code" if language == "python" else "File"
+            source = context["source"]
             source = f"#{header} {source}\n![{language}]({source})\n"
             yield from parser.parse(source)
         elif language == "file":
