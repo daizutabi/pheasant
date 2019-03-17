@@ -52,10 +52,18 @@ class PheasantPlugin(BasePlugin):
         if os.path.exists(path):
             logger.debug(f"[Pheasant] config file: {path}")
             with open(path, "r") as f:
-                self.config = yaml.load(f)
-            for key, value in self.config.items():
-                for key_, value_ in value.items():
-                    logger.debug(f"[Pheasant.{key}] Config value: '{key_}' = {value_}.")
+                config = yaml.load(f)
+
+            # for self.converter.
+            #
+            #
+            # for key, values in config.items():
+            #     for parser_name in self.converter.parsers:
+            #         for renderer_name_ in self.converter.renderers[parser_name]:
+            #             if renderer_name == renderer_name_:
+            #                 self.converter.renderers[pa]
+            #     for key_, value_ in value.items():
+            #         logger.debug(f"[Pheasant.{key}] Config value: '{key_}' = {value_}.")
 
         return config
 

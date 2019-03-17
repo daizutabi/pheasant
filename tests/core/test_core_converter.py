@@ -3,9 +3,8 @@ import re
 import pytest
 
 from pheasant.core.converter import Converter
-from pheasant.core.parser import Parser
 from pheasant.jupyter.renderer import Jupyter
-from pheasant.number.renderer import Linker, Number
+from pheasant.number.renderer import Number
 
 
 @pytest.mark.parametrize("renderers", [[Jupyter(), Number()], ("jupyter", "number")])
@@ -28,6 +27,17 @@ def test_converter_other_special(converter):
     assert callable(converter())
     assert callable(converter("preprocess"))
     assert callable(converter("preprocess", "postprocess"))
+
+    assert [repr(renderer) for renderer in converter.renderers("preprocess")] == [
+        "<Jupyter#jupyter[2]>",
+        "<Number#number[1]>",
+    ]
+
+    assert [repr(renderer) for renderer in converter.renderers] == [
+        "<Jupyter#jupyter[2]>",
+        "<Number#number[1]>",
+        "<Linker#linker[1]>",
+    ]
 
 
 def test_multiple_parser(converter):
