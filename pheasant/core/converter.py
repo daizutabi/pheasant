@@ -1,67 +1,11 @@
 import codecs
-import importlib
 from collections import OrderedDict
 from functools import partial
-from typing import Callable, Dict, Iterable, Optional, Type, Union
+from typing import Callable, Iterable, Optional, Union
 
 from pheasant.core.parser import Parser
 from pheasant.core.renderer import Renderer
-
-
-class Renderers:
-    renderer_types: Dict[str, Type[Renderer]]
-
-    def __init__(self):
-        self.update_renderer_types()
-        self.renderers: OrderedDict[str, OrderedDict[str, Renderer]] = OrderedDict()
-
-    def register(
-        self,
-        name: str,
-        renderers: Union[Union[Renderer, str], Iterable[Union[Renderer, str]]],
-    ):
-        """
-        Parameters
-        ----------
-        name
-            The name of Renderers
-        renderers
-            List of Renderer's instance
-        """
-        if not isinstance(renderers, Iterable) or isinstance(renderers, str):
-            renderers = [renderers]
-        self.renderers[name] = OrderedDict()
-        for renderer in renderers:
-            if isinstance(renderer, str):
-                renderer_ = Renderers.renderer_types[renderer]()
-            else:
-                renderer_ = renderer
-            self.renderers[name][renderer_.name] = renderer_
-
-    def __getitem__(self, item):
-        if isinstance(item, str):
-            return self.renderers[item]
-        elif isinstance(item, tuple):
-            return self.renderers[item[0]][item[1]]
-
-    def __call__(self, name: str) -> Iterable[Renderer]:
-        return (renderer for renderer in self.renderers[name].values())
-
-    def __iter__(self):
-        return (
-            renderer
-            for renderers in self.renderers.values()
-            for renderer in renderers.values()
-        )
-
-    @classmethod
-    def update_renderer_types(cls):
-        module = importlib.import_module("pheasant")
-        cls.renderer_types = {
-            name.lower(): getattr(module, name)
-            for name in module.__dict__["__all__"]  # for mypy
-            if issubclass(getattr(module, name), Renderer)
-        }
+from pheasant.core.renderers import Renderers
 
 
 class Converter:
@@ -99,7 +43,7 @@ class Converter:
         parser = Parser(name)
         self.parsers[name] = parser
         self.renderers.register(name, renderers)
-        for renderer in self.renderers(name):
+        for renderer in self.renderers[name]:
             for pattern, render in renderer.renders.items():
                 parser.register(pattern, render)
 

@@ -20,24 +20,13 @@ def test_converter(renderers):
     assert output == "abd# 1. a## 1.1. b2*36"
 
 
-def test_converter_other_special(converter):
+def test_converter_special_function(converter):
     assert repr(converter) == "<Converter#converter['preprocess', 'postprocess']>"
     assert repr(converter["preprocess"]) == "<Parser#preprocess[3]>"
     assert repr(converter["preprocess", "jupyter"]) == "<Jupyter#jupyter[2]>"
     assert callable(converter())
     assert callable(converter("preprocess"))
     assert callable(converter("preprocess", "postprocess"))
-
-    assert [repr(renderer) for renderer in converter.renderers("preprocess")] == [
-        "<Jupyter#jupyter[2]>",
-        "<Number#number[1]>",
-    ]
-
-    assert [repr(renderer) for renderer in converter.renderers] == [
-        "<Jupyter#jupyter[2]>",
-        "<Number#number[1]>",
-        "<Linker#linker[1]>",
-    ]
 
 
 def test_multiple_parser(converter):
