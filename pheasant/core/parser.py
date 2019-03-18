@@ -4,7 +4,7 @@ from typing import Any, Callable, Dict, Iterator, Match, Optional, Pattern
 
 from pheasant.core.base import Base
 
-Render = Callable[[Any], Iterator[str]]  # Any = Context dataclass
+Render = Callable[[Any, Iterator[Any]], Iterator[str]]  # Any = Context dataclass
 
 
 @dataclass(eq=False)
@@ -38,8 +38,7 @@ class Parser(Base):
         splitter = self.split(source)
         for context in splitter:
             if context.match:
-                context.splitter = splitter
-                yield from context.render(context)  # Deligates to render
+                yield from context.render(context, splitter)  # Deligates to render
             else:
                 yield context.source
 
@@ -100,7 +99,7 @@ class Parser(Base):
         del group["_source"]
         group = self.group_classes[render_name](**group)
 
-        return self.context_classes[render_name](None, match, group, None)
+        return self.context_classes[render_name](None, match, group)
 
 
 def get_render_name(render: Render, postfix: str = "") -> str:
@@ -167,9 +166,8 @@ def make_context_class(
 ) -> type:
     fields = [
         ("group", group_class),
-        ("splitter", Optional[Iterator[str]]),
         ("render_name", str, field(default=render_name)),
         ("render", Callable[[Any], Iterator[str]], field(default=render)),
         ("parser", Parser, field(default=parser)),
     ]
-    return make_dataclass("Cell", fields, bases=(Context,))  # type: ignore
+    return make_dataclass("Context", fields, bases=(Context,))  # type: ignore

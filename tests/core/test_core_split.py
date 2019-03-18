@@ -1,5 +1,3 @@
-import pytest
-
 from pheasant.core.base import Base
 from pheasant.core.parser import Parser
 
@@ -8,78 +6,35 @@ class Renderer_A(Base):
     pattern_ab = r"(?P<a>a)(?P<b>b)"
     pattern_cd = r"(?P<c>c)(?P<d>d)"
 
-    def render_ab(self, context, parser):
+    def render_ab(self, context, splitter):
         yield "ba"
 
-    def render_cd(self, context, parser):
+    def render_cd(self, context, splitter):
         yield "dc"
 
 
-class Renderer_B(Base):
-    pattern_ef = r"(?P<e>e)(?P<f>f)"
-    pattern_gh = r"(?P<g>g)(?P<h>h)"
-
-    def render_ef(self, context, parser):
-        cell = next(parser)
-        if cell.match is None:
-            yield cell.source
-            yield context._source
-        else:
-            yield "".join(cell.render(cell.context, parser))
-            yield cell.context._source
-
-    def render_gh(self, context, parser):
-        yield "XX"
-        yield from parser.parse("ab cd")
-
-
-@pytest.fixture()
-def a():
+def test_split():
     a = Renderer_A()
-    return a
-
-
-@pytest.fixture()
-def b():
-    b = Renderer_B()
-    return b
-
-
-@pytest.fixture()
-def parser(a, b):
     parser = Parser()
     parser.register(a.pattern_ab, a.render_ab)
     parser.register(a.pattern_cd, a.render_cd)
-    parser.register(b.pattern_ef, b.render_ef)
-    parser.register(b.pattern_gh, b.render_gh)
-    return parser
-
-
-def test_register(parser):
-    assert len(parser.patterns) == 4
-    assert len(parser.renders) == 4
-    assert len(parser.context_classes) == 4
-    assert len(parser.cell_classes) == 4
+    assert len(parser.patterns) == 2
+    assert len(parser.renders) == 2
+    assert len(parser.group_classes) == 2
+    assert len(parser.context_classes) == 2
     keys = list(parser.patterns.keys())
-    assert keys == [
-        "renderer_a__ab",
-        "renderer_a__cd",
-        "renderer_b__ef",
-        "renderer_b__gh",
-    ]
+    assert keys == ["renderer_a__ab", "renderer_a__cd"]
 
-
-def test_split(parser):
     source = "a ab ba cd dc"
     splitter = parser.split(source)
-    cell = next(splitter)
-    assert repr(cell) == "Cell(source='a ', match=None)"
-    cell = next(splitter)
-    assert cell.source is None
-    assert cell.match is not None
-    assert list(cell.render(cell.context, parser)) == ["ba"]
-    cell = next(splitter)
-    cell = next(splitter)
-    assert cell.source is None
-    assert cell.match is not None
-    assert "".join(cell.render(cell.context, parser)) == "dc"
+    context = next(splitter)
+    assert repr(context) == "Context(source='a ', match=None)"
+    context = next(splitter)
+    assert context.source is None
+    assert context.match is not None
+    assert list(context.render(context, splitter)) == ["ba"]
+    context = next(splitter)
+    context = next(splitter)
+    assert context.source is None
+    assert context.match is not None
+    assert "".join(context.render(context, splitter)) == "dc"
