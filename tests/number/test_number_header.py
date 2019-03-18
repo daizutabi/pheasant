@@ -29,12 +29,12 @@ def test_render_header(parser_header, header, source_simple):
     assert parser_header.renders["header__header"] == header.render_header
 
     splitter = parser_header.split(source_simple)
-    cell = next(splitter)
-    assert cell.source == "begin\n"
-    cell = next(splitter)
-    assert cell.render_name == "header__header"
-    assert cell.context.prefix == "#"
-    assert cell.context._source == "# title {#tag-a#}\n"
+    context = next(splitter)
+    assert context.source == "begin\n"
+    context = next(splitter)
+    assert context.render_name == "header__header"
+    assert context.group.prefix == "#"
+    assert context.match.group() == "# title {#tag-a#}\n"
 
 
 def test_join(parser_header, header, source_simple):
