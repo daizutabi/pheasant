@@ -1,4 +1,4 @@
-from typing import Dict, Iterator
+from typing import Iterator
 
 from pheasant.core.parser import Parser
 from pheasant.core.renderer import Renderer

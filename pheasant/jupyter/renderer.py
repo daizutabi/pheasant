@@ -1,6 +1,6 @@
 import re
 from dataclasses import asdict
-from typing import Any, Dict, Iterator, List, Match
+from typing import Iterator, List, Match
 
 from pheasant.core.parser import Parser
 from pheasant.core.renderer import Renderer
@@ -60,8 +60,10 @@ class Jupyter(Renderer):
         yield self.render(self.config["inline_code_template"], context)
 
     def render(self, template, context) -> str:
-        outputs = self.execute(code=context.code, language=context.language)
         context = asdict(context)
+        if 'language' not in context:
+            context["language"] = "python"
+        outputs = self.execute(code=context["code"], language=context["language"])
         context.update(outputs=outputs, config=self.config)
         return template.render(**context) + "\n"
 

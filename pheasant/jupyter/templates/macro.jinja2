@@ -1,13 +1,3 @@
-{%- macro output_text(output) -%}
-  {%- if output.type == 'execute_result' and 'text/plain' in output.data -%}
-      {{ output.data['text/plain'] }}
-  {%- elif output.type == 'stream' -%}
-      {{ output.text }}
-  {%- elif output.type == 'error' -%}
-    {{ output.ename }}: {{ output.evalue }}
-  {%- endif -%}
-{%- endmacro -%}
-
 {%- macro output_display(output, display) -%}
   {%- if display -%}
     <div class="pheasant-jupyter-display">

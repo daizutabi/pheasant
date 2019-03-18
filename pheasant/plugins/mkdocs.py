@@ -6,7 +6,11 @@ import yaml
 from mkdocs.config import config_options
 from mkdocs.plugins import BasePlugin
 
-from pheasant import Code, Converter, Jupyter, Linker, Number, Python
+from pheasant.core.converter import Converter
+from pheasant.code.renderer import Code
+from pheasant.jupyter.renderer import Jupyter
+from pheasant.number.renderer import Header, Anchor
+from pheasant.python.renderer import Python
 
 config_options  # to avoid linter error.
 
@@ -24,15 +28,15 @@ class PheasantPlugin(BasePlugin):
     def setup(self):
         self.converter = Converter()
         python = Python()
-        jupyter = Jupyter()
-        number = Number()
+        self.jupyter = Jupyter()
+        header = Header()
         code = Code()
-        linker = Linker()
-        linker.number = number
+        anchor = Anchor()
+        anchor.header = header
         self.converter.register("preprocess", python)
-        self.converter.register("numbered", [jupyter, number, code])
-        self.converter.register("unnumbered", [jupyter, code])
-        self.converter.register("postprocess", linker)
+        self.converter.register("numbered", [self.jupyter, header, code])
+        self.converter.register("unnumbered", [self.jupyter, code])
+        self.converter.register("postprocess", anchor)
         logger.debug(f"[Pheasant] Converter created: {self.converter}.")
         logger.debug("[Pheasant] Parser registered.")
         for name, parser in self.converter.parsers.items():
@@ -66,6 +70,8 @@ class PheasantPlugin(BasePlugin):
                     renderer.update_config(config_[name])
                 for key, value in renderer.config.items():
                     logger.debug(f"[Pheasant.{name}] Config value: '{key}' = {value}.")
+                renderer.init()
+                logger.debug(f"[Pheasant.{name}] Initialized.")
         return config
 
     def on_nav(self, nav, config, files):
@@ -83,21 +89,31 @@ class PheasantPlugin(BasePlugin):
 
     def on_page_markdown(self, markdown, page, config, files):
         logger.info(f"[Pheasant] on_page_markdown: {page.file.src_path}")
-        print(markdown)
+        # print(markdown)
         # page.file.abs_src_path
         markdown = self.converter("numbered")(markdown)
-        print(markdown)
+        # print(markdown)
         return markdown
 
     def on_page_content(self, content, page, config, files):
         logger.info(f"[Pheasant] on_page_content: {page.file.src_path}")
-        print(content)
+        # print(content)
         content = self.converter("postprocess")(content)
-        print(content)
+        # print(content)
         return content
 
     def on_page_context(self, context, page, config, nav):
         logger.info(f"[Pheasant] on_page_context: {page.file.src_path}")
-        print(context)
+        extra_resources = self.jupyter.config['extra_resources']
+        print(extra_resources)
+        print(config)
+        # for key in ['extra_css']:
+        #     config.context[key].extend(extra_resources[key])
+        #     print('----------------------------------------------')
+        #     print(context[key])
+        # return context
+        config["pheasant"] = extra_resources
+
+        self.jupyter.reset()
         # update_page_config(config, page.file.abs_src_path)
         return context

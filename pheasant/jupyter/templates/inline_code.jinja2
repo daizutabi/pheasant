@@ -1,9 +1,8 @@
 {%- from 'macro.jinja2' import output_display with context -%}
-{%- from 'macro.jinja2' import output_text with context -%}
 
 {%- for output in outputs -%}
   {%- if output.type == 'error' -%}
-    <span style="color: red; font-weight: bold;">{{ '&#x00AB;' + output_text(output) + '&#x00BB;' }}</span>
+    <span style="color: red; font-weight: bold;">{{ output.ename }}: {{ output.evalue }}</span>
   {%- else -%}
     {{ output_display(output, display) }}
   {%- endif -%}

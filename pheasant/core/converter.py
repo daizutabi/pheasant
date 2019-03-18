@@ -1,7 +1,7 @@
 from collections import OrderedDict
-from dataclasses import dataclass, field
+from dataclasses import field
 from functools import partial
-from typing import Callable, Iterable, Optional, Union
+from typing import Callable, Dict, Iterable, Optional, Union
 
 from pheasant.core.base import Base
 from pheasant.core.parser import Parser
@@ -9,9 +9,8 @@ from pheasant.core.renderer import Renderer
 from pheasant.core.renderers import Renderers
 
 
-@dataclass(repr=False)
 class Converter(Base):
-    parsers: OrderedDict[str, Parser] = field(default_factory=OrderedDict)
+    parsers: Dict[str, Parser] = field(default_factory=OrderedDict)
     renderers: Renderers = field(default_factory=Renderers)
 
     def __post_repr__(self):
@@ -35,7 +34,7 @@ class Converter(Base):
         """
         if name in self.parsers:
             raise ValueError(f"Duplicated parser name '{name}'")
-        parser = Parser(name)
+        parser = Parser(name)  # type:ignore
         self.parsers[name] = parser
         if isinstance(renderers, Renderer):
             renderers = [renderers]
