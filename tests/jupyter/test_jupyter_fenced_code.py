@@ -32,11 +32,11 @@ def test_render_fenced_code(parser, jupyter, source_simple):
     assert "jupyter__inline_code" in parser.patterns
 
     splitter = parser.split(source_simple)
-    cell = next(splitter)
-    assert cell.source == "begin\n"
-    cell = next(splitter)
-    assert cell.render_name == "jupyter__fenced_code"
-    assert cell.context.code == "a=1\nb=1"
-    cell = next(splitter)
-    cell = next(splitter)
-    assert cell.context.language == "ruby"
+    context = next(splitter)
+    assert context.source == "begin\n"
+    context = next(splitter)
+    assert context.render_name == "jupyter__fenced_code"
+    assert context.group.code == "a=1\nb=1"
+    context = next(splitter)
+    context = next(splitter)
+    assert context.group.language == "ruby"
