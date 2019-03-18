@@ -1,3 +1,0 @@
-# Test {#abc#}
-
-abc {#abc#}
