@@ -24,25 +24,16 @@ def test_renderer(header):
 
 
 def test_render_header(parser_header, header, source_simple):
-    assert "Header_render_header" in parser_header.patterns
-    assert parser_header.patterns["Header_render_header"].startswith(
-        "(?P<Header_render_header>"
-    )
-    assert parser_header.renders["Header_render_header"] == header.render_header
+    assert "header__header" in parser_header.patterns
+    assert parser_header.patterns["header__header"].startswith("(?P<header__header>")
+    assert parser_header.renders["header__header"] == header.render_header
 
     splitter = parser_header.split(source_simple)
     cell = next(splitter)
-    assert cell.name is None
-    assert cell.context == {}
     assert cell.source == "begin\n"
     cell = next(splitter)
-    assert cell.name == "Header_render_header"
-    assert cell.context == {
-        "prefix": "#",
-        "kind": "",
-        "title": "title {#tag-a#}",
-        "_source": cell.source,
-    }
+    assert cell.render_name == "header__header"
+    assert cell.context.prefix == "#"
     assert cell.source == "# title {#tag-a#}\n"
 
 

@@ -44,24 +44,21 @@ def source_parsed(anchor, parser_header, source_simple):
 
 
 def test_render_anchor(anchor, parser_anchor, source_parsed):
-    assert "Anchor_render_tag" in parser_anchor.patterns
-    assert parser_anchor.patterns["Anchor_render_tag"].startswith(
-        "(?P<Anchor_render_tag>"
+    assert "anchor__tag" in parser_anchor.patterns
+    assert parser_anchor.patterns["anchor__tag"].startswith(
+        "(?P<anchor__tag>"
     )
-    assert parser_anchor.renders["Anchor_render_tag"] == anchor.render_tag
+    assert parser_anchor.renders["anchor__tag"] == anchor.render_tag
 
     splitter = parser_anchor.split(source_parsed)
     cell = next(splitter)
-    assert cell.name is None
-    assert cell.context == {}
     answer = (
         'begin\n# <span id="pheasant-header-tag-a">1 title</span>\n' "text a Figure "
     )
     assert cell.source == answer
     cell = next(splitter)
-    assert cell.name == "Anchor_render_tag"
-    assert cell.context == {"tag": "tag-b", "_source": cell.source}
-    assert cell.context["tag"] in anchor.header.tag_context
+    assert cell.render_name == "anchor__tag"
+    assert cell.context.tag == "tag-b"
 
 
 def test_parse_anchor(anchor, parser_anchor, source_parsed):

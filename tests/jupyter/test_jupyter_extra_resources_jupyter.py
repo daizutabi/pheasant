@@ -1,7 +1,15 @@
+from dataclasses import dataclass
+
 import pytest
 
 from pheasant.jupyter.client import execute
 from pheasant.jupyter.renderer import Jupyter
+
+
+@dataclass
+class Context:
+    code: str
+    language: str = "python"
 
 
 @pytest.fixture()
@@ -13,7 +21,7 @@ def jupyter():
 @pytest.fixture()
 def render(jupyter):
     def render(code):
-        context = dict(code=code, language="python")
+        context = Context(code=code, language="python")
         return "\n".join(jupyter.render_inline_code(context, None))
 
     return render

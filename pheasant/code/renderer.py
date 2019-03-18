@@ -1,6 +1,7 @@
 import codecs
 import os
 from ast import literal_eval
+from dataclasses import asdict
 from typing import Any, Dict, Iterator
 
 from pheasant.core.parser import Parser
@@ -22,11 +23,9 @@ class Code(Renderer):
         self.register(Code.INLINE_CODE_PATTERN, self.render_inline_code)
         self.set_template("fenced_code")
 
-    def render_fenced_code(
-        self, context: Dict[str, str], parser: Parser
-    ) -> Iterator[str]:
-        if context["language"] == "copy":
-            context["language"] = "markdown"
+    def render_fenced_code(self, context, parser: Parser) -> Iterator[str]:
+        if context.language == "copy":
+            context.language = "markdown"
             copy = True
         else:
             copy = False
@@ -34,25 +33,23 @@ class Code(Renderer):
 
         if copy:
             yield "\n"  # important.
-            yield from parser.parse(context["source"] + "\n")
+            yield from parser.parse(context.source + "\n")
 
-    def render_inline_code(
-        self, context: Dict[str, str], parser: Parser
-    ) -> Iterator[str]:
-        language = context["language"]
-        if context["header"]:
+    def render_inline_code(self, context, parser: Parser) -> Iterator[str]:
+        language = context.language
+        if context.header:
             header = "Code" if language == "python" else "File"
-            source = context["source"]
+            source = context.source
             source = f"#{header} {source}\n![{language}]({source})\n"
             yield from parser.parse(source)
         elif language == "file":
-            path = context["source"]
+            path = context.source
             # path, language, slice_str = resolve_path(path)
             if not os.path.exists(path):
                 yield f'<p style="font-color:red">File not found: {path}</p>\n'
             else:
-                context["source"] = read_file(path)
-                context["language"] = "python"  # FIXME
+                context.source = read_file(path)
+                context.language = "python"  # FIXME
                 yield from self.render_fenced_code(context, parser)
                 yield "\n"
         elif language == "python":
@@ -60,13 +57,14 @@ class Code(Renderer):
             if kernel_name is None:
                 yield f'<p style="font-color:red">Kernel not found for {language}</p>\n'
             else:
-                context["source"] = inspect(kernel_name, context["source"])
+                context.source = inspect(kernel_name, context.source)
                 yield from self.render_fenced_code(context, parser)
                 yield "\n"
         else:
             yield f'<p style="font-color:red">{language} not supported</p>\n'
 
-    def render(self, template, context: Dict[str, Any]) -> str:
+    def render(self, template, context) -> str:
+        context = asdict(context)
         context.update(config=self.config)
         return template.render(**context)
 

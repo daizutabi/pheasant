@@ -28,29 +28,15 @@ def test_renderer(jupyter):
 
 
 def test_render_fenced_code(parser, jupyter, source_simple):
-    assert "Jupyter_render_fenced_code" in parser.patterns
-    assert "Jupyter_render_inline_code" in parser.patterns
+    assert "jupyter__fenced_code" in parser.patterns
+    assert "jupyter__inline_code" in parser.patterns
 
     splitter = parser.split(source_simple)
     cell = next(splitter)
-    assert cell.name is None
-    assert cell.context == {}
     assert cell.source == "begin\n"
     cell = next(splitter)
-    assert cell.name == "Jupyter_render_fenced_code"
-    assert cell.context == {
-        "mark": "```",
-        "language": "python",
-        "option": "",
-        "code": "a=1\nb=1",
-        "_source": cell.source,
-    }
+    assert cell.render_name == "jupyter__fenced_code"
+    assert cell.context.code == "a=1\nb=1"
     cell = next(splitter)
     cell = next(splitter)
-    assert cell.context == {
-        "mark": "```",
-        "language": "ruby",
-        "option": "inline",
-        "code": "a=1\nb=1",
-        "_source": cell.source,
-    }
+    assert cell.context.language == "ruby"

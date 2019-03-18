@@ -38,9 +38,9 @@ class Header(Renderer):
         for kind in self.config["kind"]:
             self.number_list[kind] = [0] * 6
 
-    def render_header(self, context: Dict[str, str], parser: Parser) -> Iterator[str]:
-        kind = self.header_kind[context["kind"][:3].lower()]
-        depth = len(context["prefix"]) - 1
+    def render_header(self, context, parser: Parser) -> Iterator[str]:
+        kind = self.header_kind[context.kind[:3].lower()]
+        depth = len(context.prefix) - 1
         self.number_list[kind][depth] += 1
         reset = [0] * (len(self.number_list[kind]) - depth)
         self.number_list[kind][depth + 1 :] = reset
@@ -52,7 +52,7 @@ class Header(Renderer):
         number_list = normalize_number_list(kind, number_list, self.page_index)
         number_string = number_list_format(number_list)
         cls = self.config["class"].format(kind=kind)
-        title, tag = split_tag(context["title"])
+        title, tag = split_tag(context.title)
 
         context_ = {
             "kind": kind,
@@ -119,10 +119,10 @@ class Anchor(Renderer):
     def set_header(self, header: Header) -> None:
         self.header = header
 
-    def render_tag(self, context: Dict[str, str], parser: Parser) -> Iterator[str]:
+    def render_tag(self, context, parser: Parser) -> Iterator[str]:
         if self.header is None:
             raise ValueError("A Header instance has not set yet.")
-        tag = context["tag"]
+        tag = context.tag
         context = self.resolve(tag)
         yield self.config["anchor_template"].render(
             reference=True, config=self.config, **context

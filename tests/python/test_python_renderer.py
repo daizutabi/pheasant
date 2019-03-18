@@ -13,13 +13,13 @@ def test_renderer_config(python):
 
 
 def test_render_python(parser, python, source_simple):
-    assert "Python_render_python_code" in parser.patterns
-    assert parser.patterns["Python_render_python_code"].startswith(
-        "(?P<Python_render_python_code>"
+    assert "python__python_code" in parser.patterns
+    assert parser.patterns["python__python_code"].startswith(
+        "(?P<python__python_code>"
     )
-    assert parser.renders["Python_render_python_code"] == python.render_python_code
+    assert parser.renders["python__python_code"] == python.render_python_code
 
     splitter = parser.split(source_simple)
     cell = next(splitter)
     assert cell.source == source_simple
-    assert cell.context["source"] == source_simple
+    assert cell.context.source == source_simple

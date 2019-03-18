@@ -1,4 +1,5 @@
 import re
+from dataclasses import asdict
 from typing import Any, Dict, Iterator, List, Match
 
 from pheasant.core.parser import Parser
@@ -49,21 +50,18 @@ class Jupyter(Renderer):
         ]:
             self.config["extra_resources"][key] = []
 
-    def render_fenced_code(
-        self, context: Dict[str, str], parser: Parser
-    ) -> Iterator[str]:
-        if "inline" in context["option"]:
-            context["code"] = preprocess_fenced_code(context["code"])
+    def render_fenced_code(self, context, parser: Parser) -> Iterator[str]:
+        if "inline" in context.option:
+            context.code = preprocess_fenced_code(context.code)
         yield self.render(self.config["fenced_code_template"], context)
 
-    def render_inline_code(
-        self, context: Dict[str, str], parser: Parser
-    ) -> Iterator[str]:
-        context["code"] = preprocess_inline_code(context["code"])
+    def render_inline_code(self, context, parser: Parser) -> Iterator[str]:
+        context.code = preprocess_inline_code(context.code)
         yield self.render(self.config["inline_code_template"], context)
 
-    def render(self, template, context: Dict[str, Any]) -> str:
-        outputs = self.execute(code=context["code"], language=context["language"])
+    def render(self, template, context) -> str:
+        outputs = self.execute(code=context.code, language=context.language)
+        context = asdict(context)
         context.update(outputs=outputs, config=self.config)
         return template.render(**context) + "\n"
 

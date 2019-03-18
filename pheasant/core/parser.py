@@ -93,6 +93,7 @@ class Parser(Base):
         cell
         """
         groupdict = match.groupdict()
+        print(groupdict)
         name = ""
 
         def rename_for_render(key):
@@ -108,6 +109,7 @@ class Parser(Base):
             for key, value in groupdict.items()
             if value is not None
         }
+        print(context)
         context = self.context_classes[name](**context)
         render = self.renders[name]
 

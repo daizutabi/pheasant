@@ -12,31 +12,11 @@ def source_simple():
 def test_render_inline_code(parser, code, source_simple):
     splitter = parser.split(source_simple)
     cell = next(splitter)
-    assert cell.name == "Code_render_inline_code"
-    assert cell.context == {
-        "header": "",
-        "language": "file",
-        "source": "abc",
-        "_source": cell.source,
-    }
+    assert cell.render_name == "code__inline_code"
+    assert cell.context.language == "file"
     cell = next(splitter)
-    assert cell.context == {
-        "header": "#",
-        "language": "file",
-        "source": "abc",
-        "_source": cell.source,
-    }
+    assert cell.context.header == "#"
     cell = next(splitter)
-    assert cell.context == {
-        "header": "",
-        "language": "python",
-        "source": "abc",
-        "_source": cell.source,
-    }
+    assert cell.context.source == "abc"
     cell = next(splitter)
-    assert cell.context == {
-        "header": "#",
-        "language": "python",
-        "source": "abc",
-        "_source": cell.source,
-    }
+    assert cell.context._source == cell.source
