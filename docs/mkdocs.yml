@@ -18,14 +18,15 @@ plugins:
 
 nav:
   - Home: index.md
-  - User Guide:
-    - Images: user-guide/images.md
-    - Code: user-guide/code.md
-    - Script: user-guide/script.py
-    - Macro: user-guide/macro.md
-  - About:
-    - Release Notes: about/release-notes.md
-    - License: about/license.md
+  - Test: test.md
+  # - User Guide:
+  #   - Images: user-guide/images.md
+  #  - Code: user-guide/code.md
+  #   - Script: user-guide/script.py
+  #   - Macro: user-guide/macro.md
+  # - About:
+  #   - Release Notes: about/release-notes.md
+  #   - License: about/license.md
 
 markdown_extensions:
   - admonition

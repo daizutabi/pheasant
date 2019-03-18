@@ -1,29 +1,11 @@
-{%- set number_string -%}
-  {%- block number_string -%}{%- endblock -%}
-{%- endset -%}
-
-{%- if reference -%}
-  {%- block reference -%}{%- endblock -%}
-{%- else -%}
 {%- if kind == 'header' -%}
-  {{ prefix }} {{ '<span id="' + id + '">' if id }}
-    {%- block header -%}{%- endblock -%}
-  {{ '</span>' if id }}
+  {{ prefix }} {% if id %}<span id="{{ id }}">{% endif %}{%- block header -%}{%- endblock -%}{% if id %}</span>{% endif %}
 {%- elif kind == 'figure' -%}
-<div class="{{ class }}"{{ ' id="' + id + '"' if id }}>
-{% block figure -%}{%- endblock %}
-</div>
+  <div class="{{ class }}"{% if id %} id="{{ id }}"{% endif %}>{%- block figure -%}{%- endblock -%}</div>
 {%- elif kind == 'table' -%}
-<div class="{{ class }}"{{ ' id="' + id + '"' if id }}>
-{% block table -%}{%- endblock %}
-</div>
+  <div class="{{ class }}"{% if id %} id="{{ id }}"{% endif %}>{%- block table -%}{%- endblock -%}</div>
 {%- elif kind == 'code' -%}
-<div class="{{ class }}"{{ ' id="' + id + '"' if id }}>
-{% block code -%}{%- endblock %}
-</div>
+  <div class="{{ class }}"{% if id %} id="{{ id }}"{% endif %}>{%- block code -%}{%- endblock -%}</div>
 {%- elif kind == 'file' -%}
-<div class="{{ class }}"{{ ' id="' + id + '"' if id }}>
-{% block file -%}{%- endblock %}
-</div>
-{%- endif -%}
+  <div class="{{ class }}"{% if id %} id="{{ id }}"{% endif %}>{%- block file -%}{%- endblock -%}</div>
 {%- endif -%}

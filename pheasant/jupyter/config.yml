@@ -1,0 +1,2 @@
+fenced_code_template_file: fenced_code.jinja2
+inline_code_template_file: inline_code.jinja2

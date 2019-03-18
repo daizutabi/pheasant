@@ -1,0 +1,25 @@
+{%- extends 'base.jinja2' -%}
+
+{%- block header -%}
+<span class="pheasant-header-number">{{ number_string }}</span> <span class="pheasant-header-title">{{ title }}</span>
+{%- endblock -%}
+
+{%- block figure -%}
+{% autoescape false %}{{ content }}{% endautoescape %}
+<p class="pheasant-figure"><span class="name">{% block figure_prefix %}{{ prefix }}{% endblock %}</span><span class="number">{{ number_string }}</span><span class="title">{{ title }}</span></p>
+{%- endblock -%}
+
+{%- block table -%}
+<p class="pheasant-table"><span class="name">{% block table_prefix %}{{ prefix }}{% endblock %}</span><span class="number">{{ number_string }}</span><span class="title">{{ title }}</span></p>
+{% autoescape false %}{{ content }}{% endautoescape %}
+{%- endblock -%}
+
+{%- block code -%}
+<p class="pheasant-code"><span class="name">{% block code_prefix %}{{ prefix }}{% endblock %}</span><span class="number">{{ number_string }}</span><span class="title">{{ title }}</span></p>
+{% autoescape false %}{{ content }}{% endautoescape %}
+{%- endblock -%}
+
+{%- block file -%}
+<p class="pheasant-file"><span class="name">{% block file_prefix %}{{ prefix }}{% endblock %}</span><span class="number">{{ number_string }}</span><span class="title">{{ title }}</span></p>
+{% autoescape false %}{{ content }}{% endautoescape %}
+{%- endblock -%}

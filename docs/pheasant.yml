@@ -1,13 +1,5 @@
 jupyter:
   kernel_name:
     python: python3
-  extra_paths:
-    - scripts
-  extra_modules:
-    - example
 number:
-  level: 0
-  ignore_pattern: ".*about.*"
-code:
-macro:
-script:
+  ignored_path: "*/about/*"
