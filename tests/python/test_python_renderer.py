@@ -19,8 +19,7 @@ def test_render_python(parser, python, source_simple):
     )
     assert parser.renders["Python_render_python_code"] == python.render_python_code
 
-    splitter = parser.splitter(source_simple)
-    next(splitter)
-    cell = splitter.send(dict)
-    assert cell["source"] == source_simple
-    assert cell["context"]["source"] == source_simple
+    splitter = parser.split(source_simple)
+    cell = next(splitter)
+    assert cell.source == source_simple
+    assert cell.context["source"] == source_simple

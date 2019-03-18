@@ -13,12 +13,12 @@ class Base(metaclass=MetaClass):
     config: Dict[str, Any] = field(default_factory=dict)
 
     def __post_init__(self):
-        self.name = self.name or self.__class__.__qualname__.lower()
+        self.name = self.name or self.__class__.__name__.lower()
 
     def __repr__(self):
         post = self.__post_repr__()
         post = f"[{post}]" if post else ""
-        return f"<{self.__class__.__qualname__}#{self.name}{post}>"
+        return f"<{self.__class__.__name__}#{self.name}{post}>"
 
     def __post_repr__(self):
         return ""

@@ -1,4 +1,4 @@
-from typing import Dict, Iterator, Optional
+from typing import Dict, Iterator
 
 from pheasant.core.parser import Parser
 from pheasant.core.renderer import Renderer
@@ -10,8 +10,7 @@ class Python(Renderer):
 
     PYTHON_CODE_PATTERN = r"^(?P<source>.+)"  # Entire source!
 
-    def __init__(self, name: str = "", config: Optional[Config] = None):
-        super().__init__(name, config)
+    def __post_init__(self):
         self.register(Python.PYTHON_CODE_PATTERN, self.render_python_code)
 
     def render_python_code(
