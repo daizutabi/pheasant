@@ -21,5 +21,5 @@ def test_render_python(parser, python, source_simple):
 
     splitter = parser.split(source_simple)
     cell = next(splitter)
-    assert cell.source == source_simple
+    assert cell.source is None
     assert cell.context.source == source_simple

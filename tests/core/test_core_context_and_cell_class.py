@@ -32,7 +32,7 @@ def test_core_make_context_class(context_class):
 
 
 def test_core_make_cell_class(cell_class):
-    cell = cell_class(source="Text")
+    cell = cell_class(source="Text", match=None, context=None)  # dummy data
     assert cell.source == "Text"
     assert cell.match is None
     assert cell.render_name == "render_name"

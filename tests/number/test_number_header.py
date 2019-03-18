@@ -34,7 +34,7 @@ def test_render_header(parser_header, header, source_simple):
     cell = next(splitter)
     assert cell.render_name == "header__header"
     assert cell.context.prefix == "#"
-    assert cell.source == "# title {#tag-a#}\n"
+    assert cell.context._source == "# title {#tag-a#}\n"
 
 
 def test_join(parser_header, header, source_simple):

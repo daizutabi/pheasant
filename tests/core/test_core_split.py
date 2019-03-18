@@ -25,12 +25,12 @@ class Renderer_B(Base):
             yield cell.source
             yield context._source
         else:
-            yield cell.convert()
+            yield "".join(cell.render(cell.context, parser))
             yield cell.context._source
 
     def render_gh(self, context, parser):
         yield "XX"
-        yield from parser.parse('ab cd')
+        yield from parser.parse("ab cd")
 
 
 @pytest.fixture()
@@ -70,21 +70,16 @@ def test_register(parser):
 
 
 def test_split(parser):
-    source = "a ab ba cd dc ef fe gh"
+    source = "a ab ba cd dc"
     splitter = parser.split(source)
     cell = next(splitter)
     assert repr(cell) == "Cell(source='a ', match=None)"
     cell = next(splitter)
-    assert cell.source == "ab"
+    assert cell.source is None
     assert cell.match is not None
     assert list(cell.render(cell.context, parser)) == ["ba"]
     cell = next(splitter)
     cell = next(splitter)
-    assert cell.source == "cd"
+    assert cell.source is None
     assert cell.match is not None
-    assert cell.convert() == "dc"
-
-
-def test_parse(parser):
-    source = "ef aa efab gh end"
-    assert "".join(parser.parse(source)) == ' aa efbaab XXba dc end'
+    assert "".join(cell.render(cell.context, parser)) == "dc"

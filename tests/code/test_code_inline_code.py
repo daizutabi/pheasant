@@ -18,5 +18,3 @@ def test_render_inline_code(parser, code, source_simple):
     assert cell.context.header == "#"
     cell = next(splitter)
     assert cell.context.source == "abc"
-    cell = next(splitter)
-    assert cell.context._source == cell.source

@@ -13,7 +13,7 @@ from pheasant.core.parser import Render  # type, not class
 class Renderer(Base):
     renders: Dict[str, Render] = field(default_factory=dict)
 
-    def __post_init__(self) -> None:
+    def __post_init__(self):
         super().__post_init__()
         module = importlib.import_module(self.__module__)
         path = os.path.join(os.path.dirname(module.__file__), "config.yml")

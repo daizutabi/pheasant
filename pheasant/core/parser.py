@@ -4,61 +4,49 @@ from typing import Any, Callable, Dict, Iterator, Match, Optional, Pattern
 
 from pheasant.core.base import Base
 
-Render = Callable[[Any, "Parser"], Iterator[str]]
+Render = Callable[[Any], Iterator[str]]  # Any = Context dataclass
 
 
 @dataclass(eq=False)
-class Cell:
-    source: str
-    match: Optional[Match] = None
+class Context:
+    source: Optional[str]
+    match: Optional[Match]
 
 
 class Parser(Base):
     patterns: Dict[str, str] = field(default_factory=dict)
     renders: Dict[str, Render] = field(default_factory=dict)
     pattern: Optional[Pattern] = None
+    group_classes: Dict[str, type] = field(default_factory=dict)
     context_classes: Dict[str, type] = field(default_factory=dict)
-    cell_classes: Dict[str, type] = field(default_factory=dict)
 
     def __post_repr__(self):
         return len(self.patterns)
 
     def register(self, pattern: str, render: Render, postfix: str = "") -> type:
-        name = render_name(render, postfix)
-        context_class = make_context_class(pattern, name)
-        self.context_classes[name] = context_class
-        cell_class = make_cell_class(context_class, name, render)
-        self.cell_classes[name] = cell_class
-        pattern = rename_pattern(pattern, name)
-        self.patterns[name] = pattern
-        self.renders[name] = render
+        group_class = make_group_class(pattern)
+        render_name = get_render_name(render, postfix)
+        self.group_classes[render_name] = group_class
+        context_class = make_context_class(group_class, render_name, render, self)
+        self.context_classes[render_name] = context_class
+        pattern = rename_pattern(pattern, render_name)
+        self.patterns[render_name] = pattern
+        self.renders[render_name] = render
         return context_class
 
     def parse(self, source: str) -> Iterator[str]:
-        self.splitter = self.split(source)
-        for cell in self.splitter:
-            if cell.match:
-                yield cell.convert()  # Deligates to render
-                # yield from cell.render(cell.context, self)
+        splitter = self.split(source)
+        for context in splitter:
+            if context.match:
+                context.splitter = splitter
+                yield from context.render(context)  # Deligates to render
             else:
-                yield cell.source
-
-    def __iter__(self):
-        return self
-
-    def __next__(self):
-        if self.splitter:
-            return next(self.splitter)
-        else:
-            raise StopIteration
+                yield context.source
 
     def split(self, source: str) -> Iterator[Any]:
-        """Split the source into a cell and yield it
-
-        The type of the cell depends on the sent arg `type_`.
-        """
+        """Split the source into a cell and yield it."""
         if not self.patterns:
-            yield Cell(source)
+            yield Context(source, None)
             return
 
         if self.pattern is None:
@@ -70,17 +58,17 @@ class Parser(Base):
         for match in self.pattern.finditer(source):
             start, end = match.start(), match.end()
             if cursor < start:
-                yield Cell(source[cursor:start])
+                yield Context(source[cursor:start], None)
             yield self.resolve(match)
             cursor = end
         if cursor < len(source):
-            yield Cell(source[cursor:])
+            yield Context(source[cursor:], None)
 
-    def resolve(self, match: Match[str]) -> Any:
-        """Resolve a Match object and return a dictionary.
+    def resolve(self, match: Match[str]) -> Any:  # Acually, Any is Cell-based instance.
+        """Resolve a Match object and return a dataclass instance called `cell`.
 
-        Returned dictionary contains the required and helpful information for
-        rendering the match object such as pattern's name, render function,
+        Returned cell contains the required and helpful information for
+        rendering the match object such as render's name, render function,
         the groups of the match object as a context, etc.
 
         Parameters
@@ -90,69 +78,47 @@ class Parser(Base):
 
         Returns
         -------
-        cell
+        cell : dataclass instance
         """
         groupdict = match.groupdict()
-        print(groupdict)
-        name = ""
+        render_name = ""
 
         def rename_for_render(key):
-            nonlocal name
+            nonlocal render_name
             if "___" in key:
                 return key.split("___")[-1]
             else:
-                name = key
+                render_name = key
                 return "_source"
 
-        context = {
+        group = {
             rename_for_render(key): value
             for key, value in groupdict.items()
             if value is not None
         }
-        print(context)
-        context = self.context_classes[name](**context)
-        render = self.renders[name]
+        # IMPORTANT: To make `_source` at once is required to set `render_name`.
+        del group["_source"]
+        group = self.group_classes[render_name](**group)
 
-        def convert() -> str:
-            return "".join(render(context, self))
-
-        return self.cell_classes[name](
-            source=match.group(),
-            match=match,
-            render_name=name,  # not required, already set
-            context=context,
-            render=render,  # not required, already set
-            convert=convert,
-        )
+        return self.context_classes[render_name](None, match, group, None)
 
 
-def rename_pattern(pattern: str, name: str) -> str:
-    """Rename a pattern with a prefix to enable to determine the render which
-    should process the pattern. Double underscore divides the pattern name into
-    a render name to determine a render and a real name for a render's processing.
-    """
-    name_pattern = r"\(\?P<(.+?)>(.+?)\)"
-    replace = f"(?P<{name}___\\1>\\2)"
-    pattern = re.sub(name_pattern, replace, pattern)
-    name_pattern = r"\(\?P=(.+?)\)"
-    replace = f"(?P={name}___\\1)"
-    pattern = re.sub(name_pattern, replace, pattern)
-    pattern = f"(?P<{name}>{pattern})"
-    return pattern
-
-
-def render_name(render: Render, postfix: str = "") -> str:
-    """Return a suitable render name as a pattern name.
+def get_render_name(render: Render, postfix: str = "") -> str:
+    """Return a render name which is used to resolve the mattched pattern.
+    Usualy, render_name = '<class_name>__<render_function_name>' in lower case.
+    If render function name starts with 'render_', it is omitted from the name.
 
     Parameters
     ----------
-    obj
-        Named object for a pattern.
+    render
+        Render function.
+    postfix
+        Additional postfix.
 
     Returns
     -------
     str
-        The suitable object name as a pattern name.
+        Name of the render.
     """
 
     def iterate(render):
@@ -173,27 +139,37 @@ def render_name(render: Render, postfix: str = "") -> str:
     return "__".join(iterate(render))
 
 
-def make_context_class(pattern: str, name: str) -> type:
+def rename_pattern(pattern: str, render_name: str) -> str:
+    """Rename a pattern with a render name to enable to determine the render which
+    should process the pattern. Triple underscores divides the pattern name into
+    a render name to determine a render and a real name for a render processing.
+    """
+    name_pattern = r"\(\?P<(.+?)>(.+?)\)"
+    replace = f"(?P<{render_name}___\\1>\\2)"
+    pattern = re.sub(name_pattern, replace, pattern)
+    name_pattern = r"\(\?P=(.+?)\)"
+    replace = f"(?P={render_name}___\\1)"
+    pattern = re.sub(name_pattern, replace, pattern)
+    pattern = f"(?P<{render_name}>{pattern})"
+    return pattern
+
+
+def make_group_class(pattern: str) -> type:
     name_pattern = r"\(\?P<(.+?)>.+?\)"
     fields = [
         (name, str, field(default="")) for name in re.findall(name_pattern, pattern)
     ]
-    extra_fields = [
-        ("_render_name", str, field(default=name)),
-        ("_source", str, field(default="")),
-    ]
-    return make_dataclass("Context", fields + extra_fields)  # type: ignore
+    return make_dataclass("Group", fields)  # type: ignore
 
 
-def make_cell_class(context_class: type, name: str, render: Render) -> type:
+def make_context_class(
+    group_class: type, render_name: str, render: Render, parser: Parser
+) -> type:
     fields = [
-        ("render_name", str, field(default=name)),
-        ("context", context_class, field(default_factory=context_class)),
-        (
-            "render",
-            Callable[[context_class, Parser], Iterator[str]],
-            field(default=render),
-        ),
-        ("convert", Optional[Callable[[], str]], field(default=None)),
+        ("group", group_class),
+        ("splitter", Optional[Iterator[str]]),
+        ("render_name", str, field(default=render_name)),
+        ("render", Callable[[Any], Iterator[str]], field(default=render)),
+        ("parser", Parser, field(default=parser)),
     ]
-    return make_dataclass("Cell", fields, bases=(Cell,))  # type: ignore
+    return make_dataclass("Cell", fields, bases=(Context,))  # type: ignore

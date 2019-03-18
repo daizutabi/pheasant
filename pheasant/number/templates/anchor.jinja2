@@ -1,5 +1,5 @@
 {%- if found -%}
-    <a href="{{ ref }}">{{ number_string }}</a>
+   [{{ number_string }}]({{ ref }})
 {%- else -%}
-    <span style="color: red;">Unknown tag: '{{ tag }}'</span>
+   <span style="color: red;">Unknown tag: '{{ tag }}'</span>
 {%- endif -%}

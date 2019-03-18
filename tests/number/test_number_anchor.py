@@ -65,14 +65,14 @@ def test_parse_anchor(anchor, parser_anchor, source_parsed):
     source = "".join(parser_anchor.parse(source_parsed))
     answer = (
         'begin\n# <span id="pheasant-header-tag-a">1 title</span>\n'
-        'text a Figure <a href=".#pheasant-header-tag-b">2</a>\n'
+        'text a Figure [2](.#pheasant-header-tag-b)\n'
         "## 1.1 section a\ntext b\n### 1.1.1 subsection\n"
         '## 1.2 section b\ntext c\n<div class="pheasant-header-figure">'
         "<p>figure content a1\nfigure content a2\ntext d</p>\n"
         "<p>Figure 1 figure title a</p></div>\n"
         '<div class="pheasant-header-figure" id="pheasant-header-tag-b">'
         "<p>figure content b1\nfigure content b2</p>\n"
-        '<p>Figure 2 figure title b Section <a href=".#pheasant-header-tag-a">1</a>'
+        '<p>Figure 2 figure title b Section [1](.#pheasant-header-tag-a)'
         '</p></div>\nend <span style="color: red;">'
         "Unknown tag: 'tag-c'</span>"
     )

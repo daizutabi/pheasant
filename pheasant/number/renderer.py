@@ -82,7 +82,7 @@ class Header(Renderer):
             # Need to detect the range of a numbered object.
             cell = next(parser)
             if cell.match:
-                content = cell.convert()
+                content = "".join(cell.render(cell.context, parser))
                 rest = ""
             else:
                 content = cell.source
