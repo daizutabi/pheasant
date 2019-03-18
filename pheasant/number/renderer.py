@@ -4,7 +4,6 @@ from dataclasses import field
 from typing import Any, Dict, Iterator, List, Optional, Tuple, Union
 
 from pheasant.core import markdown
-from pheasant.core.parser import Parser
 from pheasant.core.renderer import Renderer
 
 

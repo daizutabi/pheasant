@@ -2,7 +2,6 @@ import re
 from dataclasses import asdict
 from typing import Iterator, List, Match
 
-from pheasant.core.parser import Parser
 from pheasant.core.renderer import Renderer
 from pheasant.jupyter.client import execute, find_kernel_names
 from pheasant.jupyter.display import (bokeh_extra_resources,
