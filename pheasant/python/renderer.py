@@ -14,6 +14,8 @@ class Python(Renderer):
         self.register(Python.PYTHON_CODE_PATTERN, self.render_python_code)
 
     def render_python_code(self, context, splitter, parser) -> Iterator[str]:
+        if not context["source"].endswith('\n'):
+            context["source"] += "\n"
         formatter = Formatter(context["source"])
         for cell_type, begin, end in splitter_(context["source"]):
             yield formatter(cell_type, begin, end)

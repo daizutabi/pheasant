@@ -108,9 +108,6 @@ class Anchor(Renderer):
         self.register(Header.TAG_PATTERN, self.render_tag)
         self.set_template("anchor")
 
-    def set_header(self, header: Header) -> None:
-        self.header = header
-
     def render_tag(self, context, splitter, parser) -> Iterator[str]:
         if self.header is None:
             raise ValueError("A Header instance has not set yet.")

@@ -1,12 +1,16 @@
 from collections import OrderedDict
-from typing import Iterable, Iterator, List, Union
+from dataclasses import field
+from typing import Dict, Iterable, Iterator, List, Union
 
+from pheasant.core.base import Base
 from pheasant.core.renderer import Renderer
 
 
-class Renderers:
-    def __init__(self):
-        self.renderers: OrderedDict[str, List[Renderer]] = OrderedDict()
+class Renderers(Base):
+    renderers: Dict[str, List[Renderer]] = field(default_factory=OrderedDict)
+
+    def __post_repr__(self):
+        return len(self)
 
     def register(self, name: str, renderers: Iterable[Renderer]):
         """
@@ -33,6 +37,9 @@ class Renderers:
                 else:
                     raise KeyError
         raise IndexError
+
+    def __len__(self):
+        return len(list(iter(self)))
 
     def __iter__(self) -> Iterator[Renderer]:
         return (

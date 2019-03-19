@@ -5,6 +5,7 @@ from functools import partial
 from typing import Callable, Dict, Iterable, Optional, Union
 
 from pheasant.core.base import Base
+from pheasant.core.decorator import Decorator
 from pheasant.core.parser import Parser
 from pheasant.core.renderer import Renderer
 from pheasant.core.renderers import Renderers
@@ -23,7 +24,12 @@ class Converter(Base):
         elif isinstance(item, tuple):
             return self.renderers[item]
 
-    def register(self, name: str, renderers: Union[Renderer, Iterable[Renderer]]):
+    def register(
+        self,
+        name: str,
+        renderers: Union[Renderer, Iterable[Renderer]],
+        decorator: Optional[Decorator] = None,
+    ):
         """Register renderer's processes
 
         Parameters
@@ -36,6 +42,8 @@ class Converter(Base):
         if name in self.parsers:
             raise ValueError(f"Duplicated parser name '{name}'")
         parser = Parser(name)  # type:ignore
+        if decorator:
+            parser.decorator = decorator
         self.parsers[name] = parser
         if isinstance(renderers, Renderer):
             renderers = [renderers]

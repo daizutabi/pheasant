@@ -1,4 +1,5 @@
 import re
+from collections import OrderedDict
 from dataclasses import field
 from typing import Any, Dict, Iterator, Match, Optional, Pattern
 
@@ -9,7 +10,7 @@ from pheasant.core.decorator import Decorator
 
 class Parser(Base):
     patterns: Dict[str, str] = field(default_factory=dict)
-    renders: Dict[str, Render] = field(default_factory=dict)
+    renders: Dict[str, Render] = field(default_factory=OrderedDict)
     cell_classes: Dict[str, type] = field(default_factory=dict)
     pattern: Optional[Pattern] = None
     decorator: Optional[Decorator] = None
