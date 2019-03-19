@@ -31,27 +31,25 @@ def test_render_header(parser_header, header, source_simple):
     splitter = parser_header.split(source_simple)
     next(splitter)
     cell = next(splitter)
-    assert cell.source == "begin\n"
-    cell = next(splitter)
     assert cell.render_name == "header__header"
     assert cell.context["prefix"] == "#"
-    assert cell.match.group() == "# title {#tag-a#}\n"
+    assert cell.match.group() == "# Title {#tag-a#}\n"
 
 
 def test_join(parser_header, header, source_simple):
     output = "".join(parser_header.parse(source_simple))
-    answer = "".join(
+    output = output.replace("span", "S").replace("class=", "C").replace("div", "D")
+    answer = "\n".join(
         [
-            'begin\n# <span id="pheasant-header-tag-a">1 title</span>\n',
-            "text a Figure {#tag-b#}\n## 1.1 section a\ntext b\n",
-            "### 1.1.1 subsection\n## 1.2 section b\ntext c\n",
-            '<div class="pheasant-header-figure">',
-            "<p>figure content a1\nfigure content a2\ntext d</p>\n",
-            "<p>Figure 1 figure title a</p></div>\n",
-            '<div class="pheasant-header-figure" id="pheasant-header-tag-b">',
-            "<p>figure content b1\nfigure content b2</p>\n",
-            "<p>Figure 2 figure title b Section {#tag-a#}</p></div>\n",
-            "end {#tag-c#}",
+            '# <S C"header"><S C"number">1</S> <S C"title" id="tag-a">Title</S></S>',
+            '## <S C"header"><S C"number">1.1</S> <S C"title">Section A</S></S>',
+            "Text {#tag-b#}",
+            '## <S C"header"><S C"number">1.2</S> <S C"title">Section B</S></S>',
+            '## <S C"header"><S C"number">1.3</S> <S C"title">Subsection C</S></S>',
+            "Text {#tag-a#}",
+            '<D C"figure"><D C"content"><D>Content A</D></D>',
+            '<p><S C"prefix">Figure</S> <S C"number">1</S>',
+            '<S C"title" id="tag-b">Figure A</S></D>\n',
         ]
     )
     assert output == answer

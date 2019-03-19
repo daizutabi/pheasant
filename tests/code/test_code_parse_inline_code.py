@@ -70,5 +70,6 @@ def test_code_parse_file_with_header(file):
     path = "hello.py"
     source = "def func(x):\n    return 2 * x\n\nprint(f(3))\n"
     output = file("#", path, source)
-    assert output.startswith('<div class="pheasant-header-file">')
-    assert output.endswith('print(f(3))</code></pre></div>\n</div>\n')
+    assert output.startswith('<div class="file">')
+    print(output)
+    assert output.endswith('print(f(3))</code></pre></div>\n</div></div>\n')

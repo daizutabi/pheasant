@@ -22,14 +22,12 @@ def test_tag_context(anchor, parser_header, source_simple):
             "kind": "header",
             "number_list": [1],
             "number_string": "1",
-            "id": "pheasant-header-tag-a",
             "abs_src_path": ".",
         },
         "tag-b": {
             "kind": "figure",
-            "number_list": [2],
-            "number_string": "2",
-            "id": "pheasant-header-tag-b",
+            "number_list": [1],
+            "number_string": "1",
             "abs_src_path": ".",
         },
     }
@@ -45,36 +43,29 @@ def source_parsed(anchor, parser_header, source_simple):
 
 def test_render_anchor(anchor, parser_anchor, source_parsed):
     assert "anchor__tag" in parser_anchor.patterns
-    assert parser_anchor.patterns["anchor__tag"].startswith(
-        "(?P<anchor__tag>"
-    )
+    assert parser_anchor.patterns["anchor__tag"].startswith("(?P<anchor__tag>")
     assert parser_anchor.renders["anchor__tag"] == anchor.render_tag
 
     splitter = parser_anchor.split(source_parsed)
     next(splitter)
-    cell = next(splitter)
-    answer = (
-        'begin\n# <span id="pheasant-header-tag-a">1 title</span>\n' "text a Figure "
-    )
-    assert cell.source == answer
+    next(splitter)
     cell = next(splitter)
     assert cell.render_name == "anchor__tag"
     assert cell.context["tag"] == "tag-b"
 
 
 def test_parse_anchor(anchor, parser_anchor, source_parsed):
-    source = "".join(parser_anchor.parse(source_parsed))
-    answer = (
-        'begin\n# <span id="pheasant-header-tag-a">1 title</span>\n'
-        'text a Figure [2](.#pheasant-header-tag-b)\n'
-        "## 1.1 section a\ntext b\n### 1.1.1 subsection\n"
-        '## 1.2 section b\ntext c\n<div class="pheasant-header-figure">'
-        "<p>figure content a1\nfigure content a2\ntext d</p>\n"
-        "<p>Figure 1 figure title a</p></div>\n"
-        '<div class="pheasant-header-figure" id="pheasant-header-tag-b">'
-        "<p>figure content b1\nfigure content b2</p>\n"
-        '<p>Figure 2 figure title b Section [1](.#pheasant-header-tag-a)'
-        '</p></div>\nend <span style="color: red;">'
-        "Unknown tag: 'tag-c'</span>"
-    )
-    assert source == answer
+    output = "".join(parser_anchor.parse(source_parsed))
+    output = output.replace("span", "S").replace("class=", "C").replace("div", "D")
+    answer = "\n".join([
+        '# <S C"header"><S C"number">1</S> <S C"title" id="tag-a">Title</S></S>',
+        '## <S C"header"><S C"number">1.1</S> <S C"title">Section A</S></S>',
+        'Text [1](.#tag-b)',
+        '## <S C"header"><S C"number">1.2</S> <S C"title">Section B</S></S>',
+        '## <S C"header"><S C"number">1.3</S> <S C"title">Subsection C</S></S>',
+        'Text [1](.#tag-a)',
+        '<D C"figure"><D C"content"><D>Content A</D></D>',
+        '<p><S C"prefix">Figure</S> <S C"number">1</S>',
+        '<S C"title" id="tag-b">Figure A</S></D>\n'
+    ])
+    assert output == answer

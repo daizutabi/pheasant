@@ -45,33 +45,32 @@ class Header(Renderer):
         self.number_list[kind][depth + 1 :] = reset
         number_list = self.number_list[kind][: depth + 1]
         if kind == "header":
-            prefix = "#" * len(number_list)
+            header = "#" * len(number_list)
+            prefix = ""
         else:
+            header = ""
             prefix = self.config["kind_prefix"][kind]
         number_list = normalize_number_list(kind, number_list, self.page_index)
         number_string = number_list_format(number_list)
-        cls = self.config["class"].format(kind=kind)
         title, tag = split_tag(context["title"])
 
         context_ = {
             "kind": kind,
+            "header": header,
             "prefix": prefix,
             "title": title,
-            "class": cls,
             "number_list": number_list,
             "number_string": number_string,
         }
 
         if tag:
-            id_ = self.config["id"].format(tag=tag)
             self.tag_context[tag] = {
                 "kind": kind,
                 "number_list": number_list,
                 "number_string": number_string,
-                "id": id_,
                 "abs_src_path": self.abs_src_path,
             }
-            context_.update(tag=tag, id=id_)
+            context_.update(tag=tag)
 
         if kind == "header":
             yield self.render("header", context_) + "\n"
@@ -131,7 +130,7 @@ class Anchor(Renderer):
             relpath = relpath.replace("\\", "/")
             if self.config["relpath_function"]:
                 relpath = self.config["relpath_function"](relpath)
-            context["ref"] = "#".join([relpath, context["id"]])
+            context["ref"] = "#".join([relpath, tag])
         else:
             context = {"found": False, "tag": tag}
         return context

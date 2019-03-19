@@ -1,11 +1,11 @@
 {%- if kind == 'header' -%}
-  {{ prefix }} {% if id %}<span id="{{ id }}">{% endif %}{%- block header -%}{%- endblock -%}{% if id %}</span>{% endif %}
-{%- elif kind == 'figure' -%}
-  <div class="{{ class }}"{% if id %} id="{{ id }}"{% endif %}>{%- block figure -%}{%- endblock -%}</div>
-{%- elif kind == 'table' -%}
-  <div class="{{ class }}"{% if id %} id="{{ id }}"{% endif %}>{%- block table -%}{%- endblock -%}</div>
-{%- elif kind == 'code' -%}
-  <div class="{{ class }}"{% if id %} id="{{ id }}"{% endif %}>{%- block code -%}{%- endblock -%}</div>
-{%- elif kind == 'file' -%}
-  <div class="{{ class }}"{% if id %} id="{{ id }}"{% endif %}>{%- block file -%}{%- endblock -%}</div>
+  {{ header }} <span class="header">{%- block header -%}{%- endblock -%}</span>
+{%- else -%}
+  <div class="{{ kind }}">
+  {%- if kind == 'figure' -%}
+    {%- block figure -%}{%- endblock -%}
+  {%- else -%}
+    {%- block other -%}{%- endblock -%}
+  {%- endif -%}
+  </div>
 {%- endif -%}
