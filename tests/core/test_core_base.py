@@ -1,6 +1,6 @@
 from dataclasses import field, is_dataclass
 
-from pheasant.core.base import Base
+from pheasant.core.base import Base, make_cell_class
 
 
 def test_base_repr():
@@ -36,3 +36,17 @@ def test_update_config():
     assert a.config["B"] == ["a", "b"]
     assert a.config["C"] == {"a": 2, "b": [3], "c": 0}
     assert a.config["D"] == "a"
+
+
+def test_core_make_cell_class():
+    def func(context, spliter, parser):
+        pass
+
+    cell_class = make_cell_class("pattern", func, "render_name")
+    cell = cell_class("source", "match", "output", {"a": "1"})
+    assert cell.source == "source"
+    assert cell.match == "match"
+    assert cell.output == "output"
+    assert cell.context == {"a": "1"}
+    assert cell.render == func
+    assert cell.render_name == "render_name"

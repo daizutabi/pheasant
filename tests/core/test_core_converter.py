@@ -1,6 +1,5 @@
 import re
 
-
 from pheasant.core.converter import Converter
 from pheasant.jupyter.renderer import Jupyter
 from pheasant.number.renderer import Header
@@ -41,8 +40,10 @@ def test_multiple_parser(converter):
     header.reset()
     output = converter.convert(source, ["preprocess", "postprocess"])
     output = re.sub(r"(\<.*?\>)|\n", "", output)
-    answer = ("# 1 titletext [1](.#pheasant-header-a)## 1.1 "
-              "section1/0ZeroDivisionError: division by zero")
+    answer = (
+        "# 1 titletext [1](.#pheasant-header-a)## 1.1 "
+        "section1/0ZeroDivisionError: division by zero"
+    )
     assert output == answer
     header.reset()
     output = converter.convert(source)

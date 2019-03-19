@@ -1,26 +1,18 @@
 import re
-from dataclasses import dataclass, field, make_dataclass
-from typing import (Any, Callable, Dict, Generator, Iterator, Match, Optional,
-                    Pattern)
+from dataclasses import field
+from typing import Any, Dict, Iterator, Match, Optional, Pattern
 
-from pheasant.core.base import Base
-
-Splitter = Generator[Any, Optional[str], None]
-Render = Callable[..., Iterator[str]]
-
-
-@dataclass(eq=False)
-class Cell:
-    source: str
-    match: Optional[Match]
-    output: str
+from pheasant.core.base import (Base, Cell, Render, Splitter, get_render_name,
+                                make_cell_class, rename_pattern)
+from pheasant.core.decorator import Decorator
 
 
 class Parser(Base):
     patterns: Dict[str, str] = field(default_factory=dict)
     renders: Dict[str, Render] = field(default_factory=dict)
-    pattern: Optional[Pattern] = None
     cell_classes: Dict[str, type] = field(default_factory=dict)
+    pattern: Optional[Pattern] = None
+    decorator: Optional[Decorator] = None
 
     def __post_repr__(self):
         return len(self.patterns)
@@ -35,17 +27,22 @@ class Parser(Base):
         self.renders[render_name] = render
         return cell_class
 
-    def parse(self, source: str) -> Iterator[str]:
+    def parse(self, source: str, decorate=None) -> Iterator[str]:
         splitter = self.split(source)
         next(splitter)
         for cell in splitter:
             if cell.match:
-                output = "".join(
+                cell.output = "".join(
                     cell.render(context=cell.context, splitter=splitter, parser=self)
                 )
             else:
-                output = cell.source
-            yield output
+                cell.output = cell.source
+            if decorate:
+                decorate(cell)
+            elif self.decorator:
+                self.decorator.decorate(cell)
+
+            yield cell.output
 
     def split(self, source: str) -> Splitter:
         """Split the source into a cell and yield it."""
@@ -107,60 +104,3 @@ class Parser(Base):
         }
         source = context.pop("_source")  # FIXME: context["_source"] is better?
         return self.cell_classes[render_name](source, match, "", context)
-
-
-def get_render_name(render: Render) -> str:
-    """Return a render name which is used to resolve the mattched pattern.
-    Usualy, render_name = '<class_name>__<render_function_name>' in lower case.
-    If render function name starts with 'render_', it is omitted from the name.
-
-    Parameters
-    ----------
-    render
-        Render function.
-
-    Returns
-    -------
-    str
-        Name of the render.
-    """
-
-    def iterate(render):
-        if hasattr(render, "__self__"):
-            renderer = render.__self__
-            name = renderer.__class__.__name__.lower()
-            yield name
-            if hasattr(renderer, "name") and renderer.name != name:
-                yield renderer.name
-        name = render.__name__
-        if name.startswith("render_"):
-            yield name[7:]
-        else:
-            yield name
-
-    return "__".join(iterate(render))
-
-
-def rename_pattern(pattern: str, render_name: str) -> str:
-    """Rename a pattern with a render name to enable to determine the render which
-    should process the pattern. Triple underscores divides the pattern name into
-    a render name to determine a render and a real name for a render processing.
-    """
-    name_pattern = r"\(\?P<(.+?)>(.+?)\)"
-    replace = f"(?P<{render_name}___\\1>\\2)"
-    pattern = re.sub(name_pattern, replace, pattern)
-    name_pattern = r"\(\?P=(.+?)\)"
-    replace = f"(?P={render_name}___\\1)"
-    pattern = re.sub(name_pattern, replace, pattern)
-    pattern = f"(?P<{render_name}>{pattern})"
-    return pattern
-
-
-def make_cell_class(pattern: str, render: Render, render_name: str) -> type:
-    fields = [
-        ("context", Dict[str, str]),
-        ("pattern", str, field(default=pattern, init=False)),
-        ("render", Callable[..., Generator], field(default=render)),  # NG: init=False
-        ("render_name", str, field(default=render_name, init=False)),
-    ]
-    return make_dataclass("Cell", fields, bases=(Cell,))  # type: ignore

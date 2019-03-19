@@ -1,5 +1,9 @@
-from dataclasses import dataclass, field
-from typing import Any, Dict
+import re
+from dataclasses import dataclass, field, make_dataclass
+from typing import Any, Callable, Dict, Generator, Iterator, Match, Optional
+
+Splitter = Generator[Any, Optional[str], None]
+Render = Callable[..., Iterator[str]]
 
 
 class MetaClass(type):
@@ -35,3 +39,67 @@ class Base(metaclass=MetaClass):
                 arg[key].update(value)
             else:
                 arg[key] = value
+
+
+def get_render_name(render: Render) -> str:
+    """Return a render name which is used to resolve the mattched pattern.
+    Usualy, render_name = '<class_name>__<render_function_name>' in lower case.
+    If render function name starts with 'render_', it is omitted from the name.
+
+    Parameters
+    ----------
+    render
+        Render function.
+
+    Returns
+    -------
+    str
+        Name of the render.
+    """
+
+    def iterate(render):
+        if hasattr(render, "__self__"):
+            renderer = render.__self__
+            name = renderer.__class__.__name__.lower()
+            yield name
+            if hasattr(renderer, "name") and renderer.name != name:
+                yield renderer.name
+        name = render.__name__
+        if name.startswith("render_"):
+            yield name[7:]
+        else:
+            yield name
+
+    return "__".join(iterate(render))
+
+
+def rename_pattern(pattern: str, render_name: str) -> str:
+    """Rename a pattern with a render name to enable to determine the render which
+    should process the pattern. Triple underscores divides the pattern name into
+    a render name to determine a render and a real name for a render processing.
+    """
+    name_pattern = r"\(\?P<(.+?)>(.+?)\)"
+    replace = f"(?P<{render_name}___\\1>\\2)"
+    pattern = re.sub(name_pattern, replace, pattern)
+    name_pattern = r"\(\?P=(.+?)\)"
+    replace = f"(?P={render_name}___\\1)"
+    pattern = re.sub(name_pattern, replace, pattern)
+    pattern = f"(?P<{render_name}>{pattern})"
+    return pattern
+
+
+@dataclass(eq=False)
+class Cell:
+    source: str
+    match: Optional[Match]
+    output: str
+
+
+def make_cell_class(pattern: str, render: Render, render_name: str) -> type:
+    fields = [
+        ("context", Dict[str, str]),
+        ("pattern", str, field(default=pattern, init=False)),
+        ("render", Callable[..., Generator], field(default=render)),  # NG: init=False
+        ("render_name", str, field(default=render_name, init=False)),
+    ]
+    return make_dataclass("Cell", fields, bases=(Cell,))  # type: ignore

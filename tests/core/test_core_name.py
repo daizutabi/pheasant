@@ -1,4 +1,4 @@
-from pheasant.core.parser import get_render_name, rename_pattern
+from pheasant.core.base import get_render_name, rename_pattern
 
 
 def test_render_name_function():

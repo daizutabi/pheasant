@@ -1,5 +1,4 @@
 import re
-from dataclasses import asdict
 from typing import Iterator, List, Match
 
 from pheasant.core.renderer import Renderer
