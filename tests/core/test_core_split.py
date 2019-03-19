@@ -28,14 +28,12 @@ def test_split():
     splitter = parser.split(source)
     next(splitter)
     cell = next(splitter)
-    assert repr(cell) == "Cell(source='a ', match=None)"
+    assert repr(cell) == "Cell(source='a ', match=None, output='')"
     cell = next(splitter)
-    assert cell.source is None
     assert cell.match is not None
     assert list(cell.render(cell.context, splitter, parser)) == ["ba"]
     cell = next(splitter)
     cell = next(splitter)
-    assert cell.source is None
     assert cell.match is not None
     assert "".join(cell.render(cell.context, splitter, parser)) == "dc"
     assert splitter.send('source') == ' dc a '

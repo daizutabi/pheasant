@@ -1,7 +1,7 @@
 import re
 from dataclasses import dataclass, field, make_dataclass
-from typing import (Any, Callable, Dict, Generator, Iterable, Iterator, List,
-                    Match, Optional, Pattern, Tuple)
+from typing import (Any, Callable, Dict, Generator, Iterator, Match, Optional,
+                    Pattern)
 
 from pheasant.core.base import Base
 
@@ -11,8 +11,9 @@ Render = Callable[..., Iterator[str]]
 
 @dataclass(eq=False)
 class Cell:
-    source: Optional[str]
+    source: str
     match: Optional[Match]
+    output: str
 
 
 class Parser(Base):
@@ -39,11 +40,12 @@ class Parser(Base):
         next(splitter)
         for cell in splitter:
             if cell.match:
-                yield from cell.render(
-                    context=cell.context, splitter=splitter, parser=self
-                )  # Deligates to render
+                output = "".join(
+                    cell.render(context=cell.context, splitter=splitter, parser=self)
+                )
             else:
-                yield cell.source
+                output = cell.source
+            yield output
 
     def split(self, source: str) -> Splitter:
         """Split the source into a cell and yield it."""
@@ -65,11 +67,11 @@ class Parser(Base):
         for match in self.pattern.finditer(source):
             start, end = match.start(), match.end()
             if cursor < start:
-                attr = yield get(Cell(source[cursor:start], None), attr)
+                attr = yield get(Cell(source[cursor:start], None, ""), attr)
             attr = yield get(self.resolve(match), attr)
             cursor = end
         if cursor < len(source):
-            yield get(Cell(source[cursor:], None), attr)
+            yield get(Cell(source[cursor:], None, ""), attr)
 
     def resolve(self, match: Match[str]) -> Any:  # Acually, Any is Cell-based instance.
         """Resolve a Match object and return a dataclass instance called `cell`.
@@ -103,8 +105,8 @@ class Parser(Base):
             for key, value in groupdict.items()
             if value is not None
         }
-
-        return self.cell_classes[render_name](None, match, context)
+        source = context.pop("_source")  # FIXME: context["_source"] is better?
+        return self.cell_classes[render_name](source, match, "", context)
 
 
 def get_render_name(render: Render) -> str:

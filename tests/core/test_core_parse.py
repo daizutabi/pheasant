@@ -15,7 +15,7 @@ class A(Base):
             yield x
         elif x == "b":
             cell = next(splitter)
-            if cell.source is not None:
+            if cell.match is None:
                 yield cell.source + x
             else:
                 yield "[" + "".join(cell.render(cell.context, splitter, parser)) + "]"
