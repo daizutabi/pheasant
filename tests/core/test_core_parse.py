@@ -6,21 +6,21 @@ class A(Base):
     pattern_d = r"(?P<d>\d)"
     pattern_w = r"(?P<s>[a-z])"
 
-    def render_digit(self, context, splitter):
-        yield context.group.d
+    def render_digit(self, context, splitter, parser):
+        yield context["d"]
 
-    def render_word(self, context, splitter):
-        x = context.group.s
+    def render_word(self, context, splitter, parser):
+        x = context["s"]
         if x == "a":
             yield x
         elif x == "b":
-            context = next(splitter)
-            if context.source is not None:
-                yield context.source + x
+            cell = next(splitter)
+            if cell.source is not None:
+                yield cell.source + x
             else:
-                yield "[" + "".join(context.render(context, splitter)) + "]"
+                yield "[" + "".join(cell.render(cell.context, splitter, parser)) + "]"
         elif x == "c":
-            yield from context.parser.parse("bba")
+            yield from parser.parse("b4")
 
 
 def test_core_parse():
@@ -44,15 +44,19 @@ def test_core_parse():
 def test_core_parse_complex():
     parser = Parser()
     a = A()
+    parser.register(a.pattern_d, a.render_digit)
     parser.register(a.pattern_w, a.render_word)
 
-    source = "1ab2babb3bbacb4"
+    source = "1a b2b abb 3bbacb5"
     converter = parser.parse(source)
     assert next(converter) == "1"
     assert next(converter) == "a"
-    assert next(converter) == "2b"
-    assert next(converter) == "[a]"
-    assert next(converter) == "[3b]"
+    assert next(converter) == " "
+    assert next(converter) == "[2]"
+    assert next(converter) == " b"
+    assert next(converter) == "a"
+    assert next(converter) == "[ b]"
+    assert next(converter) == "3"
     assert next(converter) == "[[a]]"
-    assert next(converter) == "[[a]]"
-    assert next(converter) == "4b"
+    assert next(converter) == "[4]"
+    assert next(converter) == "[5]"

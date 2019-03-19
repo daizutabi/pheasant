@@ -27,7 +27,7 @@ def test_render_name_method():
     assert get_render_name(renderer.render_method) == "renderer__method"
 
 
-def test_render_name_method_with_name_and_postfix():
+def test_render_name_method_with_name():
     class Renderer:
         def __init__(self, name):
             self.name = name
@@ -40,13 +40,7 @@ def test_render_name_method_with_name_and_postfix():
 
     renderer = Renderer("example")
 
-    assert (
-        get_render_name(renderer.method, "first") == "renderer__example__method__first"
-    )
-    assert (
-        get_render_name(renderer.render_method, "second")
-        == "renderer__example__method__second"
-    )
+    assert get_render_name(renderer.method) == "renderer__example__method"
 
 
 def test_rename_pattern():

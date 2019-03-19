@@ -20,21 +20,25 @@ def test_split():
     parser.register(a.pattern_cd, a.render_cd)
     assert len(parser.patterns) == 2
     assert len(parser.renders) == 2
-    assert len(parser.group_classes) == 2
-    assert len(parser.context_classes) == 2
+    assert len(parser.cell_classes) == 2
     keys = list(parser.patterns.keys())
     assert keys == ["renderer_a__ab", "renderer_a__cd"]
 
-    source = "a ab ba cd dc"
+    source = "a ab ba cd dc a ab a ab a ab"
     splitter = parser.split(source)
-    context = next(splitter)
-    assert repr(context) == "Context(source='a ', match=None)"
-    context = next(splitter)
-    assert context.source is None
-    assert context.match is not None
-    assert list(context.render(context, splitter)) == ["ba"]
-    context = next(splitter)
-    context = next(splitter)
-    assert context.source is None
-    assert context.match is not None
-    assert "".join(context.render(context, splitter)) == "dc"
+    next(splitter)
+    cell = next(splitter)
+    assert repr(cell) == "Cell(source='a ', match=None)"
+    cell = next(splitter)
+    assert cell.source is None
+    assert cell.match is not None
+    assert list(cell.render(cell.context, splitter)) == ["ba"]
+    cell = next(splitter)
+    cell = next(splitter)
+    assert cell.source is None
+    assert cell.match is not None
+    assert "".join(cell.render(cell.context, splitter)) == "dc"
+    assert splitter.send('source') == ' dc a '
+    assert splitter.send('pattern') == '(?P<a>a)(?P<b>b)'
+    assert splitter.send('match') is None
+    assert splitter.send('render_name') == 'renderer_a__ab'

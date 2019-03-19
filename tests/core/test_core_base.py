@@ -31,7 +31,7 @@ def test_base_inherit():
 
 def test_update_config():
     a = A(config={"A": 1, "B": ["a"], "C": {"a": 1, "b": [1, 2]}})
-    a.update_config({"A": 2, "B": ["b"], "C": {"a": 2, "b": [3], "c": 0}, "D": "a"})
+    a._update("config", {"A": 2, "B": ["b"], "C": {"a": 2, "b": [3], "c": 0}, "D": "a"})
     assert a.config["A"] == 2
     assert a.config["B"] == ["a", "b"]
     assert a.config["C"] == {"a": 2, "b": [3], "c": 0}
