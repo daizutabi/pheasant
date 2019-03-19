@@ -1,7 +1,7 @@
 import importlib
 import os
 from dataclasses import field
-from typing import Dict, List, Union
+from typing import Any, Dict, List, Union
 
 import yaml
 from jinja2 import Environment, FileSystemLoader, select_autoescape
@@ -20,7 +20,7 @@ class Renderer(Base):
         if os.path.exists(path):
             with open(path, "r") as f:
                 config = yaml.load(f)
-            self.update_config(config)
+            self._update("config", config)
 
     def __post_repr__(self):
         return len(self.renders)
@@ -51,3 +51,8 @@ class Renderer(Base):
             loader = FileSystemLoader([template_directory, default_directory])
             env = Environment(loader=loader, autoescape=select_autoescape(["jinja2"]))
             self.config[template] = env.get_template(template_file)
+
+    def render(self, template: str, context: Dict[str, Any], **kwargs):
+        return self.config[template + "_template"].render(
+            context, config=self.config, **kwargs
+        )

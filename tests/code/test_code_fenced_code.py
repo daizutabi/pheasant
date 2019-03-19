@@ -31,11 +31,12 @@ def test_render_fenced_code(parser, code, source_simple):
     assert "code__inline_code" in parser.patterns
 
     splitter = parser.split(source_simple)
-    context = next(splitter)
-    assert context.source == "begin\n"
-    context = next(splitter)
-    assert context.render_name == "code__fenced_code"
-    assert context.group.source == "a=1\nb=1"
     next(splitter)
-    context = next(splitter)
-    assert context.group.option == "inline"
+    cell = next(splitter)
+    assert cell.source == "begin\n"
+    cell = next(splitter)
+    assert cell.render_name == "code__fenced_code"
+    assert cell.context["source"] == "a=1\nb=1"
+    next(splitter)
+    cell = next(splitter)
+    assert cell.context["option"] == "inline"

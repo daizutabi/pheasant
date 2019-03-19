@@ -37,10 +37,9 @@ class Header(Renderer):
         for kind in self.config["kind"]:
             self.number_list[kind] = [0] * 6
 
-    def render_header(self, context, splitter: Iterator) -> Iterator[str]:
-        group = context.group
-        kind = self.header_kind[group.kind[:3].lower()]
-        depth = len(group.prefix) - 1
+    def render_header(self, context, splitter, parser) -> Iterator[str]:
+        kind = self.header_kind[context["kind"][:3].lower()]
+        depth = len(context["prefix"]) - 1
         self.number_list[kind][depth] += 1
         reset = [0] * (len(self.number_list[kind]) - depth)
         self.number_list[kind][depth + 1 :] = reset
@@ -52,7 +51,7 @@ class Header(Renderer):
         number_list = normalize_number_list(kind, number_list, self.page_index)
         number_string = number_list_format(number_list)
         cls = self.config["class"].format(kind=kind)
-        title, tag = split_tag(group.title)
+        title, tag = split_tag(context["title"])
 
         context_ = {
             "kind": kind,
@@ -75,17 +74,15 @@ class Header(Renderer):
             context_.update(tag=tag, id=id_)
 
         if kind == "header":
-            yield self.config["header_template"].render(
-                **context_, config=self.config
-            ) + "\n"
+            yield self.render("header", context_) + "\n"
         else:
             # Need to detect the range of a numbered object.
-            context = next(splitter)
-            if context.match:
-                content = "".join(context.render(context, splitter))
+            cell = next(splitter)
+            if cell.match:
+                content = "".join(cell.render(cell.context, splitter, parser))
                 rest = ""
             else:
-                content = context.source
+                content = cell.source
                 if content.startswith(self.config["begin_pattern"]):
                     content = content[len(self.config["begin_pattern"]) :]
                     content, *rests = content.split(self.config["end_pattern"])
@@ -98,11 +95,7 @@ class Header(Renderer):
                         content, rest = content[:index], content[index + 2 :]
 
                 content = markdown.convert(content)
-
-            yield self.config["header_template"].render(
-                **context_, content=content, config=self.config
-            ) + "\n"
-
+            yield self.render("header", context_, content=content) + "\n"
             if rest:
                 yield rest
 
@@ -119,15 +112,12 @@ class Anchor(Renderer):
     def set_header(self, header: Header) -> None:
         self.header = header
 
-    def render_tag(self, context, splitter: Iterator) -> Iterator[str]:
-        group = context.group
+    def render_tag(self, context, splitter, parser) -> Iterator[str]:
         if self.header is None:
             raise ValueError("A Header instance has not set yet.")
-        tag = group.tag
+        tag = context["tag"]
         context = self.resolve(tag)
-        yield self.config["anchor_template"].render(
-            reference=True, config=self.config, **context
-        )
+        yield self.render("anchor", context, reference=True)
 
     def resolve(self, tag: str) -> Dict[str, Any]:
         tag_context = self.header.tag_context  # type: ignore

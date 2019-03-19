@@ -49,25 +49,20 @@ class Jupyter(Renderer):
         ]:
             self.config["extra_resources"][key] = []
 
-    def render_fenced_code(self, context, splitter: Iterator) -> Iterator[str]:
-        context_ = context.group
-        if "inline" in context_.option:
-            context_.code = preprocess_fenced_code(context_.code)
-        yield self.render(self.config["fenced_code_template"], context_)
+    def render_fenced_code(self, context, splitter, parser) -> Iterator[str]:
+        if "inline" in context["option"]:
+            context["code"] = preprocess_fenced_code(context["code"])
+        yield self.render("fenced_code", context)
 
-    def render_inline_code(self, context, splitter: Iterator) -> Iterator[str]:
-        print(context)
-        context_ = context.group
-        context_.code = preprocess_inline_code(context_.code)
-        yield self.render(self.config["inline_code_template"], context_)
+    def render_inline_code(self, context, splitter, parser) -> Iterator[str]:
+        context["code"] = preprocess_inline_code(context["code"])
+        yield self.render("inline_code", context)
 
-    def render(self, template, context) -> str:
-        context = asdict(context)
+    def render(self, template, context, **kawrgs) -> str:
         if 'language' not in context:
             context["language"] = "python"
         outputs = self.execute(code=context["code"], language=context["language"])
-        context.update(outputs=outputs, config=self.config)
-        return template.render(**context) + "\n"
+        return super().render(template, context, outputs=outputs) + "\n"
 
     def execute(self, code: str, language: str = "python") -> List:
         if language not in self.config["kernel_name"]:

@@ -6,10 +6,10 @@ class Renderer_A(Base):
     pattern_ab = r"(?P<a>a)(?P<b>b)"
     pattern_cd = r"(?P<c>c)(?P<d>d)"
 
-    def render_ab(self, context, splitter):
+    def render_ab(self, context, splitter, parser):
         yield "ba"
 
-    def render_cd(self, context, splitter):
+    def render_cd(self, context, splitter, parser):
         yield "dc"
 
 
@@ -32,12 +32,12 @@ def test_split():
     cell = next(splitter)
     assert cell.source is None
     assert cell.match is not None
-    assert list(cell.render(cell.context, splitter)) == ["ba"]
+    assert list(cell.render(cell.context, splitter, parser)) == ["ba"]
     cell = next(splitter)
     cell = next(splitter)
     assert cell.source is None
     assert cell.match is not None
-    assert "".join(cell.render(cell.context, splitter)) == "dc"
+    assert "".join(cell.render(cell.context, splitter, parser)) == "dc"
     assert splitter.send('source') == ' dc a '
     assert splitter.send('pattern') == '(?P<a>a)(?P<b>b)'
     assert splitter.send('match') is None
