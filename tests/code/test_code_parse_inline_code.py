@@ -38,7 +38,7 @@ def test_code_parse_file(file):
     source = "def func(x):\n    return 2 * x\n\nprint(f(3))\n"
     output = file("", path, source)
     answer = (
-        '<div class="pheasant-fenced-code pheasant-source"><pre>'
+        '<div class="source"><pre>'
         '<code class="python">def func(x):\n    return 2 * x\n\nprint(f(3))'
         "</code></pre></div>\n"
     )
@@ -55,7 +55,7 @@ def test_code_parse_inspect(parse):
     execute("import pheasant")
     output = parse("", "python", "pheasant")
     answer = (
-        '<div class="pheasant-fenced-code pheasant-source">'
+        '<div class="source">'
         '<pre><code class="python">__version__ ='
     )
     assert output.startswith(answer)

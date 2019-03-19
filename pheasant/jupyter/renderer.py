@@ -51,17 +51,28 @@ class Jupyter(Renderer):
     def render_fenced_code(self, context, splitter, parser) -> Iterator[str]:
         if "inline" in context["option"]:
             context["code"] = preprocess_fenced_code(context["code"])
-        yield self.render("fenced_code", context)
+        outputs = self.execute(code=context["code"], language=context["language"])
+        return super().render("fenced_code", context, outputs=outputs) + "\n"
 
     def render_inline_code(self, context, splitter, parser) -> Iterator[str]:
         context["code"] = preprocess_inline_code(context["code"])
-        yield self.render("inline_code", context)
-
-    def render(self, template, context, **kawrgs) -> str:
-        if 'language' not in context:
+        if "language" not in context:
             context["language"] = "python"
         outputs = self.execute(code=context["code"], language=context["language"])
-        return super().render(template, context, outputs=outputs) + "\n"
+        for output in outputs:
+            if "data" in output and "text/plain" in output["data"]:
+                text = output["data"]["text/plain"]
+                if (text.startswith('"') and text.endswith('"')) or (
+                    text.startswith("'") and text.endswith("'")
+                ):
+                    output["data"]["text/plain"] = text[1:-1]
+        for output in outputs:
+            if output["type"] == "display_data":
+                outputs = [
+                    output for output in outputs if output["type"] == "display_data"
+                ]
+                break
+        return super().render("inline_code", context, outputs=outputs)
 
     def execute(self, code: str, language: str = "python") -> List:
         if language not in self.config["kernel_name"]:

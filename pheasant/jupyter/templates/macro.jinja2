@@ -1,21 +1,17 @@
-{%- macro output_display(output, display) -%}
-  {%- if display -%}
-    <div class="pheasant-jupyter-display">
-  {% endif -%}
-  {%- for type in output.data -%}
-    {%- if type == 'text/html' -%}
-      {%- autoescape false -%}{{ output.data[type] }}{%- endautoescape -%}
-    {%- elif type == 'text/latex' -%}
-      {%- autoescape false -%}{{ output.data[type] }}{%- endautoescape -%}
-    {%- elif type == 'text/plain' -%}
-        {{ output.data['text/plain'] }}
-    {%- elif type == 'image/png' -%}
-        <img alt="{{ type }}" src="data:image/{{ type }};base64,{{ output.data[type] }}"/>
-    {%- else -%}
-        <p><span style="color: red;">Unspported data type: '{{ type }}'</span></p>
-    {%- endif -%}
-  {%- endfor -%}
-  {%- if display -%}
+{%- macro output_display(outputs) -%}
+  {%- for output in outputs if output.type == 'display_data' or 'text/html' in output.data or 'text/latex' in output.data -%}
+    <div class="display">
+    {%- for type in output.data -%}
+      {%- if type == 'text/html' -%}
+        {%- autoescape false -%}{{ output.data[type] }}{%- endautoescape -%}
+      {%- elif type == 'text/latex' -%}
+        {%- autoescape false -%}{{ output.data[type] }}{%- endautoescape -%}
+      {%- elif type == 'image/png' -%}
+          <p><img alt="{{ type }}" src="data:{{ type }};base64,{{ output.data[type] }}"/></p>
+      {%- else -%}
+          <p><span style="color: red;">Unspported data type: '{{ type }}'</span></p>
+      {%- endif -%}
+    {%- endfor -%}
     </div>
-  {% endif -%}
+  {%- endfor -%}
 {%- endmacro -%}

@@ -2,18 +2,16 @@
 
 {%- if 'hide' not in option -%}
   {%- if 'display' not in option -%}
-    <div class="pheasant-fenced-code pheasant-input"><pre><code class="{{ language }}">{{ code }}</code></pre></div>
+    <div class="input"><pre><code class="{{ language }}">{{ code }}</code></pre></div>
     {%- for output in outputs if output.type != 'display_data' -%}
       {%- if output.type == 'error' -%}
-          <div class="pheasant-fenced-code pheasant-error"><pre><code class="{{ language }}">{{ output.ename }}: {{ output.evalue }}</code></pre></div>
+          <div class="error"><pre><code class="{{ language }}">{{ output.ename }}: {{ output.evalue }}</code></pre></div>
       {%- elif output.type == 'stream' -%}
-          <div class="pheasant-fenced-code pheasant-{{output.name}}"><pre><code class="{{ language }}">{{ output.text }}</code></pre></div>
+          <div class="{{output.name}}"><pre><code class="{{ language }}">{{ output.text }}</code></pre></div>
       {%- elif 'text/plain' in output.data -%}
-          <div class="pheasant-fenced-code pheasant-output"><pre><code class="{{ language }}">{{ output.data['text/plain'] }}</code></pre></div>
+          <div class="output"><pre><code class="{{ language }}">{{ output.data['text/plain'] }}</code></pre></div>
       {%- endif -%}
     {%- endfor -%}
   {%- endif -%}
-  {%- for output in outputs if output.type == 'display_data' or 'text/html' in output.data or 'text/latex' in output.data -%}
-    {{ output_display(output, true)  }}
-  {%- endfor -%}
+  {{ output_display(outputs) }}
 {%- endif -%}

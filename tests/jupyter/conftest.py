@@ -7,6 +7,7 @@ from pheasant.jupyter.renderer import Jupyter
 @pytest.fixture()
 def jupyter():
     jupyter = Jupyter()
+    jupyter.execute("import pheasant.jupyter.display")
     return jupyter
 
 

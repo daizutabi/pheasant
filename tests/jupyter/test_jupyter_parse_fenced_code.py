@@ -22,10 +22,8 @@ def test_jupyter_parse_text(parse):
     output = parse("print(1)")
     answer = "".join(
         [
-            '<div class="pheasant-fenced-code pheasant-input">'
-            '<pre><code class="python">print(1)</code></pre></div>'
-            '<div class="pheasant-fenced-code pheasant-stdout">'
-            '<pre><code class="python">1</code></pre></div>\n'
+            '<div class="input"><pre><code class="python">print(1)</code></pre></div>'
+            '<div class="stdout"><pre><code class="python">1</code></pre></div>\n'
         ]
     )
     assert output == answer
@@ -33,10 +31,8 @@ def test_jupyter_parse_text(parse):
     output = parse("1")
     answer = "".join(
         [
-            '<div class="pheasant-fenced-code pheasant-input">'
-            '<pre><code class="python">1</code></pre></div>'
-            '<div class="pheasant-fenced-code pheasant-output">'
-            '<pre><code class="python">1</code></pre></div>\n'
+            '<div class="input"><pre><code class="python">1</code></pre></div>'
+            '<div class="output"><pre><code class="python">1</code></pre></div>\n'
         ]
     )
     assert output == answer
@@ -44,9 +40,9 @@ def test_jupyter_parse_text(parse):
     output = parse("'abc'")
     answer = "".join(
         [
-            '<div class="pheasant-fenced-code pheasant-input">'
+            '<div class="input">'
             '<pre><code class="python">&#39;abc&#39;</code></pre></div>'
-            '<div class="pheasant-fenced-code pheasant-output">'
+            '<div class="output">'
             '<pre><code class="python">&#39;abc&#39;</code></pre></div>\n'
         ]
     )
@@ -55,11 +51,32 @@ def test_jupyter_parse_text(parse):
     output = parse("1/0")
     answer = "".join(
         [
-            '<div class="pheasant-fenced-code pheasant-input">'
+            '<div class="input">'
             '<pre><code class="python">1/0</code></pre></div>'
-            '<div class="pheasant-fenced-code pheasant-error">'
+            '<div class="error">'
             '<pre><code class="python">ZeroDivisionError: division by zero'
             "</code></pre></div>\n"
         ]
     )
     assert output == answer
+
+
+def test_jupyter_parse_html(parse):
+    output = parse("import pandas\npandas.DataFrame([[1,2]])")
+    assert '<div class="display"><div>' in output
+
+
+def test_jupyter_parse_png(parse):
+    output = parse("import matplotlib.pyplot as plt")
+    output = parse("plt.plot([1,2])")
+    print(output)
+    assert '<div class="output"><pre><code class="python">[&lt;matplot' in output
+    assert '<div class="display"><p><img alt="image/png" src="data:image/png' in output
+
+
+
+# from pheasant.jupyter.renderer import Jupyter
+# jupyter = Jupyter()
+#
+# jupyter.execute('import matplotlib.pyplot as plt')
+# jupyter.execute('plt.plot([1,2])')
