@@ -6,27 +6,27 @@ site_author: daizutabi
 repo_url: https://github.com/daizutabi/pheasant/
 edit_uri: ""
 
-theme:
-  name: rtd-pheasant
-  highlightjs: true
-  hljs_languages:
-    - yaml
-    - python
+theme: readthedocs
 
 plugins:
-  - pheasant
+  - pheasant:
+      bar: 10
+    # - jupyter:
+    #   - kernel_name:
+    #       python: python3
+    # - number:
+    #     ignored_path: "*/about/*"
 
 nav:
   - Home: index.md
-  - Test: test.md
-  # - User Guide:
-  #   - Images: user-guide/images.md
-  #  - Code: user-guide/code.md
-  #   - Script: user-guide/script.py
-  #   - Macro: user-guide/macro.md
-  # - About:
-  #   - Release Notes: about/release-notes.md
-  #   - License: about/license.md
+  - User Guide:
+    - Images: user-guide/images.md
+    - Code: user-guide/code.md
+    - Script: user-guide/script.py
+    - Macro: user-guide/macro.md
+  - About:
+    - Release Notes: about/release-notes.md
+    - License: about/license.md
 
 markdown_extensions:
   - admonition

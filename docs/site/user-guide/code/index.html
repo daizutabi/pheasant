@@ -9,14 +9,11 @@
   <meta name="author" content="daizutabi">
   <link rel="shortcut icon" href="../../img/favicon.ico">
   <title>Code - Pheasant</title>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700" type="text/css"/>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Slab:400,700" type="text/css"/>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata:400,700" type="text/css"/>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/tonsky/FiraCode@1.206/distr/fira_code.css" type="text/css"/>
-  <link rel="stylesheet" href="../../css/theme.css" type="text/css"/>
-  <link rel="stylesheet" href="../../css/theme_extra.css" type="text/css"/>
-  <link rel="stylesheet" href="../../css/theme_pheasant.css" type="text/css"/>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css" type="text/css"/>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
   
   <script>
     // Current page data
@@ -24,28 +21,36 @@
     var mkdocs_page_input_path = "user-guide\\code.md";
     var mkdocs_page_url = "/user-guide/code/";
   </script>
-  <script src="../../js/jquery-2.1.1.min.js"></script>
-  <script src="../../js/modernizr-2.8.3.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/languages/yaml.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/languages/python.min.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
+  
+  <script src="../../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
 </head>
 
-<body class="wy-body-for-nav">
+<body class="wy-body-for-nav" role="document">
+
   <div class="wy-grid-for-nav">
+
+    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
       <div class="wy-side-nav-search">
-        <a href="../.." class="icon icon-home">Pheasant</a>
-	      
+        <a href="../.." class="icon icon-home"> Pheasant</a>
+        
       </div>
-      <div class="wy-menu wy-menu-vertical" data-spy="affix" aria-label="main navigation"><ul class="current">
-          <li class="toctree-l1">
-		        
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
     <a class="" href="../..">Home</a>
-	        </li>
-          <li class="toctree-l1">
-		        
+	    </li>
+          
+            <li class="toctree-l1">
+		
     <span class="caption-text">User Guide</span>
     <ul class="subnav">
                 <li class="">
@@ -57,17 +62,16 @@
     <a class="current" href="./">Code</a>
     <ul class="subnav">
             
-    <li class="toctree-l3"><a href="#3-inspect-and-load-codes">3. Inspect and Load Codes</a>
+    <li class="toctree-l3"><a href="#inspect-and-load-codes">Inspect and Load Codes</a></li>
     
         <ul>
         
-            <li><a class="toctree-l4" href="#31-file-system">3.1. File system</a></li>
+            <li><a class="toctree-l4" href="#file-system">File system</a></li>
         
-            <li><a class="toctree-l4" href="#32-python-module-source">3.2. Python module source</a></li>
+            <li><a class="toctree-l4" href="#python-module-source">Python module source</a></li>
         
         </ul>
     
-    </li>
 
     </ul>
                 </li>
@@ -80,9 +84,10 @@
     <a class="" href="../macro/">Macro</a>
                 </li>
     </ul>
-	        </li>
-          <li class="toctree-l1">
-		        
+	    </li>
+          
+            <li class="toctree-l1">
+		
     <span class="caption-text">About</span>
     <ul class="subnav">
                 <li class="">
@@ -94,7 +99,8 @@
     <a class="" href="../../about/license/">License</a>
                 </li>
     </ul>
-	        </li>
+	    </li>
+          
         </ul>
       </div>
       &nbsp;
@@ -103,7 +109,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" aria-label="top navigation">
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
         <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
         <a href="../..">Pheasant</a>
       </nav>
@@ -131,156 +137,46 @@
           <div role="main">
             <div class="section">
               
-                <h1 id="3-inspect-and-load-codes"><span class="pheasant-header-number">3.</span> <span class="pheasant-header-title">Inspect and Load Codes</span></h1>
+                <h1 id="inspect-and-load-codes">Inspect and Load Codes</h1>
 <p>Pheasant can read codes from a file system or Python module.</p>
-<h2 id="31-file-system"><span class="pheasant-header-number">3.1.</span> <span class="pheasant-header-title">File system</span></h2>
-<p>Any text files are read from file system by Pheasant's extended Markdown syntax: <code>![file](&lt;file name&gt;)</code>. For example,</p>
-<div class="pheasant-fenced-code pheasant-source">
-<pre><code class="markdown">![file](mkdocs.yml)</code></pre></div>
+<h2 id="file-system">File system</h2>
+<p>Any text files are read from file system by Pheasant's extended Markdown syntax: <code>![#file](&lt;file name&gt;)</code>. For example,</p>
+<pre><code>![file](mkdocs.yml)
+</code></pre>
 
 <p>writes the content of this document's <code>mkdocs.yml</code>:</p>
-<!-- begin -->
-
-<div class="pheasant-fenced-code pheasant-code">
-<pre><code class="yaml">site_name: Pheasant
-site_url: https://pheasant.daizutabi.net/
-site_description: Project documentation with MkDocs.
-site_author: daizutabi
-
-repo_url: https://github.com/daizutabi/pheasant/
-edit_uri: ""
-
-theme:
-  name: rtd-pheasant
-  highlightjs: true
-  hljs_languages:
-    - yaml
-    - python
-
-plugins:
-  - pheasant
-
-nav:
-  - Home: index.md
-  - User Guide:
-    - Images: user-guide/images.md
-    - Code: user-guide/code.md
-    - Script: user-guide/script.py
-    - Macro: user-guide/macro.md
-  - About:
-    - Release Notes: about/release-notes.md
-    - License: about/license.md
-
-markdown_extensions:
-  - admonition
-  - pymdownx.arithmatex
-#   - attr_list</code></pre></div>
-
-<!-- end -->
-
+<p><img alt="file" src="mkdocs.yml" /></p>
 <p>The root directory of a relative path is the directory where <code>mkdocs.yml</code> exists.</p>
 <p>If the file is too long to display the whole content, you can specify the lines as the same way that Python does with the slice notation. Use <code>&lt;</code> and <code>&gt;</code> insted of <code>[</code> and <code>]</code> because <code>[</code> and <code>]</code> can be a part of a file name.</p>
-<div class="pheasant-fenced-code pheasant-source">
-<pre><code class="markdown">![file](mkdocs.yml<5:10>)</code></pre></div>
-
-<!-- begin -->
-
-<div class="pheasant-fenced-code pheasant-code">
-<pre><code class="yaml">repo_url: https://github.com/daizutabi/pheasant/
-edit_uri: ""
-
-theme:
-  name: rtd-pheasant</code></pre></div>
-
-<!-- end -->
+<pre><code class="copy">![file](mkdocs.yml&lt;5:10&gt;)
+</code></pre>
 
 <p>When you want to specify a language, write like below after <code>?</code> character:</p>
-<div class="pheasant-fenced-code pheasant-source">
-<pre><code class="markdown">![file](example.js<:10>?javascript)</code></pre></div>
+<pre><code>![file](example.js&lt;:10&gt;?javascript)
+</code></pre>
 
 <p>Imported file can be numbered like figures and tables. Use this shorthand notation:</p>
-<div class="pheasant-fenced-code pheasant-source">
-<pre><code class="markdown">#![file](pheasant.yml)</code></pre></div>
-
-<div class="pheasant-number-file">
-<p class="pheasant-file">
-<span class="name">File</span>
-<span class="number">3.1</span>
-<span class="title">pheasant.yml</span></p>
-<div class="pheasant-fenced-code pheasant-code">
-<pre><code class="yaml">jupyter:
-  kernel_name:
-    python: python3
-  extra_paths:
-    - scripts
-  extra_modules:
-    - example
-number:
-  level: 0
-  ignore_pattern: ".*about.*"
-code:
-macro:
-script:</code></pre></div>
-</div>
+<pre><code class="copy">#![file](pheasant.yml)
+</code></pre>
 
 <p>The above file is the real config file of this Pheasant document.</p>
-<h2 id="32-python-module-source"><span class="pheasant-header-number">3.2.</span> <span class="pheasant-header-title">Python module source</span></h2>
+<h2 id="python-module-source">Python module source</h2>
 <p>Python module sources that the current Jupyter kernel can find are also inspected. Now Pheasant is configured like the above <code>phesant.yml</code> settings,
 the kernel's <code>sys.path</code> includes the <code>scripts</code> directory and the module <code>example</code> has already imported.</p>
-<div class="pheasant-fenced-code pheasant-input">
 <pre><code class="python">import sys
 sys.path[:5]
-</code></pre></div>
+</code></pre>
 
-<div class="pheasant-fenced-code pheasant-output">
-<pre><code class="python">['scripts',
- '',
- 'C:\\Users\\daizu\\Documents\\GitHub\\pheasant\\docs',
- 'C:\\Users\\daizu\\Miniconda3\\envs\\daizu\\python37.zip',
- 'C:\\Users\\daizu\\Miniconda3\\envs\\daizu\\DLLs']
-</code></pre></div>
-
-<div class="pheasant-fenced-code pheasant-input">
 <pre><code class="python">example
-</code></pre></div>
-
-<div class="pheasant-fenced-code pheasant-output">
-<pre><code class="python">&lt;module 'example' from 'scripts\\example.py'&gt;
-</code></pre></div>
+</code></pre>
 
 <p>You can write to inspect the whole module content:</p>
-<div class="pheasant-fenced-code pheasant-source">
-<pre><code class="markdown">#![python](example)</code></pre></div>
-
-<div class="pheasant-number-code">
-<p class="pheasant-code">
-<span class="name">Code</span>
-<span class="number">3.1</span>
-<span class="title">example</span></p>
-<div class="pheasant-fenced-code pheasant-code">
-<pre><code class="python">"""An Example Module."""
-
-def add(x, y):
-    return x + y
-
-
-def sub(x, y):
-    return x - y</code></pre></div>
-</div>
+<pre><code class="copy">#![python](example)
+</code></pre>
 
 <p>A part of the module can be specified as usual.</p>
-<div class="pheasant-fenced-code pheasant-source">
-<pre><code class="markdown">#![python](example.sub)</code></pre></div>
-
-<div class="pheasant-number-code">
-<p class="pheasant-code">
-<span class="name">Code</span>
-<span class="number">3.2</span>
-<span class="title">example.sub</span></p>
-<div class="pheasant-fenced-code pheasant-code">
-<pre><code class="python">def sub(x, y):
-    return x - y</code></pre></div>
-</div>
+<pre><code class="copy">#![python](example.sub)
+</code></pre>
 
 <p>With this functionality, you can guarantee the reproducible relation between your source code and results easily.</p>
               
@@ -329,8 +225,7 @@ def sub(x, y):
     </span>
 </div>
     <script>var base_url = '../..';</script>
-    <script src="../../js/theme.js"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script src="../../js/theme.js" defer></script>
 
 </body>
 </html>

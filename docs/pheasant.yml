@@ -1,5 +1,0 @@
-jupyter:
-  kernel_name:
-    python: python3
-number:
-  ignored_path: "*/about/*"

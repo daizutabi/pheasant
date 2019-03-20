@@ -23,10 +23,11 @@ class Pheasant(Converter):
         super().__post_init__()
         self.anchor.header = self.header
         self.register("script", [self.python])
-        self.register("main", [self.jupyter, self.header, self.code], self.decorator)
+        self.register("main", [self.header, self.jupyter, self.code], self.decorator)
         self.register("link", [self.anchor])
 
-        self.decorator.register(self.header, self.decorate_header)
+        self.decorator.name = "pheasant"
+        self.decorator.register('surround', [self.header, self.jupyter, self.code])
 
     def init(self, config: Optional[Dict[str, Any]] = None):
         for renderer in self.renderers:
@@ -35,13 +36,12 @@ class Pheasant(Converter):
                 renderer._update("config", config[name])
             renderer.init()
 
-    def decorate_header(self, output):
-        print('xx')
+
 
 pheasant = Pheasant()
-pheasant.convert('hello', "main")
-
-
+o = pheasant.convert("# hello\n#Fig d\ncontent\n\n```python\nprint(1)\n```\n", "main")
+print(o)
+pheasant.decorator
 
 def main():
     pass
