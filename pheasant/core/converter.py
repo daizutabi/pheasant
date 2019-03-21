@@ -1,11 +1,12 @@
-import codecs
+import io
 from collections import OrderedDict
 from dataclasses import field
 from functools import partial
-from typing import Callable, Dict, Iterable, Optional, Union
+from typing import Any, Callable, Dict, Iterable, Optional, Union
 
 from pheasant.core.base import Base
 from pheasant.core.decorator import Decorator
+from pheasant.core.page import Page
 from pheasant.core.parser import Parser
 from pheasant.core.renderer import Renderer
 from pheasant.core.renderers import Renderers
@@ -14,6 +15,7 @@ from pheasant.core.renderers import Renderers
 class Converter(Base):
     parsers: Dict[str, Parser] = field(default_factory=OrderedDict)
     renderers: Renderers = field(default_factory=Renderers)
+    pages: Dict[str, Page] = field(default_factory=dict)
 
     def __post_repr__(self):
         return ", ".join(f"'{name}'" for name in self.parsers)
@@ -23,6 +25,20 @@ class Converter(Base):
             return self.parsers[item]
         elif isinstance(item, tuple):
             return self.renderers[item]
+
+    def update_config(self, config: Dict[str, Any]):
+        for renderer in self.renderers:
+            if renderer.name in config:
+                renderer._update("config", config[renderer.name])
+
+    def setup(self):
+        for renderer in self.renderers:
+            renderer.setup()
+
+    def reset(self):
+        for renderer in self.renderers:
+            renderer.reset()
+        self.pages = {}
 
     def register(
         self,
@@ -78,14 +94,17 @@ class Converter(Base):
 
         return source
 
-    def __call__(self, *names: str) -> Callable[[str], str]:
-        return partial(self.convert, names=names)
-
     def convert_from_file(
         self, path: str, names: Optional[Union[str, Iterable[str]]] = None
     ) -> str:
-        with codecs.open(path, "r", "utf8") as file:
-            source = file.read()
-            source = source.replace("\r\n", "\n").replace("\r", "\n")
+        with io.open(path, "r", encoding="utf-8-sig", errors="strict") as f:
+            source = f.read()
+        self.pages[path] = Page(path, source=source)  # type: ignore
+        self.pages[path].output = self.convert(self.pages[path].source, names)
+        return self.pages[path].output
 
-        return self.convert(source, names)
+    def convert_from_output(
+        self, path: str, names: Optional[Union[str, Iterable[str]]] = None
+    ) -> str:
+        self.pages[path].output = self.convert(self.pages[path].output, names)
+        return self.pages[path].output

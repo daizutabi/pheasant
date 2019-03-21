@@ -21,9 +21,6 @@ def test_converter_special_function(converter):
     assert repr(converter) == "<Converter#converter['preprocess', 'postprocess']>"
     assert repr(converter["preprocess"]) == "<Parser#preprocess[3]>"
     assert repr(converter["preprocess", "jupyter"]) == "<Jupyter#jupyter[2]>"
-    assert callable(converter())
-    assert callable(converter("preprocess"))
-    assert callable(converter("preprocess", "postprocess"))
 
 
 def test_multiple_parser(converter):

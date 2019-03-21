@@ -28,7 +28,7 @@ class Renderer(Base):
     def register(self, pattern: str, render: Render) -> None:
         self.renders[pattern] = render
 
-    def init(self) -> None:
+    def setup(self) -> None:
         """Called once on build."""
         pass
 

@@ -73,7 +73,10 @@ def inspect(kernel_name: str, obj: str) -> str:
     code = f"import inspect\ninspect.getsourcelines({obj})"
     outputs = execute(code, kernel_name=kernel_name)
     # FIXME: when error occurs
-    lines, lineno = literal_eval(outputs[0]["data"]["text/plain"])
+    try:
+        lines, lineno = literal_eval(outputs[0]["data"]["text/plain"])
+    except KeyError:
+        lines = ["inspect error"]
     return "".join(lines)
 
 

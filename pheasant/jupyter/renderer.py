@@ -27,7 +27,7 @@ class Jupyter(Renderer):
         }
         self.reset()
 
-    def init(self) -> None:
+    def setup(self):
         code = "\n".join(
             [
                 "import pheasant.jupyter.display",
@@ -38,15 +38,13 @@ class Jupyter(Renderer):
         self.execute(code, "python")
 
     def reset(self):
-        self.config["extra_resources"] = {}
-        for key in [
-            "module",
-            "extra_css",
-            "extra_javascript",
-            "extra_raw_css",
-            "extra_raw_javascript",
-        ]:
-            self.config["extra_resources"][key] = []
+        self.meta["extra_resources"] = dict(
+            modules=[],
+            extra_css=[],
+            extra_javascript=[],
+            extra_raw_css=[],
+            extra_raw_javascript=[],
+        )
 
     def render_fenced_code(self, context, splitter, parser) -> Iterator[str]:
         if "inline" in context["option"]:
@@ -82,13 +80,13 @@ class Jupyter(Renderer):
         select_display_data(outputs)
         return outputs
 
-    def update_extra_resourse(self, outputs):
+    def update_extra_resourse(self, outputs: List[dict]) -> None:
         module_dict = {
             "bokeh": bokeh_extra_resources,
             "holoviews": holoviews_extra_resources,
         }
-        extra_resources = self.config["extra_resources"]
-        if len(extra_resources["module"]) == len(module_dict):
+        extra_resources = self.meta["extra_resources"]
+        if len(extra_resources["modules"]) == len(module_dict):
             return
 
         new_modules = []
@@ -101,12 +99,12 @@ class Jupyter(Renderer):
                 module = output["data"]["text/plain"]
                 if (
                     module in module_dict.keys()
-                    and module not in extra_resources["module"]
+                    and module not in extra_resources["modules"]
                 ):
                     new_modules.append(module)
 
         for module in new_modules:
-            extra_resources["module"].append(module)
+            extra_resources["modules"].append(module)
             resources = module_dict[module]()
             for key in extra_resources:
                 if key in resources:

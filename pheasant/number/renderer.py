@@ -22,13 +22,15 @@ class Header(Renderer):
         self.register(Header.HEADER_PATTERN, self.render_header)
         self.set_template("header")
         self.config["kind_prefix"] = {}
-        for kind in self.config["kind"]:
-            if kind == "header":
-                self.header_kind[""] = "header"
-            else:
-                self.header_kind[kind[:3].lower()] = kind
-                self.config["kind_prefix"][kind] = kind[0].upper() + kind[1:]
-        self.reset_number_list()
+        self.header_kind[""] = "header"
+        for kind in ['figure', 'table', 'code', 'file']:
+            self.header_kind[kind[:3].lower()] = kind
+            self.config["kind_prefix"][kind] = kind[0].upper() + kind[1:]
+        self.config["kind"] = list(self.header_kind.values())
+        self.setup()
+
+    def setup(self):
+        self.reset()
 
     def reset(self) -> None:
         self.reset_number_list()
@@ -44,12 +46,8 @@ class Header(Renderer):
         reset = [0] * (len(self.number_list[kind]) - depth)
         self.number_list[kind][depth + 1 :] = reset
         number_list = self.number_list[kind][: depth + 1]
-        if kind == "header":
-            header = "#" * len(number_list)
-            prefix = ""
-        else:
-            header = ""
-            prefix = self.config["kind_prefix"][kind]
+        header = "#" * len(number_list) if kind == "header" else ""
+        prefix = self.config["kind_prefix"][kind] if kind != "header" else ""
         number_list = normalize_number_list(kind, number_list, self.page_index)
         number_string = number_list_format(number_list)
         title, tag = split_tag(context["title"])

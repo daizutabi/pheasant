@@ -1,13 +1,6 @@
 # Jinja2 template file for numbering.
 header_template_file: header.jinja2
 anchor_template_file: anchor.jinja2
-# List of numbered objects
-kind:
-  - header
-  - figure
-  - table
-  - code
-  - file
 # Numbering level. 0 for multiple pages 2 for h2 etc.
 level: 0
 # Begin pattern

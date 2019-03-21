@@ -1,5 +1,5 @@
 from dataclasses import field
-from typing import Any, Dict, List, Optional
+from typing import Dict, Iterator, List
 
 from pheasant.code.renderer import Code
 from pheasant.core.converter import Converter
@@ -16,8 +16,8 @@ class Pheasant(Converter):
     header: Header = field(default_factory=Header, init=False)
     code: Code = field(default_factory=Code, init=False)
     anchor: Anchor = field(default_factory=Anchor, init=False)
-    pages: List[Page] = field(default_factory=list)
-    decorator: Decorator = field(default_factory=Decorator)
+    decorator: Decorator = field(default_factory=Decorator, init=False)
+    pages: Dict[str, Page] = field(default_factory=dict, init=False)
 
     def __post_init__(self):
         super().__post_init__()
@@ -27,51 +27,28 @@ class Pheasant(Converter):
         self.register("link", [self.anchor])
 
         self.decorator.name = "pheasant"
-        self.decorator.register('surround', [self.header, self.jupyter, self.code])
+        self.decorator.register("surround", [self.header, self.jupyter, self.code])
+        self.setup()
 
-    def init(self, config: Optional[Dict[str, Any]] = None):
-        for renderer in self.renderers:
-            name = renderer.name
-            if config and name in config:
-                renderer._update("config", config[name])
-            renderer.init()
-
-
-
-pheasant = Pheasant()
-o = pheasant.convert("# hello\n#Fig d\ncontent\n\n```python\nprint(1)\n```\n", "main")
-print(o)
-pheasant.decorator
-
-def main():
-    pass
-    # def on_page_markdown(self, markdown, page, config, files):
-    #     logger.info(f"[Pheasant] on_page_markdown: {page.file.src_path}")
-    #     # print(markdown)
-    #     # page.file.abs_src_path
-    #     markdown = self.converter("numbered")(markdown)
-    #     # print(markdown)
-    #     return markdown
-    #
-    # def on_page_content(self, content, page, config, files):
-    #     logger.info(f"[Pheasant] on_page_content: {page.file.src_path}")
-    #     # print(content)
-    #     content = self.converter("postprocess")(content)
-    #     # print(content)
-    #     return content
-    #
-    # def on_page_context(self, context, page, config, nav):
-    #     logger.info(f"[Pheasant] on_page_context: {page.file.src_path}")
-    #     extra_resources = self.jupyter.config["extra_resources"]
-    #     print(extra_resources)
-    #     print(config)
-    #     # for key in ['extra_css']:
-    #     #     config.context[key].extend(extra_resources[key])
-    #     #     print('----------------------------------------------')
-    #     #     print(context[key])
-    #     # return context
-    #     config["pheasant"] = extra_resources
-    #
-    #     self.jupyter.reset()
-    #     # update_page_config(config, page.file.abs_src_path)
-    #     return context
+    def convert_from_files(self, paths: List[str], message=None) -> List[str]:
+        self.reset()
+        for path in paths:
+            self.jupyter.reset()  # Reset extra_resources
+            self.header.abs_src_path = path
+            if path.endswith(".py"):
+                if message:
+                    message(f"Converting Python script: {path}")
+                self.convert_from_file(path, ["script", "main"])
+            else:
+                if message:
+                    message(f"Converting Markdown: {path}")
+                self.convert_from_file(path, "main")
+            self.pages[path].meta["extra_resources"] = self.jupyter.meta[
+                "extra_resources"
+            ]
+        for path in paths:
+            self.anchor.abs_src_path = path
+            if message:
+                message(f"Interlinking: {path}")
+            self.convert_from_output(path, "link")
+        return [self.pages[path].output for path in paths]
