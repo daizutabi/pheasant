@@ -21,9 +21,9 @@ class PheasantPlugin(BasePlugin):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        logger.info("[Pheasant] Plugin created.")
+        logger.debug("[Pheasant] Plugin created.")
         self.converter = Pheasant()
-        logger.info(f"[Pheasant] Converter created. {self.converter}")
+        logger.debug(f"[Pheasant] Converter created. {self.converter}")
         for name, parser in self.converter.parsers.items():
             logger.debug(f"[Pheasant] Parser for '{name}' = {parser}.")
         logger.debug("[Pheasant] Renderer registered.")
@@ -42,7 +42,7 @@ class PheasantPlugin(BasePlugin):
     #     return server
 
     def on_config(self, config, **kwargs):
-        logger.info(f"[Pheasant] on_config: config={self.config}")
+        logger.debug(f"[Pheasant] on_config: config={self.config}")
         if self.config:
             self.converter.update_config(self.config)
 
@@ -55,13 +55,13 @@ class PheasantPlugin(BasePlugin):
     def on_nav(self, nav, config, **kwargs):
 
         def message(msg):
-            logger.info(f"[Pheasant] {msg}")
+            logger.debug(f"[Pheasant] {msg}")
 
-        logger.info(f"[Pheasant] on_nav")
-        logger.info(f"[Pheasant] Preprocess begins.")
+        logger.debug(f"[Pheasant] on_nav")
+        logger.debug(f"[Pheasant] Preprocess begins.")
         paths = [page.file.abs_src_path for page in nav.pages]
         self.converter.convert_from_files(paths, message=message)
-        logger.info(f"[Pheasant] Preprocess done.")
+        logger.debug(f"[Pheasant] Preprocess done.")
 
         for directory in ["css", "js"]:
             root = os.path.join(config["site_dir"], directory)
@@ -105,9 +105,9 @@ class PheasantPlugin(BasePlugin):
 
     def on_page_read_source(self, source, page, **kwargs):
         assert source is None
-        logger.info(
+        logger.debug(
             f"[Pheasant] on_page_read_source: {page.file.src_path}  -- "
-            f"[Pheasant] Return preprocessed markdown"
+            f"Return preprocessed markdown"
         )
 
         return self.converter.pages[page.file.abs_src_path].output
@@ -121,7 +121,7 @@ class PheasantPlugin(BasePlugin):
     #     return content
 
     def on_page_context(self, context, page, **kwargs):
-        logger.info(f"[Pheasant] on_page_context: {page.file.src_path}")
+        logger.debug(f"[Pheasant] on_page_context: {page.file.src_path}")
         page_ = self.converter.pages[page.file.abs_src_path]
         for key in ["extra_css", "extra_javascript"]:
             context["config"][key] = list(self.config[key])
@@ -130,7 +130,7 @@ class PheasantPlugin(BasePlugin):
 
     # Run `env` plugin events.
     def on_env(self, env, files, **kwargs):
-        logger.info(f"[Pheasant] on_env")
+        logger.debug(f"[Pheasant] on_env")
 
 
 def _emulate_mkdocs_main_and_build():

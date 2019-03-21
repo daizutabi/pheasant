@@ -75,7 +75,7 @@ def inspect(kernel_name: str, obj: str) -> str:
     # FIXME: when error occurs
     try:
         lines, lineno = literal_eval(outputs[0]["data"]["text/plain"])
-    except KeyError:
+    except Exception:
         lines = ["inspect error"]
     return "".join(lines)
 

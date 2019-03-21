@@ -14,6 +14,7 @@
   <link rel="stylesheet" href="../../css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../css/theme_extra.css" type="text/css" />
   <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+  <link href="../../css/pheasant.css" rel="stylesheet">
   
   <script>
     // Current page data
@@ -66,217 +67,19 @@
     <a class="current" href="./">Script</a>
     <ul class="subnav">
             
-    <li class="toctree-l3"><a href="#standalone-script"># Standalone Script</a></li>
-    
-
-    <li class="toctree-l3"><a href="#using-atoms-hydorgen-package-you-can">Using Atom's Hydorgen package, you can</a></li>
-    
-
-    <li class="toctree-l3"><a href="#execute-any-python-script-codes-in-a-markdown-source-so-you-can-edit-your-markdown">execute any Python script codes in a Markdown source. So you can edit your Markdown</a></li>
-    
-
-    <li class="toctree-l3"><a href="#verifying-its-execution-and-outputs-but-unfortunately-as-long-as-i-know-the-entire">verifying its execution and outputs. But unfortunately (as long as I know), the entire</a></li>
-    
-
-    <li class="toctree-l3"><a href="#markdown-source-cannot-be-executed-all-at-once-as-a-standalone-script-and-cannot-be">Markdown source cannot be executed all at once as a standalone script and cannot be</a></li>
-    
-
-    <li class="toctree-l3"><a href="#ran-by-python-interpreter-pheasant-connects-between-a-pure-python-script-and-a">ran by Python interpreter. Pheasant connects between a pure Python script and a</a></li>
-    
-
-    <li class="toctree-l3"><a href="#markdown-source-for-mkdocs-actually-this-page-is-written-by-a-pure-python-code">Markdown source for MkDocs. Actually, this page is written by a pure Python code.</a></li>
-    
-
-    <li class="toctree-l3"><a href="#how-to">## How to</a></li>
-    
-
-    <li class="toctree-l3"><a href="#a-basic-idea-is-that-markdown-cells-and-code-cells-generally-appear-alternately-we">A basic idea is that Markdown cells and code cells generally appear alternately. We</a></li>
-    
-
-    <li class="toctree-l3"><a href="#can-write-a-markdown-cell-with-a-successive-comment-lines-in-order-to-be-recognized">can write a Markdown cell with a successive comment lines. In order to be recognized</a></li>
-    
-
-    <li class="toctree-l3"><a href="#as-a-markdown-cell-must-be-at-the-begining-of-lines-but-we-can-insert-a-blank">as a Markdown cell, # must be at the begining of lines. But we can insert a blank</a></li>
-    
-
-    <li class="toctree-l3"><a href="#line-in-a-markdown-cell-without-to-make-a-paragraph">line in a Markdown cell without # to make a paragraph.</a></li>
-    
-
-    <li class="toctree-l3"><a href="#python-code-block-is-treated-as-a-code-cell-as-you-expect-if-a-comment-is-not-at-the">Python code block is treated as a code cell as you expect. If a comment is not at the</a></li>
-    
-
-    <li class="toctree-l3"><a href="#begining-of-line-a-code-cell-can-contain-comments">begining of line, a code cell can contain comments.</a></li>
-    
-
-    <li class="toctree-l3"><a href="#when-a-comment-starts-at-the-begining-of-a-line-after-a-code-block-it-divides-the">When a comment starts at the begining of a line after a code block, it divides the</a></li>
-    
-
-    <li class="toctree-l3"><a href="#source-into-a-code-cell-and-a-markdown-cell-this-markdown-cell-will-continue-until">source into a code cell and a Markdown cell. This Markdown cell will continue until</a></li>
-    
-
-    <li class="toctree-l3"><a href="#next-python-code-appears">next Python code appears.</a></li>
-    
-
-    <li class="toctree-l3"><a href="#despite-of-a-markdown-cell-you-may-want-to-devide-successive-codes-into-separate">Despite of a Markdown cell, you may want to devide successive codes into separate</a></li>
-    
-
-    <li class="toctree-l3"><a href="#cells-this-can-be-done-by-putting-a-special-marker-between-codes-to-tell-pheasant">cells. This can be done by putting a special marker between codes to tell Pheasant</a></li>
-    
-
-    <li class="toctree-l3"><a href="#your-intention-the-marker-is-sharp-space-minus-at-the-begining-of-lines-in">your intention. The marker is # - [sharp-space-minus] at the begining of lines. In</a></li>
-    
-
-    <li class="toctree-l3"><a href="#this-way-you-can-divide-the-above-two-functions-into-separate-cells-regardless-of-its">this way you can divide the above two functions into separate cells (regardless of its</a></li>
-    
-
-    <li class="toctree-l3"><a href="#usefullness">usefullness.)</a></li>
-    
-
-    <li class="toctree-l3"><a href="#-">-</a></li>
-    
-
-    <li class="toctree-l3"><a href="#internal-mechanism">## Internal mechanism</a></li>
-    
-
-    <li class="toctree-l3"><a href="#by-defaults-mkdocs-processes-markdown-files-only-for-pages-this-setting-is-defined">By defaults, MkDocs processes Markdown files only for pages. This setting is defined</a></li>
-    
-
-    <li class="toctree-l3"><a href="#in-the-mkdocss-utility-library-mkdocsutilsmarkdown_extensions-pheasant-plugin">in the MkDocs's utility library: mkdocs.utils.markdown_extensions. Pheasant plugin</a></li>
-    
-
-    <li class="toctree-l3"><a href="#appends-py-to-this-setting-in-the-plugins-on_config-event-function">appends .py to this setting in the Plugin's on_config event function:</a></li>
-    
-
-    <li class="toctree-l3"><a href="#python">~~~python</a></li>
-    
-
-    <li class="toctree-l3"><a href="#class-pheasantpluginbaseplugin">class PheasantPlugin(BasePlugin):</a></li>
-    
-
-    <li class="toctree-l3"><a href="#def-on_configself-config">def on_config(self, config):</a></li>
-    
-
-    <li class="toctree-l3"><a href="#from-mkdocsutils-import-markdown_extensions">from mkdocs.utils import markdown_extensions</a></li>
-    
-
-    <li class="toctree-l3"><a href="#markdown_extensionsappendpy">markdown_extensions.append(".py")</a></li>
-    
-
-    <li class="toctree-l3"><a href="#_1">~~~</a></li>
-    
-
-    <li class="toctree-l3"><a href="#by-this-setting-mkdocs-reads-a-py-file-as-a-markdown-source-then-pheasant-will">By this setting, MkDocs reads a .py file as a Markdown source. Then, Pheasant will</a></li>
-    
-
-    <li class="toctree-l3"><a href="#convert-it-into-a-real-markdown-format-in-order-to-be-processed-by-other-converters">convert it into a real Markdown format in order to be processed by other converters</a></li>
-    
-
-    <li class="toctree-l3"><a href="#later">later.</a></li>
-    
-
-    <li class="toctree-l3"><a href="#fenced-code-block">## Fenced code block</a></li>
-    
-
-    <li class="toctree-l3"><a href="#you-can-write-a-fenced-code-block-in-commented-markdown-source">You can write a fenced code block in commented-Markdown source.</a></li>
-    
-
-    <li class="toctree-l3"><a href="#python_1">~~~python</a></li>
-    
-
-    <li class="toctree-l3"><a href="#python_2"># ```python</a></li>
-    
-
-    <li class="toctree-l3"><a href="#print1"># print(1)</a></li>
-    
-
-    <li class="toctree-l3"><a href="#_2"># ```</a></li>
-    
-
-    <li class="toctree-l3"><a href="#_3">~~~</a></li>
-    
-
-    <li class="toctree-l3"><a href="#becomes">becomes:</a></li>
-    
-
-    <li class="toctree-l3"><a href="#python_3">```python</a></li>
-    
-
-    <li class="toctree-l3"><a href="#print1_1">print(1)</a></li>
-    
-
-    <li class="toctree-l3"><a href="#_4">```</a></li>
-    
-
-    <li class="toctree-l3"><a href="#and">And,</a></li>
-    
-
-    <li class="toctree-l3"><a href="#python_4">~~~python</a></li>
-    
-
-    <li class="toctree-l3"><a href="#_5"># ~~~</a></li>
-    
-
-    <li class="toctree-l3"><a href="#python_5"># ```python</a></li>
-    
-
-    <li class="toctree-l3"><a href="#print1_2"># print(1)</a></li>
-    
-
-    <li class="toctree-l3"><a href="#_6"># ```</a></li>
-    
-
-    <li class="toctree-l3"><a href="#_7"># ~~~</a></li>
-    
-
-    <li class="toctree-l3"><a href="#_8">~~~</a></li>
-    
-
-    <li class="toctree-l3"><a href="#becomes_1">becomes:</a></li>
-    
-
-    <li class="toctree-l3"><a href="#_9">~~~</a></li>
-    
-
-    <li class="toctree-l3"><a href="#python_6">```python</a></li>
-    
-
-    <li class="toctree-l3"><a href="#print1_3">print(1)</a></li>
-    
-
-    <li class="toctree-l3"><a href="#_10">```</a></li>
-    
-
-    <li class="toctree-l3"><a href="#_11">~~~</a></li>
-    
-
-    <li class="toctree-l3"><a href="#comment-writing-package">## Comment writing package</a></li>
-    
-
-    <li class="toctree-l3"><a href="#in-this-scheme-we-have-to-write-many-comments-for-markdown-cells-but-a-linter-such">In this scheme, we have to write many comments for Markdown cells. But a linter such</a></li>
-    
-
-    <li class="toctree-l3"><a href="#as-pycodestyle-doesnt-allow-us-to-write-a-very-long-comment-in-one-line-longer-than">as pycodestyle doesn't allow us to write a very long comment in one line longer than</a></li>
-    
-
-    <li class="toctree-l3"><a href="#for-example-79-characters-this-means-that-we-have-to-write-markdown-source-with">(for example) 79 characters. This means that we have to write 'Markdown source' with</a></li>
-    
-
-    <li class="toctree-l3"><a href="#several-new-line-characters-even-we-are-writing-one-paragraph-in-order-to">several 'New Line' characters even we are writing 'one' paragraph. In order to</a></li>
-    
-
-    <li class="toctree-l3"><a href="#overcome-this-incovenient-situation-a-comment-wrapping-pakage">overcome this incovenient situation, a comment wrapping pakage</a></li>
-    
-
-    <li class="toctree-l3"><a href="#pyls-cwrap-was-prepared-you-can-install">pyls-cwrap was prepared. You can install</a></li>
-    
-
-    <li class="toctree-l3"><a href="#this-package-as-pip-install-pyls-cwrap-in-atom-if-you-use">this package as pip install pyls-cwrap. In Atom, if you use</a></li>
-    
-
-    <li class="toctree-l3"><a href="#ide-python-just-press-ctrlshiftc">ide-python, just press [Ctrl]+[Shift]+[C]</a></li>
-    
-
-    <li class="toctree-l3"><a href="#windows-default-setting-sequential-comments-are-automatically-formatted">(Windows, default setting), sequential comments are automatically formatted.</a></li>
+    <li class="toctree-l3"><a href="#4-standalone-script">4 Standalone Script</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l4" href="#41-how-to">4.1 How to</a></li>
+        
+            <li><a class="toctree-l4" href="#42-internal-mechanism">4.2 Internal mechanism</a></li>
+        
+            <li><a class="toctree-l4" href="#43-fenced-code-block">4.3 Fenced code block</a></li>
+        
+            <li><a class="toctree-l4" href="#44-comment-writing-package">4.4 Comment writing package</a></li>
+        
+        </ul>
     
 
     </ul>
@@ -339,89 +142,55 @@
           <div role="main">
             <div class="section">
               
-                <h1 id="standalone-script"># Standalone Script</h1>
-<h1 id="using-atoms-hydorgen-package-you-can">Using Atom's <a href="https://nteract.gitbooks.io/hydrogen/">Hydorgen</a> package, you can</h1>
-<h1 id="execute-any-python-script-codes-in-a-markdown-source-so-you-can-edit-your-markdown">execute any Python script codes in a Markdown source. So you can edit your Markdown</h1>
-<h1 id="verifying-its-execution-and-outputs-but-unfortunately-as-long-as-i-know-the-entire">verifying its execution and outputs. But unfortunately (as long as I know), the entire</h1>
-<h1 id="markdown-source-cannot-be-executed-all-at-once-as-a-standalone-script-and-cannot-be">Markdown source cannot be executed all at once as a standalone script and cannot be</h1>
-<h1 id="ran-by-python-interpreter-pheasant-connects-between-a-pure-python-script-and-a">ran by Python interpreter. Pheasant connects between a pure Python script and a</h1>
-<h1 id="markdown-source-for-mkdocs-actually-this-page-is-written-by-a-pure-python-code">Markdown source for MkDocs. Actually, this page is written by a pure Python code.</h1>
-<h1 id="how-to">## How to</h1>
-<h1 id="a-basic-idea-is-that-markdown-cells-and-code-cells-generally-appear-alternately-we">A basic idea is that Markdown cells and code cells generally appear alternately. We</h1>
-<h1 id="can-write-a-markdown-cell-with-a-successive-comment-lines-in-order-to-be-recognized">can write a Markdown cell with a successive comment lines. In order to be recognized</h1>
-<h1 id="as-a-markdown-cell-must-be-at-the-begining-of-lines-but-we-can-insert-a-blank">as a Markdown cell, <code>#</code> must be at the begining of lines. But we can insert a blank</h1>
-<h1 id="line-in-a-markdown-cell-without-to-make-a-paragraph">line in a Markdown cell without <code>#</code> to make a paragraph.</h1>
-<h1 id="python-code-block-is-treated-as-a-code-cell-as-you-expect-if-a-comment-is-not-at-the">Python code block is treated as a code cell as you expect. If a comment is not at the</h1>
-<h1 id="begining-of-line-a-code-cell-can-contain-comments">begining of line, a code cell can contain comments.</h1>
-<p>def add(x: int, y: int) -&gt; int:
-    """Add <code>x</code> and <code>y</code>."""
+                <h1 id="4-standalone-script"><span class="pheasant-header"><span class="header"><span class="number">4</span> <span class="title">Standalone Script</span></span></span></h1>
+<p>Using Atom's <a href="https://nteract.gitbooks.io/hydrogen/">Hydorgen</a> package, you can execute any Python script codes in a Markdown source. So you can edit your Markdown verifying its execution and outputs. But unfortunately (as long as I know), the entire Markdown source cannot be executed all at once as a standalone script and cannot be ran by Python interpreter. Pheasant connects between a pure Python script and a Markdown source for MkDocs. Actually, this page is written by a pure Python code.</p>
+<h2 id="41-how-to"><span class="pheasant-header"><span class="header"><span class="number">4.1</span> <span class="title">How to</span></span></span></h2>
+<p>A basic idea is that Markdown cells and code cells generally appear alternately. We can write a Markdown cell with a successive comment lines. In order to be recognized as a Markdown cell, <code>#</code> must be at the begining of lines. But we can insert a blank line in a Markdown cell without <code>#</code> to make a paragraph.</p>
+<p>Python code block is treated as a code cell as you expect. If a comment is not at the begining of line, a code cell can contain comments.
+<div class="pheasant-fenced-code"><div class="input"><pre><code class="python">def add(x: int, y: int) -&gt; int:
+    &#34;&#34;&#34;Add <code>x</code> and <code>y</code>.&#34;&#34;&#34;
     return x + y  # a comment in a code cell.</p>
 <p>def sub(x: int, y: int) -&gt; int:
-    """Substract <code>y</code> from <code>x</code>."""
-    return x - y  # a comment in a code cell.</p>
-<h1 id="when-a-comment-starts-at-the-begining-of-a-line-after-a-code-block-it-divides-the">When a comment starts at the begining of a line after a code block, it divides the</h1>
-<h1 id="source-into-a-code-cell-and-a-markdown-cell-this-markdown-cell-will-continue-until">source into a code cell and a Markdown cell. This Markdown cell will continue until</h1>
-<h1 id="next-python-code-appears">next Python code appears.</h1>
-<h1 id="despite-of-a-markdown-cell-you-may-want-to-devide-successive-codes-into-separate">Despite of a Markdown cell, you may want to devide successive codes into separate</h1>
-<h1 id="cells-this-can-be-done-by-putting-a-special-marker-between-codes-to-tell-pheasant">cells. This can be done by putting a special marker between codes to tell Pheasant</h1>
-<h1 id="your-intention-the-marker-is-sharp-space-minus-at-the-begining-of-lines-in">your intention. The marker is <code># -</code> [sharp-space-minus] at the begining of lines. In</h1>
-<h1 id="this-way-you-can-divide-the-above-two-functions-into-separate-cells-regardless-of-its">this way you can divide the above two functions into separate cells (regardless of its</h1>
-<h1 id="usefullness">usefullness.)</h1>
-<p>def add2(x: int, y: int) -&gt; int:
-    """Add <code>x</code> and <code>y</code>."""
-    return x + y  # a comment in a code cell.</p>
-<h1 id="-">-</h1>
-<p>def sub2(x: int, y: int) -&gt; int:
-    """Substract <code>y</code> from <code>x</code>."""
-    return x - y  # a comment in a code cell.</p>
-<h1 id="internal-mechanism">## Internal mechanism</h1>
-<h1 id="by-defaults-mkdocs-processes-markdown-files-only-for-pages-this-setting-is-defined">By defaults, MkDocs processes Markdown files only for pages. This setting is defined</h1>
-<h1 id="in-the-mkdocss-utility-library-mkdocsutilsmarkdown_extensions-pheasant-plugin">in the MkDocs's utility library: <code>mkdocs.utils.markdown_extensions</code>. Pheasant plugin</h1>
-<h1 id="appends-py-to-this-setting-in-the-plugins-on_config-event-function">appends <code>.py</code> to this setting in the Plugin's <code>on_config</code> event function:</h1>
-<h1 id="python">~~~python</h1>
-<h1 id="class-pheasantpluginbaseplugin">class PheasantPlugin(BasePlugin):</h1>
-<h1 id="def-on_configself-config">def on_config(self, config):</h1>
-<h1 id="from-mkdocsutils-import-markdown_extensions">from mkdocs.utils import markdown_extensions</h1>
-<h1 id="markdown_extensionsappendpy">markdown_extensions.append(".py")</h1>
-<h1 id="_1">~~~</h1>
-<h1 id="by-this-setting-mkdocs-reads-a-py-file-as-a-markdown-source-then-pheasant-will">By this setting, MkDocs reads a <code>.py</code> file as a Markdown source. Then, Pheasant will</h1>
-<h1 id="convert-it-into-a-real-markdown-format-in-order-to-be-processed-by-other-converters">convert it into a real Markdown format in order to be processed by other converters</h1>
-<h1 id="later">later.</h1>
-<h1 id="fenced-code-block">## Fenced code block</h1>
-<h1 id="you-can-write-a-fenced-code-block-in-commented-markdown-source">You can write a fenced code block in commented-Markdown source.</h1>
-<h1 id="python_1">~~~python</h1>
-<h1 id="python_2"># <sapn>```</span>python</h1>
-<h1 id="print1"># print(1)</h1>
-<h1 id="_2"># <span>```</sanp></h1>
-<h1 id="_3">~~~</h1>
-<h1 id="becomes">becomes:</h1>
-<h1 id="python_3">```python</h1>
-<h1 id="print1_1">print(1)</h1>
-<h1 id="_4">```</h1>
-<h1 id="and">And,</h1>
-<h1 id="python_4">~~~python</h1>
-<h1 id="_5"># <span>~~~</span></h1>
-<h1 id="python_5"># <sapn>```</span>python</h1>
-<h1 id="print1_2"># print(1)</h1>
-<h1 id="_6"># <span>```</sanp></h1>
-<h1 id="_7"># <span>~~~</span></h1>
-<h1 id="_8">~~~</h1>
-<h1 id="becomes_1">becomes:</h1>
-<h1 id="_9">~~~</h1>
-<h1 id="python_6">```python</h1>
-<h1 id="print1_3">print(1)</h1>
-<h1 id="_10">```</h1>
-<h1 id="_11">~~~</h1>
-<h1 id="comment-writing-package">## Comment writing package</h1>
-<h1 id="in-this-scheme-we-have-to-write-many-comments-for-markdown-cells-but-a-linter-such">In this scheme, we have to write many comments for Markdown cells. But a linter such</h1>
-<h1 id="as-pycodestyle-doesnt-allow-us-to-write-a-very-long-comment-in-one-line-longer-than">as pycodestyle doesn't allow us to write a very long comment in one line longer than</h1>
-<h1 id="for-example-79-characters-this-means-that-we-have-to-write-markdown-source-with">(for example) 79 characters. This means that we have to write 'Markdown source' with</h1>
-<h1 id="several-new-line-characters-even-we-are-writing-one-paragraph-in-order-to">several 'New Line' characters even we are writing 'one' paragraph. In order to</h1>
-<h1 id="overcome-this-incovenient-situation-a-comment-wrapping-pakage">overcome this incovenient situation, a comment wrapping pakage</h1>
-<h1 id="pyls-cwrap-was-prepared-you-can-install"><a href="https://github.com/daizutabi/pyls-cwrap"><code>pyls-cwrap</code></a> was prepared. You can install</h1>
-<h1 id="this-package-as-pip-install-pyls-cwrap-in-atom-if-you-use">this package as <code>pip install pyls-cwrap</code>. In Atom, if you use</h1>
-<h1 id="ide-python-just-press-ctrlshiftc"><a href="https://atom.io/packages/ide-python"><code>ide-python</code></a>, just press [Ctrl]+[Shift]+[C]</h1>
-<h1 id="windows-default-setting-sequential-comments-are-automatically-formatted">(Windows, default setting), sequential comments are automatically formatted.</h1>
+    &#34;&#34;&#34;Substract <code>y</code> from <code>x</code>.&#34;&#34;&#34;
+    return x - y  # a comment in a code cell.</code></pre></div></div>
+When a comment starts at the begining of a line after a code block, it divides the source into a code cell and a Markdown cell. This Markdown cell will continue until next Python code appears.</p>
+<p>Despite of a Markdown cell, you may want to devide successive codes into separate cells. This can be done by putting a special marker between codes to tell Pheasant your intention. The marker is <code># -</code> [sharp-space-minus] at the begining of lines. In this way you can divide the above two functions into separate cells (regardless of its usefullness.)
+<div class="pheasant-fenced-code"><div class="input"><pre><code class="python">def add2(x: int, y: int) -&gt; int:
+    &#34;&#34;&#34;Add <code>x</code> and <code>y</code>.&#34;&#34;&#34;
+    return x + y  # a comment in a code cell.</code></pre></div></div>
+<div class="pheasant-fenced-code"><div class="input"><pre><code class="python">def sub2(x: int, y: int) -&gt; int:
+    &#34;&#34;&#34;Substract <code>y</code> from <code>x</code>.&#34;&#34;&#34;
+    return x - y  # a comment in a code cell.</code></pre></div></div></p>
+<h2 id="42-internal-mechanism"><span class="pheasant-header"><span class="header"><span class="number">4.2</span> <span class="title">Internal mechanism</span></span></span></h2>
+<p>By defaults, MkDocs processes Markdown files only for pages. This setting is defined in the MkDocs's utility library: <code>mkdocs.utils.markdown_extensions</code>. Pheasant plugin appends <code>.py</code> to this setting in the Plugin's <code>on_config</code> event function:</p>
+<div class="pheasant-fenced-code"><div class="source"><pre><code class="python">class PheasantPlugin(BasePlugin):
+    def on_config(self, config):
+        from mkdocs.utils import markdown_extensions
+        markdown_extensions.append(&#34;.py&#34;)</code></pre></div></div>
+
+<p>By this setting, MkDocs reads a <code>.py</code> file as a Markdown source. Then, Pheasant will convert it into a real Markdown format in order to be processed by other converters later.</p>
+<h2 id="43-fenced-code-block"><span class="pheasant-header"><span class="header"><span class="number">4.3</span> <span class="title">Fenced code block</span></span></span></h2>
+<p>You can write a fenced code block in commented-Markdown source.</p>
+<div class="pheasant-fenced-code"><div class="source"><pre><code class="python"># &lt;sapn&gt;```&lt;/span&gt;python
+# print(1)
+# &lt;span&gt;```&lt;/sanp&gt;</code></pre></div></div>
+
+<p>becomes:</p>
+<div class="pheasant-fenced-code"><div class="input"><pre><code class="python">print(1)</code></pre></div><div class="stdout"><pre><code class="python">1</code></pre></div></div>
+
+<p>And,</p>
+<div class="pheasant-fenced-code"><div class="source"><pre><code class="python"># &lt;span&gt;~~~&lt;/span&gt;
+# &lt;sapn&gt;```&lt;/span&gt;python
+# print(1)
+# &lt;span&gt;```&lt;/sanp&gt;
+# &lt;span&gt;~~~&lt;/span&gt;</code></pre></div></div>
+
+<p>becomes:</p>
+<pre><code>&lt;div class=&quot;pheasant-fenced-code&quot;&gt;&lt;div class=&quot;input&quot;&gt;&lt;pre&gt;&lt;code class=&quot;python&quot;&gt;print(1)&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&quot;stdout&quot;&gt;&lt;pre&gt;&lt;code class=&quot;python&quot;&gt;1&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+</code></pre>
+
+<h2 id="44-comment-writing-package"><span class="pheasant-header"><span class="header"><span class="number">4.4</span> <span class="title">Comment writing package</span></span></span></h2>
+<p>In this scheme, we have to write many comments for Markdown cells. But a linter such as pycodestyle doesn't allow us to write a very long comment in one line longer than (for example) 79 characters. This means that we have to write 'Markdown source' with several 'New Line' characters even we are writing 'one' paragraph. In order to overcome this incovenient situation, a comment wrapping pakage <a href="https://github.com/daizutabi/pyls-cwrap"><code>pyls-cwrap</code></a> was prepared. You can install this package as <code>pip install pyls-cwrap</code>. In Atom, if you use <a href="https://atom.io/packages/ide-python"><code>ide-python</code></a>, just press [Ctrl]+[Shift]+[C] (Windows, default setting), sequential comments are automatically formatted.</p>
               
             </div>
           </div>

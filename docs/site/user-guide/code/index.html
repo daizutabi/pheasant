@@ -14,6 +14,7 @@
   <link rel="stylesheet" href="../../css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../css/theme_extra.css" type="text/css" />
   <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+  <link href="../../css/pheasant.css" rel="stylesheet">
   
   <script>
     // Current page data
@@ -62,13 +63,13 @@
     <a class="current" href="./">Code</a>
     <ul class="subnav">
             
-    <li class="toctree-l3"><a href="#inspect-and-load-codes">Inspect and Load Codes</a></li>
+    <li class="toctree-l3"><a href="#3-inspect-and-load-codes">3 Inspect and Load Codes</a></li>
     
         <ul>
         
-            <li><a class="toctree-l4" href="#file-system">File system</a></li>
+            <li><a class="toctree-l4" href="#31-file-system">3.1 File system</a></li>
         
-            <li><a class="toctree-l4" href="#python-module-source">Python module source</a></li>
+            <li><a class="toctree-l4" href="#32-python-module-source">3.2 Python module source</a></li>
         
         </ul>
     
@@ -137,46 +138,125 @@
           <div role="main">
             <div class="section">
               
-                <h1 id="inspect-and-load-codes">Inspect and Load Codes</h1>
+                <h1 id="3-inspect-and-load-codes"><span class="pheasant-header"><span class="header"><span class="number">3</span> <span class="title">Inspect and Load Codes</span></span></span></h1>
 <p>Pheasant can read codes from a file system or Python module.</p>
-<h2 id="file-system">File system</h2>
+<h2 id="31-file-system"><span class="pheasant-header"><span class="header"><span class="number">3.1</span> <span class="title">File system</span></span></span></h2>
 <p>Any text files are read from file system by Pheasant's extended Markdown syntax: <code>![#file](&lt;file name&gt;)</code>. For example,</p>
-<pre><code>![file](mkdocs.yml)
+<pre><code>&lt;div class=&quot;pheasant-inline-code&quot;&gt;&lt;div class=&quot;source&quot;&gt;&lt;pre&gt;&lt;code class=&quot;python&quot;&gt;site_name: Pheasant
+site_url: https://pheasant.daizutabi.net/
+site_description: Project documentation with MkDocs.
+site_author: daizutabi
+
+repo_url: https://github.com/daizutabi/pheasant/
+edit_uri: &amp;#34;&amp;#34;
+
+theme: readthedocs
+
+plugins:
+  - pheasant:
+      bar: 10
+    # - jupyter:
+    #   - kernel_name:
+    #       python: python3
+    # - number:
+    #     ignored_path: &amp;#34;*/about/*&amp;#34;
+
+nav:
+  - Home: index.md
+  - User Guide:
+    - Images: user-guide/images.md
+    - Code: user-guide/code.md
+    - Script: user-guide/script.py
+    - Macro: user-guide/macro.md
+  - About:
+    - Release Notes: about/release-notes.md
+    - License: about/license.md
+
+markdown_extensions:
+  - admonition
+  - pymdownx.arithmatex
+#   - attr_list&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 </code></pre>
 
 <p>writes the content of this document's <code>mkdocs.yml</code>:</p>
-<p><img alt="file" src="mkdocs.yml" /></p>
+<div class="pheasant-inline-code"><div class="source"><pre><code class="python">site_name: Pheasant
+site_url: https://pheasant.daizutabi.net/
+site_description: Project documentation with MkDocs.
+site_author: daizutabi
+
+repo_url: https://github.com/daizutabi/pheasant/
+edit_uri: &#34;&#34;
+
+theme: readthedocs
+
+plugins:
+  - pheasant:
+      bar: 10
+    # - jupyter:
+    #   - kernel_name:
+    #       python: python3
+    # - number:
+    #     ignored_path: &#34;*/about/*&#34;
+
+nav:
+  - Home: index.md
+  - User Guide:
+    - Images: user-guide/images.md
+    - Code: user-guide/code.md
+    - Script: user-guide/script.py
+    - Macro: user-guide/macro.md
+  - About:
+    - Release Notes: about/release-notes.md
+    - License: about/license.md
+
+markdown_extensions:
+  - admonition
+  - pymdownx.arithmatex
+#   - attr_list</code></pre></div></div>
+
 <p>The root directory of a relative path is the directory where <code>mkdocs.yml</code> exists.</p>
 <p>If the file is too long to display the whole content, you can specify the lines as the same way that Python does with the slice notation. Use <code>&lt;</code> and <code>&gt;</code> insted of <code>[</code> and <code>]</code> because <code>[</code> and <code>]</code> can be a part of a file name.</p>
-<pre><code class="copy">![file](mkdocs.yml&lt;5:10&gt;)
-</code></pre>
+<div class="source"><pre><code class="markdown">![file](mkdocs.yml&lt;5:10&gt;)</code></pre></div>
+
+<p style="font-color:red">File not found: mkdocs.yml<5:10></p>
 
 <p>When you want to specify a language, write like below after <code>?</code> character:</p>
-<pre><code>![file](example.js&lt;:10&gt;?javascript)
+<pre><code>&lt;p style=&quot;font-color:red&quot;&gt;File not found: example.js&lt;:10&gt;?javascript&lt;/p&gt;
 </code></pre>
 
 <p>Imported file can be numbered like figures and tables. Use this shorthand notation:</p>
-<pre><code class="copy">#![file](pheasant.yml)
-</code></pre>
+<div class="pheasant-fenced-code"><div class="source"><pre><code class="markdown">#![file](pheasant.yml)</code></pre></div>
+<div class="pheasant-inline-code"><div class="pheasant-header"><div class="file"><p><span class="prefix">File</span> <span class="number">1</span>
+<span class="title">pheasant.yml</span>
+<div class="content"><p style="font-color:red">File not found: pheasant.yml</p>
+</div></div></div></div></div>
 
 <p>The above file is the real config file of this Pheasant document.</p>
-<h2 id="python-module-source">Python module source</h2>
+<h2 id="32-python-module-source"><span class="pheasant-header"><span class="header"><span class="number">3.2</span> <span class="title">Python module source</span></span></span></h2>
 <p>Python module sources that the current Jupyter kernel can find are also inspected. Now Pheasant is configured like the above <code>phesant.yml</code> settings,
 the kernel's <code>sys.path</code> includes the <code>scripts</code> directory and the module <code>example</code> has already imported.</p>
-<pre><code class="python">import sys
-sys.path[:5]
-</code></pre>
+<div class="pheasant-fenced-code"><div class="input"><pre><code class="python">import sys
+sys.path[:5]</code></pre></div><div class="output"><pre><code class="python">[&#39;&#39;,
+ &#39;c:\\users\\daizu\\documents\\github\\pheasant\\docs&#39;,
+ &#39;C:\\Users\\daizu\\Miniconda3\\envs\\daizu\\python37.zip&#39;,
+ &#39;C:\\Users\\daizu\\Miniconda3\\envs\\daizu\\DLLs&#39;,
+ &#39;C:\\Users\\daizu\\Miniconda3\\envs\\daizu\\lib&#39;]</code></pre></div></div>
 
-<pre><code class="python">example
-</code></pre>
+<div class="pheasant-fenced-code"><div class="input"><pre><code class="python">example</code></pre></div><div class="error"><pre><code class="python">NameError: name &#39;example&#39; is not defined</code></pre></div></div>
 
 <p>You can write to inspect the whole module content:</p>
-<pre><code class="copy">#![python](example)
-</code></pre>
+<div class="pheasant-fenced-code"><div class="source"><pre><code class="markdown">#![python](example)</code></pre></div>
+<div class="pheasant-inline-code"><div class="pheasant-header"><div class="code"><p><span class="prefix">Code</span> <span class="number">1</span>
+<span class="title">example</span>
+<div class="content"><div class="source"><pre><code class="python">inspect error</code></pre></div>
+</div></div></div></div></div>
 
 <p>A part of the module can be specified as usual.</p>
-<pre><code class="copy">#![python](example.sub)
-</code></pre>
+<div class="pheasant-fenced-code"><div class="source"><pre><code class="markdown">#![python](example.sub)</code></pre></div>
+<div class="pheasant-inline-code"><div class="pheasant-header"><div class="code"><p><span class="prefix">Code</span> <span class="number">2</span>
+<span class="title">example.sub</span>
+<div class="content"><div class="source"><pre><code class="python">inspect error</code></pre></div>
+</div></div></div></div></div>
 
 <p>With this functionality, you can guarantee the reproducible relation between your source code and results easily.</p>
               
