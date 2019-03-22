@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 kernel_names: Dict[str, list] = {}
 kernel_managers: Dict[str, Any] = {}
 kernel_clients: Dict[str, Any] = {}
-execution_time = {"total": datetime.timedelta(0)}
+execution_report = {"total": datetime.timedelta(0)}
 
 
 def find_kernel_names() -> Dict[str, list]:
@@ -125,9 +125,13 @@ def execute(
 
     start_time = msg["parent_header"]["date"].astimezone()
     end_time = msg["header"]["date"].astimezone()
-    execution_time["start"] = start_time
-    execution_time["end"] = end_time
-    execution_time["total"] += end_time - start_time
+    msg["parent_header"]["date"] = start_time
+    msg["header"]["date"] = end_time
+    execution_report["start"] = start_time
+    execution_report["end"] = end_time
+    execution_report["total"] += end_time - start_time
+    execution_report["execution_count"] = msg["content"]["execution_count"]
+    execution_report["message"] = msg
     return outputs
 
 
@@ -173,6 +177,3 @@ def strip_ansi(source: str) -> str:
         Source to remove the ANSI from
     """
     return _ANSI_RE.sub("", source)
-
-
-execute("print(1)")

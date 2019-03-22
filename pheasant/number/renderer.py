@@ -23,7 +23,7 @@ class Header(Renderer):
         self.set_template("header")
         self.config["kind_prefix"] = {}
         self.header_kind[""] = "header"
-        for kind in ['figure', 'table', 'code', 'file']:
+        for kind in ["figure", "table", "code", "file"]:
             self.header_kind[kind[:3].lower()] = kind
             self.config["kind_prefix"][kind] = kind[0].upper() + kind[1:]
         self.config["kind"] = list(self.header_kind.values())
@@ -51,6 +51,7 @@ class Header(Renderer):
         number_list = normalize_number_list(kind, number_list, self.page_index)
         number_string = number_list_format(number_list)
         title, tag = split_tag(context["title"])
+        title, inline_code = split_inline_code(title)
 
         context_ = {
             "kind": kind,
@@ -74,27 +75,29 @@ class Header(Renderer):
             yield self.render("header", context_) + "\n"
         else:
             # Need to detect the range of a numbered object.
-            cell = next(splitter)
-            if cell.match:
-                content = "".join(cell.render(cell.context, splitter, parser))
-                rest = ""
+            rest = ""
+            if inline_code:
+                content = "".join(parser.parse(inline_code, decorate=False))
             else:
-                content = cell.source
-                if content.startswith(self.config["begin_pattern"]):
-                    content = content[len(self.config["begin_pattern"]) :]
-                    content, *rests = content.split(self.config["end_pattern"])
-                    rest = self.config["end_pattern"].join(rests)
+                cell = next(splitter)
+                if cell.match:
+                    content = "".join(cell.render(cell.context, splitter, parser))
                 else:
-                    index = content.find("\n\n")
-                    if index == -1:
-                        content, rest = content, ""
+                    content = cell.source
+                    if content.startswith(self.config["begin_pattern"]):
+                        content = content[len(self.config["begin_pattern"]) :]
+                        content, *rests = content.split(self.config["end_pattern"])
+                        rest = self.config["end_pattern"].join(rests)
                     else:
-                        content, rest = content[:index], content[index + 2 :]
-
-                content = markdown.convert(content)
+                        index = content.find("\n\n")
+                        if index == -1:
+                            content, rest = content, ""
+                        else:
+                            content, rest = content[:index], content[index + 2 :]
+                    content = markdown.convert(content)
             yield self.render("header", context_, content=content) + "\n"
-            if rest:
-                yield rest
+            # if rest:
+            #     yield rest
 
 
 class Anchor(Renderer):
@@ -110,8 +113,12 @@ class Anchor(Renderer):
         if self.header is None:
             raise ValueError("A Header instance has not set yet.")
         tag = context["tag"]
-        context = self.resolve(tag)
-        yield self.render("anchor", context, reference=True)
+
+        if context["tag"].startswith("#"):
+            yield context["_source"].replace(context["tag"], context["tag"][1:])
+        else:
+            context = self.resolve(tag)
+            yield self.render("anchor", context, reference=True)
 
     def resolve(self, tag: str) -> Dict[str, Any]:
         tag_context = self.header.tag_context  # type: ignore
@@ -193,5 +200,26 @@ def split_tag(title: str) -> Tuple[str, str]:
     match = re.search(Header.TAG_PATTERN, title)
     if match:
         return title.replace(match.group(), "").strip(), match.group(1)
+    else:
+        return title, ""
+
+
+def split_inline_code(title: str) -> Tuple[str, str]:
+    """Split an inline code from `title`. Return (title, inline code).
+
+    Parameters
+    ----------
+    title
+        header text
+
+    Returns
+    -------
+    (title, inline code)
+    """
+    from pheasant.jupyter.renderer import Jupyter
+
+    match = re.search(Jupyter.INLINE_CODE_PATTERN, title)
+    if match:
+        return title.replace(match.group(), "").strip(), match.group()
     else:
         return title, ""

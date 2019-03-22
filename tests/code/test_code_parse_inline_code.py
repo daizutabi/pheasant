@@ -63,7 +63,7 @@ def test_code_parse_inspect(parse):
 
 def test_code_parse_inspect_not_found(parse):
     output = parse("", "xxx", "xxx")
-    assert output == '<p style="font-color:red">xxx not supported</p>\n'
+    assert output.startswith('<p><img alt="xxx"')
 
 
 def test_code_parse_file_with_header(file):

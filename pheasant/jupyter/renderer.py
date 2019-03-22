@@ -2,7 +2,8 @@ import re
 from typing import Iterator, List, Match
 
 from pheasant.core.renderer import Renderer
-from pheasant.jupyter.client import execute, find_kernel_names
+from pheasant.jupyter.client import (execute, execution_report,
+                                     find_kernel_names)
 from pheasant.jupyter.display import (bokeh_extra_resources,
                                       holoviews_extra_resources,
                                       select_display_data)
@@ -46,12 +47,20 @@ class Jupyter(Renderer):
         if "inline" in context["option"]:
             context["code"] = preprocess_fenced_code(context["code"])
         outputs = self.execute(code=context["code"], language=context["language"])
-        return super().render("fenced_code", context, outputs=outputs) + "\n"
+        output = super().render(
+            "fenced_code", context, outputs=outputs, report=execution_report
+        )
+        yield output + "\n"
 
     def render_inline_code(self, context, splitter, parser) -> Iterator[str]:
+        if context["code"].startswith("#"):
+            yield context["_source"].replace(context["code"], context["code"][1:])
+            return
+
         context["code"] = preprocess_inline_code(context["code"])
         if "language" not in context:
             context["language"] = "python"
+
         outputs = self.execute(code=context["code"], language=context["language"])
         for output in outputs:
             if "data" in output and "text/plain" in output["data"]:
@@ -66,7 +75,7 @@ class Jupyter(Renderer):
                     output for output in outputs if output["type"] == "display_data"
                 ]
                 break
-        return super().render("inline_code", context, outputs=outputs)
+        yield super().render("inline_code", context, outputs=outputs)
 
     def execute(self, code: str, language: str = "python") -> List:
         if language not in self.config["kernel_name"]:

@@ -122,6 +122,19 @@ def _split_css_html_assets(css_html: str) -> Dict[str, List[str]]:
     return {"extra_css": extra_css, "extra_raw_css": extra_raw_css}
 
 
+def extra_html(extra: Dict[str, List[str]]) -> str:
+    return "\n".join(
+        [
+            f'<link href="{css}" rel="stylesheet"/>'
+            for css in extra["extra_css"]
+            if "bokeh-" in css
+        ]
+        + extra["extra_raw_css"]
+        + [f'<script src="{js}"></script>' for js in extra["extra_javascript"]]
+        + extra["extra_raw_javascript"]
+    )
+
+
 CONVERTERS: Dict[str, Callable] = {
     "matplotlib": matplotlib_to_base64,
     "pandas": pandas_to_html,

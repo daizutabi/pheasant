@@ -1,8 +1,7 @@
 import io
 from collections import OrderedDict
 from dataclasses import field
-from functools import partial
-from typing import Any, Callable, Dict, Iterable, Optional, Union
+from typing import Any, Dict, Iterable, Optional, Union
 
 from pheasant.core.base import Base
 from pheasant.core.decorator import Decorator
@@ -99,12 +98,19 @@ class Converter(Base):
     ) -> str:
         with io.open(path, "r", encoding="utf-8-sig", errors="strict") as f:
             source = f.read()
-        self.pages[path] = Page(path, source=source)  # type: ignore
-        self.pages[path].output = self.convert(self.pages[path].source, names)
-        return self.pages[path].output
+
+        break_str = "<!-- break -->"
+        if break_str in source:
+            source = source.split(break_str)[0]
+
+        page = Page(path, source=source)  # type: ignore
+        self.pages[path] = page
+        page.output = self.convert(source, names)
+        return page.output
 
     def convert_from_output(
         self, path: str, names: Optional[Union[str, Iterable[str]]] = None
     ) -> str:
-        self.pages[path].output = self.convert(self.pages[path].output, names)
-        return self.pages[path].output
+        page = self.pages[path]
+        page.output = self.convert(page.output, names)
+        return page.output

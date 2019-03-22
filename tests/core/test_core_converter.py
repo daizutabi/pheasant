@@ -1,15 +1,14 @@
 import re
 
 from pheasant.core.converter import Converter
-from pheasant.jupyter.renderer import Jupyter
 from pheasant.number.renderer import Header
 
 
-def test_converter():
+def test_converter(jupyter):
     converter = Converter()
     assert converter.convert("abc") == "abc"
 
-    converter.register("markdown", [Jupyter(), Header()])
+    converter.register("markdown", [jupyter, Header()])
     assert len(converter.parsers) == 1
 
     output = converter.convert("abd\n# a\n## b\n```python\n2*3\n```\n")
@@ -38,8 +37,7 @@ def test_multiple_parser(converter):
     output = converter.convert(source, ["preprocess", "postprocess"])
     output = re.sub(r"(\<.*?\>)|\n", "", output)
     answer = (
-        "# 1 titletext [1](.#a)## 1.1 "
-        "section1/0ZeroDivisionError: division by zero"
+        "# 1 titletext [1](.#a)## 1.1 " "section1/0ZeroDivisionError: division by zero"
     )
     assert output == answer
     header.reset()

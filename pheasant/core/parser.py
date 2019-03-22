@@ -28,9 +28,8 @@ class Parser(Base):
         self.renders[render_name] = render
         return cell_class
 
-    def parse(self, source: str, decorate=None) -> Iterator[str]:
+    def parse(self, source: str, decorate=True) -> Iterator[str]:
         splitter = self.split(source)
-        next(splitter)
         for cell in splitter:
             if cell.match:
                 cell.output = "".join(
@@ -38,10 +37,9 @@ class Parser(Base):
                 )
             else:
                 cell.output = cell.source
-            if decorate:
-                decorate(cell)
-            elif self.decorator:
+            if decorate is True and self.decorator:
                 self.decorator.decorate(cell)
+                # decorate(cell)
 
             yield cell.output
 
@@ -54,22 +52,23 @@ class Parser(Base):
                 "|".join(self.patterns.values()), re.MULTILINE | re.DOTALL
             )
 
-        def get(cell, attr=None):
-            if attr is None:
-                return cell
-            else:
-                return getattr(cell, attr)
+        def resplit(rework: Optional[str]) -> Splitter:
+            if rework is not None:
+                yield
+                yield from self.split(rework)
 
         cursor = 0
-        attr = yield
         for match in self.pattern.finditer(source):
             start, end = match.start(), match.end()
             if cursor < start:
-                attr = yield get(Cell(source[cursor:start], None, ""), attr)
-            attr = yield get(self.resolve(match), attr)
+                rework = yield Cell(source[cursor:start], None, "")
+                yield from resplit(rework)
+            rework = yield self.resolve(match)
+            yield from resplit(rework)
             cursor = end
         if cursor < len(source):
-            yield get(Cell(source[cursor:], None, ""), attr)
+            rework = yield Cell(source[cursor:], None, "")
+            yield from resplit(rework)
 
     def resolve(self, match: Match[str]) -> Any:  # Acually, Any is Cell-based instance.
         """Resolve a Match object and return a dataclass instance called `cell`.
@@ -103,5 +102,5 @@ class Parser(Base):
             for key, value in groupdict.items()
             if value is not None
         }
-        source = context.pop("_source")  # FIXME: context["_source"] is better?
+        source = context["_source"]
         return self.cell_classes[render_name](source, match, "", context)

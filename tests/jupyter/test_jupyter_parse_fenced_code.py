@@ -72,11 +72,3 @@ def test_jupyter_parse_png(parse):
     print(output)
     assert '<div class="output"><pre><code class="python">[&lt;matplot' in output
     assert '<div class="display"><p><img alt="image/png" src="data:image/png' in output
-
-
-
-# from pheasant.jupyter.renderer import Jupyter
-# jupyter = Jupyter()
-#
-# jupyter.execute('import matplotlib.pyplot as plt')
-# jupyter.execute('plt.plot([1,2])')

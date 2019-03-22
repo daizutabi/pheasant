@@ -1,5 +1,5 @@
-import codecs
 import os
+from pheasant.core import markdown
 from ast import literal_eval
 from typing import Iterator
 
@@ -10,7 +10,7 @@ from pheasant.jupyter.client import execute, get_kernel_name
 class Code(Renderer):
 
     FENCED_CODE_PATTERN = (
-        r"^(?P<mark>~{3,})(?P<language>\w+) ?(?P<option>.*?)\n"
+        r"^(?P<mark>~{3,})(?P<language>\w*) ?(?P<option>.*?)\n"
         r"(?P<source>.*?)\n(?P=mark)\n"
     )
     INLINE_CODE_PATTERN = r"^(?P<header>#?)!\[(?P<language>\w+?)\]\((?P<source>.+?)\)\n"
@@ -26,12 +26,14 @@ class Code(Renderer):
             context["language"] = "markdown"
             copy = True
         else:
+            if not context["language"]:
+                context["language"] = "markdown"
             copy = False
         yield self.render("fenced_code", context)
 
         if copy:
             yield "\n"  # important.
-            yield from parser.parse(context["source"] + "\n")
+            yield from parser.parse(context["source"] + "\n", decorate=False)
 
     def render_inline_code(self, context, splitter, parser) -> Iterator[str]:
         language = context["language"]
@@ -39,10 +41,9 @@ class Code(Renderer):
             header = "Code" if language == "python" else "File"
             source = context["source"]
             source = f"#{header} {source}\n![{language}]({source})\n"
-            yield from parser.parse(source)
+            yield from parser.parse(source, decorate=False)
         elif language == "file":
             path = context["source"]
-            # path, language, slice_str = resolve_path(path)
             if not os.path.exists(path):
                 yield f'<p style="font-color:red">File not found: {path}</p>\n'
             else:
@@ -59,13 +60,12 @@ class Code(Renderer):
                 yield from self.render_fenced_code(context, splitter, parser)
                 yield "\n"
         else:
-            yield f'<p style="font-color:red">{language} not supported</p>\n'
+            yield markdown.convert(context["_source"])
 
 
 def read_file(path):
-    with codecs.open(path, "r", "utf8") as file:
-        source = file.read()
-    return source.replace("\r\n", "\n").replace("\r", "\n").strip()
+    with open(path, "r", encoding="utf-8-sig") as file:
+        return file.read().strip()
 
 
 def inspect(kernel_name: str, obj: str) -> str:
