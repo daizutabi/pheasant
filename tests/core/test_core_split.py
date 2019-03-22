@@ -26,7 +26,6 @@ def test_split():
 
     source = "a ab ba cd dc a ab a ab a ab"
     splitter = parser.split(source)
-    next(splitter)
     cell = next(splitter)
     assert repr(cell) == "Cell(source='a ', match=None, output='')"
     cell = next(splitter)
@@ -36,7 +35,9 @@ def test_split():
     cell = next(splitter)
     assert cell.match is not None
     assert "".join(cell.render(cell.context, splitter, parser)) == "dc"
-    assert splitter.send('source') == ' dc a '
-    assert splitter.send('pattern') == '(?P<a>a)(?P<b>b)'
-    assert splitter.send('match') is None
-    assert splitter.send('render_name') == 'renderer_a__ab'
+    assert splitter.send('a ab') is None
+    cell = next(splitter)
+    assert repr(cell) == "Cell(source='a ', match=None, output='')"
+    cell = next(splitter)
+    assert cell.match is not None
+    assert list(cell.render(cell.context, splitter, parser)) == ["ba"]

@@ -29,7 +29,6 @@ def test_render_header(parser_header, header, source_simple):
     assert parser_header.renders["header__header"] == header.render_header
 
     splitter = parser_header.split(source_simple)
-    next(splitter)
     cell = next(splitter)
     assert cell.render_name == "header__header"
     assert cell.context["prefix"] == "#"

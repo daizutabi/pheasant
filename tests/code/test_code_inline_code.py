@@ -11,7 +11,6 @@ def source_simple():
 
 def test_render_inline_code(parser, code, source_simple):
     splitter = parser.split(source_simple)
-    next(splitter)
     cell = next(splitter)
     assert cell.render_name == "code__inline_code"
     assert cell.context["language"] == "file"

@@ -31,7 +31,6 @@ def test_render_fenced_code(parser, code, source_simple):
     assert "code__inline_code" in parser.patterns
 
     splitter = parser.split(source_simple)
-    next(splitter)
     cell = next(splitter)
     assert cell.source == "begin\n"
     cell = next(splitter)

@@ -48,7 +48,6 @@ def test_render_anchor(anchor, parser_anchor, source_parsed):
 
     splitter = parser_anchor.split(source_parsed)
     next(splitter)
-    next(splitter)
     cell = next(splitter)
     assert cell.render_name == "anchor__tag"
     assert cell.context["tag"] == "tag-b"

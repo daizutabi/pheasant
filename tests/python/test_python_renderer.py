@@ -18,7 +18,6 @@ def test_render_python(parser, python, source_simple):
     assert parser.renders["python__python_code"] == python.render_python_code
 
     splitter = parser.split(source_simple)
-    next(splitter)
     cell = next(splitter)
     assert cell.match is not None
     assert cell.context["source"] == source_simple
