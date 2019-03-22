@@ -58,7 +58,7 @@ class Formatter:
             re.sub(self.COMMENT_PATTERN, "", line)
             for line in self.lines[begin : end + 1]
         ]
-        return "\n".join(body) + "\n"
+        return "\n".join(body)
 
     def code(self, begin, end):
         source = self.content(begin, end)

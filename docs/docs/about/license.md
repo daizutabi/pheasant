@@ -1,19 +1,5 @@
 # License
 
-The legal stuff.
-
----
-
-## Included projects
-
-Themes used under license from the ReadTheDocs projects.
-
-* ReadTheDocs theme - [View license](https://github.com/snide/sphinx_rtd_theme/blob/master/LICENSE).
-
-Many thanks to the authors and contributors of those wonderful projects.
-
-## Pheasant License (MIT)
-
 Copyright (c) 2017 daizutabi
 
 Permission is hereby granted, free of charge, to any person obtaining a copy

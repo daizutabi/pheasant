@@ -12,11 +12,9 @@ pip install -U pheasant
 
 You can determine your currently installed version using `pheasant --version`:
 
-[=version]: {{pheasant.__version__}}
-
 ~~~
 $ pheasant --version
-pheasant, version [=version] from /path/to/pheasant (Python 3.7)
+pheasant, version x.x.x from /path/to/pheasant (Python 3.7)
 ~~~
 
 ## Maintenance team

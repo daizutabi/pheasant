@@ -51,20 +51,40 @@ p {
   margin: 1px auto 0px auto;
 }
 
+.pheasant-header .figure p,
+.pheasant-header .table p,
+.pheasant-header .file p,
+.pheasant-header .code p {
+  font-size: 95%;
+}
+
+.pheasant-header .file p,
+.pheasant-header .code p {
+  margin: 1px auto 0px 2em;
+}
+
 .pheasant-header .figure .prefix,
-.pheasant-header .table .prefix {
+.pheasant-header .table .prefix,
+.pheasant-header .file .prefix,
+.pheasant-header .code .prefix {
   color: #44f;
   font-weight: bold;
   margin-right: 0.2em;
 }
+
 .pheasant-header .figure .number,
-.pheasant-header .table .number {
+.pheasant-header .table .number,
+.pheasant-header .file .number,
+.pheasant-header .code .number {
   color: #44f;
   font-weight: bold;
   margin-right: 0.4em;
 }
+
 .pheasant-header .figure .title,
-.pheasant-header .table .title {
+.pheasant-header .table .title,
+.pheasant-header .file .title,
+.pheasant-header .code .title {
 }
 
 
@@ -232,7 +252,8 @@ div.pheasant-number-file .number {
   border-color: #cec;
 }
 
-.pheasant-fenced-code .display .content {
+.pheasant-fenced-code .display .content,
+.pheasant-inline-code .display .content {
   display: table;
   margin: 5px auto 5px auto;
 }

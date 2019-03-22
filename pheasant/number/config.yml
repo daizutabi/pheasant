@@ -1,11 +1,2 @@
-# Jinja2 template file for numbering.
 header_template_file: header.jinja2
 anchor_template_file: anchor.jinja2
-# Numbering level. 0 for multiple pages 2 for h2 etc.
-level: 0
-# Begin pattern
-begin_pattern: <!-- begin -->
-# End pattern
-end_pattern: <!-- end -->
-# relpath function
-relpath_function: null

@@ -171,8 +171,6 @@ Table  | #Table (title), #Tab (title)
 Code   | #Code (title)
 File   | #File (title)
 
-<!-- break -->
-
 In the above Markdown source, `{##<tag>#}` is an ID tag for hyperlink described below. Off course, you can use any code to create a figure:
 
 
@@ -199,31 +197,28 @@ Pandas's DataFarme is useful to create a table programmatically.
 #Table A Pandas's DataFrame
 ```python display
 import pandas as pd
+
 pd.DataFrame([[1, 2], [3, 4]], index=list('XY'), columns=list('ab'))
 ```
 ~~~
 
-A Markdown source for figures and tables is a source block separated by a blank line from following Markdown source. If a figure or table has blank lines within it, you have to explicitly declare the content range with `<!-- begin -->` and `<!-- end -->` statements.
+A **plain** Markdown source which is not processed by Pheasant has to be separated by a blank line from the following Markdown source which is not a part of the figure or table. If a figure or table has blank lines within it, you have to explicitly declare the content range with `<!-- begin -->` and `<!-- end -->` statements.
 
-~~~
-#Fig A Bokeh's HTML figure
+~~~copy
+#Fig A figure with a blank line
 <!-- begin -->
-{{plot}}
+![jpg](img/cat.jpg)
+
+![jpg](img/cat.jpg)
 <!-- end -->
 ~~~
-
-#Fig A Bokeh's HTML figure
-<!-- begin -->
-{{plot}}
-<!-- end -->
 
 However, Pheasant provides an easy way to number figures, tables, *etc*. regardless of whether they actually have any blank lines or not. Try this:
 
-~~~
+~~~copy
 #Figure {{curve}} Inline numbering method.
 ~~~
 
-#Fig Inline numbering method {{curve}}
 
 ### Hyperlink
 

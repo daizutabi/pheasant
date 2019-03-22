@@ -1,3 +1,7 @@
+/**************************************************
+ Main
+**************************************************/
+
 body {
   font-size: 100%;
 }
@@ -10,42 +14,81 @@ code {
   /* background: #e0e0ff; */
 }
 
-.wy-nav-content {
+p {
+  margin-bottom: 10px;
+}
+
+/* .wy-nav-content {
     max-width: none;
-}
-
-/**************************************************
- Display style
-**************************************************/
-
-div.pheasant-jupyter-display {
-  display: table;
-  margin: 5px auto 5px auto;
-}
-
-div.pheasant-number-figure div.pheasant-jupyter-display {
-  margin: 3px auto 3px auto;
-}
-
-div.pheasant-jupyter-display p {
-  margin: 0px;
-}
-
-div.pheasant-number-figure p,
-div.pheasant-number-table p {
-  margin: 3px auto 3px auto;
-}
+} */
 
 /**************************************************
  Numbering style
 **************************************************/
 
-.pheasant-header-number {
+.pheasant-header .header .number {
   opacity: 0.5;
   /* font-size: 90%; */
 }
 
-div.pheasant-number-figure {
+.pheasant-header .header .title {
+  margin-left: 6px;
+}
+
+.pheasant-header div.figure {
+  margin: 0px 0px 12px 0px;
+}
+
+.pheasant-header .figure .content p {
+  margin: 0px;
+}
+
+.pheasant-header .figure .content,
+.pheasant-header .table .content,
+.pheasant-header .figure p,
+.pheasant-header .table p {
+  display: table;
+  margin: 1px auto 0px auto;
+}
+
+.pheasant-header .figure p,
+.pheasant-header .table p,
+.pheasant-header .file p,
+.pheasant-header .code p {
+  font-size: 95%;
+}
+
+.pheasant-header .file p,
+.pheasant-header .code p {
+  margin: 1px auto 0px 2em;
+}
+
+.pheasant-header .figure .prefix,
+.pheasant-header .table .prefix,
+.pheasant-header .file .prefix,
+.pheasant-header .code .prefix {
+  color: #44f;
+  font-weight: bold;
+  margin-right: 0.2em;
+}
+
+.pheasant-header .figure .number,
+.pheasant-header .table .number,
+.pheasant-header .file .number,
+.pheasant-header .code .number {
+  color: #44f;
+  font-weight: bold;
+  margin-right: 0.4em;
+}
+
+.pheasant-header .figure .title,
+.pheasant-header .table .title,
+.pheasant-header .file .title,
+.pheasant-header .code .title {
+}
+
+
+/* div.pheasant-number-figure {
   margin-bottom: 1.6em;
 }
 
@@ -78,12 +121,9 @@ div.pheasant-number-table table {
   display: table !important;
   width: auto !important;
 }
+ */
 
-.pheasant-header-title {
-  margin-left: 10px;
-}
-
-
+/*
 p.pheasant-figure .title,
 p.pheasant-table .title,
 p.pheasant-code .title,
@@ -99,8 +139,8 @@ div.pheasant-number-file p {
   padding: 0px 6px !important;
   font-size: 90%;
 }
-
-
+ */
+/*
 div.pheasant-number-code .name,
 div.pheasant-number-code .number,
 div.pheasant-number-file .name,
@@ -108,16 +148,131 @@ div.pheasant-number-file .number {
   font-weight: bold;
   color: #002299;
 }
-
+ */
 
 /**************************************************
- Table style
+ Fenced code style
 **************************************************/
 
-.rst-content table.docutils thead th,
-.rst-content table.docutils tbody td {
-  padding: 2px 10px;
+.pheasant-fenced-code {
+  margin-bottom: 10px;
 }
+
+.pheasant-fenced-code > div {
+  position: relative;
+  margin: 2px 0px 2px 2em;
+  padding: 0px;
+  background: transparent;
+}
+
+.pheasant-fenced-code .error {
+  position: relative;
+  margin: 2px 0px 2px 2em;
+  padding: 0px;
+  background: transparent;
+}
+
+.pheasant-fenced-code pre {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin: 0px;
+  padding: 0px;
+}
+
+.pheasant-fenced-code code {
+  font-family: "Fira Code";
+  line-height: 1.34;
+  font-size: 80%;
+  background: transparent;
+  padding: 6px 8px;
+}
+
+.pheasant-fenced-code div:before {
+  font-family: san serif;
+  content: "";
+  position: absolute;
+  left: -3.8em;
+  font-size: 80%;
+  width: 3.5em;
+  text-align: right;
+  margin-top: 5px;
+}
+
+.pheasant-fenced-code .input:before {
+  content: "In:";
+  color: #99b;
+}
+.pheasant-fenced-code .stdout:before {
+  content: "Stdout:";
+  color: #bb9;
+}
+.pheasant-fenced-code .stderr:before {
+  content: "Stderr:";
+  color: #fdd;
+}
+.pheasant-fenced-code .output:before {
+  content: "Out:";
+  color: #bb9;
+}
+.pheasant-fenced-code .error:before {
+  content: "Err:";
+  color: red;
+}
+.pheasant-fenced-code .source:before {
+  content: "Src:";
+  color: #aca;
+}
+.pheasant-fenced-code .display:before {
+  content: "Display:";
+  color: #ccc;
+}
+
+.pheasant-fenced-code .input pre {
+  background-color: #dff;
+  border-color: #bdd;
+}
+.pheasant-fenced-code .stdout pre {
+  background-color: #ffd;
+  border-color: #ddb;
+}
+.pheasant-fenced-code .stderr pre {
+  background-color: #fdd;
+  border-color: #fcc;
+}
+.pheasant-fenced-code .output pre {
+  background-color: #ffd;
+  border-color: #ddb;
+}
+.pheasant-fenced-code .error pre {
+  background-color: #fcc;
+  border-color: red;
+}
+.pheasant-fenced-code .source pre {
+  background-color: #efe;
+  border-color: #cec;
+}
+
+.pheasant-fenced-code .display .content,
+.pheasant-inline-code .display .content {
+  display: table;
+  margin: 5px auto 5px auto;
+}
+
+
+/*
+div.pheasant-number-figure div.pheasant-jupyter-display {
+  margin: 3px auto 3px auto;
+}
+
+div.pheasant-jupyter-display p {
+  margin: 0px;
+}
+ */
+/* div.pheasant-number-figure p,
+div.pheasant-number-table p {
+  margin: 3px auto 3px auto;
+}
+ */
 
 /**************************************************
  Pandas DataFrame style
@@ -170,128 +325,6 @@ table.dataframe tbody td {
   background: #f1f6fc;
 }
 
-
-/**************************************************
- Fenced code style
-**************************************************/
-
-.pheasant-fenced-code {
-  position: relative;
-  background-color: transparent !important;
-  margin-left: 2em !important;
-  margin-top: 2px;
-  margin-bottom: 2px;
-}
-
-.pheasant-fenced-code pre {
-  margin: 0px;
-  padding: 0px;
-  border-radius: 4px;
-}
-
-.pheasant-fenced-code code {
-  font-family: "Fira Code";
-  line-height: 1.34;
-  font-size: 80%;
-  background: transparent !important;
-  border: none !important;
-  padding: 6px 8px;
-}
-
-.pheasant-fenced-code:before {
-  content: "";
-  position: absolute;
-  left: -3.5em;
-  font-size: 90%;
-  color: #669;
-  width: 3.3em;
-  text-align: right;
-  margin-top: 5px;
-}
-
-.pheasant-source:before {
-  content: "Src:";
-  color: #9b9;
-}
-.pheasant-input:before {
-  content: "In:";
-  color: #9bb;
-}
-.pheasant-stdout:before {
-  content: "Stdout:";
-  color: #bb9;
-}
-.pheasant-stderr:before {
-  content: "Stderr:";
-  color: #fdd;
-}
-.pheasant-output:before {
-  content: "Out:";
-  color: #bb9;
-}
-.pheasant-error:before {
-  content: "Err:";
-  color: red;
-}
-.pheasant-code:before {
- content: "";
- color: #9b9;
-}
-.pheasant-source > pre {
-  background-color: #efc;
-  border: 1px solid #bda;
-}
-.pheasant-input > pre {
-  background-color: #dff;
-  border: 1px solid #bdd;
-}
-.pheasant-stdout > pre {
-  background-color: #ffd;
-  border: 1px solid #ddb;
-}
-.pheasant-stderr > pre {
-  background-color: #fdd;
-  border: 1px solid #fcc;
-}
-.pheasant-output > pre {
-  background-color: #ffd;
-  border: 1px solid #ddb;
-}
-.pheasant-error > pre {
-  background-color: #fcc;
-  border: 1px solid red;
-}
-.pheasant-code > pre {
-  background-color: #efd;
-  border: 1px solid #bdb;
-}
-
-.pheasant-fenced-code + p {
-  margin-top: 8px
-}
-
-.pheasant-fenced-code + h1,
-.pheasant-fenced-code + h2,
-.pheasant-fenced-code + h3,
-.pheasant-number-file + h1,
-.pheasant-number-file + h2,
-.pheasant-number-file + h3,
-.pheasant-number-code + h1,
-.pheasant-number-code + h2,
-.pheasant-number-code + h3 {
-  margin-top: 1.4em;
-}
-
-p + .pheasant-fenced-code,
-p + .pheasant-number-file,
-p + .pheasant-number-code {
-  margin-top: -16px;
-}
-
-p.pheasant-file + .pheasant-fenced-code,
-p.pheasant-code + .pheasant-fenced-code {
-  margin-top: 2px;
-}
 
 /**************************************************
  HoloViews

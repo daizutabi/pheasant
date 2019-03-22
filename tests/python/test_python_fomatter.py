@@ -21,7 +21,7 @@ def test_formatter_markdown(source, output):
 
 @pytest.mark.parametrize(
     "source, output",
-    [("# ~~~ python\n# def\n# ghi.\n# ~~~", "~~~ python\ndef\nghi.\n~~~\n")],
+    [("# ~~~ python\n# def\n# ghi.\n# ~~~", "~~~ python\ndef\nghi.\n~~~")],
 )
 def test_formatter_escape(source, output):
     formatter = Formatter(source)

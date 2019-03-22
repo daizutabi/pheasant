@@ -1,8 +1,8 @@
 import os
-from pheasant.core import markdown
 from ast import literal_eval
 from typing import Iterator
 
+from pheasant.core import markdown
 from pheasant.core.renderer import Renderer
 from pheasant.jupyter.client import execute, get_kernel_name
 
@@ -29,38 +29,67 @@ class Code(Renderer):
             if not context["language"]:
                 context["language"] = "markdown"
             copy = False
-        yield self.render("fenced_code", context)
+        yield self.render("fenced_code", context) + "\n"
 
         if copy:
-            yield "\n"  # important.
-            yield from parser.parse(context["source"] + "\n", decorate=False)
+            splitter.send(context["source"] + "\n")
 
     def render_inline_code(self, context, splitter, parser) -> Iterator[str]:
         language = context["language"]
-        if context["header"]:
+        if language.startswith("#"):
+            yield context["_source"].replace(language, language[1:])
+        elif context["header"]:
             header = "Code" if language == "python" else "File"
             source = context["source"]
             source = f"#{header} {source}\n![{language}]({source})\n"
-            yield from parser.parse(source, decorate=False)
+            splitter.send(source)
         elif language == "file":
             path = context["source"]
+            if "<" in path:
+                path, lineno = path.split("<")
+            else:
+                lineno = None
             if not os.path.exists(path):
                 yield f'<p style="font-color:red">File not found: {path}</p>\n'
             else:
-                context["source"] = read_file(path)
-                context["language"] = "python"  # FIXME
-                yield from self.render_fenced_code(context, splitter, parser)
-                yield "\n"
+                source = get_source(path, lineno)
+                language = get_language_from_path(path)
+                source = f"~~~{language}\n{source}\n~~~\n"
+                splitter.send(source)
         elif language == "python":
             kernel_name = get_kernel_name(language)
             if kernel_name is None:
                 yield f'<p style="font-color:red">Kernel not found for {language}</p>\n'
             else:
-                context["source"] = inspect(kernel_name, context["source"])
-                yield from self.render_fenced_code(context, splitter, parser)
-                yield "\n"
+                source = inspect(kernel_name, context["source"])
+                source = f"~~~{language}\n{source}\n~~~\n"
+                splitter.send(source)
+                # yield from self.render_fenced_code(context, splitter, parser)
+                # yield "\n"
         else:
             yield markdown.convert(context["_source"])
+
+
+def get_source(path, lineno):
+    source = read_file(path)
+    if not lineno:
+        return source
+    source = source.split("\n")
+    lineno = lineno[:-1]
+    begin, end = lineno.split(":")
+    begin = int(begin) if begin else 0
+    end = int(end) if end else len(source)
+    return "\n".join(source[begin:end])
+
+
+def get_language_from_path(path: str) -> str:
+    _, ext = os.path.splitext(path)
+    if ext in [".py"]:
+        return "python"
+    elif ext in [".yml"]:
+        return "yaml"
+    else:
+        return "text"
 
 
 def read_file(path):

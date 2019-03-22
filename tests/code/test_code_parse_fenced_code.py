@@ -20,7 +20,7 @@ def test_code_parse_source(parse):
     answer = "".join(
         [
             '<div class="source">'
-            '<pre><code class="python">print(1)\na = 1</code></pre></div>'
+            '<pre><code class="python">print(1)\na = 1</code></pre></div>\n'
         ]
     )
     assert output == answer

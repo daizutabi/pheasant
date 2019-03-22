@@ -13,7 +13,6 @@ def test_renderer(header):
     assert header.config["__dummy__"] == "test"
     assert "kind" in header.config
     assert header.config["header_template"] is not None
-    assert header.page_index == 1
     assert header.header_kind == {
         "": "header",
         "fig": "figure",
@@ -46,9 +45,9 @@ def test_join(parser_header, header, source_simple):
             '## <S C"header"><S C"number">1.2</S> <S C"title">Section B</S></S>',
             '## <S C"header"><S C"number">1.3</S> <S C"title">Subsection C</S></S>',
             "Text {#tag-a#}",
-            '<D C"figure"><D C"content"><D>Content A</D></D>',
-            '<p><S C"prefix">Figure</S> <S C"number">1</S>',
-            '<S C"title" id="tag-b">Figure A</S></D>\n',
+            '<D C"figure"><D C"content" id="tag-b"><D>Content A</D></D>',
+            '<p><S C"prefix">Figure</S> <S C"number">1.1</S>',
+            '<S C"title">Figure A</S></D>\n',
         ]
     )
     assert output == answer

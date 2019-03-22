@@ -21,12 +21,12 @@ def renderers():
 
 
 def test_converter_special_function(renderers):
-    assert repr(renderers["preprocess"]) == "[<Jupyter#jupyter[2]>, <Header#header[1]>]"
+    assert repr(renderers["preprocess"]) == "[<Jupyter#jupyter[2]>, <Header#header[2]>]"
     assert repr(renderers["preprocess", "jupyter"]) == "<Jupyter#jupyter[2]>"
 
     assert [repr(renderer) for renderer in renderers] == [
         "<Jupyter#jupyter[2]>",
-        "<Header#header[1]>",
+        "<Header#header[2]>",
         "<Anchor#anchor[1]>",
     ]
 

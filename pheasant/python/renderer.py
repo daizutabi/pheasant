@@ -18,4 +18,4 @@ class Python(Renderer):
             context["source"] += "\n"
         formatter = Formatter(context["source"])
         for cell_type, begin, end in splitter_(context["source"]):
-            yield formatter(cell_type, begin, end)
+            yield formatter(cell_type, begin, end) + "\n"

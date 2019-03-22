@@ -42,6 +42,7 @@ def test_code_parse_file(file):
         '<code class="python">def func(x):\n    return 2 * x\n\nprint(f(3))'
         "</code></pre></div>\n"
     )
+    print(output)
     assert output == answer
 
 
@@ -71,5 +72,4 @@ def test_code_parse_file_with_header(file):
     source = "def func(x):\n    return 2 * x\n\nprint(f(3))\n"
     output = file("#", path, source)
     assert output.startswith('<div class="file">')
-    print(output)
     assert output.endswith('print(f(3))</code></pre></div>\n</div></div>\n')

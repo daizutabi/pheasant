@@ -43,6 +43,16 @@ class Parser(Base):
 
             yield cell.output
 
+    def parse_from_cell(
+        self, cell: Any, splitter: Splitter, decorate=True
+    ) -> Iterator[str]:
+        cell.output = "".join(
+            cell.render(context=cell.context, splitter=splitter, parser=self)
+        )
+        if decorate is True and self.decorator:
+            self.decorator.decorate(cell)
+        yield cell.output
+
     def split(self, source: str) -> Splitter:
         """Split the source into a cell and yield it."""
         if not self.patterns:

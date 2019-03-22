@@ -28,7 +28,8 @@ class Pheasant(Converter):
         self.register("link", [self.anchor])
 
         self.decorator.name = "pheasant"
-        self.decorator.register("surround", [self.header, self.jupyter, self.code])
+        self.decorator.register("surround", [self.header, self.code])
+        self.decorator.register(self.surround, [self.jupyter])
         self.setup()
 
     def convert_from_files(self, paths: List[str], message=None) -> List[str]:
@@ -53,3 +54,9 @@ class Pheasant(Converter):
             self.convert_from_output(path, "link")
 
         return [self.pages[path].output for path in paths]
+
+    def surround(self, cell):
+        if cell.render_name == 'jupyter__fenced_code':
+            if "display" in cell.context["option"]:
+                cell.render_name = 'jupyter__inline_code'
+        self.decorator.surround(cell)

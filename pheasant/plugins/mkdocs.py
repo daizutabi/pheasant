@@ -38,14 +38,6 @@ class PheasantPlugin(BasePlugin):
             f"[Pheasant] `mkdocs.utils.markdown_extensions` = {markdown_extensions}"
         )
 
-    def on_serve(self, server, **kwargs):
-        watcher = server.watcher
-        builder = list(watcher._tasks.values())[0]["func"]
-        root = os.path.join(os.path.dirname(pheasant.__file__), "themes/mkdocs")
-        server.watch(root, builder)
-
-        return server
-
     def on_config(self, config, **kwargs):
         if self.config:
             self.converter.update_config(self.config)
@@ -57,7 +49,7 @@ class PheasantPlugin(BasePlugin):
         return config
 
     def on_files(self, files, config):
-        root = os.path.join(os.path.dirname(pheasant.__file__), "themes/mkdocs")
+        root = os.path.join(os.path.dirname(pheasant.__file__), "theme")
         docs_dir = config["docs_dir"]
         config["docs_dir"] = root
         files_ = get_files(config)
@@ -93,15 +85,29 @@ class PheasantPlugin(BasePlugin):
         return nav
 
     def on_page_read_source(self, source, page, **kwargs):
+        # print("=================")
+        # print(self.converter.pages[page.file.abs_src_path].output)
+        # print("=================")
         return self.converter.pages[page.file.abs_src_path].output
 
     def on_page_content(self, content, page, **kwargs):
+        # print("---------------------")
+        # print(content)
+        # print("---------------------")
         return "\n".join(
             [self.converter.pages[page.file.abs_src_path].meta["extra_html"], content]
         )
 
     def on_post_page(self, output, **kwargs):
         return output.replace('.js" defer></script>', '.js"></script>')
+
+    def on_serve(self, server, **kwargs):
+        watcher = server.watcher
+        builder = list(watcher._tasks.values())[0]["func"]
+        root = os.path.join(os.path.dirname(pheasant.__file__), "theme")
+        server.watch(root, builder)
+
+        return server
 
 
 def _emulate_mkdocs_main_and_build():

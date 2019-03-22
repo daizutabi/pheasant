@@ -8,7 +8,6 @@ from pheasant.core.renderer import Renderer
 
 
 class Header(Renderer):
-    page_index: Union[int, List[int]] = field(default=1)
     tag_context: Dict[str, Any] = field(default_factory=dict)
     number_list: Dict[str, List[int]] = field(default_factory=dict)
     header_kind: Dict[str, str] = field(default_factory=dict)
@@ -16,10 +15,12 @@ class Header(Renderer):
 
     HEADER_PATTERN = r"^(?P<prefix>#+)(?P<kind>\w*?) +(?P<title>.+?)\n"
     TAG_PATTERN = r"\{#(?P<tag>\S+?)#\}"
+    CONTENT_PATTERN = r"^<!-- *begin *-->\n(?P<content>.*?)\n<!-- *end *-->\n"
 
     def __post_init__(self):
         super().__post_init__()
         self.register(Header.HEADER_PATTERN, self.render_header)
+        self.register(Header.CONTENT_PATTERN, self.render_content)
         self.set_template("header")
         self.config["kind_prefix"] = {}
         self.header_kind[""] = "header"
@@ -45,10 +46,9 @@ class Header(Renderer):
         self.number_list[kind][depth] += 1
         reset = [0] * (len(self.number_list[kind]) - depth)
         self.number_list[kind][depth + 1 :] = reset
-        number_list = self.number_list[kind][: depth + 1]
-        header = "#" * len(number_list) if kind == "header" else ""
+        header = context["prefix"] if kind == "header" else ""
         prefix = self.config["kind_prefix"][kind] if kind != "header" else ""
-        number_list = normalize_number_list(kind, number_list, self.page_index)
+        number_list = normalize_number_list(self.number_list, kind, depth)
         number_string = number_list_format(number_list)
         title, tag = split_tag(context["title"])
         title, inline_code = split_inline_code(title)
@@ -77,27 +77,33 @@ class Header(Renderer):
             # Need to detect the range of a numbered object.
             rest = ""
             if inline_code:
-                content = "".join(parser.parse(inline_code, decorate=False))
+                # content = "".join(parser.parse(inline_code, decorate=False))
+                content = "".join(parser.parse(inline_code))
             else:
-                cell = next(splitter)
-                if cell.match:
-                    content = "".join(cell.render(cell.context, splitter, parser))
-                else:
-                    content = cell.source
-                    if content.startswith(self.config["begin_pattern"]):
-                        content = content[len(self.config["begin_pattern"]) :]
-                        content, *rests = content.split(self.config["end_pattern"])
-                        rest = self.config["end_pattern"].join(rests)
+                content = ""
+                while not content:
+                    cell = next(splitter)
+                    if cell.match:
+                        content = "".join(parser.parse_from_cell(cell, splitter))
+                        # content = "".join(cell.render(cell.context, splitter, parser))
                     else:
-                        index = content.find("\n\n")
-                        if index == -1:
-                            content, rest = content, ""
-                        else:
-                            content, rest = content[:index], content[index + 2 :]
-                    content = markdown.convert(content)
+                        content, rest = self._get_content(cell)
             yield self.render("header", context_, content=content) + "\n"
-            # if rest:
-            #     yield rest
+            splitter.send(rest)
+
+    def render_content(self, context, splitter, parser) -> Iterator[str]:
+        content = "".join(parser.parse(context["content"] + "\n", decorate=False))
+        yield markdown.convert(content)
+
+    def _get_content(self, cell):
+        content = cell.source
+        index = content.find("\n\n")
+        if index == -1:
+            content, rest = content, ""
+        else:
+            content, rest = content[:index], content[index + 2 :]
+        content = markdown.convert(content)
+        return content, rest
 
 
 class Anchor(Renderer):
@@ -130,8 +136,6 @@ class Anchor(Renderer):
                 context["abs_src_path"], os.path.dirname(self.abs_src_path)
             )
             relpath = relpath.replace("\\", "/")
-            if self.config["relpath_function"]:
-                relpath = self.config["relpath_function"](relpath)
             context["ref"] = "#".join([relpath, tag])
         else:
             context = {"found": False, "tag": tag}
@@ -139,39 +143,12 @@ class Anchor(Renderer):
 
 
 def normalize_number_list(
-    kind: str, number_list: List[int], page_index: Union[int, List[int]]
+    number_list: Dict[str, List[int]], kind: str, depth: int
 ) -> List[int]:
-    """
-
-    Examples
-    --------
-    >>> normalize_number_list("header", [1], 1)
-    [1]
-    >>> normalize_number_list("header", [1, 2], [3])
-    [3, 2]
-    >>> normalize_number_list("header", [0, 2], 2)
-    [2]
-    >>> normalize_number_list("header", [0, 2], 1)
-    [0, 2]
-    >>> normalize_number_list("header", [0, 2, 1], 2)
-    [2, 1]
-    >>> normalize_number_list("figure", [3], 1)
-    [3]
-    >>> normalize_number_list("figure", [3], [4, 2])
-    [4, 2, 3]
-    >>> normalize_number_list("figure", [3, 1], 2)
-    [3, 1]
-    """
-    if isinstance(page_index, list):
-        if kind == "header":
-            number_list = page_index + number_list[1:]
-        else:
-            number_list = page_index + number_list
+    if kind == "header":
+        return number_list[kind][: depth + 1]
     else:
-        if kind == "header":
-            number_list = number_list[page_index - 1 :]
-
-    return number_list
+        return number_list["header"][: depth + 1] + [number_list[kind][depth]]
 
 
 def number_list_format(number_list: List[int]) -> str:

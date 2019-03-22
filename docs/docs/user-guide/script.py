@@ -54,13 +54,11 @@ def sub2(x: int, y: int) -> int:
 
 # By defaults, MkDocs processes Markdown files only for pages. This setting is defined
 # in the MkDocs's utility library: `mkdocs.utils.markdown_extensions`. Pheasant plugin
-# appends `.py` to this setting in the Plugin's `on_config` event function:
+# appends `.py` to this setting in the Plugin's `__init__ function:
 
 # ~~~python
-# class PheasantPlugin(BasePlugin):
-#     def on_config(self, config):
-#         from mkdocs.utils import markdown_extensions
-#         markdown_extensions.append(".py")
+# from mkdocs.utils import markdown_extensions
+# markdown_extensions.append(".py")
 # ~~~
 
 
@@ -74,9 +72,9 @@ def sub2(x: int, y: int) -> int:
 
 
 # ~~~python
-# # <sapn>```</span>python
+# # ```python
 # # print(1)
-# # <span>```</sanp>
+# # ```
 # ~~~
 
 # becomes:
@@ -88,11 +86,11 @@ def sub2(x: int, y: int) -> int:
 # And,
 
 # ~~~python
-# # <span>~~~</span>
-# # <sapn>```</span>python
+# # ~~~
+# # ```python
 # # print(1)
-# # <span>```</sanp>
-# # <span>~~~</span>
+# # ```
+# # ~~~
 # ~~~
 
 

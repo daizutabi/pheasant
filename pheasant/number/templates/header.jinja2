@@ -5,9 +5,9 @@
 {%- endblock -%}
 
 {%- block figure -%}
-<div class="content">{% autoescape false %}{{ content }}{% endautoescape %}</div>
+<div class="content"{% if tag %} id="{{ tag }}"{% endif %}>{% autoescape false %}{{ content }}{% endautoescape %}</div>
 <p><span class="prefix">{{ prefix }}</span> <span class="number">{{ number_string }}</span>
-<span class="title"{% if tag %} id="{{ tag }}"{% endif %}>{{ title }}</span>
+<span class="title">{{ title }}</span>
 {%- endblock -%}
 
 {%- block other -%}

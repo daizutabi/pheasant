@@ -18,7 +18,7 @@ A call of `plt.plot` generates a standard plain text output (a list of `Line` ob
 plt.plot([1, 3, 5], marker='o')
 ```
 
-If you want to hide the input source and the standard output, you can use a `display` option to show just the display data such as an image or HTML:
+If you want to hide the input source and the plain text output, you can use a `display` option to show just the display data such as an image or HTML:
 
 ~~~copy
 ```python display
@@ -26,15 +26,15 @@ plt.plot([4, 2, 3], marker='o')
 ```
 ~~~
 
-**"Inline code"** is useful to display a plot in shorthand notation. `{{#!plt.plot([1, 2, 4])}}` generates:
+**"Inline code"** is useful to display a plot in shorthand notation. `{{#plt.plot([1, 2, 4])}}` generates:
 
-{{!plt.plot([1, 2, 4])}}
+{{plt.plot([1, 2, 4])}}
 
-Note that the standard plain text output (`[<matplotlib.lines...]`) is not displayed if the inline code generates display data.
+Note that the plain text output (`[<matplotlib.lines...]`) does not displayed if the inline code generates display data.
 
 An inline code statement (`{{#<expr>}}`) can be written in a fenced code block. In this case, the expression in the statement is evaluated dynamically during the evaluation of the fenced code block.
 
-In the next example, two plots are overlayed. `axes[0]` and `axes[1]` refer to the same image.
+In the next example, two plots are overlayed. `axes[0]` and `axes[1]` refer to the same image object.
 
 ```python
 axes = []
@@ -74,28 +74,33 @@ Thanks to this Pheasant feature, you can put images anywhere. For example, in a 
 
 ~~~copy
 #Tab A Markdown table with Matplotlib plot
+<!--begin-->
 |Red         |Blue       |
 |------------|-----------|
 |{{axes[0]}} |{{axes[1]}}|
+<!-- end -->
 ~~~
 
-If you prefer a Pandas DataFrame, HTML-type inline code can be used with `{{#^` and `}}`.
+Herer, `<!-- begin -->` and `<!-- end -->` statements are required because `{{#axes[0]}}` and `{{#axes[1]}}` are not normal Markdown sources.
+
+If you prefer a Pandas DataFrame, HTML-type inline code can be used with `{{#^` and `}}` which return an IPython HTML object. So you can use the `data` attribute to get a HTML string.
 
 ~~~copy
 ```python hide inline
 axes = []
 for k, color in enumerate(['red', 'blue']):
     plt.plot([0, k + 3], color)
-    axes.append({{^plt.gca()}})
+    axes.append({{^plt.gca()}}.data)
     plt.cla()
 ```
 ~~~
+
 
 Then,
 
 ~~~copy
 #Tab A Pandas DataFrame with a Matplotlib plot
-```python inline
+```python inline display
 import pandas as pd
 {{pd.DataFrame([axes], columns=['Red', 'Blue'])}}
 ```
@@ -118,29 +123,9 @@ print('[script]:', script[:140].strip(), '...')
 print('[div]:', div[:40].strip(), '...')
 ```
 
-These `<script>`  and `<div>` tags are used in an inline code like `{{#script}}{{#div}}` to get a plot as shown below:
+Pheasant uses this functionality inside automatically. You can get a Bokeh plot just write `{{#plot}}`:
 
-~~~copy
-{{script}}{{div}}
-~~~
-
-A shortcut to this functionality is prepared.
-
-~~~copy
 {{plot}}
-~~~
-
-Just for your infomation, the extra stylesheet and javascript files provided by Bokeh are obtained by the following commands.
-
-```python
-from bokeh.resources import CDN
-CDN.css_files
-```
-```python
-CDN.js_files
-```
-
-In fact, Pheasant uses the above API to embed Bokeh's plots internally.
 
 ## HoloViews
 
@@ -168,7 +153,7 @@ html = renderer.html(curve)
 print(html[:40], '...')
 ```
 
-Extra assets which should be written in HTML `<head>` tag to display the image are provided by the `renderer`'s class method: `html_assets()`.
+Extra assets which should be written in a HTML source to display the image are provided by the `renderer`'s class method: `html_assets()`.
 
 ```python
 js_html, css_html = renderer.html_assets()

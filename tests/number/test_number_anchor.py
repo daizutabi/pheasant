@@ -26,8 +26,8 @@ def test_tag_context(anchor, parser_header, source_simple):
         },
         "tag-b": {
             "kind": "figure",
-            "number_list": [1],
-            "number_string": "1",
+            "number_list": [1, 1],
+            "number_string": "1.1",
             "abs_src_path": ".",
         },
     }
@@ -59,12 +59,12 @@ def test_parse_anchor(anchor, parser_anchor, source_parsed):
     answer = "\n".join([
         '# <S C"header"><S C"number">1</S> <S C"title" id="tag-a">Title</S></S>',
         '## <S C"header"><S C"number">1.1</S> <S C"title">Section A</S></S>',
-        'Text [1](.#tag-b)',
+        'Text [1.1](.#tag-b)',
         '## <S C"header"><S C"number">1.2</S> <S C"title">Section B</S></S>',
         '## <S C"header"><S C"number">1.3</S> <S C"title">Subsection C</S></S>',
         'Text [1](.#tag-a)',
-        '<D C"figure"><D C"content"><D>Content A</D></D>',
-        '<p><S C"prefix">Figure</S> <S C"number">1</S>',
-        '<S C"title" id="tag-b">Figure A</S></D>\n'
+        '<D C"figure"><D C"content" id="tag-b"><D>Content A</D></D>',
+        '<p><S C"prefix">Figure</S> <S C"number">1.1</S>',
+        '<S C"title">Figure A</S></D>\n'
     ])
     assert output == answer
