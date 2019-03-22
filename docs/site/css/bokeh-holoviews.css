@@ -1,3 +1,16 @@
+div.bk-hbox {
+    display: flex;
+    justify-content: center;
+}
+
+div.bk-hbox div.bk-plot {
+    padding: 8px;
+}
+
+div.bk-hbox div.bk-data-table {
+    padding: 20px;
+}
+
 div.hololayout {
   display: flex;
   align-items: center;
@@ -90,17 +103,4 @@ div.hologroup {
 .noUi-target {
   margin-left: 0.5em;
   margin-right: 0.5em;
-}
-
-div.bk-hbox {
-    display: flex;
-    justify-content: center;
-}
-
-div.bk-hbox div.bk-plot {
-    padding: 8px;
-}
-
-div.bk-hbox div.bk-data-table {
-    padding: 20px;
 }

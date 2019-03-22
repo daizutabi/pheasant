@@ -103,7 +103,7 @@ def _split_js_html_assets(js_html: str) -> Dict[str, List[str]]:
     pattern = r'<script src="(.*?)" type="text/javascript"></script>'
     extra_javascript = re.findall(pattern, js_html)
 
-    pattern = r'<script type="text/javascript">(.*?)</script>'
+    pattern = r'(<script type="text/javascript">.*?</script>)'
     extra_raw_javascript = re.findall(pattern, js_html, re.DOTALL)
 
     return {
@@ -116,7 +116,7 @@ def _split_css_html_assets(css_html: str) -> Dict[str, List[str]]:
     pattern = r'<link rel="stylesheet" href="(.*?)">'
     extra_css = re.findall(pattern, css_html)
 
-    pattern = r"<style>(.*?)</style>"
+    pattern = r"(<style>.*?</style>)"
     extra_raw_css = re.findall(pattern, css_html, re.DOTALL)
 
     return {"extra_css": extra_css, "extra_raw_css": extra_raw_css}

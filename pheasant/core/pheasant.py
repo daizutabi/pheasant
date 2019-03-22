@@ -43,12 +43,20 @@ class Pheasant(Converter):
                 if message:
                     message(f"Converting Markdown: {path}")
                 self.convert_from_file(path, "main")
-            self.pages[path].meta["extra_resources"] = self.jupyter.meta[
-                "extra_resources"
-            ]
+            # Copy Jupyter extra resources
+            for key in ["css", "javascript", "raw_css", "raw_javascript"]:
+                key_ = f"extra_{key}"
+                self.pages[path].meta[key_] = self.jupyter.meta[key_]
         for path in paths:
             self.anchor.abs_src_path = path
             if message:
                 message(f"Interlinking: {path}")
             self.convert_from_output(path, "link")
+
+            page = self.pages[path]
+            extra_raw = "\n".join(
+                page.meta.pop("extra_raw_css") + page.meta.pop("extra_raw_javascript")
+            )
+            page.output += extra_raw
+
         return [self.pages[path].output for path in paths]

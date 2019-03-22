@@ -8,6 +8,7 @@ from mkdocs.utils import string_types
 
 import pheasant
 from pheasant.core.pheasant import Pheasant
+from pheasant.jupyter.client import execution_time
 
 logger = logging.getLogger("mkdocs")
 
@@ -53,15 +54,15 @@ class PheasantPlugin(BasePlugin):
         return config
 
     def on_nav(self, nav, config, **kwargs):
-
         def message(msg):
             logger.debug(f"[Pheasant] {msg}")
 
         logger.debug(f"[Pheasant] on_nav")
-        logger.debug(f"[Pheasant] Preprocess begins.")
         paths = [page.file.abs_src_path for page in nav.pages]
+        logger.info(f"[Pheasant] Converting: Page number = {len(paths)}.")
         self.converter.convert_from_files(paths, message=message)
         logger.debug(f"[Pheasant] Preprocess done.")
+        logger.info(f"[Pheasant] Kernel execution time: {execution_time['total']}")
 
         for directory in ["css", "js"]:
             root = os.path.join(config["site_dir"], directory)
@@ -102,6 +103,7 @@ class PheasantPlugin(BasePlugin):
 
             extra_resources["extra_css"].extend(extra["css"])
             extra_resources["extra_javascript"].extend(extra["js"])
+        return nav
 
     def on_page_read_source(self, source, page, **kwargs):
         assert source is None

@@ -44,9 +44,15 @@ def test_holoviews_extra_javascript(index, host, name):
         assert split[-1] == name
 
 
+def test_holoviews_extra_raw_css():
+    resources = holoviews_extra_resources()
+    extra = resources["extra_raw_css"]
+    assert len(extra) == 1
+    assert extra[0].startswith("<style")
+
+
 def test_holoviews_extra_raw_javascript():
     resources = holoviews_extra_resources()
     extra = resources["extra_raw_javascript"]
     assert len(extra) == 2
-    assert extra[0][:40] == "function HoloViewsWidget() {\n}\n\nHoloView"
-    assert extra[0][-40:] == "kehScrubberWidget = BokehScrubberWidget\n"
+    assert extra[0].startswith("<script")

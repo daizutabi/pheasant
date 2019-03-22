@@ -38,13 +38,9 @@ class Jupyter(Renderer):
         self.execute(code, "python")
 
     def reset(self):
-        self.meta["extra_resources"] = dict(
-            modules=[],
-            extra_css=[],
-            extra_javascript=[],
-            extra_raw_css=[],
-            extra_raw_javascript=[],
-        )
+        for key in ["css", "javascript", "raw_css", "raw_javascript"]:
+            self.meta[f"extra_{key}"] = []
+        self.meta["extra_module"] = []
 
     def render_fenced_code(self, context, splitter, parser) -> Iterator[str]:
         if "inline" in context["option"]:
@@ -85,8 +81,7 @@ class Jupyter(Renderer):
             "bokeh": bokeh_extra_resources,
             "holoviews": holoviews_extra_resources,
         }
-        extra_resources = self.meta["extra_resources"]
-        if len(extra_resources["modules"]) == len(module_dict):
+        if len(self.meta["extra_module"]) == len(module_dict):
             return
 
         new_modules = []
@@ -99,22 +94,17 @@ class Jupyter(Renderer):
                 module = output["data"]["text/plain"]
                 if (
                     module in module_dict.keys()
-                    and module not in extra_resources["modules"]
+                    and module not in self.meta["extra_module"]
                 ):
                     new_modules.append(module)
 
         for module in new_modules:
-            extra_resources["modules"].append(module)
+            self.meta["extra_module"].append(module)
             resources = module_dict[module]()
-            for key in extra_resources:
-                if key in resources:
-                    extra_resources[key].extend(
-                        [
-                            value
-                            for value in resources[key]
-                            if value not in extra_resources[key]
-                        ]
-                    )
+            for key, values in resources.items():
+                self.meta[key].extend(
+                    value for value in values if value not in self.meta[key]
+                )
 
 
 def preprocess_fenced_code(code: str) -> str:
