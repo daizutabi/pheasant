@@ -87,69 +87,6 @@ p {
 .pheasant-header .code .title {
 }
 
-
-/* div.pheasant-number-figure {
-  margin-bottom: 1.6em;
-}
-
-div.pheasant-number-figure p {
-  text-align: center;
-}
-
-div.pheasant-number-table {
-  margin-top: 1.6em;
-}
-
-p.pheasant-figure, p.pheasant-table {
-  text-align: center;
-  margin: 2px 8%;
-  font-size: 100%;
-}
-
-p.pheasant-figure .name, p.pheasant-figure .number {
-  font-weight: bold;
-  color: #002299;
-}
-
-p.pheasant-table .name, p.pheasant-table .number {
-  font-weight: bold;
-  color: #002299;
-}
-
-div.pheasant-number-table table {
-  margin: 0 auto;
-  display: table !important;
-  width: auto !important;
-}
- */
-
-/*
-p.pheasant-figure .title,
-p.pheasant-table .title,
-p.pheasant-code .title,
-p.pheasant-file .title {
-  margin-left: 4px;
-  color: #005599;
-}
-
-div.pheasant-number-code p,
-div.pheasant-number-file p {
-  margin-left: 2.0em !important;
-  margin-bottom: -2px !important;
-  padding: 0px 6px !important;
-  font-size: 90%;
-}
- */
-/*
-div.pheasant-number-code .name,
-div.pheasant-number-code .number,
-div.pheasant-number-file .name,
-div.pheasant-number-file .number {
-  font-weight: bold;
-  color: #002299;
-}
- */
-
 /**************************************************
  Fenced code style
 **************************************************/
@@ -177,6 +114,32 @@ div.pheasant-number-file .number {
   border-radius: 4px;
   margin: 0px;
   padding: 0px;
+}
+
+.pheasant-fenced-code .input pre {
+  border-radius: 4px 4px 0px 0px;
+}
+
+.pheasant-fenced-code .input .report {
+  border-bottom: 1px solid #bdd;
+  border-left: 1px solid #bdd;
+  border-right: 1px solid #bdd;
+  border-radius: 0px 0px 4px 4px;
+  background: #eff;
+  color: #999;
+  font-size: 70%;
+  padding: 0px 8px;
+  line-height: 16px;
+  margin-bottom: 2px;
+}
+
+.pheasant-fenced-code .input .report .count {
+  color: #777;
+}
+
+.pheasant-fenced-code .input .report .elasped {
+  color: #777;
+  font-weight: bold;
 }
 
 .pheasant-fenced-code code {

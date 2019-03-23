@@ -108,7 +108,7 @@ pd.DataFrame([axes], columns=['Red', 'Blue'])
 
 ## Bokeh
 
-You can embed [Bokeh](https://bokeh.pydata.org/en/latest/)'s plots into MkDocs HTML documents. Following [User Guide "Embedding Plots and Apps"](https://bokeh.pydata.org/en/latest/docs/user_guide/embed.html) from the official Bokeh documents, Pheasant automatically adds extra stylesheet and javascript in HTML `<head>` tag. You don't need to configure `extra_css` and `extra_javascript` in your `mkdocs.yml` manually.
+You can embed [Bokeh](https://bokeh.pydata.org/en/latest/)'s plots into MkDocs HTML documents. Following [User Guide "Embedding Plots and Apps"](https://bokeh.pydata.org/en/latest/docs/user_guide/embed.html) from the official Bokeh documents, Pheasant automatically adds extra stylesheet and javascript in HTML source. You don't need to configure `extra_css` and `extra_javascript` in your `mkdocs.yml` manually.
 
 In order to embed plots in your document, `bokeh.embed.components` function can be used. This function returns `<script>`  and `<div>` tags in HTML format. For example:
 

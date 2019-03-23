@@ -1,7 +1,5 @@
 import pytest
 
-from pheasant.jupyter.renderer import Jupyter
-
 
 def inline_code(code):
     return "[{{" + code + "}}]"

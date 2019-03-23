@@ -3,6 +3,7 @@ import os
 import pytest
 
 from pheasant.core.parser import Parser
+from pheasant.jupyter.client import execution_report
 from pheasant.jupyter.renderer import Jupyter
 
 

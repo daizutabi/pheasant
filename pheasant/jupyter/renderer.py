@@ -1,3 +1,4 @@
+import datetime
 import re
 from typing import Iterator, List, Match
 
@@ -49,9 +50,8 @@ class Jupyter(Renderer):
         if "inline" in context["option"]:
             context["code"] = replace_fenced_code_for_display(context["code"])
         outputs = self.execute(code=context["code"], language=context["language"])
-        output = super().render(
-            "fenced_code", context, outputs=outputs, report=execution_report
-        )
+        report = format_report()
+        output = super().render("fenced_code", context, outputs=outputs, report=report)
         yield output + "\n"
 
     def render_inline_code(self, context, splitter, parser) -> Iterator[str]:
@@ -169,3 +169,40 @@ def select_outputs(outputs):
             outputs = [output for output in outputs if output["type"] == "display_data"]
             break
     return outputs
+
+
+def format_report():
+    report = dict(execution_report)
+    datetime_format = r"%Y-%m-%d %H:%M:%S"
+    report["start"] = report["start"].strftime(datetime_format)
+    report["end"] = report["end"].strftime(datetime_format)
+    report["elasped"] = timedelta_format(report["elasped"])
+    report["total"] = timedelta_format(report["total"])
+    report["count"] = report["execution_count"]
+    return report
+
+
+def timedelta_format(dt) -> str:
+    sec = dt.total_seconds()
+    if sec >= 3600:
+        return f"{sec//3600}h{sec//60%60}min{sec%3600%60}s"
+    elif sec >= 60:
+        return f"{sec//60}min{sec%60}s"
+    elif sec >= 10:
+        return f"{sec:0.1f}s"
+    elif sec >= 1:
+        return f"{sec:0.2f}s"
+    elif sec >= 1e-1:
+        return f"{sec*1e3:.00f}ms"
+    elif sec >= 1e-2:
+        return f"{sec*1e3:.01f}ms"
+    elif sec >= 1e-3:
+        return f"{sec*1e3:.02f}ms"
+    elif sec >= 1e-4:
+        return f"{sec*1e6:.00f}us"
+    elif sec >= 1e-5:
+        return f"{sec*1e6:.01f}us"
+    elif sec >= 1e-6:
+        return f"{sec*1e6:.02f}us"
+    else:
+        return f"{sec*1e9:.00f}ns"
