@@ -72,16 +72,16 @@ axes[0][:50]
 
 Thanks to this Pheasant feature, you can put images anywhere. For example, in a table:
 
-~~~copy
+~~~~copy
 #Tab A Markdown table with Matplotlib plot
-<!--begin-->
+~~~
 |Red         |Blue       |
 |------------|-----------|
 |{{axes[0]}} |{{axes[1]}}|
-<!-- end -->
 ~~~
+~~~~
 
-Herer, `<!-- begin -->` and `<!-- end -->` statements are required because `{{#axes[0]}}` and `{{#axes[1]}}` are not normal Markdown sources.
+Herer, a fenced code is required because `{{#axes[0]}}` and `{{#axes[1]}}` are not normal Markdown sources.
 
 If you prefer a Pandas DataFrame, HTML-type inline code can be used with `{{#^` and `}}` which return an IPython HTML object. So you can use the `data` attribute to get a HTML string.
 
@@ -100,9 +100,9 @@ Then,
 
 ~~~copy
 #Tab A Pandas DataFrame with a Matplotlib plot
-```python inline display
+```python display
 import pandas as pd
-{{pd.DataFrame([axes], columns=['Red', 'Blue'])}}
+pd.DataFrame([axes], columns=['Red', 'Blue'])
 ```
 ~~~
 

@@ -44,6 +44,8 @@ class Jupyter(Renderer):
         self.meta["extra_module"] = []
 
     def render_fenced_code(self, context, splitter, parser) -> Iterator[str]:
+        if "display" in context["option"]:
+            context["code"] = replace_for_display(context["code"], skip_equal=False)
         if "inline" in context["option"]:
             context["code"] = preprocess_fenced_code(context["code"])
         outputs = self.execute(code=context["code"], language=context["language"])
@@ -118,7 +120,7 @@ class Jupyter(Renderer):
 
 def preprocess_fenced_code(code: str) -> str:
     def replace(match: Match) -> str:
-        return replace_for_display(match.group(1), ignore_equal=True)
+        return replace_for_display(match.group(1), skip_equal=False)
 
     return Jupyter.RE_INLINE_CODE_PATTERN.sub(replace, code)
 
@@ -127,22 +129,22 @@ def preprocess_inline_code(code: str) -> str:
     return replace_for_display(code)
 
 
-def replace_for_display(code: str, ignore_equal: bool = False) -> str:
+def replace_for_display(code: str, skip_equal: bool = True) -> str:
     """Replace a match object with `display` function.
 
     Parameters
     ----------
     code
         The code to be executed in the inline mode.
-    ignore_equal
-        If True, do not replace the code which contains `=`.
+    skip_equal
+        If True, skip the statement which contains equal character.
 
     Returns
     -------
     codes
         Replaced python code list.
     """
-    if "=" in code and not ignore_equal:
+    if "=" in code and skip_equal:
         return code
 
     precode = None
@@ -153,12 +155,17 @@ def replace_for_display(code: str, ignore_equal: bool = False) -> str:
     else:
         output = "markdown"
 
-    if ";" in code:
-        codes = code.split(";")
-        code = "_pheasant_dummy"
-        codes[-1] = f"{code} = {codes[-1]}"
-        precode = "\n".join(codes) + "\n"
-    else:
+    code = code.replace(";", "\n")
+    if "\n" not in code:
         precode = ""
+    else:
+        codes = code.split("\n")
+        code = "_pheasant_dummy"
+        match = re.match(r"(\w+) *?=", codes[-1])
+        if match:
+            codes.append(f"{code} = {match.group(1)}")
+        else:
+            codes[-1] = f"{code} = {codes[-1]}"
+        precode = "\n".join(codes) + "\n"
 
     return f'{precode}pheasant.jupyter.display.display({code}, output="{output}")'

@@ -15,12 +15,12 @@ class Header(Renderer):
 
     HEADER_PATTERN = r"^(?P<prefix>#+)(?P<kind>\w*?) +(?P<title>.+?)\n"
     TAG_PATTERN = r"\{#(?P<tag>\S+?)#\}"
-    CONTENT_PATTERN = r"^<!-- *begin *-->\n(?P<content>.*?)\n<!-- *end *-->\n"
+    # CONTENT_PATTERN = r"^<!-- *begin *-->\n(?P<content>.*?)\n<!-- *end *-->\n"
 
     def __post_init__(self):
         super().__post_init__()
         self.register(Header.HEADER_PATTERN, self.render_header)
-        self.register(Header.CONTENT_PATTERN, self.render_content)
+        # self.register(Header.CONTENT_PATTERN, self.render_content)
         self.set_template("header")
         self.config["kind_prefix"] = {}
         self.header_kind[""] = "header"
@@ -84,6 +84,7 @@ class Header(Renderer):
                     if cell.match:
                         if cell.source.startswith("~~~") and kind in "figure table":
                             content = cell.context["source"] + "\n"
+                            content = "".join(parser.parse(content, decorate=False))
                             content = markdown.convert(content)
                         else:
                             content = "".join(parser.parse_from_cell(cell, splitter))
@@ -92,9 +93,9 @@ class Header(Renderer):
             yield self.render("header", context_, content=content) + "\n"
             splitter.send(rest)
 
-    def render_content(self, context, splitter, parser) -> Iterator[str]:
-        content = "".join(parser.parse(context["content"] + "\n", decorate=False))
-        yield markdown.convert(content)
+    # def render_content(self, context, splitter, parser) -> Iterator[str]:
+    #     content = "".join(parser.parse(context["content"] + "\n", decorate=False))
+    #     yield markdown.convert(content)
 
     def _get_content(self, cell):
         content = cell.source

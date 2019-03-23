@@ -34,7 +34,8 @@ def test_jupyter_parse_text(parse):
 def test_jupyter_parse_html(parse):
     output = parse("import pandas;pandas.DataFrame([[1,2]])")
     assert (
-        '[<div class="display"><div class="content"><table class="dataframe' in output
+        '[\n\n<div class="display"><div class="content"><table class="dataframe'
+        in output
     )
 
 
@@ -42,6 +43,6 @@ def test_jupyter_parse_png(jupyter, parse):
     jupyter.execute("import matplotlib.pyplot as plt")
     output = parse("plt.plot([1,2])")
     assert (
-        '[<div class="display"><div class="content"><p>'
+        '[\n\n<div class="display"><div class="content"><p>'
         '<img alt="image/png" src="data:image/png' in output
     )

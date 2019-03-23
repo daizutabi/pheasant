@@ -7,4 +7,4 @@
     <span class="output">{{ output.data['text/plain'] }}</span>
   {%- endif -%}
 {%- endfor -%}
-{{ output_display(outputs) }}
+{%- for output in outputs -%}{{ output_display(output) }}{%- endfor -%}

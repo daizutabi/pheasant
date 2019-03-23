@@ -18,7 +18,7 @@ def test_converter(jupyter):
 
 def test_converter_special_function(converter):
     assert repr(converter) == "<Converter#converter['preprocess', 'postprocess']>"
-    assert repr(converter["preprocess"]) == "<Parser#preprocess[4]>"
+    assert repr(converter["preprocess"]) == "<Parser#preprocess[3]>"
     assert repr(converter["preprocess", "jupyter"]) == "<Jupyter#jupyter[2]>"
 
 

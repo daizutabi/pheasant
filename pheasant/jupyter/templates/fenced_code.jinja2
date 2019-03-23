@@ -13,5 +13,5 @@
       {%- endif -%}
     {%- endfor -%}
   {%- endif -%}
-  {{ output_display(outputs) }}
+  {%- for output in outputs -%}{{ output_display(output) }}{%- endfor -%}
 {%- endif -%}

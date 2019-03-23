@@ -25,7 +25,7 @@ If you use Pheasant as a plugin of MkDocs, you also need to install it.
 $ pip install mkdocs
 ~~~
 
-Then, in your `mkdocs.yml`, add lines below to register Pheasant as a MkDocs plugin and its theme based on [Read *the* Docs theme](https://sphinx-rtd-theme.readthedocs.io/en/stable/):
+Then, in your `mkdocs.yml`, add lines below to register Pheasant as a MkDocs plugin.
 
 ~~~yaml
 plugins:
@@ -89,7 +89,7 @@ plt.plot([1, 2])
 
 Executin of the above Markdown source on a Jupyter kernel creates a plain text output as a execute result and a PNG image as display data. You may want to display only the image. You can set `display` option to a fenced code after language description:
 
-~~~
+~~~copy
 ```python display
 plt.plot([1, 2])
 ```
@@ -97,34 +97,48 @@ plt.plot([1, 2])
 
 Note that Matplotlib package has already been imported in the previous code block so that we don't need to import it again here.
 
-Pheasant also supports Bokeh's HTML output.
+Pheasant also supports Bokeh's HTML output. First, create a figure object.
 
 ```python
 from bokeh.plotting import figure
 
 plot = figure(plot_width=250, plot_height=250)
-plot.circle([1, 2, 3, 4, 5], [1, 2, 3, 4, 5], size=10)
 ```
 
-The last line of the above code block returns a `GlyphRenderer` object. To show the bokeh's figure instead of it, we can use an inline code described above:
+Now, you can use `plot.circle` function to add some scatter points.
 
 ~~~copy
-{{plot}}
+```python
+plot.circle([1, 2, 3, 4, 5], [1, 2, 3, 4, 5], size=10)
+plot
+```
 ~~~
+
+{{plot}}
+
+The last line of the above code block returns a `Figure` object. To show the corresponding figure instead of it, we can use the `display` option described above:
+
+~~~copy
+```python display
+plot
+```
+~~~
+
+As well as a fenced code with `display` option, we can choose inline code style: `{{#plot}}`
+
+{{plot}}
+
 
 Furthermore, Pheasant supports HoloViews objects as well as interactive HoloMap.
 
 ~~~copy
-```python
+```python display
 import holoviews as hv
 curve = hv.Curve(((1, 2), (2, 3)))
-curve
 ```
 ~~~
 
-Then `{{#curve}}` generates a HoloView ojbect:
-
-{{curve}}
+Then `{{#curve}}` generates a HoloView ojbect: {{curve}}
 
 HoloMap can work as in a Jupyter Notebook.
 
