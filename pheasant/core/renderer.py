@@ -3,7 +3,6 @@ import os
 from dataclasses import field
 from typing import Any, Dict, List, Union
 
-import yaml
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 from pheasant.core.base import Base
@@ -12,15 +11,6 @@ from pheasant.core.parser import Render  # type, not class
 
 class Renderer(Base):
     renders: Dict[str, Render] = field(default_factory=dict)
-
-    def __post_init__(self):
-        super().__post_init__()
-        module = importlib.import_module(self.__module__)
-        path = os.path.join(os.path.dirname(module.__file__), "config.yml")
-        if os.path.exists(path):
-            with open(path, "r") as f:
-                config = yaml.load(f)
-            self._update("config", config)
 
     def __post_repr__(self):
         return len(self.renders)
@@ -36,21 +26,22 @@ class Renderer(Base):
         """Called per page."""
         pass
 
-    def set_template(
-        self, prefix: Union[str, List[str]] = "", directory: str = "templates"
-    ) -> None:
+    def set_template(self, names: Union[str, List[str]] = "") -> None:
         module = importlib.import_module(self.__module__)
-        default_directory = os.path.join(os.path.dirname(module.__file__), directory)
-        if isinstance(prefix, str):
-            prefix = [prefix]
-        for prefix_ in [f"{p}_" if p else "" for p in prefix]:
-            template = f"{prefix_}template"
-            template_file = f"{template}_file"
-            abspath = os.path.abspath(self.config[template_file])
-            template_directory, template_file = os.path.split(abspath)
-            loader = FileSystemLoader([template_directory, default_directory])
+        directory = os.path.join(os.path.dirname(module.__file__), "templates")
+        if isinstance(names, str):
+            names = [names]
+        for name in names:
+            template = f"{name}_template"
+            template_file = f"{name}_template_file"
+            if template_file in self.config:
+                path = self.config[template_file]
+            else:
+                path = os.path.join(directory, f"{name}.jinja2")
+            directory, path = os.path.split(os.path.abspath(path))
+            loader = FileSystemLoader([directory])
             env = Environment(loader=loader, autoescape=select_autoescape(["jinja2"]))
-            self.config[template] = env.get_template(template_file)
+            self.config[template] = env.get_template(path)
 
     def render(self, template: str, context: Dict[str, Any], **kwargs):
         return self.config[template + "_template"].render(
