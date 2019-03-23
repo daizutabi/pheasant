@@ -8,11 +8,11 @@ from pheasant.core.page import Page
 from pheasant.jupyter.display import extra_html
 from pheasant.jupyter.renderer import Jupyter
 from pheasant.number.renderer import Anchor, Header
-from pheasant.python.renderer import Python
+from pheasant.script.renderer import Script
 
 
 class Pheasant(Converter):
-    python: Python = field(default_factory=Python, init=False)
+    script: Script = field(default_factory=Script, init=False)
     jupyter: Jupyter = field(default_factory=Jupyter, init=False)
     header: Header = field(default_factory=Header, init=False)
     code: Code = field(default_factory=Code, init=False)
@@ -23,7 +23,7 @@ class Pheasant(Converter):
     def __post_init__(self):
         super().__post_init__()
         self.anchor.header = self.header
-        self.register("script", [self.python])
+        self.register("script", [self.script])
         self.register("main", [self.header, self.jupyter, self.code], self.decorator)
         self.register("link", [self.anchor])
 

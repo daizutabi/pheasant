@@ -1,20 +1,20 @@
 import pytest
 
 from pheasant.core.parser import Parser
-from pheasant.python.renderer import Python
+from pheasant.script.renderer import Script
 
 
 @pytest.fixture()
-def python():
-    python = Python()
-    return python
+def script():
+    script = Script()
+    return script
 
 
 @pytest.fixture()
-def parser(python):
+def parser(script):
     parser = Parser()
 
-    for pattern, render in python.renders.items():
+    for pattern, render in script.renders.items():
         parser.register(pattern, render)
 
     return parser

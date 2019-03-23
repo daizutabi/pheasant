@@ -1,6 +1,6 @@
 import pytest
 
-from pheasant.python.formatter import Formatter
+from pheasant.script.formatter import Formatter
 
 
 @pytest.mark.parametrize(
