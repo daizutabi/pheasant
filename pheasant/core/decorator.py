@@ -1,3 +1,4 @@
+import functools
 import re
 from dataclasses import field
 from typing import Callable, Dict, Union
@@ -38,3 +39,17 @@ class Decorator(Base):
         replace = r'\1<\2 class="{class_name}"><\2\4</\2></\2>\5'
         replace = replace.format(class_name=class_name)
         cell.output = SURROUND_TAG.sub(replace, cell.output)
+
+
+def comment(name):
+    def deco(render):
+        @functools.wraps(render)
+        def render_(self, context, splitter, parser):
+            if context[name].startswith("#"):
+                yield context["_source"].replace(context[name], context[name][1:])
+            else:
+                yield from render(self, context, splitter, parser)
+
+        return render_
+
+    return deco

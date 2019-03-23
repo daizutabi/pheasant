@@ -2,6 +2,7 @@ import re
 from typing import Iterator, List, Match
 
 from pheasant.core.renderer import Renderer
+from pheasant.core.decorator import comment
 from pheasant.jupyter.client import (execute, execution_report,
                                      find_kernel_names)
 from pheasant.jupyter.display import (bokeh_extra_resources,
@@ -53,10 +54,11 @@ class Jupyter(Renderer):
         )
         yield output + "\n"
 
+    @comment('code')
     def render_inline_code(self, context, splitter, parser) -> Iterator[str]:
-        if context["code"].startswith("#"):
-            yield context["_source"].replace(context["code"], context["code"][1:])
-            return
+        # if context["code"].startswith("#"):
+        #     yield context["_source"].replace(context["code"], context["code"][1:])
+        #     return
 
         context["code"] = replace_for_display(context["code"])
         if "language" not in context:

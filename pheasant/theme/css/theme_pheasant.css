@@ -11,6 +11,8 @@ code {
   color: #03E;
   border: none;
   font-size: 90%;
+  margin: 0px;
+  padding: 0px;
   /* background: #e0e0ff; */
 }
 

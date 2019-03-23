@@ -114,8 +114,6 @@ plot
 ```
 ~~~
 
-{{plot}}
-
 The last line of the above code block returns a `Figure` object. To show the corresponding figure instead of it, we can use the `display` option described above:
 
 ~~~copy
