@@ -29,13 +29,12 @@ class Jupyter(Renderer):
         self.reset()
 
     def setup(self):
-        code = "\n".join(
-            [
-                "import pheasant.jupyter.display",
-                "import pandas",
-                "pandas.options.display.max_colwidth = 0",
-            ]
-        )
+        codes = [
+            "import pheasant.jupyter.display",
+            "import pandas",
+            "pandas.options.display.max_colwidth = 0",
+        ]
+        code = "\n".join(codes)
         self.execute(code, "python")
 
     def reset(self):
@@ -47,7 +46,7 @@ class Jupyter(Renderer):
         if "display" in context["option"]:
             context["code"] = replace_for_display(context["code"], skip_equal=False)
         if "inline" in context["option"]:
-            context["code"] = preprocess_fenced_code(context["code"])
+            context["code"] = replace_fenced_code_for_display(context["code"])
         outputs = self.execute(code=context["code"], language=context["language"])
         output = super().render(
             "fenced_code", context, outputs=outputs, report=execution_report
@@ -59,7 +58,7 @@ class Jupyter(Renderer):
             yield context["_source"].replace(context["code"], context["code"][1:])
             return
 
-        context["code"] = preprocess_inline_code(context["code"])
+        context["code"] = replace_for_display(context["code"])
         if "language" not in context:
             context["language"] = "python"
 
@@ -118,15 +117,11 @@ class Jupyter(Renderer):
                 )
 
 
-def preprocess_fenced_code(code: str) -> str:
+def replace_fenced_code_for_display(code: str) -> str:
     def replace(match: Match) -> str:
         return replace_for_display(match.group(1), skip_equal=False)
 
     return Jupyter.RE_INLINE_CODE_PATTERN.sub(replace, code)
-
-
-def preprocess_inline_code(code: str) -> str:
-    return replace_for_display(code)
 
 
 def replace_for_display(code: str, skip_equal: bool = True) -> str:
