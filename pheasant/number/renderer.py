@@ -74,18 +74,19 @@ class Header(Renderer):
         if kind == "header":
             yield self.render("header", context_) + "\n"
         else:
-            # Need to detect the range of a numbered object.
             rest = ""
             if inline_code:
-                # content = "".join(parser.parse(inline_code, decorate=False))
                 content = "".join(parser.parse(inline_code))
             else:
                 content = ""
                 while not content:
                     cell = next(splitter)
                     if cell.match:
-                        content = "".join(parser.parse_from_cell(cell, splitter))
-                        # content = "".join(cell.render(cell.context, splitter, parser))
+                        if cell.source.startswith("~~~") and kind in "figure table":
+                            content = cell.context["source"] + "\n"
+                            content = markdown.convert(content)
+                        else:
+                            content = "".join(parser.parse_from_cell(cell, splitter))
                     else:
                         content, rest = self._get_content(cell)
             yield self.render("header", context_, content=content) + "\n"

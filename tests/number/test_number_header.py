@@ -47,7 +47,7 @@ def test_join(parser_header, header, source_simple):
             "Text {#tag-a#}",
             '<D C"figure"><D C"content" id="tag-b"><D>Content A</D></D>',
             '<p><S C"prefix">Figure</S> <S C"number">1.1</S>',
-            '<S C"title">Figure A</S></D>\n',
+            '<S C"title">Figure A</S></p></D>\n',
         ]
     )
     assert output == answer

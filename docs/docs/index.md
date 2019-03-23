@@ -202,23 +202,22 @@ pd.DataFrame([[1, 2], [3, 4]], index=list('XY'), columns=list('ab'))
 ```
 ~~~
 
-A **plain** Markdown source which is not processed by Pheasant has to be separated by a blank line from the following Markdown source which is not a part of the figure or table. If a figure or table has blank lines within it, you have to explicitly declare the content range with `<!-- begin -->` and `<!-- end -->` statements.
+A **plain** Markdown source which is not processed by Pheasant has to be separated by a blank line from the following Markdown source which is not a part of the figure or table. If a figure or table has blank lines within it, you have to write the content in a fenced code with tilde (`~~~`).
 
-~~~copy
+~~~~copy
 #Fig A figure with a blank line
-<!-- begin -->
-![jpg](img/cat.jpg)
-
-![jpg](img/cat.jpg)
-<!-- end -->
 ~~~
+![jpg](img/cat.jpg)
 
-However, Pheasant provides an easy way to number figures, tables, *etc*. regardless of whether they actually have any blank lines or not. Try this:
+![jpg](img/cat.jpg)
+~~~
+~~~~
+
+In addition, Pheasant provides an easy way to number figures, tables, *etc*. regardless of whether they actually have any blank lines or not. Try this:
 
 ~~~copy
 #Figure {{curve}} Inline numbering method.
 ~~~
-
 
 ### Hyperlink
 

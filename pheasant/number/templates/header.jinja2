@@ -7,11 +7,11 @@
 {%- block figure -%}
 <div class="content"{% if tag %} id="{{ tag }}"{% endif %}>{% autoescape false %}{{ content }}{% endautoescape %}</div>
 <p><span class="prefix">{{ prefix }}</span> <span class="number">{{ number_string }}</span>
-<span class="title">{{ title }}</span>
+<span class="title">{{ title }}</span></p>
 {%- endblock -%}
 
 {%- block other -%}
 <p><span class="prefix">{{ prefix }}</span> <span class="number">{{ number_string }}</span>
-<span class="title"{% if tag %} id="{{ tag }}"{% endif %}>{{ title }}</span>
+<span class="title"{% if tag %} id="{{ tag }}"{% endif %}>{{ title }}</span></p>
 <div class="content">{% autoescape false %}{{ content }}{% endautoescape %}</div>
 {%- endblock -%}

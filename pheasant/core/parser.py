@@ -39,8 +39,6 @@ class Parser(Base):
                 cell.output = cell.source
             if decorate is True and self.decorator:
                 self.decorator.decorate(cell)
-                # decorate(cell)
-
             yield cell.output
 
     def parse_from_cell(

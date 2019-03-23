@@ -7,7 +7,6 @@ matrix:
       python: 3.7
 
 install:
-  - pip install coveralls pytest-cov coverage  # for py3.6
   - pip install -e .[develop]
 
 before_script:
