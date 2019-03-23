@@ -36,9 +36,11 @@ setup(
     license="MIT",
     packages=find_packages(exclude=["tests", "docs"]),
     include_package_data=True,
-    install_requires=["click", "ipykernel", "markdown"],
+    install_requires=["click"],
     extras_require={
         "develop": [
+            "ipykernel",
+            "markdown",
             "mkdocs",
             "pytest",
             "pytest-cov",
@@ -48,11 +50,9 @@ setup(
             "pandas",
             "sympy",
             "selenium",
-            "pyflakes",
-            "openpyxl",
-            "python-pptx",
-            "mypy",
             "pycodestyle",
+            "pyflakes",
+            "mypy",
         ]
     },
     entry_points={

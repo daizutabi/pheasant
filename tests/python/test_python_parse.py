@@ -11,6 +11,7 @@ def parse(parser):
 
 def test_python_parse_source(parse):
     assert parse("# # Title\n") == "# Title\n\n"
+    assert parse("# # Title\n# ## Section\n") == "# Title\n## Section\n\n"
     assert parse("# # Title\n\n# ## Section\n") == "# Title\n\n## Section\n\n"
     assert parse("# # Title\n\n# abc\n# def\n# ghi\n") == "# Title\n\nabc def ghi\n\n"
     assert parse("# あ\n# い\n# う\n") == "あいう\n\n"
@@ -25,7 +26,6 @@ def test_python_parse_code(parse):
 
 
 def test_python_parse_code_escaped(parse):
-    print( parse("# a\n# ~~~\n# abc\n# ~~~\na=1\n"))
     assert (
         parse("# a\n# ~~~\n# abc\n# ~~~\na=1\n")
         == "a\n\n~~~\nabc\n~~~\n\n```python\na=1\n```\n\n"

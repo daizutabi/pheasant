@@ -79,7 +79,12 @@ def is_wide(character):
 
 def markdown_joiner(lines: List[str]) -> Iterator[str]:
     for cur in range(len(lines) - 1):
-        if not lines[cur]:
+        if (
+            not lines[cur]
+            or lines[cur + 1].startswith("#")
+            or lines[cur + 1].startswith("```")
+            or lines[cur + 1].startswith("~~~")
+        ):
             yield "\n"
         else:
             tail = lines[cur][-1]
