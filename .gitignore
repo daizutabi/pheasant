@@ -11,4 +11,4 @@ __pycache__/
 .pytest_cache/
 .mypy_cache/
 .pheasant-number.json
-tets/docs/site/
+tests/docs/site/
