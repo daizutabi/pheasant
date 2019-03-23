@@ -55,10 +55,6 @@ class Jupyter(Renderer):
 
     @comment('code')
     def render_inline_code(self, context, splitter, parser) -> Iterator[str]:
-        # if context["code"].startswith("#"):
-        #     yield context["_source"].replace(context["code"], context["code"][1:])
-        #     return
-
         context["code"] = replace_for_display(context["code"])
         if "language" not in context:
             context["language"] = "python"

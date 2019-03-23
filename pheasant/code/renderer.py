@@ -3,6 +3,7 @@ from ast import literal_eval
 from typing import Iterator
 
 from pheasant.core import markdown
+from pheasant.core.decorator import comment
 from pheasant.core.renderer import Renderer
 from pheasant.jupyter.client import execute, get_kernel_name
 
@@ -34,11 +35,10 @@ class Code(Renderer):
         if copy:
             splitter.send(context["source"] + "\n")
 
+    @comment('language')
     def render_inline_code(self, context, splitter, parser) -> Iterator[str]:
         language = context["language"]
-        if language.startswith("#"):
-            yield context["_source"].replace(language, language[1:])
-        elif context["header"]:
+        if context["header"]:
             header = "Code" if language == "python" else "File"
             source = context["source"]
             source = f"#{header} {source}\n![{language}]({source})\n"
@@ -64,8 +64,6 @@ class Code(Renderer):
                 source = inspect(kernel_name, context["source"])
                 source = f"~~~{language}\n{source}\n~~~\n"
                 splitter.send(source)
-                # yield from self.render_fenced_code(context, splitter, parser)
-                # yield "\n"
         else:
             yield markdown.convert(context["_source"])
 

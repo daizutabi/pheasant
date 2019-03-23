@@ -13,8 +13,3 @@ plugins:
 
 nav:
   - Home: index.md
-
-markdown_extensions:
-  - admonition
-  - pymdownx.arithmatex
-#   - attr_list
