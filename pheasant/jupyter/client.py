@@ -3,7 +3,7 @@ import atexit
 import datetime
 import logging
 import re
-from typing import Any, Callable, Dict, List, Optional, Tuple
+from typing import Any, Callable, Dict, List, Optional
 
 import jupyter_client
 from jupyter_client.manager import KernelManager

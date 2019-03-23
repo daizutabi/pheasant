@@ -48,7 +48,7 @@ setup(
             "pandas",
             "sympy",
             "selenium",
-            "flake8",
+            "pyflakes",
             "openpyxl",
             "python-pptx",
             "mypy",
