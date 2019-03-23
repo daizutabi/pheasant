@@ -47,7 +47,7 @@ class Jupyter(Renderer):
         if "display" in context["option"]:
             context["code"] = replace_for_display(context["code"], skip_equal=False)
         if "inline" in context["option"]:
-            context["code"] = preprocess_fenced_code(context["code"])
+            context["code"] = replace_fenced_code_for_display(context["code"])
         outputs = self.execute(code=context["code"], language=context["language"])
         output = super().render(
             "fenced_code", context, outputs=outputs, report=execution_report
@@ -59,24 +59,13 @@ class Jupyter(Renderer):
             yield context["_source"].replace(context["code"], context["code"][1:])
             return
 
-        context["code"] = preprocess_inline_code(context["code"])
+        # context["code"] = replace_for_display(context["code"])
+        context["code"] = replace_for_display(context["code"])
         if "language" not in context:
             context["language"] = "python"
 
         outputs = self.execute(code=context["code"], language=context["language"])
-        for output in outputs:
-            if "data" in output and "text/plain" in output["data"]:
-                text = output["data"]["text/plain"]
-                if (text.startswith('"') and text.endswith('"')) or (
-                    text.startswith("'") and text.endswith("'")
-                ):
-                    output["data"]["text/plain"] = text[1:-1]
-        for output in outputs:
-            if output["type"] == "display_data":
-                outputs = [
-                    output for output in outputs if output["type"] == "display_data"
-                ]
-                break
+        outputs = select_outputs(outputs)
         yield super().render("inline_code", context, outputs=outputs)
 
     def execute(self, code: str, language: str = "python") -> List:
@@ -118,15 +107,11 @@ class Jupyter(Renderer):
                 )
 
 
-def preprocess_fenced_code(code: str) -> str:
+def replace_fenced_code_for_display(code: str) -> str:
     def replace(match: Match) -> str:
         return replace_for_display(match.group(1), skip_equal=False)
 
     return Jupyter.RE_INLINE_CODE_PATTERN.sub(replace, code)
-
-
-def preprocess_inline_code(code: str) -> str:
-    return replace_for_display(code)
 
 
 def replace_for_display(code: str, skip_equal: bool = True) -> str:
@@ -169,3 +154,18 @@ def replace_for_display(code: str, skip_equal: bool = True) -> str:
         precode = "\n".join(codes) + "\n"
 
     return f'{precode}pheasant.jupyter.display.display({code}, output="{output}")'
+
+
+def select_outputs(outputs):
+    for output in outputs:
+        if "data" in output and "text/plain" in output["data"]:
+            text = output["data"]["text/plain"]
+            if (text.startswith('"') and text.endswith('"')) or (
+                text.startswith("'") and text.endswith("'")
+            ):
+                output["data"]["text/plain"] = text[1:-1]
+    for output in outputs:
+        if output["type"] == "display_data":
+            outputs = [output for output in outputs if output["type"] == "display_data"]
+            break
+    return outputs

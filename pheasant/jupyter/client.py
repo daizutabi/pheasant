@@ -129,7 +129,8 @@ def execute(
     msg["header"]["date"] = end_time
     execution_report["start"] = start_time
     execution_report["end"] = end_time
-    execution_report["total"] += end_time - start_time
+    execution_report["elasped"] = end_time - start_time
+    execution_report["total"] += execution_report["elasped"]
     execution_report["execution_count"] = msg["content"]["execution_count"]
     execution_report["message"] = msg
     return outputs
