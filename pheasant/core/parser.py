@@ -1,7 +1,7 @@
 import re
 from collections import OrderedDict
 from dataclasses import field
-from typing import Any, Dict, Iterator, Match, Optional, Pattern
+from typing import Any, Callable, Dict, Iterator, Match, Optional, Pattern
 
 from pheasant.core.base import (Base, Cell, Render, Splitter, get_render_name,
                                 make_cell_class, rename_pattern)
@@ -37,7 +37,9 @@ class Parser(Base):
                     cell.output = "".join(cell.render(cell.context, splitter, self))
                 else:
                     cell.output = cell.source
-                if decorate is True and self.decorator:
+                if callable(decorate):
+                    decorate(cell)
+                elif decorate is True and self.decorator:
                     self.decorator.decorate(cell)
                 yield cell.output
 
