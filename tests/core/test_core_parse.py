@@ -29,7 +29,7 @@ def test_core_parse():
     parser.register(a.pattern_d, a.render_digit)
 
     source = "123456789"
-    parser.parse(source) == source
+    assert parser.parse(source) == source
 
 
 def test_core_parse_complex():
@@ -39,40 +39,4 @@ def test_core_parse_complex():
     parser.register(a.pattern_w, a.render_word)
 
     source = "1a b2b abb 3bbacb5"
-    parser.parse(source) == "1a [2] ba[ b]3[[a]][4][5]"
-
-
-def decorate(cell):
-    print(cell)
-    if cell.match is None:
-        cell.output = "<" + cell.output + ">"
-    else:
-        cell.output = "{" + cell.output + "}"
-
-
-class B(Base):
-    pattern_a = r"(?P<a>a)"
-    pattern_b = r"(?P<b>b)"
-
-    def render_a(self, context, splitter, parser):
-        cell = next(splitter)
-        if cell.match is not None:
-            yield "[" + "".join(cell.render(cell.context, splitter, parser)) + "]"
-        else:
-            source = cell.source
-            yield parser.parse("b" + source, decorate=decorate)
-
-    def render_b(self, context, splitter, parser):
-        yield "B"
-
-
-def test_core_parse_with_decorate():
-    parser = Parser()
-    a = B()
-    parser.register(a.pattern_a, a.render_a)
-    parser.register(a.pattern_b, a.render_b)
-
-    source = "a12aa345"
-    parser.parse(source)
-    next(converter) == "{B}<12>"
-    next(converter) == "[{B}<345>]"
+    assert parser.parse(source) == "1a [2] ba[ b]3[[a]][4][5]"
