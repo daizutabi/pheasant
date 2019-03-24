@@ -10,7 +10,7 @@ def parse(parser):
     def func(language, source, pre="", post=""):
         if pre:
             pre += "\n"
-        return "".join(parser.parse(pre + fenced_code(language, source) + post))
+        return parser.parse(pre + fenced_code(language, source) + post)
 
     return func
 

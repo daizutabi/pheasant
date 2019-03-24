@@ -89,7 +89,7 @@ class Converter(Base):
         names = names or self.parsers
         for name in names:
             parser = self.parsers[name]
-            source = "".join(parser.parse(source))
+            source = parser.parse(source)
 
         return source
 

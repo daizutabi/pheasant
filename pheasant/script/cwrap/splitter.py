@@ -3,31 +3,8 @@ import re
 from itertools import repeat
 from typing import Iterator, List
 
-from pheasant.core.renderer import Renderer
-from pheasant.script import (AST_PATTERN, COMMENT_PATTERN, ESCAPE_PATTERN,
-                             HEADER_PATTERN, Line, _new_line_character)
-from pheasant.script.formatter import Formatter
-from pheasant.script.splitter import splitter as splitter_
-
-
-class Script(Renderer):
-    nl: str = "\n"
-    source: str = ""
-
-    def __post_init__(self):
-        super().__post_init__()
-        self.register(r"^(?P<source>.+)", self.render_script_code)
-
-    def render_script_code(self, context, splitter, parser) -> Iterator[str]:
-        self.source = context["source"]
-        self.nl = _new_line_character(self.source)
-        if not self.source.endswith(self.nl):
-            self.source += self.nl
-        yield ""
-
-        # formatter = Formatter(context["source"])
-        # for cell_type, begin, end in splitter_(context["source"]):
-        #     yield formatter(cell_type, begin, end) + "\n"
+from pyls_cwrap.config import (AST_PATTERN, COMMENT_PATTERN, ESCAPE_PATTERN,
+                               Line, _new_line_character)
 
 
 def splitter(source: str) -> Iterator[Line]:

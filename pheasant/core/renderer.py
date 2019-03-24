@@ -1,16 +1,17 @@
 import importlib
 import os
 from dataclasses import field
-from typing import Any, Dict, List, Union
+from typing import Any, Dict, Iterator, List, Optional, Union
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 from pheasant.core.base import Base
-from pheasant.core.parser import Render  # type, not class
+from pheasant.core.parser import Parser, Render  # Render is type, not class
 
 
 class Renderer(Base):
     renders: Dict[str, Render] = field(default_factory=dict)
+    parser: Optional[Parser] = None
 
     def __post_repr__(self):
         return len(self.renders)
@@ -47,3 +48,10 @@ class Renderer(Base):
         return self.config[template + "_template"].render(
             context, config=self.config, **kwargs
         )
+
+    def parse(self, source: str) -> Iterator[str]:
+        if self.parser is None:
+            self.parser = Parser()
+            for pattern, render in self.renders.items():
+                self.parser.register(pattern, render)
+        yield from self.parser.parse(source, decorate=False)

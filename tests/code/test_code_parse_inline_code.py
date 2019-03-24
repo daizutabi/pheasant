@@ -14,7 +14,7 @@ def parse(parser):
     def func(header, language, source, pre="", post=""):
         if pre:
             pre += "\n"
-        return "".join(parser.parse(pre + inline_code(header, language, source) + post))
+        return parser.parse(pre + inline_code(header, language, source) + post)
 
     return func
 

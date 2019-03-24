@@ -28,28 +28,26 @@ class Parser(Base):
         self.renders[render_name] = render
         return cell_class
 
-    def parse(self, source: str, decorate=True) -> Iterator[str]:
+    def parse(self, source: str, decorate=True) -> str:
         splitter = self.split(source)
-        for cell in splitter:
-            if cell.match:
-                cell.output = "".join(
-                    cell.render(context=cell.context, splitter=splitter, parser=self)
-                )
-            else:
-                cell.output = cell.source
-            if decorate is True and self.decorator:
-                self.decorator.decorate(cell)
-            yield cell.output
 
-    def parse_from_cell(
-        self, cell: Any, splitter: Splitter, decorate=True
-    ) -> Iterator[str]:
-        cell.output = "".join(
-            cell.render(context=cell.context, splitter=splitter, parser=self)
-        )
+        def iterator():
+            for cell in splitter:
+                if cell.match:
+                    cell.output = "".join(cell.render(cell.context, splitter, self))
+                else:
+                    cell.output = cell.source
+                if decorate is True and self.decorator:
+                    self.decorator.decorate(cell)
+                yield cell.output
+
+        return "".join(iterator())
+
+    def parse_from_cell(self, cell: Any, splitter: Splitter, decorate=True) -> str:
+        cell.output = "".join(cell.render(cell.context, splitter, self))
         if decorate is True and self.decorator:
             self.decorator.decorate(cell)
-        yield cell.output
+        return cell.output
 
     def split(self, source: str) -> Splitter:
         """Split the source into a cell and yield it."""

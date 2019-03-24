@@ -1,3 +1,15 @@
+# # Title
+# ## Section
+# ### Subsection
+
+# paragraph
+# paragraph
+
+# #Fig
+# ~~~
+# d
+# ~~~
+
 import pytest
 
 from pheasant.core.parser import Parser
@@ -5,9 +17,21 @@ from pheasant.script.renderer import Script
 
 
 @pytest.fixture()
+def source():
+    with open(__file__, "r", encoding="utf-8-sig") as file:
+        return file.read()
+
+# -
+@pytest.fixture()
 def script():
+    """
+    Return a Script instance.
+    """
     script = Script()
     return script
+
+# paragaraph
+# paragaraph
 
 
 @pytest.fixture()
@@ -19,7 +43,13 @@ def parser(script):
 
     return parser
 
+# paragaraph
+# paragaraph
 
+# paragaraph
+# paragaraph
+
+# -
 @pytest.fixture()
 def source_simple():
     source_simple = "\n".join(

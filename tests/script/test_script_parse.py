@@ -4,7 +4,7 @@ import pytest
 @pytest.fixture()
 def parse(parser):
     def func(source):
-        return "".join(parser.parse(source))
+        return parser.parse(source)
 
     return func
 

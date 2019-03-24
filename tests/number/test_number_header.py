@@ -35,7 +35,7 @@ def test_render_header(parser_header, header, source_simple):
 
 
 def test_join(parser_header, header, source_simple):
-    output = "".join(parser_header.parse(source_simple))
+    output = parser_header.parse(source_simple)
     output = output.replace("span", "S").replace("class=", "C").replace("div", "D")
     answer = "\n".join(
         [
