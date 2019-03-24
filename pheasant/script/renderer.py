@@ -1,103 +1,68 @@
-import ast
-import re
-from itertools import repeat
-from typing import Iterator, List
+from dataclasses import field
+from typing import Iterator
 
 from pheasant.core.renderer import Renderer
-from pheasant.script import (AST_PATTERN, COMMENT_PATTERN, ESCAPE_PATTERN,
-                             HEADER_PATTERN, Line, _new_line_character)
-from pheasant.script.formatter import Formatter
-from pheasant.script.splitter import splitter as splitter_
+from pheasant.script.formatter import format_comment
+from pheasant.script.splitter import split
 
 
-class Script(Renderer):
-    nl: str = "\n"
-    source: str = ""
+class Comment(Renderer):
+    max_line_length: int = 0
+    option: str = ""
+
+    HEADER_PATTERN = r"^(?P<source>#\s*#.*?\n)"
+    FENCED_CODE_PATTERN = r"^#\s*(?P<mark>~{3,}).*?\n#\s*(?P=mark)\n"
 
     def __post_init__(self):
         super().__post_init__()
-        self.register(r"^(?P<source>.+)", self.render_script_code)
+        self.register(Comment.HEADER_PATTERN, self.render_header, "comment__header")
+        self.register(Comment.FENCED_CODE_PATTERN, self.render_fenced_code)
 
-    def render_script_code(self, context, splitter, parser) -> Iterator[str]:
-        self.source = context["source"]
-        self.nl = _new_line_character(self.source)
-        if not self.source.endswith(self.nl):
-            self.source += self.nl
-        yield ""
+    def render_header(self, context, splitter, parser) -> Iterator[str]:
+        yield from self.render_escape(context, splitter, parser)
 
-        # formatter = Formatter(context["source"])
-        # for cell_type, begin, end in splitter_(context["source"]):
-        #     yield formatter(cell_type, begin, end) + "\n"
+    def render_fenced_code(self, context, splitter, parser) -> Iterator[str]:
+        yield from self.render_escape(context, splitter, parser)
 
-
-def splitter(source: str) -> Iterator[Line]:
-    iterator = source_splitter(source)
-    for kind, line in iterator:
-        if not line:
-            yield "Code", ""
-        elif kind == "Code":
-            yield kind, line
-        elif line.startswith("# #"):
-            yield "Escape", line
+    def render_escape(self, context, splitter, parser) -> Iterator[str]:
+        if self.max_line_length == 0:
+            yield format_comment(context["_source"], -1)  # Just remove "# ".
         else:
-            match = re.match(ESCAPE_PATTERN, line)
-            if match:
-                yield "Escape", line
-                escape_pattern = match.group()
-                for kind, line in iterator:
-                    yield "Escape", line
-                    if line.startswith(escape_pattern):
-                        break
+            yield context["_source"]
+
+    def decorate(self, cell) -> None:
+        if cell.match is None and self.max_line_length != -1:
+            if self.max_line_length == 0 and cell.source.startswith("# -"):
+                cell.output = ""
             else:
-                line = re.sub(COMMENT_PATTERN, "", line)
-                if line:  # Drop comment line without any text.
-                    yield "Comment", line
+                cell.output = format_comment(cell.source, self.max_line_length)
 
 
-def source_splitter(source: str) -> Iterator[Line]:
-    nl = _new_line_character(source)
-    node = ast.parse(source)
-    names = [ast_name(obj) for obj in node.body]
-    lines = source.split(nl)
+class Script(Renderer):
+    comment: Comment = field(default_factory=Comment)
 
-    if not names:  # Comment only.
-        yield from zip(repeat("Comment"), lines)
-        return
+    def __post_init__(self):
+        super().__post_init__()
+        self.register(r"^(?P<source>.+)", self.render_entire)
 
-    first_line_numbers = [obj.lineno - 1 for obj in node.body]  # 0-indexed
-    last_line_numbers = [
-        file_last_line_number(lines, no - 1)
-        for no in first_line_numbers[1:] + [len(lines) - 1]
-    ]
+    def render_entire(self, context, splitter, parser) -> Iterator[str]:
+        for kind, source in split(context["source"]):
+            if kind == "Comment":
+                yield self.comment.parse(source)
+            elif kind == "Code":
+                if self.comment.max_line_length == 0:
+                    yield f"```python\n{source}```\n"
+                else:
+                    yield source
+            else:
+                yield source
 
-    if first_line_numbers[0] != 0:
-        yield from zip(repeat("Comment"), lines[: first_line_numbers[0]])
-
-    cursor = first_line_numbers[0]
-    for name, first, last in zip(names, first_line_numbers, last_line_numbers):
-        if cursor < first:
-            yield from zip(repeat("Comment"), lines[cursor:first])
-        cursor = last + 1
-        yield "Code", nl.join(lines[first:cursor])
-    if cursor <= len(lines) - 1:
-        yield from zip(repeat("Comment"), lines[cursor:])
-
-
-def ast_name(node: ast.AST) -> str:
-    """Returns the node name."""
-    match = re.match(AST_PATTERN, str(node))
-    if match:
-        return match.group(1)
-    else:
-        return "Unknown"
-
-
-def file_last_line_number(lines: List[str], no: int) -> int:
-    def is_code(line: str) -> bool:
-        return len(line) > 0 and not line.startswith("#")
-
-    while True:
-        if is_code(lines[no]) or no == -1:
-            return no
-        else:
-            no -= 1
+    def convert(self, source: str, max_line_length=88):
+        self.comment.max_line_length = max_line_length
+        nl = "\r\n" if "\r\n" in source else "\n"
+        if nl != "\n":
+            source = source.replace(nl, "\n")
+        output = self.parse(source)
+        if nl != "\n":
+            output = output.replace("\n", nl)
+        return output

@@ -2,17 +2,17 @@
 # ## Section
 # ### Subsection
 
-# paragraph
-# paragraph
+# paragraph 1
+# paragraph 1
 
 # #Fig
 # ~~~
 # d
 # ~~~
 
+# -
 import pytest
 
-from pheasant.core.parser import Parser
 from pheasant.script.renderer import Script
 
 
@@ -21,42 +21,32 @@ def source():
     with open(__file__, "r", encoding="utf-8-sig") as file:
         return file.read()
 
-# -
+
+# -display
 @pytest.fixture()
-def script():
+def script(source):
     """
     Return a Script instance.
     """
     script = Script()
     return script
 
-# paragaraph
-# paragaraph
+
+# paragraph 2
+# paragraph 2
+
+def f():
+    for x in range(10):
+
+        yield x
 
 
-@pytest.fixture()
-def parser(script):
-    parser = Parser()
+# paragraph 3
+# paragraph 3
 
-    for pattern, render in script.renders.items():
-        parser.register(pattern, render)
+# paragraph 4
+# paragraph 4
 
-    return parser
-
-# paragaraph
-# paragaraph
-
-# paragaraph
-# paragaraph
-
-# -
-@pytest.fixture()
-def source_simple():
-    source_simple = "\n".join(
-        [
-            "# # Title\n# ## Section a\n# paragraph 11\n# paragraph 12",
-            "# paragraph 13\n\n# paragraph 21\n# paragraph 22\n# paragraph 23\n"
-            "a=1\nb=2\nc=3\n# ## section b\nd=4\ne=5\nf=6\n",
-        ]
-    )
-    return source_simple
+# -inline
+def g():
+    pass

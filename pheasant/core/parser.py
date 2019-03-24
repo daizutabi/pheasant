@@ -1,7 +1,7 @@
 import re
 from collections import OrderedDict
 from dataclasses import field
-from typing import Any, Callable, Dict, Iterator, Match, Optional, Pattern
+from typing import Any, Callable, Dict, Match, Optional, Pattern, Union
 
 from pheasant.core.base import (Base, Cell, Render, Splitter, get_render_name,
                                 make_cell_class, rename_pattern)
@@ -28,7 +28,7 @@ class Parser(Base):
         self.renders[render_name] = render
         return cell_class
 
-    def parse(self, source: str, decorate=True) -> str:
+    def parse(self, source: str, decorate: Union[Callable, bool] = False) -> str:
         splitter = self.split(source)
 
         def iterator():

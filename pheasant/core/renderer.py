@@ -1,7 +1,7 @@
 import importlib
 import os
 from dataclasses import field
-from typing import Any, Dict, Iterator, List, Optional, Union
+from typing import Any, Dict, List, Optional, Union
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
@@ -49,9 +49,15 @@ class Renderer(Base):
             context, config=self.config, **kwargs
         )
 
-    def parse(self, source: str) -> Iterator[str]:
+    def parse(self, source: str) -> str:
         if self.parser is None:
             self.parser = Parser()
             for pattern, render in self.renders.items():
                 self.parser.register(pattern, render)
-        yield from self.parser.parse(source, decorate=False)
+        return self.parser.parse(source, decorate=self.decorate)
+
+    def decorate(self, cell):
+        """Decorate cell.output after parse.
+
+        Overwritten by subclass."""
+        pass

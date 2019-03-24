@@ -1,99 +1,88 @@
-"""Format Python commnet and code for suitable format as Markdown"""
-
 import re
 import unicodedata
-from itertools import chain
-from typing import Iterator, List, Pattern
+from functools import reduce
+from itertools import accumulate
+from typing import Iterator
+
+COMMENT_PATTERN = re.compile(r"^#\s*", re.MULTILINE)
 
 
-class Formatter:
-    OPTION_PATTERN: Pattern = re.compile(r".*?(\s{2,}# -)(.+)$", re.MULTILINE)
-    COMMENT_PATTERN: Pattern = re.compile(r"^# ", re.MULTILINE)
+def format_comment(source: str, max_line_length: int = 88) -> str:
+    """Format a comment source to python code or markdown.
 
-    def __init__(self, source: str):
-        self.lines = source.split("\n")
-        self.language = "python"
+    Output format is determined by `max_line_length`:
+        -1: Just remove `#` and following spaces at the beginning of each line.
+         0: Markdown source formatted to one line.
+        >1: Python script wrapped with the max line length.
 
-    def __len__(self):
-        return len(self.lines)
+    Any wide characters take two-character spaces to calculate the line length.
 
-    def __call__(self, cell_type: str, begin: int, end: int) -> str:
-        return self.format_(cell_type, begin, end)
+    Parameters
+    ----------
+    source
+        Comment source to be formatted.
+    max_line_length
+        Preferred line length when source is formatted to a Python script.
+        If 0, source is formatted to a Markdown source and its line length is
+        not limitted.
 
-    def content(self, begin: int, end: int):
-        """Join the lines and add a new line at the end."""
-        return "\n".join(self.lines[begin : end + 1]) + "\n"
-
-    def format_(self, cell_type: str, begin: int, end: int) -> str:
-        """Format `str` lines according to the cell type.
-
-        Parameters
-        ----------
-        cell_type : 'Markdown' or 'Code'
-        begin, end : 0-indexed line number at which cell starts and ends.
-
-        Returns
-        -------
-        cell_content : Formatted cell content.
-        """
-        if cell_type == "Markdown":
-            return self.markdown(begin, end)
-        elif cell_type == "Escape":
-            return self.escape(begin, end)
-        elif cell_type == "Code":
-            return self.code(begin, end)
-        else:
-            raise ValueError(f"Unknown cell type: {cell_type}.")
-
-    def markdown(self, begin: int, end: int) -> str:
-        body = [
-            re.sub(self.COMMENT_PATTERN, "", line)
-            for line in self.lines[begin : end + 1]
-        ]
-        joiner = markdown_joiner(body)
-        return "".join(chain(*zip(body, joiner)))
-
-    def escape(self, begin: int, end: int) -> str:
-        body = [
-            re.sub(self.COMMENT_PATTERN, "", line)
-            for line in self.lines[begin : end + 1]
-        ]
-        return "\n".join(body)
-
-    def code(self, begin, end):
-        source = self.content(begin, end)
-        match = re.match(self.OPTION_PATTERN, source)
-        if match:
-            options = match.group(2)
-            source = source.replace(match.group(1) + match.group(2), "")
-            options = " " + options
-        else:
-            options = ""
-        source = re.sub("\n{3,}", "\n\n", source)  # for saving spaces.
-        return f"```{self.language}{options}\n{source}```\n"
+    Returns
+    -------
+    output
+        Formatted output.
+    """
+    source = COMMENT_PATTERN.sub("", source)
+    if max_line_length == -1:
+        return source
+    else:
+        return "\n".join(wrap(source, max_line_length)) + "\n"
 
 
-def is_wide(character):
+def wrap(source: str, max_line_length: int, pre: str = "# ") -> Iterator[str]:
+    line = join(source)
+    if max_line_length == 0:
+        yield line
+        return
+
+    max_line_length -= len(pre)
+    if len(line) <= max_line_length:
+        yield pre + line
+        return
+
+    is_wides = [is_wide(character) for character in line]
+    distance = list(accumulate(2 if x else 1 for x in is_wides))
+    splittable = [is_splittable(line, index) for index in range(1, len(line))]
+
+    begin = end = cursor = 0
+    while True:
+        if splittable[cursor]:
+            end = cursor
+        cursor += 1
+        if cursor == len(line) - 1:
+            yield pre + line[begin:].strip()
+            break
+        elif distance[cursor] - distance[begin] > max_line_length and begin != end:
+            yield pre + line[begin : end + 1].strip()
+            begin = end = end + 1
+
+
+def is_wide(character: str) -> bool:
     return unicodedata.east_asian_width(character) in ["F", "W"]
 
 
-def markdown_joiner(lines: List[str]) -> Iterator[str]:
-    for cur in range(len(lines) - 1):
-        if (
-            not lines[cur]
-            or lines[cur + 1].startswith("#")
-            or lines[cur + 1].startswith("```")
-            or lines[cur + 1].startswith("~~~")
-        ):
-            yield "\n"
+def is_splittable(line: str, index: int) -> bool:
+    return line[index] == " " or is_wide(line[index - 1]) or is_wide(line[index])
+
+
+def join(source: str) -> str:
+    def joint(tail: str, head: str) -> str:
+        if is_wide(tail) and is_wide(head):
+            return ""
         else:
-            tail = lines[cur][-1]
-            if not lines[cur + 1]:
-                yield "\n"
-            else:
-                head = lines[cur + 1][0]
-                if is_wide(tail) and is_wide(head):
-                    yield ""
-                else:
-                    yield " "
-    yield "\n"
+            return " "
+
+    def join(first: str, second: str) -> str:
+        return joint(first[-1], second[0]).join([first, second])
+
+    lines = source.split("\n")[:-1]
+    return reduce(join, lines[1:], lines[0])
