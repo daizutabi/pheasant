@@ -35,7 +35,7 @@ def test_render_header(header, source_simple):
 
 
 def test_join(header, source_simple):
-    output = header.parser.parse(source_simple)
+    output = header.parse(source_simple)
     output = output.replace("span", "S").replace("class=", "C").replace("div", "D")
     answer = "\n".join(
         [
@@ -51,3 +51,11 @@ def test_join(header, source_simple):
         ]
     )
     assert output == answer
+
+
+def test_ignore(header):
+    from pheasant.number.renderer import Header
+
+    header = Header()
+
+    header.parse("# title\n")

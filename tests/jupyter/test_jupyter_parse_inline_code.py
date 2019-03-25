@@ -8,7 +8,7 @@ def inline_code(code):
 @pytest.fixture()
 def parse(jupyter):
     def func(code):
-        return jupyter.parser.parse(inline_code(code))
+        return jupyter.parse(inline_code(code))
 
     return func
 

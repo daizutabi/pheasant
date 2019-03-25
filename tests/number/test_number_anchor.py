@@ -5,11 +5,11 @@ def test_without_number(anchor, source_simple):
     assert anchor.header is None
 
     with pytest.raises(ValueError):
-        anchor.parser.parse(source_simple)
+        anchor.parse(source_simple)
 
 
 def test_with_number(anchor, header, source_simple):
-    list(header.parser.parse(source_simple))  # DO PARSE
+    list(header.parse(source_simple))  # DO PARSE
     assert len(header.tag_context) == 2
     anchor.header = header
     assert anchor.header is header
@@ -37,7 +37,7 @@ def test_tag_context(anchor, source_simple):
 @pytest.fixture()
 def source_parsed(anchor, header, source_simple):
     anchor.header.reset()
-    return header.parser.parse(source_simple)
+    return header.parse(source_simple)
 
 
 def test_render_anchor(anchor, source_parsed):
@@ -53,7 +53,7 @@ def test_render_anchor(anchor, source_parsed):
 
 
 def test_parse_anchor(anchor, source_parsed):
-    output = anchor.parser.parse(source_parsed)
+    output = anchor.parse(source_parsed)
     output = output.replace("span", "S").replace("class=", "C").replace("div", "D")
     answer = "\n".join([
         '# <S C"header"><S C"number">1</S> <S C"title" id="tag-a">Title</S></S>',

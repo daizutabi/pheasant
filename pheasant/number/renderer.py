@@ -32,6 +32,7 @@ class Header(Renderer):
         self.reset()
 
     def reset(self) -> None:
+        self.meta["ignored_path"] = set()
         self.reset_number_list()
 
     def reset_number_list(self) -> None:
