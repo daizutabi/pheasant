@@ -34,7 +34,7 @@ class Parser(Base):
         def iterator():
             for cell in splitter:
                 if cell.match:
-                    cell.output = "".join(cell.render(cell.context, splitter, self))
+                    cell.output = cell.parse(splitter, self)
                 else:
                     cell.output = cell.source
                 if callable(decorate):
@@ -46,7 +46,7 @@ class Parser(Base):
         return "".join(iterator())
 
     def parse_from_cell(self, cell: Any, splitter: Splitter, decorate=True) -> str:
-        cell.output = "".join(cell.render(cell.context, splitter, self))
+        cell.output = cell.parse(splitter, self)
         if decorate is True and self.decorator:
             self.decorator.decorate(cell)
         return cell.output

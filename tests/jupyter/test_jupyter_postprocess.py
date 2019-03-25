@@ -1,5 +1,5 @@
 from pheasant.jupyter.client import execute
-from pheasant.jupyter.display import select_display_data, strip_text
+from pheasant.jupyter.display import select_display_data
 
 
 def test_import():
@@ -118,20 +118,3 @@ def test_select_display_data_sympy():
     select_display_data(outputs)
     assert len(outputs[0]["data"]) == 1
     assert "text/latex" in outputs[0]["data"]
-
-
-def test_strip_text():
-    outputs = execute("'abc'")
-    outputs[0]['data']['text/plain'] == "'abc'"
-    strip_text(outputs)
-    outputs[0]['data']['text/plain'] == 'abc'
-
-    outputs = execute('"abc"')
-    outputs[0]['data']['text/plain'] == "'abc'"
-    strip_text(outputs)
-    outputs[0]['data']['text/plain'] == 'abc'
-
-    outputs = execute("'a\"b\"c'")
-    outputs[0]['data']['text/plain'] == "'a\"b\"c'"
-    strip_text(outputs)
-    outputs[0]['data']['text/plain'] == 'a"b"c'

@@ -87,10 +87,10 @@ plt.plot([1, 2])
 ```
 ~~~
 
-Executin of the above Markdown source on a Jupyter kernel creates a plain text output as a execute result and a PNG image as display data. You may want to display only the image. You can set `display` option to a fenced code after language description:
+Executin of the above Markdown source on a Jupyter kernel creates a plain text output as a execute result and a PNG image as display data. You may want to display only the image. You can set `inline` option to a fenced code after language description:
 
 ~~~copy
-```python display
+```python inline
 plt.plot([1, 2])
 ```
 ~~~
@@ -114,7 +114,7 @@ plot
 ```
 ~~~
 
-The last line of the above code block returns a `Figure` object. To show the corresponding figure instead of it, we can use the `display` option described above:
+The last line of the above code block returns a `Figure` object. To show the corresponding figure instead of it, we can use the `display` option:
 
 ~~~copy
 ```python display
@@ -136,14 +136,13 @@ curve = hv.Curve(((1, 2), (2, 3)))
 ```
 ~~~
 
-Then `{{#curve}}` generates a HoloView ojbect: {{curve}}
+Also, `{{#curve}}` generates a HoloView ojbect: {{curve}}
 
 HoloMap can work as in a Jupyter Notebook.
 
 
-```python
+```python display
 import numpy as np
-
 
 def sine_curve(phase, freq):
     xvals = [0.1* i for i in range(100)]
@@ -153,10 +152,6 @@ frequencies = [0.5, 0.75, 1.0]
 curve_dict = {f: sine_curve(0, f) for f in frequencies}
 holomap = hv.HoloMap(curve_dict, kdims='Frequency')
 ```
-
-~~~copy
-{{holomap}}
-~~~
 
 ### Auto numbering of headers, figures, tables, *etc*.
 
@@ -188,7 +183,7 @@ In the above Markdown source, `{##<tag>#}` is an ID tag for hyperlink described 
 
 ~~~copy
 #Fig A Matplotlib figure
-```python display
+```python inline
 plt.plot([3, 2])
 ```
 ~~~
@@ -207,7 +202,7 @@ Pandas's DataFarme is useful to create a table programmatically.
 
 ~~~copy
 #Table A Pandas's DataFrame
-```python display
+```python inline
 import pandas as pd
 
 pd.DataFrame([[1, 2], [3, 4]], index=list('XY'), columns=list('ab'))

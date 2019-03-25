@@ -18,10 +18,10 @@ A call of `plt.plot` generates a standard plain text output (a list of `Line` ob
 plt.plot([1, 3, 5], marker='o')
 ```
 
-If you want to hide the input source and the plain text output, you can use a `display` option to show just the display data such as an image or HTML:
+If you want to hide the input source and the plain text output, you can use a `inline` option to show just the display data such as an image or HTML:
 
 ~~~copy
-```python display
+```python inline
 plt.plot([4, 2, 3], marker='o')
 ```
 ~~~
@@ -47,7 +47,7 @@ axes
 You can use the inline code to get different images at the every evaluation time while the iteration is going. You have to call `plt.cla()` method to continuously clear the previous plot.
 
 ~~~copy
-```python hide inline
+```python inline hide
 axes = []
 for k, color in enumerate(['red', 'blue']):
     plt.plot([0, k + 3], color)
@@ -100,7 +100,7 @@ Then,
 
 ~~~copy
 #Tab A Pandas DataFrame with a Matplotlib plot
-```python display
+```python inline
 import pandas as pd
 pd.DataFrame([axes], columns=['Red', 'Blue'])
 ```
@@ -171,7 +171,7 @@ The above process to display a HTML image from a HoloViews object can be done by
 
 Showing a HoloMap is straightforward. From HoloViews's official documents,
 
-```python
+```python display
 import numpy as np
 frequencies = [0.5, 0.75, 1.0, 1.25]
 
@@ -183,16 +183,8 @@ curve_dict = {f:sine_curve(0,f) for f in frequencies}
 hmap = hv.HoloMap(curve_dict, kdims='frequency')
 ```
 
-~~~copy
-{{hmap}}
-~~~
-
-```python
+```python display
 phases = [0, np.pi/2, np.pi, 3*np.pi/2]
 curve_dict_2D = {(p,f):sine_curve(p,f) for p in phases for f in frequencies}
 hmap = hv.HoloMap(curve_dict_2D, kdims=['phase', 'frequency'])
 ```
-
-~~~copy
-{{hmap}}
-~~~

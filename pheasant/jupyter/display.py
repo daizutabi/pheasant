@@ -5,7 +5,6 @@ IMPORTANT: `display` function is called from jupyter kernel.
 import base64
 import io
 import re
-from ast import literal_eval
 from typing import Any, Callable, Dict, List
 
 from IPython.display import HTML, Latex
@@ -188,16 +187,3 @@ PANDAS_PATTERN = re.compile(
 def delete_style(html: str) -> str:
     """Delete style from Pandas DataFrame html."""
     return PANDAS_PATTERN.sub("", html)
-
-
-def strip_text(outputs: list) -> None:
-    for output in outputs:
-        if output["type"] == "execute_result":
-            if "text/html" in output["data"]:
-                return
-            elif "text/plain" in output["data"]:
-                text = output["data"]["text/plain"]
-                if text.startswith("'"):
-                    text = literal_eval(text)
-                output["data"] = {"text/plain": text}
-                break

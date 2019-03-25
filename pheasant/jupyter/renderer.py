@@ -1,8 +1,9 @@
 import re
+from ast import literal_eval
 from typing import Iterator, List, Match
 
-from pheasant.core.renderer import Renderer
 from pheasant.core.decorator import comment
+from pheasant.core.renderer import Renderer
 from pheasant.jupyter.client import (execute, execution_report,
                                      find_kernel_names)
 from pheasant.jupyter.display import (bokeh_extra_resources,
@@ -44,24 +45,26 @@ class Jupyter(Renderer):
         self.meta["extra_module"] = []
 
     def render_fenced_code(self, context, splitter, parser) -> Iterator[str]:
+        code = context["code"]
         if "display" in context["option"]:
-            context["code"] = replace_for_display(context["code"], skip_equal=False)
+            code = replace_for_display(code, skip_equal=False)
         if "inline" in context["option"]:
-            context["code"] = replace_fenced_code_for_display(context["code"])
-        outputs = self.execute(code=context["code"], language=context["language"])
+            code = replace_fenced_code_for_display(code)
+            code = replace_for_display(code, skip_equal=False)
+        # context["code"] = code  # Uncomment for debug
+        outputs = self.execute(code, context["language"])
         report = format_report()
-        output = super().render("fenced_code", context, outputs=outputs, report=report)
-        yield output + "\n"
+        yield self.render("fenced_code", context, outputs=outputs, report=report) + "\n"
 
-    @comment('code')
+    @comment("code")
     def render_inline_code(self, context, splitter, parser) -> Iterator[str]:
-        context["code"] = replace_for_display(context["code"])
+        code = replace_for_display(context["code"])
         if "language" not in context:
             context["language"] = "python"
 
-        outputs = self.execute(code=context["code"], language=context["language"])
+        outputs = self.execute(code, context["language"])
         outputs = select_outputs(outputs)
-        yield super().render("inline_code", context, outputs=outputs)
+        yield self.render("inline_code", context, outputs=outputs)
 
     def execute(self, code: str, language: str = "python") -> List:
         if language not in self.config["kernel_name"]:
@@ -127,8 +130,6 @@ def replace_for_display(code: str, skip_equal: bool = True) -> str:
     if "=" in code and skip_equal:
         return code
 
-    precode = None
-
     if code.startswith("^"):
         code = code[1:]
         output = "html"
@@ -140,11 +141,13 @@ def replace_for_display(code: str, skip_equal: bool = True) -> str:
         precode = ""
     else:
         codes = code.split("\n")
-        code = "_pheasant_dummy"
+        if codes[-1].startswith(" "):
+            return code
         match = re.match(r"(\w+) *?=", codes[-1])
         if match:
-            codes.append(f"{code} = {match.group(1)}")
+            code = match.group(1)
         else:
+            code = "_pheasant_dummy"
             codes[-1] = f"{code} = {codes[-1]}"
         precode = "\n".join(codes) + "\n"
 
@@ -158,7 +161,7 @@ def select_outputs(outputs):
             if (text.startswith('"') and text.endswith('"')) or (
                 text.startswith("'") and text.endswith("'")
             ):
-                output["data"]["text/plain"] = text[1:-1]
+                output["data"]["text/plain"] = literal_eval(text)
     for output in outputs:
         if output["type"] == "display_data":
             outputs = [output for output in outputs if output["type"] == "display_data"]

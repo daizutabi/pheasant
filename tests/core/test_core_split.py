@@ -30,14 +30,14 @@ def test_split():
     assert repr(cell) == "Cell(source='a ', match=None, output='')"
     cell = next(splitter)
     assert cell.match is not None
-    assert list(cell.render(cell.context, splitter, parser)) == ["ba"]
+    assert list(cell.render(splitter, parser)) == ["ba"]
     cell = next(splitter)
     cell = next(splitter)
     assert cell.match is not None
-    assert "".join(cell.render(cell.context, splitter, parser)) == "dc"
+    assert cell.parse(splitter, parser) == "dc"
     assert splitter.send('a ab') is None
     cell = next(splitter)
     assert repr(cell) == "Cell(source='a ', match=None, output='')"
     cell = next(splitter)
     assert cell.match is not None
-    assert list(cell.render(cell.context, splitter, parser)) == ["ba"]
+    assert list(cell.render(splitter, parser)) == ["ba"]

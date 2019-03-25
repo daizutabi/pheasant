@@ -51,7 +51,7 @@ class Header(Renderer):
         title, tag = split_tag(context["title"])
         title, inline_code = split_inline_code(title)
 
-        context_ = {
+        context = {
             "kind": kind,
             "header": header,
             "prefix": prefix,
@@ -67,10 +67,10 @@ class Header(Renderer):
                 "number_string": number_string,
                 "abs_src_path": self.abs_src_path,
             }
-            context_.update(tag=tag)
+            context.update(tag=tag)
 
         if kind == "header":
-            yield self.render("header", context_) + "\n"
+            yield self.render("header", context) + "\n"
         else:
             rest = ""
             if inline_code:
@@ -87,19 +87,22 @@ class Header(Renderer):
                         else:
                             content = parser.parse_from_cell(cell, splitter)
                     else:
-                        content, rest = self._get_content(cell)
-            yield self.render("header", context_, content=content) + "\n"
-            splitter.send(rest)
+                        content, rest = get_content(cell.source)
+            yield self.render("header", context, content=content) + "\n"
+            if rest:
+                splitter.send(rest)
 
-    def _get_content(self, cell):
-        content = cell.source
-        index = content.find("\n\n")
-        if index == -1:
-            content, rest = content, ""
-        else:
-            content, rest = content[:index], content[index + 2 :]
-        content = markdown.convert(content)
-        return content, rest
+
+def get_content(source: str) -> Tuple[str, str]:
+    if source.strip() == "":
+        return "", ""
+    index = source.find("\n\n")
+    if index == -1:
+        content, rest = source, ""
+    else:
+        content, rest = source[:index], source[index + 2 :]
+    content = markdown.convert(content)
+    return content, rest
 
 
 class Anchor(Renderer):

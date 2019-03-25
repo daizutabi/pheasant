@@ -1,19 +1,21 @@
 import io
 from collections import OrderedDict
 from dataclasses import field
-from typing import Any, Dict, Iterable, Optional, Union
+from typing import Any, Dict, Iterable, Iterator, List, Optional, Union
 
 from pheasant.core.base import Base
 from pheasant.core.decorator import Decorator
 from pheasant.core.page import Page
 from pheasant.core.parser import Parser
 from pheasant.core.renderer import Renderer
-from pheasant.core.renderers import Renderers
+
+# from pheasant.core.renderers import Renderers
 
 
 class Converter(Base):
     parsers: Dict[str, Parser] = field(default_factory=OrderedDict)
-    renderers: Renderers = field(default_factory=Renderers)
+    # renderers: Renderers = field(default_factory=Renderers)
+    renderers: Dict[str, List[Renderer]] = field(default_factory=dict)
     pages: Dict[str, Page] = field(default_factory=dict)
 
     def __post_repr__(self):
@@ -23,19 +25,28 @@ class Converter(Base):
         if isinstance(item, str):
             return self.parsers[item]
         elif isinstance(item, tuple):
-            return self.renderers[item]
+            renderers = self.renderers[item[0]]
+            for renderer in renderers:
+                if renderer.name == item[1]:
+                    return renderer
+            else:
+                raise KeyError
+
+    def renderer_iter(self) -> Iterator[Renderer]:
+        for renderers in self.renderers.values():
+            yield from renderers
 
     def update_config(self, config: Dict[str, Any]):
-        for renderer in self.renderers:
+        for renderer in self.renderer_iter():
             if renderer.name in config:
                 renderer._update("config", config[renderer.name])
 
     def setup(self):
-        for renderer in self.renderers:
+        for renderer in self.renderer_iter():
             renderer.setup()
 
     def reset(self):
-        for renderer in self.renderers:
+        for renderer in self.renderer_iter():
             renderer.reset()
         self.pages = {}
 
@@ -56,18 +67,15 @@ class Converter(Base):
         """
         if name in self.parsers:
             raise ValueError(f"Duplicated parser name '{name}'")
-        parser = Parser(name)  # type:ignore
+        parser = Parser(name)  # type: ignore
         if decorator:
             parser.decorator = decorator
-        self.parsers[name] = parser
         if isinstance(renderers, Renderer):
             renderers = [renderers]
-        self.renderers.register(name, renderers)
-        for renderer in self.renderers[name]:  # type: ignore
+        for renderer in renderers:
             renderer.parser = parser
-        # r
-        #     for pattern, render in renderer.renders.items():
-        #         parser.register(pattern, render)
+        self.parsers[name] = parser
+        self.renderers[name] = list(renderers)
 
     def convert(
         self, source: str, names: Optional[Union[str, Iterable[str]]] = None

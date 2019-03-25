@@ -99,7 +99,15 @@ def make_cell_class(pattern: str, render: Render, render_name: str) -> type:
     fields = [
         ("context", Dict[str, str]),
         ("pattern", str, field(default=pattern, init=False)),
-        ("render", Callable[..., Generator], field(default=render)),  # NG: init=False
         ("render_name", str, field(default=render_name, init=False)),
     ]
-    return make_dataclass("Cell", fields, bases=(Cell,))  # type: ignore
+
+    def _render(self, splitter, parser):
+        yield from render(self.context, splitter, parser)
+
+    def parse(self, splitter, parser):
+        return "".join(self.render(splitter, parser))
+
+    return make_dataclass(  # type: ignore
+        "Cell", fields, namespace={"render": _render, "parse": parse}, bases=(Cell,)
+    )

@@ -1,7 +1,7 @@
 {%- from 'macro.jinja2' import output_display with context -%}
 
 {%- if 'hide' not in option -%}
-  {%- if 'display' not in option -%}
+  {%- if 'inline' not in option -%}
     <div class="input"><pre><code class="{{ language }}">{{ code }}</code></pre>
     <p class="report"><span class="count">[{{report.count}}]</span><span class="label"> Last executed </span>
     <span class="start">{{report.start}}</span><span class="label"> in </span><span class="elasped">{{report.elasped}}</span></p></div>
