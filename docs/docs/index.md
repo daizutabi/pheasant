@@ -47,16 +47,10 @@ print(1)
 
 is converted into:
 
+~~~html
+<div class="input"><pre><code class="python">print(1)</code></pre>
+<div class="stdout"><pre><code class="text">1</code></pre></div>
 ~~~
-```python
-print(1)
-```
-
-```python
-1
-```
-~~~
-
 
 after execution of `print` function via [Jupyter client](https://jupyter-client.readthedocs.io/en/stable/) and finally rendered as:
 
@@ -83,7 +77,7 @@ Then, plot a line.
 
 ~~~copy
 ```python
-plt.plot([1, 2])
+plt.plot([1, 3])
 ```
 ~~~
 

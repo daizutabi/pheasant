@@ -136,7 +136,7 @@ p {
 }
 
 .pheasant-fenced-code .cached .report {
-  background: #eee;
+  background: transparent;
 }
 
 .pheasant-fenced-code .report .count {
@@ -186,6 +186,10 @@ p {
 
 .pheasant-fenced-code .input:before {
   content: "In:";
+  color: #99b;
+}
+.pheasant-fenced-code .cached .input:before {
+  content: "#In:";
   color: #99b;
 }
 .pheasant-fenced-code .stdout:before {
@@ -238,11 +242,20 @@ p {
   border-color: #cec;
 }
 
+.pheasant-inline-code span.cached {
+  background-color: #eec;
+}
+
 .pheasant-fenced-code .display .content,
 .pheasant-inline-code .display .content {
   display: table;
   margin: 5px auto 5px auto;
 }
+
+/* .pheasant-fenced-code .cached .display .content,
+.pheasant-inline-code .cached .display .content {
+  background-color: yellow;
+} */
 
 
 /*

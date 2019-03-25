@@ -8,7 +8,7 @@ def fenced_code(code):
 @pytest.fixture()
 def parse(jupyter):
     def func(code):
-        return jupyter.parser.parse(fenced_code(code))
+        return jupyter.parse(fenced_code(code))
 
     return func
 

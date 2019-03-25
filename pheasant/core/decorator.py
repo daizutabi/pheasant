@@ -34,10 +34,18 @@ class Decorator(Base):
             self.decorates[cell.render_name](cell)
 
     def surround(self, cell):
-        class_name = self.class_names[cell.render_name]
-        replace = r'\1<\2 class="{class_name}"><\2\4</\2></\2>\5'
-        replace = replace.format(class_name=class_name)
-        cell.output = SURROUND_TAG.sub(replace, cell.output)
+        if cell.output:
+            class_name = self.class_names[cell.render_name]
+            cell.output = surround(cell.output, class_name)
+            # replace = r'\1<\2 class="{class_name}"><\2\4</\2></\2>\5'
+            # replace = replace.format(class_name=class_name)
+            # cell.output = SURROUND_TAG.sub(replace, cell.output)
+
+
+def surround(source, class_name):
+    replace = r'\1<\2 class="{class_name}"><\2\4</\2></\2>\5'
+    replace = replace.format(class_name=class_name)
+    return SURROUND_TAG.sub(replace, source)
 
 
 def comment(name):

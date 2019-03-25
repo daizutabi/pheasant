@@ -35,7 +35,7 @@ def test_render_header(header, source_simple):
 
 
 def test_join(header, source_simple):
-    output = header.parser.parse(source_simple)
+    output = header.parse(source_simple)
     output = output.replace("span", "S").replace("class=", "C").replace("div", "D")
     answer = "\n".join(
         [
@@ -51,3 +51,35 @@ def test_join(header, source_simple):
         ]
     )
     assert output == answer
+
+
+def test_ignore(header):
+    from pheasant.number.renderer import Header
+
+    header = Header()
+    assert header.meta["ignored_depth"] == 100
+
+    output = header.parse("# title\n## section\n### subsection\n")
+    assert "number" in output
+    assert header.number_list["header"] == [1, 1, 1, 0, 0, 0]
+
+    output = header.parse("## #section\n")
+    assert "number" not in output
+    assert header.number_list["header"] == [1, 1, 1, 0, 0, 0]
+    assert header.meta["ignored_depth"] == 1
+
+    output = header.parse("### subsection\n")
+    assert "number" not in output
+
+    output = header.parse("## section\n")
+    assert "number" in output
+    assert header.number_list["header"] == [1, 2, 0, 0, 0, 0]
+    assert header.meta["ignored_depth"] == 100
+
+    output = header.parse("## ##section\n")
+    assert "number" not in output
+    assert header.number_list["header"] == [1, 2, 0, 0, 0, 0]
+    assert header.meta["ignored_path"] == set(["."])
+
+    output = header.parse("# title\n")
+    assert "number" not in output
