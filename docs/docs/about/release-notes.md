@@ -14,10 +14,15 @@ You can determine your currently installed version using `pheasant --version`:
 
 ~~~
 $ pheasant --version
-pheasant, version x.x.x from /path/to/pheasant (Python 3.7)
+pheasant, version 2.0.0 from /path/to/pheasant (Python 3.7)
 ~~~
 
 ## Change log
+
+### Version 2.0.0 (2019-03-26)
+
+* Drop Python 3.6 support in favor of Python 3.7 dataclass.
+* Macro converter: deleted.
 
 ### Version 1.2.2 (2019-03-10)
 
