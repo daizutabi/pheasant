@@ -7,7 +7,7 @@ matrix:
       python: 3.7
 
 install:
-  - pip install python-coveralls
+  - pip install coverage python-coveralls
   - pip install -e .[develop]
 
 before_script:
