@@ -58,4 +58,6 @@ def test_ignore(header):
 
     header = Header()
 
-    header.parse("# title\n")
+    output = header.parse("# title\n## section\n### subsection\n")
+    assert "number" in output
+    header.number_list["header"] == [1, 1, 1, 0, 0, 0]

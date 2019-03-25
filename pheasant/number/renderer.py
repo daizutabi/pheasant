@@ -43,7 +43,7 @@ class Header(Renderer):
         kind = self.header_kind[context["kind"][:3].lower()]
         depth = len(context["prefix"]) - 1
         self.number_list[kind][depth] += 1
-        reset = [0] * (len(self.number_list[kind]) - depth)
+        reset = [0] * (len(self.number_list[kind]) - depth - 1)
         self.number_list[kind][depth + 1 :] = reset
         header = context["prefix"] if kind == "header" else ""
         prefix = self.config["kind_prefix"][kind] if kind != "header" else ""
