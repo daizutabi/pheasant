@@ -1,3 +1,4 @@
+# Script renderer test
 # # Title
 # ## Section
 # ### Subsection
@@ -35,6 +36,7 @@ def script(source):
 # paragraph 2
 # paragraph 2
 
+
 def f():
     for x in range(10):
 
@@ -50,3 +52,31 @@ def f():
 # -inline
 def g():
     pass
+
+
+# fenced code test
+
+# before:
+# ~~~python
+# # ```python
+# # print(1)
+# # ```
+# ~~~
+# after:
+# ```python
+# print(1)
+# ```
+# before:
+# ~~~python
+# # ~~~
+# # ```python
+# # print(1)
+# # ```
+# # ~~~
+# ~~~
+# after:
+# ~~~
+# ```python
+# print(1)
+# ```
+# ~~~

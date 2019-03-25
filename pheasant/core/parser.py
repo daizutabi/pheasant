@@ -28,7 +28,7 @@ class Parser(Base):
         self.renders[render_name] = render
         return cell_class
 
-    def parse(self, source: str, decorate: Union[Callable, bool] = False) -> str:
+    def parse(self, source: str, decorate: Union[Callable, bool] = True) -> str:
         splitter = self.split(source)
 
         def iterator():

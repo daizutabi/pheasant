@@ -11,7 +11,7 @@ class Comment(Renderer):
     option: str = ""
 
     HEADER_PATTERN = r"^(?P<source>#\s*#.*?\n)"
-    FENCED_CODE_PATTERN = r"^#\s*(?P<mark>~{3,}).*?\n#\s*(?P=mark)\n"
+    FENCED_CODE_PATTERN = r"^#\s*(?P<mark>~{3,}|`{3,}).*?\n#\s*(?P=mark)\n"
 
     def __post_init__(self):
         super().__post_init__()
