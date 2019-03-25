@@ -204,18 +204,18 @@ def format_report():
     datetime_format = r"%Y-%m-%d %H:%M:%S"
     report["start"] = report["start"].strftime(datetime_format)
     report["end"] = report["end"].strftime(datetime_format)
-    report["elasped"] = timedelta_format(report["elasped"])
-    report["total"] = timedelta_format(report["total"])
+    report["elasped"] = format_timedelta(report["elasped"])
+    report["total"] = format_timedelta(report["total"])
     report["count"] = report["execution_count"]
     return report
 
 
-def timedelta_format(dt) -> str:
+def format_timedelta(dt) -> str:
     sec = dt.total_seconds()
     if sec >= 3600:
-        return f"{sec//3600}h{sec//60%60}min{sec%3600%60}s"
+        return f"{sec//3600:.00f}h{sec//60%60:.00f}min{sec%3600%60:.00f}s"
     elif sec >= 60:
-        return f"{sec//60}min{sec%60}s"
+        return f"{sec//60:.00f}min{sec%60:.00f}s"
     elif sec >= 10:
         return f"{sec:0.1f}s"
     elif sec >= 1:
@@ -226,11 +226,7 @@ def timedelta_format(dt) -> str:
         return f"{sec*1e3:.01f}ms"
     elif sec >= 1e-3:
         return f"{sec*1e3:.02f}ms"
-    elif sec >= 1e-4:
-        return f"{sec*1e6:.00f}us"
-    elif sec >= 1e-5:
-        return f"{sec*1e6:.01f}us"
     elif sec >= 1e-6:
-        return f"{sec*1e6:.02f}us"
+        return f"{sec*1e6:.00f}us"
     else:
-        return f"{sec*1e9:.00f}ns"
+        return f"<1us"

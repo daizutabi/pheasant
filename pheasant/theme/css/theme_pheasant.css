@@ -10,7 +10,7 @@ code {
   font-family: "Fira Code";
   color: #03E;
   border: none;
-  font-size: 90%;
+  font-size: 14px;
   margin: 0px;
   padding: 0px;
   /* background: #e0e0ff; */
@@ -122,26 +122,47 @@ p {
   border-radius: 4px 4px 0px 0px;
 }
 
-.pheasant-fenced-code .input .report {
+.pheasant-fenced-code .report {
   border-bottom: 1px solid #bdd;
   border-left: 1px solid #bdd;
   border-right: 1px solid #bdd;
   border-radius: 0px 0px 4px 4px;
   background: #eff;
-  color: #999;
+  color: #777;
   font-size: 70%;
   padding: 0px 8px;
   line-height: 16px;
   margin-bottom: 2px;
 }
 
-.pheasant-fenced-code .input .report .count {
-  color: #777;
+.pheasant-fenced-code .cached .report {
+  background: #eee;
 }
 
-.pheasant-fenced-code .input .report .elasped {
+.pheasant-fenced-code .report .count {
+  color: #b88;
+}
+
+.pheasant-fenced-code .cached .report .count {
+  color: #999;
+}
+
+.pheasant-fenced-code .report .elasped {
   color: #777;
   font-weight: bold;
+}
+
+.pheasant-fenced-code .cached .report .elasped {
+  font-weight: normal;
+}
+
+.pheasant-fenced-code .report .right {
+  position: absolute;
+  right: 8px;
+}
+
+.pheasant-fenced-code .report .option {
+  color: #aaa;
 }
 
 .pheasant-fenced-code code {

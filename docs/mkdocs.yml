@@ -10,12 +10,6 @@ theme: readthedocs
 
 plugins:
   - pheasant:
-      bar: 10
-    # - jupyter:
-    #   - kernel_name:
-    #       python: python3
-    # - number:
-    #     ignored_path: "*/about/*"
 
 nav:
   - Home: index.md
