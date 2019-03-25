@@ -35,9 +35,9 @@ class Pheasant(Converter):
     def convert_from_files(self, paths: List[str], message=None) -> List[str]:
         self.reset()
         for path in paths:
-            self.jupyter.abs_src_path = path  # for cache
+            self.jupyter.abs_src_path = path  # for cache and extra resources
             self.header.abs_src_path = path  # for hypyerlink between pages
-            self.jupyter.reset()  # Reset extra_resources for every page
+            self.jupyter.reset()  # Reset cell number for every page
             if path.endswith(".py"):
                 if message:
                     message(f"Converting Python script: {path}")
@@ -47,7 +47,9 @@ class Pheasant(Converter):
                     message(f"Converting Markdown: {path}")
                 self.convert_from_file(path, "main")
             # Copy Jupyter extra resources
-            self.pages[path].meta["extra_html"] = extra_html(self.jupyter.meta)
+            extra = self.jupyter.meta.get(path)
+            extra = extra_html(extra) if extra else ""
+            self.pages[path].meta["extra_html"] = extra
         for path in paths:
             self.anchor.abs_src_path = path
             if message:
@@ -57,7 +59,7 @@ class Pheasant(Converter):
         return [self.pages[path].output for path in paths]
 
     def surround(self, cell):
-        if cell.render_name == 'jupyter__fenced_code':
+        if cell.render_name == "jupyter__fenced_code":
             if "inline" in cell.context["option"]:
-                cell.render_name = 'jupyter__inline_code'
+                cell.render_name = "jupyter__inline_code"
         self.decorator.surround(cell)

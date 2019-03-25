@@ -53,9 +53,6 @@ class Jupyter(Renderer):
         self.execute(code, "python")
 
     def reset(self):
-        for key in ["css", "javascript", "raw_css", "raw_javascript"]:
-            self.meta[f"extra_{key}"] = []
-        self.meta["extra_module"] = []
         self.cursor = 0
 
     def render_fenced_code(self, context, splitter, parser) -> Iterator[str]:
@@ -109,7 +106,13 @@ class Jupyter(Renderer):
             "bokeh": bokeh_extra_resources,
             "holoviews": holoviews_extra_resources,
         }
-        if len(self.meta["extra_module"]) == len(module_dict):
+        extra = self.meta.setdefault(self.abs_src_path, {})
+        if not extra:
+            for key in ["css", "javascript", "raw_css", "raw_javascript"]:
+                extra[f"extra_{key}"] = []
+            extra["extra_module"] = []
+
+        if len(extra["extra_module"]) == len(module_dict):
             return
 
         new_modules = []
@@ -122,16 +125,16 @@ class Jupyter(Renderer):
                 module = output["data"]["text/plain"]
                 if (
                     module in module_dict.keys()
-                    and module not in self.meta["extra_module"]
+                    and module not in extra["extra_module"]
                 ):
                     new_modules.append(module)
 
         for module in new_modules:
-            self.meta["extra_module"].append(module)
+            extra["extra_module"].append(module)
             resources = module_dict[module]()
             for key, values in resources.items():
-                self.meta[key].extend(
-                    value for value in values if value not in self.meta[key]
+                extra[key].extend(
+                    value for value in values if value not in extra[key]
                 )
 
 
