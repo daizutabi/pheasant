@@ -33,6 +33,7 @@ class Header(Renderer):
 
     def reset(self) -> None:
         self.meta["ignored_path"] = set()
+        self.meta["ignored_depth"] = 100
         self.reset_number_list()
 
     def reset_number_list(self) -> None:
@@ -40,42 +41,14 @@ class Header(Renderer):
             self.number_list[kind] = [0] * 6
 
     def render_header(self, context, splitter, parser) -> Iterator[str]:
-        kind = self.header_kind[context["kind"][:3].lower()]
-        depth = len(context["prefix"]) - 1
-        self.number_list[kind][depth] += 1
-        reset = [0] * (len(self.number_list[kind]) - depth - 1)
-        self.number_list[kind][depth + 1 :] = reset
-        header = context["prefix"] if kind == "header" else ""
-        prefix = self.config["kind_prefix"][kind] if kind != "header" else ""
-        number_list = normalize_number_list(self.number_list, kind, depth)
-        number_string = number_list_format(number_list)
-        title, tag = split_tag(context["title"])
-        title, inline_code = split_inline_code(title)
-
-        context = {
-            "kind": kind,
-            "header": header,
-            "prefix": prefix,
-            "title": title,
-            "number_list": number_list,
-            "number_string": number_string,
-        }
-
-        if tag:
-            self.tag_context[tag] = {
-                "kind": kind,
-                "number_list": number_list,
-                "number_string": number_string,
-                "abs_src_path": self.abs_src_path,
-            }
-            context.update(tag=tag)
-
+        context = self.resolve(context)
+        kind = context["kind"]
         if kind == "header":
             yield self.render("header", context) + "\n"
         else:
             rest = ""
-            if inline_code:
-                content = parser.parse(inline_code)
+            if context["inline_code"]:
+                content = parser.parse(context["inline_code"])
             else:
                 content = ""
                 while not content:
@@ -92,6 +65,60 @@ class Header(Renderer):
             yield self.render("header", context, content=content) + "\n"
             if rest:
                 splitter.send(rest)
+
+    def resolve(self, context):
+        kind = self.header_kind[context["kind"][:3].lower()]
+        depth = len(context["prefix"]) - 1
+        title = context["title"]
+
+        numbered = False
+        if title.startswith("##"):
+            title = title[2:]
+            self.meta["ignored_path"].add(self.abs_src_path)
+        elif title.startswith("#"):
+            title = title[1:]
+            self.meta["ignored_depth"] = depth
+        elif self.abs_src_path in self.meta["ignored_path"]:
+            pass
+        elif depth > self.meta["ignored_depth"]:
+            pass
+        else:
+            self.meta["ignored_depth"] = 100
+            numbered = True
+
+        if numbered:
+            self.number_list[kind][depth] += 1
+            reset = [0] * (len(self.number_list[kind]) - depth - 1)
+            self.number_list[kind][depth + 1 :] = reset
+            number_list = normalize_number_list(self.number_list, kind, depth)
+            number_string = number_list_format(number_list)
+        else:
+            number_list = []
+            number_string = ""
+
+        header = context["prefix"] if kind == "header" else ""
+        prefix = self.config["kind_prefix"][kind] if kind != "header" else ""
+        title, tag = split_tag(title)
+        title, inline_code = split_inline_code(title)
+        context = {
+            "kind": kind,
+            "header": header,
+            "prefix": prefix,
+            "title": title,
+            "number_list": number_list,
+            "number_string": number_string,
+            "inline_code": inline_code,
+        }
+
+        if tag:
+            self.tag_context[tag] = {
+                "kind": kind,
+                "number_list": number_list,
+                "number_string": number_string,
+                "abs_src_path": self.abs_src_path,
+            }
+            context.update(tag=tag)
+        return context
 
 
 def get_content(source: str) -> Tuple[str, str]:

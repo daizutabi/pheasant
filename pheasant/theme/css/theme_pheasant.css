@@ -136,7 +136,7 @@ p {
 }
 
 .pheasant-fenced-code .cached .report {
-  background: #eee;
+  background: transparent;
 }
 
 .pheasant-fenced-code .report .count {
@@ -186,6 +186,10 @@ p {
 
 .pheasant-fenced-code .input:before {
   content: "In:";
+  color: #99b;
+}
+.pheasant-fenced-code .cached .input:before {
+  content: "#In:";
   color: #99b;
 }
 .pheasant-fenced-code .stdout:before {

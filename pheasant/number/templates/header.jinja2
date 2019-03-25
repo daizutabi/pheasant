@@ -1,17 +1,17 @@
 {%- extends 'base.jinja2' -%}
 
 {%- block header -%}
-<span class="number">{{ number_string }}</span> <span class="title"{% if tag %} id="{{ tag }}"{% endif %}>{{ title }}</span>
+{% if number_string %}<span class="number">{{ number_string }}</span> {% endif %}<span class="title"{% if tag %} id="{{ tag }}"{% endif %}>{{ title }}</span>
 {%- endblock -%}
 
 {%- block figure -%}
 <div class="content"{% if tag %} id="{{ tag }}"{% endif %}>{% autoescape false %}{{ content }}{% endautoescape %}</div>
-<p><span class="prefix">{{ prefix }}</span> <span class="number">{{ number_string }}</span>
+<p><span class="prefix">{{ prefix }}</span> {% if number_string %}<span class="number">{{ number_string }}</span>{% endif %}
 <span class="title">{{ title }}</span></p>
 {%- endblock -%}
 
 {%- block other -%}
-<p><span class="prefix">{{ prefix }}</span> <span class="number">{{ number_string }}</span>
+<p><span class="prefix">{{ prefix }}</span> {% if number_string %}<span class="number">{{ number_string }}</span>{% endif %}
 <span class="title"{% if tag %} id="{{ tag }}"{% endif %}>{{ title }}</span></p>
 <div class="content">{% autoescape false %}{{ content }}{% endautoescape %}</div>
 {%- endblock -%}
