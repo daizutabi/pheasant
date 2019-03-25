@@ -3,11 +3,9 @@ def test_renderer_config(script):
 
 
 def test_render_script(script, source):
-    # script.comment.max_line_length = -1
+    assert script.convert(source, -1) == source
+
+    # print(script.parse(source))
     # assert script.parse(source) == source
-
-    script.comment.max_line_length = 0
-    print(script.parse(source))
-    assert script.parse(source) == source
-
-    assert 0
+    #
+    # assert 0

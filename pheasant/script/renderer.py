@@ -15,7 +15,7 @@ class Comment(Renderer):
 
     def __post_init__(self):
         super().__post_init__()
-        self.register(Comment.HEADER_PATTERN, self.render_header, "comment__header")
+        self.register(Comment.HEADER_PATTERN, self.render_header)
         self.register(Comment.FENCED_CODE_PATTERN, self.render_fenced_code)
 
     def render_header(self, context, splitter, parser) -> Iterator[str]:
