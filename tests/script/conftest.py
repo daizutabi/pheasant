@@ -49,7 +49,7 @@ def f():
 # paragraph 4
 # paragraph 4
 
-# -inline
+# -inline display
 def g():
     pass
 

@@ -29,6 +29,7 @@ class Comment(Renderer):
         if cell.match is None and self.max_line_length != -1:
             if self.max_line_length == 0 and cell.source.startswith("# -"):
                 cell.output = ""
+                self.option = " " + cell.source[3:-1]
             else:
                 cell.output = format_comment(cell.source, self.max_line_length)
 
@@ -46,7 +47,8 @@ class Script(Renderer):
                 yield self.comment.parse(source)
             elif kind == "Code":
                 if self.comment.max_line_length == 0:
-                    yield f"```python\n{source}```\n"
+                    yield f"```python{self.comment.option}\n{source}```\n"
+                    self.comment.option = ""
                 else:
                     yield source
             else:
