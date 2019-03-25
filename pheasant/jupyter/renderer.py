@@ -1,8 +1,9 @@
 import re
+from ast import literal_eval
 from typing import Iterator, List, Match
 
-from pheasant.core.renderer import Renderer
 from pheasant.core.decorator import comment
+from pheasant.core.renderer import Renderer
 from pheasant.jupyter.client import (execute, execution_report,
                                      find_kernel_names)
 from pheasant.jupyter.display import (bokeh_extra_resources,
@@ -50,10 +51,9 @@ class Jupyter(Renderer):
             context["code"] = replace_fenced_code_for_display(context["code"])
         outputs = self.execute(code=context["code"], language=context["language"])
         report = format_report()
-        output = super().render("fenced_code", context, outputs=outputs, report=report)
-        yield output + "\n"
+        yield self.render("fenced_code", context, outputs=outputs, report=report) + "\n"
 
-    @comment('code')
+    @comment("code")
     def render_inline_code(self, context, splitter, parser) -> Iterator[str]:
         context["code"] = replace_for_display(context["code"])
         if "language" not in context:
@@ -61,7 +61,7 @@ class Jupyter(Renderer):
 
         outputs = self.execute(code=context["code"], language=context["language"])
         outputs = select_outputs(outputs)
-        yield super().render("inline_code", context, outputs=outputs)
+        yield self.render("inline_code", context, outputs=outputs)
 
     def execute(self, code: str, language: str = "python") -> List:
         if language not in self.config["kernel_name"]:
@@ -158,7 +158,7 @@ def select_outputs(outputs):
             if (text.startswith('"') and text.endswith('"')) or (
                 text.startswith("'") and text.endswith("'")
             ):
-                output["data"]["text/plain"] = text[1:-1]
+                output["data"]["text/plain"] = literal_eval(text)
     for output in outputs:
         if output["type"] == "display_data":
             outputs = [output for output in outputs if output["type"] == "display_data"]
