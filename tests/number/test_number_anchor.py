@@ -1,21 +1,21 @@
 import pytest
 
 
-def test_without_number(anchor, parser_header, parser_anchor, source_simple):
+def test_without_number(anchor, source_simple):
     assert anchor.header is None
 
     with pytest.raises(ValueError):
-        parser_anchor.parse(source_simple)
+        anchor.parser.parse(source_simple)
 
 
-def test_with_number(anchor, header, parser_header, parser_anchor, source_simple):
-    list(parser_header.parse(source_simple))
+def test_with_number(anchor, header, source_simple):
+    list(header.parser.parse(source_simple))  # DO PARSE
     assert len(header.tag_context) == 2
     anchor.header = header
     assert anchor.header is header
 
 
-def test_tag_context(anchor, parser_header, source_simple):
+def test_tag_context(anchor, source_simple):
     assert anchor.header is not None
     tag_context = {
         "tag-a": {
@@ -35,25 +35,25 @@ def test_tag_context(anchor, parser_header, source_simple):
 
 
 @pytest.fixture()
-def source_parsed(anchor, parser_header, source_simple):
+def source_parsed(anchor, header, source_simple):
     anchor.header.reset()
-    return parser_header.parse(source_simple)
+    return header.parser.parse(source_simple)
 
 
-def test_render_anchor(anchor, parser_anchor, source_parsed):
-    assert "anchor__tag" in parser_anchor.patterns
-    assert parser_anchor.patterns["anchor__tag"].startswith("(?P<anchor__tag>")
-    assert parser_anchor.renders["anchor__tag"] == anchor.render_tag
+def test_render_anchor(anchor, source_parsed):
+    assert "anchor__tag" in anchor.parser.patterns
+    assert anchor.parser.patterns["anchor__tag"].startswith("(?P<anchor__tag>")
+    assert anchor.parser.renders["anchor__tag"] == anchor.render_tag
 
-    splitter = parser_anchor.split(source_parsed)
+    splitter = anchor.parser.split(source_parsed)
     next(splitter)
     cell = next(splitter)
     assert cell.render_name == "anchor__tag"
     assert cell.context["tag"] == "tag-b"
 
 
-def test_parse_anchor(anchor, parser_anchor, source_parsed):
-    output = parser_anchor.parse(source_parsed)
+def test_parse_anchor(anchor, source_parsed):
+    output = anchor.parser.parse(source_parsed)
     output = output.replace("span", "S").replace("class=", "C").replace("div", "D")
     answer = "\n".join([
         '# <S C"header"><S C"number">1</S> <S C"title" id="tag-a">Title</S></S>',

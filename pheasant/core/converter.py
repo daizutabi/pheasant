@@ -64,8 +64,10 @@ class Converter(Base):
             renderers = [renderers]
         self.renderers.register(name, renderers)
         for renderer in self.renderers[name]:  # type: ignore
-            for pattern, render in renderer.renders.items():
-                parser.register(pattern, render)
+            renderer.parser = parser
+        # r
+        #     for pattern, render in renderer.renders.items():
+        #         parser.register(pattern, render)
 
     def convert(
         self, source: str, names: Optional[Union[str, Iterable[str]]] = None

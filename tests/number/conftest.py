@@ -1,6 +1,5 @@
 import pytest
 
-from pheasant.core.parser import Parser
 from pheasant.number.renderer import Anchor, Header
 
 
@@ -17,26 +16,6 @@ def anchor():
 
 
 @pytest.fixture()
-def parser_header(header):
-    parser = Parser()
-
-    for pattern, render in header.renders.items():
-        parser.register(pattern, render)
-
-    return parser
-
-
-@pytest.fixture()
-def parser_anchor(anchor):
-    parser = Parser()
-
-    for pattern, render in anchor.renders.items():
-        parser.register(pattern, render)
-
-    return parser
-
-
-@pytest.fixture()
 def source_simple():
     source_simple = "\n".join(
         [
@@ -47,7 +26,7 @@ def source_simple():
             "## Subsection C",
             "Text {#tag-a#}",
             "#Fig Figure A {#tag-b#}",
-            "<div>Content A</div>"
+            "<div>Content A</div>",
         ]
     )
     return source_simple

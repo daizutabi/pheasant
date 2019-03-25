@@ -2,8 +2,6 @@ import os
 
 import pytest
 
-from pheasant.core.parser import Parser
-from pheasant.jupyter.client import execution_report
 from pheasant.jupyter.renderer import Jupyter
 
 
@@ -19,13 +17,3 @@ def jupyter():
     jupyter.set_template(["fenced_code"])
     jupyter.execute("import pheasant.jupyter.display")
     return jupyter
-
-
-@pytest.fixture()
-def parser(jupyter):
-    parser = Parser()
-
-    for pattern, render in jupyter.renders.items():
-        parser.register(pattern, render)
-
-    return parser

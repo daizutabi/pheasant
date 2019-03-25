@@ -34,14 +34,8 @@ def code():
 @pytest.fixture()
 def parser(jupyter, header, code):
     parser = Parser()
-
-    for pattern, render in jupyter.renders.items():
-        parser.register(pattern, render)
-
-    for pattern, render in code.renders.items():
-        parser.register(pattern, render)
-
-    for pattern, render in header.renders.items():
-        parser.register(pattern, render)
+    jupyter.parser = parser
+    header.parser = parser
+    code.parser = parser
 
     return parser

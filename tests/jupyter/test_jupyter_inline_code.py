@@ -7,8 +7,8 @@ def source_simple():
     return source_simple
 
 
-def test_render_inline_code(parser, jupyter, source_simple):
-    splitter = parser.split(source_simple)
+def test_render_inline_code(jupyter, source_simple):
+    splitter = jupyter.parser.split(source_simple)
     next(splitter)
     cell = next(splitter)
     assert cell.context["code"] == "a=1"

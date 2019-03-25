@@ -27,11 +27,11 @@ def test_renderer(jupyter):
     assert jupyter.config["inline_code_template"] is not None
 
 
-def test_render_fenced_code(parser, jupyter, source_simple):
-    assert "jupyter__fenced_code" in parser.patterns
-    assert "jupyter__inline_code" in parser.patterns
+def test_render_fenced_code(jupyter, source_simple):
+    assert "jupyter__fenced_code" in jupyter.parser.patterns
+    assert "jupyter__inline_code" in jupyter.parser.patterns
 
-    splitter = parser.split(source_simple)
+    splitter = jupyter.parser.split(source_simple)
     cell = next(splitter)
     assert cell.source == "begin\n"
     cell = next(splitter)

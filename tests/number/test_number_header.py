@@ -22,20 +22,20 @@ def test_renderer(header):
     }
 
 
-def test_render_header(parser_header, header, source_simple):
-    assert "header__header" in parser_header.patterns
-    assert parser_header.patterns["header__header"].startswith("(?P<header__header>")
-    assert parser_header.renders["header__header"] == header.render_header
+def test_render_header(header, source_simple):
+    assert "header__header" in header.parser.patterns
+    assert header.parser.patterns["header__header"].startswith("(?P<header__header>")
+    assert header.parser.renders["header__header"] == header.render_header
 
-    splitter = parser_header.split(source_simple)
+    splitter = header.parser.split(source_simple)
     cell = next(splitter)
     assert cell.render_name == "header__header"
     assert cell.context["prefix"] == "#"
     assert cell.match.group() == "# Title {#tag-a#}\n"
 
 
-def test_join(parser_header, header, source_simple):
-    output = parser_header.parse(source_simple)
+def test_join(header, source_simple):
+    output = header.parser.parse(source_simple)
     output = output.replace("span", "S").replace("class=", "C").replace("div", "D")
     answer = "\n".join(
         [
