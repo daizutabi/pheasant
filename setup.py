@@ -42,17 +42,12 @@ setup(
             "ipykernel",
             "markdown",
             "mkdocs",
-            "pytest",
-            "pytest-cov",
             "matplotlib",
             "bokeh",
             "holoviews",
             "pandas",
             "sympy",
             "selenium",
-            "pycodestyle",
-            "pyflakes",
-            "mypy",
         ]
     },
     entry_points={
