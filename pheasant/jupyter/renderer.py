@@ -3,7 +3,7 @@ from ast import literal_eval
 from dataclasses import dataclass, field
 from typing import Dict, Iterator, List, Match
 
-from pheasant.core.decorator import comment
+from pheasant.core.decorator import comment, surround
 from pheasant.core.renderer import Renderer
 from pheasant.jupyter.client import (execute, execution_report,
                                      find_kernel_names)
@@ -77,7 +77,11 @@ class Jupyter(Renderer):
         if len(cache) >= self.cursor:
             cached = cache[self.cursor - 1]
             if cell == cached:
-                return f'<div class="cached">{cached.output}</div>'
+                return surround(cached.output, "cached")
+                # if cached.output.startswith("<div"):
+                #     return f'<div class="cached">{cached.output}</div>'
+                # else:
+                #     return f'<span class="cached">{cached.output}</span>'
 
         outputs = self.execute(code, context["language"])
         report = format_report()
@@ -123,19 +127,14 @@ class Jupyter(Renderer):
                 and "text/plain" in output["data"]
             ):
                 module = output["data"]["text/plain"]
-                if (
-                    module in module_dict.keys()
-                    and module not in extra["extra_module"]
-                ):
+                if module in module_dict.keys() and module not in extra["extra_module"]:
                     new_modules.append(module)
 
         for module in new_modules:
             extra["extra_module"].append(module)
             resources = module_dict[module]()
             for key, values in resources.items():
-                extra[key].extend(
-                    value for value in values if value not in extra[key]
-                )
+                extra[key].extend(value for value in values if value not in extra[key])
 
 
 def replace_fenced_code_for_display(code: str) -> str:

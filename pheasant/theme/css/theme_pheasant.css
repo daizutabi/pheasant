@@ -242,11 +242,20 @@ p {
   border-color: #cec;
 }
 
+.pheasant-inline-code span.cached {
+  background-color: #eec;
+}
+
 .pheasant-fenced-code .display .content,
 .pheasant-inline-code .display .content {
   display: table;
   margin: 5px auto 5px auto;
 }
+
+/* .pheasant-fenced-code .cached .display .content,
+.pheasant-inline-code .cached .display .content {
+  background-color: yellow;
+} */
 
 
 /*
