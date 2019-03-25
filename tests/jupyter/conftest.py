@@ -15,5 +15,5 @@ def jupyter():
     fenced_code_template_file = os.path.abspath(fenced_code_template_file)
     jupyter._update("config", {"fenced_code_template_file": fenced_code_template_file})
     jupyter.set_template(["fenced_code"])
-    jupyter.execute("import pheasant.jupyter.display")
+    jupyter.execute("import pheasant.jupyter.display", "python")
     return jupyter

@@ -66,7 +66,7 @@ class Jupyter(Renderer):
         outputs = select_outputs(outputs)
         yield self.render("inline_code", context, outputs=outputs)
 
-    def execute(self, code: str, language: str = "python") -> List:
+    def execute(self, code: str, language: str) -> List:
         if language not in self.config["kernel_name"]:
             return []
         outputs = execute(code, self.config["kernel_name"][language])
