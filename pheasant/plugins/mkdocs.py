@@ -4,13 +4,15 @@ import os
 from mkdocs.config import config_options
 from mkdocs.plugins import BasePlugin
 from mkdocs.structure.files import get_files
-from mkdocs.utils import string_types
+from mkdocs.utils import markdown_extensions, string_types
 
 import pheasant
 from pheasant.core.pheasant import Pheasant
 from pheasant.jupyter.client import execution_report
 
 logger = logging.getLogger("mkdocs")
+
+markdown_extensions.append(".py")
 
 
 class PheasantPlugin(BasePlugin):
@@ -19,24 +21,7 @@ class PheasantPlugin(BasePlugin):
         ("bar", config_options.Type(int, default=0)),
         ("baz", config_options.Type(bool, default=True)),
     )
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        logger.debug("[Pheasant] Plugin created.")
-        self.converter = Pheasant()
-        logger.debug(f"[Pheasant] Converter created. {self.converter}")
-        for name, parser in self.converter.parsers.items():
-            logger.debug(f"[Pheasant] Parser for '{name}' = {parser}.")
-        logger.debug("[Pheasant] Renderer registered.")
-        for name, renderers in self.converter.renderers.items():
-            logger.debug(f"[Pheasant] Renderers for '{name}' = {renderers}.")
-
-        from mkdocs.utils import markdown_extensions
-
-        markdown_extensions.append(".py")
-        logger.debug(
-            f"[Pheasant] `mkdocs.utils.markdown_extensions` = {markdown_extensions}"
-        )
+    converter = Pheasant()
 
     def on_config(self, config, **kwargs):
         if self.config:

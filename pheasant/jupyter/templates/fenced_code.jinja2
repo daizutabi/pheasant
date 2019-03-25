@@ -3,16 +3,19 @@
 {%- if 'hide' not in option -%}
   {%- if 'inline' not in option -%}
     <div class="input"><pre><code class="{{ language }}">{{ code }}</code></pre>
-    <p class="report"><span class="count">[{{report.count}}]</span><span class="label"> Last executed </span>
-    <span class="start">{{report.start}}</span><span class="label"> in </span><span class="elasped">{{report.elasped}}</span></p></div>
-    {# <span class="label"> (total </span><span class="total">{{report.total}}</span><span class="label">)</span></p></div> #}
+    <p class="report"><span class="count">[{{ report.cursor }}]</span>
+    <span class="start">{{ report.start }}</span> (<span class="elasped">{{ report.elasped }}</span>)
+    <span class="right">
+    {%- if option -%}<span class="option"> ({{ option }}) </span>{%- endif -%}
+    <span class="kernel">{{ config.kernel_name[language] }}</span><span class="count"> [{{ report.count }}]</span>
+    </span></p></div>
     {%- for output in outputs if output.type != 'display_data' -%}
       {%- if output.type == 'error' -%}
-          <div class="error"><pre><code class="{{ language }}">{{ output.ename }}: {{ output.evalue }}</code></pre></div>
+          <div class="error"><pre><code class="text">{{ output.ename }}: {{ output.evalue }}</code></pre></div>
       {%- elif output.type == 'stream' -%}
-          <div class="{{ output.name }}"><pre><code class="{{ language }}">{{ output.text }}</code></pre></div>
+          <div class="{{ output.name }}"><pre><code class="text">{{ output.text }}</code></pre></div>
       {%- elif 'text/plain' in output.data -%}
-          <div class="output"><pre><code class="{{ language }}">{{ output.data['text/plain'] }}</code></pre></div>
+          <div class="output"><pre><code class="text">{{ output.data['text/plain'] }}</code></pre></div>
       {%- endif -%}
     {%- endfor -%}
   {%- endif -%}

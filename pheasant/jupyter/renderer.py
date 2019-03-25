@@ -1,6 +1,7 @@
 import re
 from ast import literal_eval
-from typing import Iterator, List, Match
+from dataclasses import dataclass, field
+from typing import Dict, Iterator, List, Match
 
 from pheasant.core.decorator import comment
 from pheasant.core.renderer import Renderer
@@ -11,7 +12,19 @@ from pheasant.jupyter.display import (bokeh_extra_resources,
                                       select_display_data)
 
 
+@dataclass
+class Cell:
+    code: str
+    context: Dict[str, str]
+    template: str
+    valid: bool = True
+    output: str = field(default="", compare=False)
+
+
 class Jupyter(Renderer):
+    abs_src_path: str = "."  # should be set the real path later
+    cursor: int = 0
+    cache: Dict[str, List[Cell]] = field(default_factory=dict)
 
     FENCED_CODE_PATTERN = (
         r"^(?P<mark>`{3,})(?P<language>\w+) ?(?P<option>.*?)\n"
@@ -43,30 +56,47 @@ class Jupyter(Renderer):
         for key in ["css", "javascript", "raw_css", "raw_javascript"]:
             self.meta[f"extra_{key}"] = []
         self.meta["extra_module"] = []
+        self.cursor = 0
 
     def render_fenced_code(self, context, splitter, parser) -> Iterator[str]:
         code = context["code"]
-        if "display" in context["option"]:
-            code = replace_for_display(code, skip_equal=False)
         if "inline" in context["option"]:
             code = replace_fenced_code_for_display(code)
+        if "display" in context["option"] or "inline" in context["option"]:
             code = replace_for_display(code, skip_equal=False)
-        # context["code"] = code  # Uncomment for debug
-        outputs = self.execute(code, context["language"])
-        report = format_report()
-        yield self.render("fenced_code", context, outputs=outputs, report=report) + "\n"
+        yield self.execute_and_render(code, context, "fenced_code") + "\n"
 
     @comment("code")
     def render_inline_code(self, context, splitter, parser) -> Iterator[str]:
         code = replace_for_display(context["code"])
         if "language" not in context:
             context["language"] = "python"
+        yield self.execute_and_render(code, context, "inline_code")
+
+    def execute_and_render(self, code, context, template) -> str:
+        self.cursor += 1
+        cell = Cell(code, context, template)
+        cache = self.cache.setdefault(self.abs_src_path, [])
+        if len(cache) >= self.cursor:
+            cached = cache[self.cursor - 1]
+            if cell == cached:
+                return f'<div class="cached">{cached.output}</div>'
 
         outputs = self.execute(code, context["language"])
-        outputs = select_outputs(outputs)
-        yield self.render("inline_code", context, outputs=outputs)
+        report = format_report()
+        report["cursor"] = self.cursor
+        if template == "inline_code":
+            outputs = select_outputs(outputs)
+        cell.output = self.render(template, context, outputs=outputs, report=report)
+        if len(cache) == self.cursor - 1:
+            cache.append(cell)
+        else:
+            cache[self.cursor - 1] = cell
+            if len(cache) > self.cursor:
+                cache[self.cursor].valid = False
+        return cell.output
 
-    def execute(self, code: str, language: str = "python") -> List:
+    def execute(self, code: str, language: str) -> List:
         if language not in self.config["kernel_name"]:
             return []
         outputs = execute(code, self.config["kernel_name"][language])
@@ -174,18 +204,18 @@ def format_report():
     datetime_format = r"%Y-%m-%d %H:%M:%S"
     report["start"] = report["start"].strftime(datetime_format)
     report["end"] = report["end"].strftime(datetime_format)
-    report["elasped"] = timedelta_format(report["elasped"])
-    report["total"] = timedelta_format(report["total"])
+    report["elasped"] = format_timedelta(report["elasped"])
+    report["total"] = format_timedelta(report["total"])
     report["count"] = report["execution_count"]
     return report
 
 
-def timedelta_format(dt) -> str:
+def format_timedelta(dt) -> str:
     sec = dt.total_seconds()
     if sec >= 3600:
-        return f"{sec//3600}h{sec//60%60}min{sec%3600%60}s"
+        return f"{sec//3600:.00f}h{sec//60%60:.00f}min{sec%3600%60:.00f}s"
     elif sec >= 60:
-        return f"{sec//60}min{sec%60}s"
+        return f"{sec//60:.00f}min{sec%60:.00f}s"
     elif sec >= 10:
         return f"{sec:0.1f}s"
     elif sec >= 1:
@@ -196,11 +226,7 @@ def timedelta_format(dt) -> str:
         return f"{sec*1e3:.01f}ms"
     elif sec >= 1e-3:
         return f"{sec*1e3:.02f}ms"
-    elif sec >= 1e-4:
-        return f"{sec*1e6:.00f}us"
-    elif sec >= 1e-5:
-        return f"{sec*1e6:.01f}us"
     elif sec >= 1e-6:
-        return f"{sec*1e6:.02f}us"
+        return f"{sec*1e6:.00f}us"
     else:
-        return f"{sec*1e9:.00f}ns"
+        return f"<1us"

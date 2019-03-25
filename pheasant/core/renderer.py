@@ -64,7 +64,7 @@ class Renderer(Base):
             env = Environment(loader=loader, autoescape=select_autoescape(["jinja2"]))
             self.config[template] = env.get_template(path)
 
-    def render(self, template: str, context: Dict[str, Any], **kwargs):
+    def render(self, template: str, context: Dict[str, Any], **kwargs) -> str:
         return self.config[template + "_template"].render(
             context, config=self.config, **kwargs
         )

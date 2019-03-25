@@ -11,7 +11,7 @@ class Header(Renderer):
     tag_context: Dict[str, Any] = field(default_factory=dict)
     number_list: Dict[str, List[int]] = field(default_factory=dict)
     header_kind: Dict[str, str] = field(default_factory=dict)
-    abs_src_path: str = field(default=".")  # should be set the real path later
+    abs_src_path: str = "."  # should be set the real path later
 
     HEADER_PATTERN = r"^(?P<prefix>#+)(?P<kind>\w*?) +(?P<title>.+?)\n"
     TAG_PATTERN = r"\{#(?P<tag>\S+?)#\}"
