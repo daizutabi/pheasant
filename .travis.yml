@@ -8,6 +8,7 @@ matrix:
 
 install:
   - pip install -e .[develop]
+  - pip install python-coveralls
 
 before_script:
   - pycodestyle pheasant
