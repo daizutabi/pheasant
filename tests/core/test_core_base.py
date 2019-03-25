@@ -48,5 +48,4 @@ def test_core_make_cell_class():
     assert cell.match == "match"
     assert cell.output == "output"
     assert cell.context == {"a": "1"}
-    assert cell.render == func
     assert cell.render_name == "render_name"

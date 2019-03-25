@@ -18,7 +18,7 @@ class A(Base):
             if cell.match is None:
                 yield cell.source + x
             else:
-                yield "[" + "".join(cell.render(cell.context, splitter, parser)) + "]"
+                yield "[" + cell.parse(splitter, parser) + "]"
         elif x == "c":
             yield parser.parse("b4")
 
@@ -56,7 +56,7 @@ class B(Base):
     def render_a(self, context, splitter, parser):
         cell = next(splitter)
         if cell.match is not None:
-            yield "[" + "".join(cell.render(cell.context, splitter, parser)) + "]"
+            yield "[" + cell.parse(splitter, parser) + "]"
         else:
             source = cell.source
             yield parser.parse("b" + source, decorate=decorate)

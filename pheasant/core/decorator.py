@@ -3,7 +3,7 @@ import re
 from dataclasses import field
 from typing import Callable, Dict, Union
 
-from pheasant.core.base import Base, get_render_name
+from pheasant.core.base import Base
 
 SURROUND_TAG = re.compile(
     r"^([^<]*)<(?P<tag>(span|div))(.*)</(?P=tag)>([^>]*)$", re.DOTALL
@@ -20,8 +20,7 @@ class Decorator(Base):
         if not isinstance(renderers, list):
             renderers = [renderers]
         for renderer in renderers:
-            for render in renderer.renders.values():
-                render_name = get_render_name(render)
+            for render_name, render in renderer.renders.items():
                 self.decorates[render_name] = decorate  # type: ignore
                 self.class_names[render_name] = self.class_name(render_name)
 
