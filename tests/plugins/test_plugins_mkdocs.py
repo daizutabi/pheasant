@@ -11,6 +11,7 @@ import pheasant
 def test_plugins_mkdocs():
     root = os.path.join(pheasant.__file__, "../../tests/docs")
     config_file = os.path.join(root, "mkdocs.yml")
+    config_file = os.path.normpath(config_file)
     config = load_config(config_file)
 
     assert "pheasant" in config["plugins"]
