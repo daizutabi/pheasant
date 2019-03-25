@@ -15,14 +15,9 @@ class Comment(Renderer):
 
     def __post_init__(self):
         super().__post_init__()
-        self.register(Comment.HEADER_PATTERN, self.render_header)
-        self.register(Comment.FENCED_CODE_PATTERN, self.render_fenced_code)
-
-    def render_header(self, context, splitter, parser) -> Iterator[str]:
-        yield from self.render_escape(context, splitter, parser)
-
-    def render_fenced_code(self, context, splitter, parser) -> Iterator[str]:
-        yield from self.render_escape(context, splitter, parser)
+        self.register(Comment.HEADER_PATTERN, self.render_escape, "comment__header")
+        pattern = Comment.FENCED_CODE_PATTERN
+        self.register(pattern, self.render_escape, "comment__fenced_code")
 
     def render_escape(self, context, splitter, parser) -> Iterator[str]:
         if self.max_line_length == 0:
