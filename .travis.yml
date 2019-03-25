@@ -13,6 +13,8 @@ before_script:
   - pycodestyle pheasant
   - pyflakes pheasant
   - mypy pheasant
+  - pycodestyle tests
+  - pyflakes tests
   - python -m ipykernel install --user --name travis
 
 script:

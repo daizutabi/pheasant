@@ -1,7 +1,7 @@
 import importlib
 import os
 from dataclasses import field
-from typing import Any, Dict, List, Union, Optional
+from typing import Any, Dict, List, Optional, Union
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
@@ -30,7 +30,7 @@ class Renderer(Base):
     def parser(self) -> Parser:
         if self._parser is None:
             self.parser = Parser()
-        return self._parser
+        return self._parser  # type: ignore
 
     @parser.setter
     def parser(self, parser: Parser) -> None:

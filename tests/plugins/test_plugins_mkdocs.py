@@ -1,16 +1,11 @@
 import os
 
-from mkdocs.commands import build
 from mkdocs.commands.build import get_context
-from mkdocs.config import config_options, load_config
-from mkdocs.plugins import BasePlugin
+from mkdocs.config import load_config
 from mkdocs.structure.files import get_files
 from mkdocs.structure.nav import get_navigation
-from mkdocs.utils import string_types
 
 import pheasant
-from pheasant.core.pheasant import Pheasant
-from pheasant.jupyter.client import execution_report
 
 
 def test_plugins_mkdocs():
@@ -51,6 +46,6 @@ def test_plugins_mkdocs():
             template = env.get_template("main.html")
         output = template.render(context)
         output = plugin.on_post_page(output)
-        assert 'pheasant' in output
+        assert "pheasant" in output
 
         page.active = False
