@@ -1,6 +1,7 @@
 import re
 from ast import literal_eval
-from typing import Iterator, List, Match
+from dataclasses import dataclass, field
+from typing import Dict, Iterator, List, Match
 
 from pheasant.core.decorator import comment
 from pheasant.core.renderer import Renderer
@@ -11,7 +12,19 @@ from pheasant.jupyter.display import (bokeh_extra_resources,
                                       select_display_data)
 
 
+@dataclass
+class Cell:
+    code: str
+    context: Dict[str, str]
+    template: str
+    valid: bool = True
+    output: str = field(default="", compare=False)
+
+
 class Jupyter(Renderer):
+    abs_src_path: str = "."  # should be set the real path later
+    cursor: int = 0
+    cache: Dict[str, List[Cell]] = field(default_factory=dict)
 
     FENCED_CODE_PATTERN = (
         r"^(?P<mark>`{3,})(?P<language>\w+) ?(?P<option>.*?)\n"
@@ -43,28 +56,45 @@ class Jupyter(Renderer):
         for key in ["css", "javascript", "raw_css", "raw_javascript"]:
             self.meta[f"extra_{key}"] = []
         self.meta["extra_module"] = []
+        self.cursor = 0
 
     def render_fenced_code(self, context, splitter, parser) -> Iterator[str]:
         code = context["code"]
-        if "display" in context["option"]:
-            code = replace_for_display(code, skip_equal=False)
         if "inline" in context["option"]:
             code = replace_fenced_code_for_display(code)
+        if "display" in context["option"] or "inline" in context["option"]:
             code = replace_for_display(code, skip_equal=False)
-        # context["code"] = code  # Uncomment for debug
-        outputs = self.execute(code, context["language"])
-        report = format_report()
-        yield self.render("fenced_code", context, outputs=outputs, report=report) + "\n"
+        yield self.execute_and_render(code, context, "fenced_code") + "\n"
 
     @comment("code")
     def render_inline_code(self, context, splitter, parser) -> Iterator[str]:
         code = replace_for_display(context["code"])
         if "language" not in context:
             context["language"] = "python"
+        yield self.execute_and_render(code, context, "inline_code")
+
+    def execute_and_render(self, code, context, template) -> str:
+        self.cursor += 1
+        cell = Cell(code, context, template)
+        cache = self.cache.setdefault(self.abs_src_path, [])
+        if len(cache) >= self.cursor:
+            cached = cache[self.cursor - 1]
+            if cell == cached:
+                return f'<div class="cached">{cached.output}</div>'
 
         outputs = self.execute(code, context["language"])
-        outputs = select_outputs(outputs)
-        yield self.render("inline_code", context, outputs=outputs)
+        report = format_report()
+        report["cursor"] = self.cursor
+        if template == "inline_code":
+            outputs = select_outputs(outputs)
+        cell.output = self.render(template, context, outputs=outputs, report=report)
+        if len(cache) == self.cursor - 1:
+            cache.append(cell)
+        else:
+            cache[self.cursor - 1] = cell
+            if len(cache) > self.cursor:
+                cache[self.cursor].valid = False
+        return cell.output
 
     def execute(self, code: str, language: str) -> List:
         if language not in self.config["kernel_name"]:

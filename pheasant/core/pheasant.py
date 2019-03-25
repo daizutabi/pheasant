@@ -35,8 +35,9 @@ class Pheasant(Converter):
     def convert_from_files(self, paths: List[str], message=None) -> List[str]:
         self.reset()
         for path in paths:
-            self.jupyter.reset()  # Reset extra_resources
-            self.header.abs_src_path = path
+            self.jupyter.abs_src_path = path  # for cache
+            self.header.abs_src_path = path  # for hypyerlink between pages
+            self.jupyter.reset()  # Reset extra_resources for every page
             if path.endswith(".py"):
                 if message:
                     message(f"Converting Python script: {path}")

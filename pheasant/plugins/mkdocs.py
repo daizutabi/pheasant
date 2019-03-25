@@ -19,11 +19,13 @@ class PheasantPlugin(BasePlugin):
         ("bar", config_options.Type(int, default=0)),
         ("baz", config_options.Type(bool, default=True)),
     )
+    converter = Pheasant()
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         logger.debug("[Pheasant] Plugin created.")
-        self.converter = Pheasant()
+        # self.converter = Pheasant()
+        print("+++++++++++++++++++++++++++++++")
         logger.debug(f"[Pheasant] Converter created. {self.converter}")
         for name, parser in self.converter.parsers.items():
             logger.debug(f"[Pheasant] Parser for '{name}' = {parser}.")
