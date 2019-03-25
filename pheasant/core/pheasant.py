@@ -57,6 +57,6 @@ class Pheasant(Converter):
 
     def surround(self, cell):
         if cell.render_name == 'jupyter__fenced_code':
-            if "display" in cell.context["option"]:
+            if "inline" in cell.context["option"]:
                 cell.render_name = 'jupyter__inline_code'
         self.decorator.surround(cell)
