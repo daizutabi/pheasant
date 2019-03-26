@@ -9,12 +9,9 @@ from pheasant.core.page import Page
 from pheasant.core.parser import Parser
 from pheasant.core.renderer import Renderer
 
-# from pheasant.core.renderers import Renderers
-
 
 class Converter(Base):
     parsers: Dict[str, Parser] = field(default_factory=OrderedDict)
-    # renderers: Renderers = field(default_factory=Renderers)
     renderers: Dict[str, List[Renderer]] = field(default_factory=dict)
     pages: Dict[str, Page] = field(default_factory=dict)
 
@@ -85,19 +82,18 @@ class Converter(Base):
         Parameters
         ----------
         source
-            The text string to be converted.
+            The source text to be converted.
         names
             Parser names to be used. If not specified. all of the registered
             parsers will be used.
 
         Returns
         -------
-        Converted source text.
+        Converted output text.
         """
         if isinstance(names, str):
             names = [names]
-        names = names or self.parsers
-        for name in names:
+        for name in names or self.parsers:
             parser = self.parsers[name]
             source = parser.parse(source)
 

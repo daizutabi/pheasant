@@ -29,6 +29,21 @@ class Parser(Base):
         return cell_class
 
     def parse(self, source: str, decorate: Union[Callable, bool] = True) -> str:
+        """Parse the source and deligate to the render function.
+
+        Parameters
+        ----------
+        source
+            Source text
+        decorate
+            If True, parser's decorator is used to decorate the cell with output
+            from the renders. If callable, `decorate` directly decorates the cell.
+
+        Returns
+        -------
+        str
+            Rendered and decorated output text.
+        """
         splitter = self.split(source)
 
         def iterator():
@@ -52,7 +67,13 @@ class Parser(Base):
         return cell.output
 
     def split(self, source: str) -> Splitter:
-        """Split the source into a cell and yield it."""
+        """Split the source into a cell and yield it.
+
+        Split function returns a Splitter generator. This generator can receive a
+        source through `send` method to return the source you get from generator.
+
+
+        """
         if not self.patterns:
             raise ValueError("No pattern registered")
         elif self.pattern is None:
@@ -62,8 +83,8 @@ class Parser(Base):
 
         def resplit(rework: Optional[str]) -> Splitter:
             if rework is not None:
-                yield
-                yield from self.split(rework)
+                yield  # Yields None as a return value for send method.
+                yield from self.split(rework)  # Then, yields the same source again.
 
         cursor = 0
         for match in self.pattern.finditer(source):
@@ -92,7 +113,7 @@ class Parser(Base):
 
         Returns
         -------
-        cell : dataclass instance
+        cell : Cell dataclass instance
         """
         groupdict = match.groupdict()
         render_name = ""
