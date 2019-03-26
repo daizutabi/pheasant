@@ -2,11 +2,24 @@ import ast
 import re
 from typing import Iterator, List, Tuple
 
-
+pattern = r'^(?P<quote>"""|\'\'\')(.*?)(?P=quote)\n'
+DOCSTRING_PATTERN = re.compile(pattern, re.DOTALL | re.MULTILINE)
 AST_PATTERN = re.compile(r"<_ast\.(.+?) ")
 
 
 def split(source: str) -> Iterator[Tuple[str, str]]:
+    cursor = 0
+    for match in DOCSTRING_PATTERN.finditer(source):
+        start, end = match.start(), match.end()
+        if cursor < start:
+            yield from split_block(source[cursor:start])
+        yield "Docstring", match.group()
+        cursor = end
+    if cursor < len(source):
+        yield from split_block(source[cursor:])
+
+
+def split_block(source: str) -> Iterator[Tuple[str, str]]:
     current = ""
     lines = []
     for kind, line in split_line(source):

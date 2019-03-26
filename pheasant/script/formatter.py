@@ -1,29 +1,25 @@
-import re
 import unicodedata
 from functools import reduce
 from itertools import accumulate
 from typing import Iterator
 
-COMMENT_PATTERN = re.compile(r"^#\s*", re.MULTILINE)
 
-
-def format_comment(source: str, max_line_length: int = 88) -> str:
-    """Format a comment source to python code or markdown.
+def format_source(source: str, max_line_length: int = 88) -> str:
+    """Format a source to python code or markdown.
 
     Output format is determined by `max_line_length`:
-        -1: Just remove `#` and following spaces at the beginning of each line.
-         0: Markdown source formatted to one line.
-        >1: Python script wrapped with the max line length.
+         0: formatted to one line.
+        >1: wrapped with the max line length.
 
     Any wide characters take two-character spaces to calculate the line length.
 
     Parameters
     ----------
     source
-        Comment source to be formatted.
+        Source to be formatted.
     max_line_length
-        Preferred line length when source is formatted to a Python script.
-        If 0, source is formatted to a Markdown source and its line length is
+        Preferred line length.
+        If 0, the source is formatted to a one-line source and its line length is
         not limitted.
 
     Returns
@@ -31,22 +27,13 @@ def format_comment(source: str, max_line_length: int = 88) -> str:
     output
         Formatted output.
     """
-    source = COMMENT_PATTERN.sub("", source)
-    if max_line_length == -1:
-        return source
-    else:
-        return "\n".join(wrap(source, max_line_length)) + "\n"
+    return "\n".join(wrap(source, max_line_length)) + "\n"
 
 
-def wrap(source: str, max_line_length: int, pre: str = "# ") -> Iterator[str]:
+def wrap(source: str, max_line_length: int) -> Iterator[str]:
     line = join(source)
-    if max_line_length == 0:
+    if max_line_length == 0 or len(line) <= max_line_length:
         yield line
-        return
-
-    max_line_length -= len(pre)
-    if len(line) <= max_line_length:
-        yield pre + line
         return
 
     is_wides = [is_wide(character) for character in line]
@@ -59,10 +46,10 @@ def wrap(source: str, max_line_length: int, pre: str = "# ") -> Iterator[str]:
             end = cursor
         cursor += 1
         if cursor == len(line) - 1:
-            yield pre + line[begin:].strip()
+            yield line[begin:].strip()
             break
         elif distance[cursor] - distance[begin] >= max_line_length and begin != end:
-            yield pre + line[begin : end + 1].strip()
+            yield line[begin : end + 1].strip()
             begin = end = end + 1
 
 
