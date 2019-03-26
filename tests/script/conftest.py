@@ -1,10 +1,14 @@
-# Script renderer test
 # # Title
 # ## Section
 # ### Subsection
 
 # paragraph 1
 # paragraph 1
+
+"""
+docstring 1
+docstring 2
+"""
 
 # #Fig
 # ~~~
@@ -51,6 +55,11 @@ def f():
 
 # -inline display
 def g():
+    """Function g
+
+    Function docstring 1
+    Function docstring 2
+    """
     pass
 
 
