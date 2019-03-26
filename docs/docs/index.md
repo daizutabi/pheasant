@@ -48,7 +48,7 @@ print(1)
 is converted into:
 
 ~~~html
-<div class="input"><pre><code class="python">print(1)</code></pre>
+<div class="input"><pre><code class="python">print(1)</code></pre></div>
 <div class="stdout"><pre><code class="text">1</code></pre></div>
 ~~~
 

@@ -3,7 +3,7 @@ import atexit
 import datetime
 import logging
 import re
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any, Dict, List, Optional
 
 import jupyter_client
 from jupyter_client.manager import KernelManager
@@ -27,7 +27,6 @@ def find_kernel_names() -> Dict[str, list]:
     if kernel_names:
         return kernel_names
 
-    logger.info(f"[Pheasant.jupyter] Finding Kernel names.")
     kernel_specs = jupyter_client.kernelspec.find_kernel_specs()
     for kernel_name in kernel_specs:
         kernel_spec = jupyter_client.kernelspec.get_kernel_spec(kernel_name)
@@ -36,8 +35,6 @@ def find_kernel_names() -> Dict[str, list]:
             kernel_names[language] = [kernel_name]
         else:
             kernel_names[language].append(kernel_name)
-
-    logger.info(f"[Pheasant.jupyter] Found kernels: {kernel_names}.")
 
     return kernel_names
 
@@ -86,21 +83,18 @@ def get_kernel_client(kernel_name: str):
         return kernel_clients[kernel_name]
 
     kernel_manager = get_kernel_manager(kernel_name)
-    logger.info(f'[Pheasant.jupyter] Creating kernel client for "{kernel_name}".')
+    logger.info(f'Creating kernel client for "{kernel_name}".')
     kernel_client = kernel_manager.client()
     kernel_client.start_channels()
     while not kernel_client.is_complete('print("OK")'):
         pass
-    logger.info(f'[Pheasant.jupyter] Kernel client for "{kernel_name}" ready.')
+    logger.info(f'Kernel client for "{kernel_name}" ready.')
     kernel_clients[kernel_name] = kernel_client
     return kernel_client
 
 
 def execute(
-    code: str,
-    kernel_name: Optional[str] = None,
-    language: str = "python",
-    output_hook: Callable[..., None] = None,
+    code: str, kernel_name: Optional[str] = None, language: str = "python"
 ) -> List:
     if kernel_name is None:
         kernel_name = get_kernel_name(language)
@@ -111,18 +105,19 @@ def execute(
 
     outputs = []
 
-    def output_hook_(msg):
-        if output_hook:
-            output_hook(msg)
+    def output_hook(msg):
         output = output_from_msg(msg)
         if output:
             outputs.append(output)
 
     msg = kernel_client.execute_interactive(
-        code, allow_stdin=False, output_hook=output_hook_
+        code, allow_stdin=False, output_hook=output_hook
     )
-    output_hook_(msg)
+    create_execution_report(msg)
+    return outputs
 
+
+def create_execution_report(msg) -> None:
     start_time = msg["parent_header"]["date"].astimezone()
     end_time = msg["header"]["date"].astimezone()
     msg["parent_header"]["date"] = start_time
@@ -133,7 +128,6 @@ def execute(
     execution_report["total"] += execution_report["elasped"]
     execution_report["execution_count"] = msg["content"]["execution_count"]
     execution_report["message"] = msg
-    return outputs
 
 
 def output_from_msg(msg) -> Optional[dict]:
