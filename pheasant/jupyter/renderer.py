@@ -58,7 +58,6 @@ class Jupyter(Renderer):
     def render_fenced_code(self, context, splitter, parser) -> Iterator[str]:
         code = context["code"]
         if "inline" in context["option"]:
-            code = replace_fenced_code_for_display(code)
             splitter.send("{{" + code + "}}")
             return
         if "display" in context["option"]:
@@ -68,8 +67,7 @@ class Jupyter(Renderer):
     @comment("code")
     def render_inline_code(self, context, splitter, parser) -> Iterator[str]:
         code = replace_for_display(context["code"])
-        if "language" not in context:
-            context["language"] = "python"
+        context["language"] = "python"  # FIXME choice of other languages
         yield self.execute_and_render(code, context, "inline_code")
 
     def execute_and_render(self, code, context, template) -> str:
@@ -133,13 +131,6 @@ class Jupyter(Renderer):
             resources = module_dict[module]()
             for key, values in resources.items():
                 extra[key].extend(value for value in values if value not in extra[key])
-
-
-def replace_fenced_code_for_display(code: str) -> str:
-    def replace(match: Match) -> str:
-        return replace_for_display(match.group(1))
-
-    return Jupyter.RE_INLINE_CODE_PATTERN.sub(replace, code)
 
 
 def replace_for_display(code: str) -> str:

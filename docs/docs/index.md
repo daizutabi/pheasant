@@ -172,15 +172,14 @@ Table  | #Table (title), #Tab (title)
 Code   | #Code (title)
 File   | #File (title)
 
-In the above Markdown source, `{##<tag>#}` is an ID tag for hyperlink described below. Off course, you can use any code to create a figure:
+In the above Markdown source, `{##<tag>#}` is an ID tag for hyperlink described below. Off course, you can use any code to create a figure.
 
-
-~~~copy
-#Fig A Matplotlib figure
+~~~~copy
+#Figure A Matplotlib figure
 ```python inline
-plt.plot([3, 2])
+plt.plot([2, 4])
 ```
-~~~
+~~~~
 
 Like figures, tables can be numbered.
 
@@ -198,7 +197,6 @@ Pandas's DataFarme is useful to create a table programmatically.
 #Table A Pandas's DataFrame
 ```python inline
 import pandas as pd
-
 pd.DataFrame([[1, 2], [3, 4]], index=list('XY'), columns=list('ab'))
 ```
 ~~~

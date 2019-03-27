@@ -30,7 +30,7 @@ class Embed(Renderer):
             if not context["language"]:
                 context["language"] = "markdown"
             copy = False
-        yield self.render("fenced_code", context) + "\n"
+        yield "\n" + self.render("fenced_code", context) + "\n"
 
         if copy:
             splitter.send(context["source"] + "\n")

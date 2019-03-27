@@ -123,7 +123,7 @@ class Header(Renderer):
 
 
 def get_content(source: str) -> Tuple[str, str]:
-    source = source.strip()
+    source = source.lstrip()
     if source == "":
         return "", ""
     index = source.find("\n\n")

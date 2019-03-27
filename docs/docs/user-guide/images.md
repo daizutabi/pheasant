@@ -44,14 +44,15 @@ for k, color in enumerate(['red', 'blue']):
 axes
 ```
 
-You can use the inline code to get different images at the every evaluation time while the iteration is going. You have to call `plt.cla()` method to continuously clear the previous plot.
+You can use the `display` function to get different images at the every evaluation time while the iteration is going. You have to call `plt.cla()` method to continuously clear the previous plot.
 
 ~~~copy
-```python inline hide
+```python hide
+from pheasant.jupyter.display import display
 axes = []
 for k, color in enumerate(['red', 'blue']):
     plt.plot([0, k + 3], color)
-    axes.append({{plt.gca()}})
+    axes.append(display(plt.gca()))
     plt.cla()
 ```
 ~~~
@@ -83,18 +84,22 @@ Thanks to this Pheasant feature, you can put images anywhere. For example, in a 
 
 Herer, a fenced code is required because `{{#axes[0]}}` and `{{#axes[1]}}` are not normal Markdown sources.
 
-If you prefer a Pandas DataFrame, HTML-type inline code can be used with `{{#^` and `}}` which return an IPython HTML object. So you can use the `data` attribute to get a HTML string.
+```python
+help(display)
+```
+
+
+If you prefer a Pandas DataFrame, use "html" output option. When this option is set, `display` function returns an IPython HTML object. So you can use the `data` attribute to get a HTML string.
 
 ~~~copy
-```python hide inline
+```python hide
 axes = []
 for k, color in enumerate(['red', 'blue']):
     plt.plot([0, k + 3], color)
-    axes.append({{^plt.gca()}}.data)
+    axes.append(display(plt.gca(), output="html").data)
     plt.cla()
 ```
 ~~~
-
 
 Then,
 
