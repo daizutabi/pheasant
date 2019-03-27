@@ -17,7 +17,6 @@ nav:
     - Images: user-guide/images.md
     - Embed: user-guide/embed.md
     - Script: user-guide/script.py
-  - API: api.py
   - About:
     - Release Notes: about/release-notes.md
     - License: about/license.md
