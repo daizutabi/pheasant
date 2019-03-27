@@ -32,10 +32,10 @@ def embed():
 
 
 @pytest.fixture()
-def parser(jupyter, header, code):
+def parser(jupyter, header, embed):
     parser = Parser()
     jupyter.parser = parser
     header.parser = parser
-    code.parser = parser
+    embed.parser = parser
 
     return parser

@@ -1,8 +1,7 @@
 import os
 from ast import literal_eval
-from typing import Dict, Iterator, Optional
+from typing import Dict, Iterator
 
-from pheasant.core import markdown
 from pheasant.core.decorator import comment
 from pheasant.core.renderer import Renderer
 from pheasant.jupyter.client import execute, get_kernel_name
@@ -30,7 +29,7 @@ class Embed(Renderer):
             if not context["language"]:
                 context["language"] = "markdown"
             copy = False
-        yield "\n" + self.render("fenced_code", context) + "\n"
+        yield self.render("fenced_code", context) + "\n"
 
         if copy:
             splitter.send(context["source"] + "\n")
