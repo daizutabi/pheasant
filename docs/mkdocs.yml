@@ -15,7 +15,7 @@ nav:
   - Home: index.md
   - User Guide:
     - Images: user-guide/images.md
-    - Code: user-guide/code.md
+    - Embed: user-guide/embed.md
     - Script: user-guide/script.py
   - API: api.py
   - About:

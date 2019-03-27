@@ -46,13 +46,13 @@ class Embed(Renderer):
                 return
             source = read_file(path)
         else:
+            language = 'python'
             kernel_name = get_kernel_name(language)
             if kernel_name is None:  # pragma: no cover
                 yield f'<p style="font-color:red">Kernel not found for {language}</p>\n'
                 return
             source = inspect(path, kernel_name)
         source = select_source(source, context.get("lineno"))
-        context = {"language": language, "source": source}
         source = f"~~~{language}\n{source}\n~~~\n"
         splitter.send(source)
 
@@ -102,10 +102,9 @@ def select_source(source: str, lineno: str) -> str:
     if not lineno:
         return source
     lines = source.split("\n")
-    lineno = lineno[:-1]
     begin_str, end_str = lineno.split(":")
     begin = int(begin_str) if begin_str else 0
-    end = int(end_str) if end_str else len(source)
+    end = int(end_str) if end_str else len(lines)
     return "\n".join(lines[begin:end])
 
 
