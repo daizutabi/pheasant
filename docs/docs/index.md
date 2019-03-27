@@ -161,9 +161,9 @@ You can use a special **"header"** statement for figure, table, *etc*. to number
 #Fig Markdown link for an image can be numbered. {#cat#}
 ![jpg](img/cat.jpg)
 
-Supported numbered headers are shown in the next table:
+Supported numbered headers are shown in Table {#numbered-header#}:
 
-#Tab Supported numbered headers
+#Tab Supported numbered headers {#numbered-header#}
 Type   | Markdown
 -------|-------------------------------
 Header | # (title)
