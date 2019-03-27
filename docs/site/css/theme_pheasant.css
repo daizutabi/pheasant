@@ -20,6 +20,12 @@ p {
   margin-bottom: 10px;
 }
 
+h2, h3, h4, h5 {
+  margin-top:20px;
+  margin-bottom:10px;
+
+}
+
 /* .wy-nav-content {
     max-width: none;
 } */
@@ -260,27 +266,6 @@ p {
   margin: 5px auto 5px auto;
 }
 
-/* .pheasant-fenced-code .cached .display .content,
-.pheasant-inline-code .cached .display .content {
-  background-color: yellow;
-} */
-
-
-/*
-div.pheasant-number-figure div.pheasant-jupyter-display {
-  margin: 3px auto 3px auto;
-}
-
-div.pheasant-jupyter-display p {
-  margin: 0px;
-}
- */
-/* div.pheasant-number-figure p,
-div.pheasant-number-table p {
-  margin: 3px auto 3px auto;
-}
- */
-
 /**************************************************
  Pandas DataFrame style
 **************************************************/
@@ -339,12 +324,4 @@ table.dataframe tbody td {
 
 .holoform label {
   color: black;
-}
-
-/**************************************************
- Misc
-**************************************************/
-
-span.pheasant-backquote {
-  color: #AA0088;
 }
