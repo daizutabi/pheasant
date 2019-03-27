@@ -20,6 +20,11 @@ class HoloviewsHTML(HTML):
         return "holoviews"
 
 
+class AltairHTML(HTML):
+    def __repr__(self):
+        return "altair"
+
+
 def matplotlib_to_base64(obj, output: str = "markdown") -> str:
     """Convert a Matplotlib's figure into base64 string."""
 
@@ -121,6 +126,19 @@ def _split_css_html_assets(css_html: str) -> Dict[str, List[str]]:
     return {"extra_css": extra_css, "extra_raw_css": extra_raw_css}
 
 
+def altair_to_html(obj, **kwargs) -> HTML:
+    from pheasant.jupyter.altair import to_html
+
+    html = to_html(obj)
+    return AltairHTML(html)
+
+
+def altair_extra_resources() -> Dict[str, List[str]]:
+    from pheasant.jupyter.altair import extra_raw_css, extra_javascript
+
+    return {"extra_raw_css": extra_raw_css, "extra_javascript": extra_javascript}
+
+
 def extra_html(extra: Dict[str, List[str]]) -> str:
     return "\n".join(
         [
@@ -140,6 +158,7 @@ CONVERTERS: Dict[str, Callable] = {
     "sympy": sympy_to_latex,
     "bokeh": bokeh_to_html,
     "holoviews": holoviews_to_html,
+    "altair": altair_to_html,
 }
 
 

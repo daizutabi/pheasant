@@ -7,7 +7,8 @@ from pheasant.core.decorator import comment, surround
 from pheasant.core.renderer import Renderer
 from pheasant.jupyter.client import (execute, execution_report,
                                      find_kernel_names)
-from pheasant.jupyter.display import (bokeh_extra_resources,
+from pheasant.jupyter.display import (altair_extra_resources,
+                                      bokeh_extra_resources,
                                       holoviews_extra_resources,
                                       select_display_data)
 
@@ -105,6 +106,7 @@ class Jupyter(Renderer):
         module_dict = {
             "bokeh": bokeh_extra_resources,
             "holoviews": holoviews_extra_resources,
+            "altair": altair_extra_resources,
         }
         extra = self.meta.setdefault(self.abs_src_path, {})
         if not extra:
