@@ -98,7 +98,7 @@ def test_get_content(header):
     output = header.parse("#FIG title\n \n \n\n# test\n")
     assert '<div class="content"># <span class="header"' in output
 
-    from pheasant.code.renderer import Embed
+    from pheasant.embed.renderer import Embed
     embed = Embed()
     embed.parser = header.parser
 
