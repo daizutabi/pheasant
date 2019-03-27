@@ -61,7 +61,7 @@ print(1)
 
 ### Inline code embeded in a Markdown source
 
-**"Inline code"** is a powerful feature of Pheasant. Any python codes surrounded by `{{#` and `}}` are executed and the result remains there. For example, `{{#3*5}}` becomes {{3*5}}. Variables can be assigned in an inline code like this: `{{#name='Pheasant'}}`{{name='Pheasant'}}. Then, `"I'm {{#name}}."` becomes "I'm {{name}}." Note that an inline code without outputs does not shown after execution.
+**"Inline code"** is a powerful feature of Pheasant. Any python codes surrounded by `{{#` and `}}` are executed and the result remains there. For example, `{{#4*5}}` becomes {{4*5}}. Variables can be assigned in an inline code like this: `{{#name='Pheasant';}}`{{name='Pheasant';}}. Then, `"I'm {{#name}}."` becomes "I'm {{name}}." Note that a semicolon at the end of expression hides the output.
 
 ### Visualization
 
@@ -172,15 +172,14 @@ Table  | #Table (title), #Tab (title)
 Code   | #Code (title)
 File   | #File (title)
 
-In the above Markdown source, `{##<tag>#}` is an ID tag for hyperlink described below. Off course, you can use any code to create a figure:
+In the above Markdown source, `{##<tag>#}` is an ID tag for hyperlink described below. Off course, you can use any code to create a figure.
 
-
-~~~copy
-#Fig A Matplotlib figure
+~~~~copy
+#Figure A Matplotlib figure
 ```python inline
-plt.plot([3, 2])
+plt.plot([2, 4])
 ```
-~~~
+~~~~
 
 Like figures, tables can be numbered.
 
@@ -198,7 +197,6 @@ Pandas's DataFarme is useful to create a table programmatically.
 #Table A Pandas's DataFrame
 ```python inline
 import pandas as pd
-
 pd.DataFrame([[1, 2], [3, 4]], index=list('XY'), columns=list('ab'))
 ```
 ~~~

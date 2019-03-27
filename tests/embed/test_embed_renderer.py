@@ -1,15 +1,16 @@
-from pheasant.code.renderer import get_language_from_path, inspect
+from pheasant.embed.renderer import (get_language_from_path, inspect,
+                                     resolve_path)
 from pheasant.jupyter.client import get_kernel_name
 
 
-def test_renderer(code):
-    output = code.parse("~~~\nabc\n~~~\n")
+def test_renderer(embed):
+    output = embed.parse("~~~\nabc\n~~~\n")
     assert 'class="markdown"' in output
 
-    output = code.parse("![file](setup.py<1:2>)\n")
+    output = embed.parse("{%setup.py[1:2]%}")
     assert '<code class="python">import re</code>' in output
 
-    output = code.parse("![file](abc.py)\n")
+    output = embed.parse("{%abc.py%}")
     assert output == '<p style="font-color:red">File not found: abc.py</p>\n'
 
 
@@ -21,4 +22,8 @@ def test_get_languate_from_path():
 
 def test_inspect_error():
     kernel_name = get_kernel_name("python")
-    assert inspect(kernel_name, "ABC") == "inspect error"
+    assert inspect("ABC", kernel_name) == "inspect error"
+
+
+def test_resolve_path():
+    assert resolve_path("abc.py?python")["language"] == "python"

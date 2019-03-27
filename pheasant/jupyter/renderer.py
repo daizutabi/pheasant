@@ -1,7 +1,7 @@
 import re
 from ast import literal_eval
 from dataclasses import dataclass, field
-from typing import Dict, Iterator, List, Match
+from typing import Dict, Iterator, List
 
 from pheasant.core.decorator import comment, surround
 from pheasant.core.renderer import Renderer
@@ -58,16 +58,16 @@ class Jupyter(Renderer):
     def render_fenced_code(self, context, splitter, parser) -> Iterator[str]:
         code = context["code"]
         if "inline" in context["option"]:
-            code = replace_fenced_code_for_display(code)
-        if "display" in context["option"] or "inline" in context["option"]:
-            code = replace_for_display(code, skip_equal=False)
+            splitter.send("{{" + code + "}}")
+            return
+        if "display" in context["option"]:
+            code = replace_for_display(code)
         yield self.execute_and_render(code, context, "fenced_code") + "\n"
 
     @comment("code")
     def render_inline_code(self, context, splitter, parser) -> Iterator[str]:
         code = replace_for_display(context["code"])
-        if "language" not in context:
-            context["language"] = "python"
+        context["language"] = "python"  # FIXME choice of other languages
         yield self.execute_and_render(code, context, "inline_code")
 
     def execute_and_render(self, code, context, template) -> str:
@@ -78,10 +78,6 @@ class Jupyter(Renderer):
             cached = cache[self.cursor - 1]
             if cell == cached:
                 return surround(cached.output, "cached")
-                # if cached.output.startswith("<div"):
-                #     return f'<div class="cached">{cached.output}</div>'
-                # else:
-                #     return f'<span class="cached">{cached.output}</span>'
 
         outputs = self.execute(code, context["language"])
         report = format_report()
@@ -137,14 +133,7 @@ class Jupyter(Renderer):
                 extra[key].extend(value for value in values if value not in extra[key])
 
 
-def replace_fenced_code_for_display(code: str) -> str:
-    def replace(match: Match) -> str:
-        return replace_for_display(match.group(1), skip_equal=False)
-
-    return Jupyter.RE_INLINE_CODE_PATTERN.sub(replace, code)
-
-
-def replace_for_display(code: str, skip_equal: bool = True) -> str:
+def replace_for_display(code: str) -> str:
     """Replace a match object with `display` function.
 
     Parameters
@@ -159,8 +148,8 @@ def replace_for_display(code: str, skip_equal: bool = True) -> str:
     codes
         Replaced python code list.
     """
-    if "=" in code and skip_equal:
-        return code
+    if code.endswith(";"):
+        return code[:-1]
 
     if code.startswith("^"):
         code = code[1:]
@@ -169,19 +158,19 @@ def replace_for_display(code: str, skip_equal: bool = True) -> str:
         output = "markdown"
 
     code = code.replace(";", "\n")
-    if "\n" not in code:
-        precode = ""
+    codes = code.split("\n")
+    if codes[-1].startswith(" "):
+        return code
+    match = re.match(r"(\w+) *?=", codes[-1])
+    if match:
+        precode = code + "\n"
+        code = match.group(1)
     else:
-        codes = code.split("\n")
-        if codes[-1].startswith(" "):
-            return code
-        match = re.match(r"(\w+) *?=", codes[-1])
-        if match:
-            code = match.group(1)
+        if len(codes) == 1:
+            precode = ""
         else:
-            code = "_pheasant_dummy"
-            codes[-1] = f"{code} = {codes[-1]}"
-        precode = "\n".join(codes) + "\n"
+            codes, code = codes[:-1], codes[-1]
+            precode = "\n".join(codes) + "\n"
 
     return f'{precode}pheasant.jupyter.display.display({code}, output="{output}")'
 

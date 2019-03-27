@@ -1,7 +1,7 @@
 import pytest
 import os
 
-from pheasant.code.renderer import Code
+from pheasant.embed.renderer import Embed
 from pheasant.core.parser import Parser
 from pheasant.jupyter.renderer import Jupyter
 from pheasant.number.renderer import Header
@@ -26,16 +26,16 @@ def header():
 
 
 @pytest.fixture()
-def code():
-    code = Code()
-    return code
+def embed():
+    embed = Embed()
+    return embed
 
 
 @pytest.fixture()
-def parser(jupyter, header, code):
+def parser(jupyter, header, embed):
     parser = Parser()
     jupyter.parser = parser
     header.parser = parser
-    code.parser = parser
+    embed.parser = parser
 
     return parser

@@ -48,6 +48,8 @@ setup(
             "pandas",
             "sympy",
             "selenium",
+            "openpyxl",
+            "python-pptx",
         ]
     },
     entry_points={

@@ -8,7 +8,7 @@
   
   <meta name="author" content="daizutabi">
   <link rel="shortcut icon" href="../../img/favicon.ico">
-  <title>Code - Pheasant</title>
+  <title>Embed - Pheasant</title>
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   <link rel="stylesheet" href="../../css/theme.css" type="text/css" />
@@ -19,9 +19,9 @@
   
   <script>
     // Current page data
-    var mkdocs_page_name = "Code";
-    var mkdocs_page_input_path = "user-guide\\code.md";
-    var mkdocs_page_url = "/user-guide/code/";
+    var mkdocs_page_name = "Embed";
+    var mkdocs_page_input_path = "user-guide\\embed.md";
+    var mkdocs_page_url = "/user-guide/embed/";
   </script>
   
   <script src="../../js/jquery-2.1.1.min.js"></script>
@@ -61,7 +61,7 @@
                 </li>
                 <li class=" current">
                     
-    <a class="current" href="./">Code</a>
+    <a class="current" href="./">Embed</a>
     <ul class="subnav">
             
     <li class="toctree-l3"><a href="#3-inspect-and-load-codes">3 Inspect and Load Codes</a></li>
@@ -130,7 +130,7 @@
         
       
     
-    <li>Code</li>
+    <li>Embed</li>
     <li class="wy-breadcrumbs-aside">
       
     </li>
@@ -144,8 +144,8 @@
 <h1 id="3-inspect-and-load-codes"><span class="pheasant-header"><span class="header"><span class="number">3</span> <span class="title">Inspect and Load Codes</span></span></span></h1>
 <p>Pheasant can read codes from a file system or Python module.</p>
 <h2 id="31-file-system"><span class="pheasant-header"><span class="header"><span class="number">3.1</span> <span class="title">File system</span></span></span></h2>
-<p>Any text files are read from file system by Pheasant's extended Markdown syntax: <code>![file](&lt;file name&gt;)</code>. For example,</p>
-<div class="pheasant-fenced-code"><div class="source"><pre><code class="markdown">![file](mkdocs.yml)</code></pre></div></div>
+<p>Extenal resources are read from file system by Pheasant syntax: <code>{%object%}</code>. For example,</p>
+<div class="pheasant-fenced-code"><div class="source"><pre><code class="markdown">{%mkdocs.yml%}</code></pre></div></div>
 
 <p>writes the content of the real <code>mkdocs.yml</code> of this document:</p>
 <div class="pheasant-fenced-code"><div class="source"><pre><code class="yaml">site_name: Pheasant
@@ -165,7 +165,7 @@ nav:
   - Home: index.md
   - User Guide:
     - Images: user-guide/images.md
-    - Code: user-guide/code.md
+    - Embed: user-guide/embed.md
     - Script: user-guide/script.py
   - API: api.py
   - About:
@@ -178,20 +178,20 @@ markdown_extensions:
 #   - attr_list</code></pre></div></div>
 
 <p>The root directory of a relative path is the directory where <code>mkdocs.yml</code> exists.</p>
-<p>If the file is too long to display the whole content, you can specify the lines as the same way that Python does with the slice notation. Use <code>&lt;</code> and <code>&gt;</code> insted of <code>[</code> and <code>]</code> because <code>[</code> and <code>]</code> can be a part of a file name.</p>
-<div class="pheasant-fenced-code"><div class="source"><pre><code class="markdown">![file](mkdocs.yml&lt;5:10&gt;)</code></pre></div></div>
+<p>If the file is too long to display the whole content, you can specify the lines as the same way that Python does with the slice notation.</p>
+<div class="pheasant-fenced-code"><div class="source"><pre><code class="markdown">{%mkdocs.yml[3:8]%}</code></pre></div></div>
 
-<div class="pheasant-fenced-code"><div class="source"><pre><code class="yaml">repo_url: https://github.com/daizutabi/pheasant/
+<div class="pheasant-fenced-code"><div class="source"><pre><code class="yaml">site_author: daizutabi
+
+repo_url: https://github.com/daizutabi/pheasant/
 edit_uri: &#34;&#34;
-
-theme: readthedocs
 </code></pre></div></div>
 
-<p>Imported file can be numbered like figures and tables. Use this shorthand notation:</p>
-<div class="pheasant-fenced-code"><div class="source"><pre><code class="markdown">#![file](mkdocs.yml&lt;:8&gt;)</code></pre></div></div>
+<p>Imported file can be numbered like figures and tables. Use this inline notation:</p>
+<div class="pheasant-fenced-code"><div class="source"><pre><code class="markdown">#file {%mkdocs.yml[:8]%}</code></pre></div></div>
 
 <div class="pheasant-header"><div class="file"><p><span class="prefix">File</span> <span class="number">3.1</span>
-<span class="title">mkdocs.yml&lt;:8&gt;</span></p>
+<span class="title"></span></p>
 <div class="content"><div class="pheasant-fenced-code"><div class="source"><pre><code class="yaml">site_name: Pheasant
 site_url: https://pheasant.daizutabi.net/
 site_description: Project documentation with MkDocs.
@@ -205,35 +205,28 @@ edit_uri: &#34;&#34;
 <h2 id="32-python-module-source"><span class="pheasant-header"><span class="header"><span class="number">3.2</span> <span class="title">Python module source</span></span></span></h2>
 <p>Python module sources that the current Jupyter kernel can find are also inspected. Now Pheasant imported its own package <code>pheasant</code>, so you can read the source from this document.</p>
 <p>You can write to inspect the whole module content:</p>
-<div class="pheasant-fenced-code"><div class="source"><pre><code class="markdown">#![python](pheasant)</code></pre></div></div>
+<div class="pheasant-fenced-code"><div class="source"><pre><code class="markdown">{%?pheasant%}</code></pre></div></div>
 
-<div class="pheasant-header"><div class="code"><p><span class="prefix">Code</span> <span class="number">3.1</span>
-<span class="title">pheasant</span></p>
-<div class="content"><div class="pheasant-fenced-code"><div class="source"><pre><code class="python">__version__ = &#34;2.0.2&#34;
+<div class="pheasant-fenced-code"><div class="source"><pre><code class="python">__version__ = &#34;2.0.3&#34;
 
 from pheasant.core.parser import Parser
 
 __all__ = [&#34;Parser&#34;]
 </code></pre></div></div>
-</div></div></div>
 
-<p>Just version number now.</p>
 <p>A part of the module can be specified as usual.</p>
 <div class="pheasant-fenced-code"><div class="input"><pre><code class="python">from pheasant.core import page</code></pre>
-    <p class="report"><span class="count">[1]</span>
-    <span class="start">2019-03-26 17:53:25</span> (<span class="elasped">15.6ms</span>)
-    <span class="right"><span class="kernel">python3</span><span class="count"> [42]</span>
-    </span></p></div></div>
+  <p class="report"><span class="count">[1]</span>
+  <span class="start">2019-03-27 15:26:31</span> (<span class="elasped">5.00ms</span>)
+  <span class="right"><span class="kernel">python3</span><span class="count"> [43]</span>
+  </span></p></div></div>
 
-<div class="pheasant-fenced-code"><div class="source"><pre><code class="markdown">#![python](page.Page)</code></pre></div></div>
+<div class="pheasant-fenced-code"><div class="source"><pre><code class="markdown">{%?page.Page%}</code></pre></div></div>
 
-<div class="pheasant-header"><div class="code"><p><span class="prefix">Code</span> <span class="number">3.2</span>
-<span class="title">page.Page</span></p>
-<div class="content"><div class="pheasant-fenced-code"><div class="source"><pre><code class="python">class Page(Base):
+<div class="pheasant-fenced-code"><div class="source"><pre><code class="python">class Page(Base):
     source: str = &#34;&#34;
     output: str = &#34;&#34;
 </code></pre></div></div>
-</div></div></div>
 
 <p>With this functionality, you can guarantee the reproducible relation between your source code and results easily.</p>
               

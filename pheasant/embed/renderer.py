@@ -1,25 +1,24 @@
 import os
 from ast import literal_eval
-from typing import Iterator
+from typing import Dict, Iterator
 
-from pheasant.core import markdown
 from pheasant.core.decorator import comment
 from pheasant.core.renderer import Renderer
 from pheasant.jupyter.client import execute, get_kernel_name
 
 
-class Code(Renderer):
+class Embed(Renderer):
 
     FENCED_CODE_PATTERN = (
         r"^(?P<mark>~{3,})(?P<language>\w*) ?(?P<option>.*?)\n"
         r"(?P<source>.*?)\n(?P=mark)\n"
     )
-    INLINE_CODE_PATTERN = r"^(?P<header>#?)!\[(?P<language>\w+?)\]\((?P<source>.+?)\)\n"
+    INLINE_CODE_PATTERN = r"\{%(?P<source>.+?)%\}"
 
     def __post_init__(self):
         super().__post_init__()
-        self.register(Code.FENCED_CODE_PATTERN, self.render_fenced_code)
-        self.register(Code.INLINE_CODE_PATTERN, self.render_inline_code)
+        self.register(Embed.FENCED_CODE_PATTERN, self.render_fenced_code)
+        self.register(Embed.INLINE_CODE_PATTERN, self.render_inline_code)
         self.set_template("fenced_code")
 
     def render_fenced_code(self, context, splitter, parser) -> Iterator[str]:
@@ -35,49 +34,41 @@ class Code(Renderer):
         if copy:
             splitter.send(context["source"] + "\n")
 
-    @comment("language")
+    @comment("source")
     def render_inline_code(self, context, splitter, parser) -> Iterator[str]:
+        context.update(resolve_path(context["source"].strip()))
         language = context["language"]
-        if context["header"]:
-            header = "Code" if language == "python" else "File"
-            source = context["source"]
-            source = f"#{header} {source}\n![{language}]({source})\n"
-            splitter.send(source)
-        elif language == "file":
-            path = context["source"]
-            if "<" in path:
-                path, lineno = path.split("<")
-            else:
-                lineno = None
+        path = context["path"]
+        if context["mode"] == "file":
             if not os.path.exists(path):
                 yield f'<p style="font-color:red">File not found: {path}</p>\n'
-            else:
-                source = get_source(path, lineno)
-                language = get_language_from_path(path)
-                source = f"~~~{language}\n{source}\n~~~\n"
-                splitter.send(source)
-        elif language == "python":
+                return
+            source = read_file(path)
+        else:
+            language = 'python'
             kernel_name = get_kernel_name(language)
             if kernel_name is None:  # pragma: no cover
                 yield f'<p style="font-color:red">Kernel not found for {language}</p>\n'
-            else:
-                source = inspect(kernel_name, context["source"])
-                source = f"~~~{language}\n{source}\n~~~\n"
-                splitter.send(source)
-        else:
-            yield markdown.convert(context["_source"])
+                return
+            source = inspect(path, kernel_name)
+        source = select_source(source, context.get("lineno"))
+        source = f"~~~{language}\n{source}\n~~~\n"
+        splitter.send(source)
 
 
-def get_source(path, lineno):
-    source = read_file(path)
-    if not lineno:
-        return source
-    source = source.split("\n")
-    lineno = lineno[:-1]
-    begin, end = lineno.split(":")
-    begin = int(begin) if begin else 0
-    end = int(end) if end else len(source)
-    return "\n".join(source[begin:end])
+def resolve_path(path: str) -> Dict[str, str]:
+    context = {"mode": "file"}
+    if "?" in path and not path.startswith("?"):
+        path, context["language"] = path.split("?")
+    if "[" in path and ":" in path and path.endswith("]"):
+        path, context["lineno"] = path[:-1].split("[")
+    if path.startswith("?"):
+        context["mode"] = "inspect"
+        path = path[1:]
+    context["path"] = path
+    if "language" not in context:
+        context["language"] = get_language_from_path(context["path"])
+    return context
 
 
 def get_language_from_path(path: str) -> str:
@@ -95,16 +86,25 @@ def read_file(path):
         return file.read().strip()
 
 
-def inspect(kernel_name: str, obj: str) -> str:
+def inspect(obj: str, kernel_name: str) -> str:
     """Inspect source code."""
     code = f"import inspect\ninspect.getsourcelines({obj})"
     outputs = execute(code, kernel_name=kernel_name)
-    # FIXME: when error occurs
     try:
         lines, lineno = literal_eval(outputs[0]["data"]["text/plain"])
     except Exception:
         lines = ["inspect error"]
     return "".join(lines)
+
+
+def select_source(source: str, lineno: str) -> str:
+    if not lineno:
+        return source
+    lines = source.split("\n")
+    begin_str, end_str = lineno.split(":")
+    begin = int(begin_str) if begin_str else 0
+    end = int(end_str) if end_str else len(lines)
+    return "\n".join(lines[begin:end])
 
 
 # CODE LATER

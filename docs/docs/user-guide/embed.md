@@ -4,28 +4,28 @@ Pheasant can read codes from a file system or Python module.
 
 ## File system
 
-Any text files are read from file system by Pheasant's extended Markdown syntax: `![file](<file name>)`. For example,
+Extenal resources are read from file system by Pheasant syntax: `{%#object%}`. For example,
 
 ~~~
-![file](mkdocs.yml)
+{%mkdocs.yml%}
 ~~~
 
 writes the content of the real `mkdocs.yml` of this document:
 
-![file](mkdocs.yml)
+{% mkdocs.yml %}
 
 The root directory of a relative path is the directory where `mkdocs.yml` exists.
 
-If the file is too long to display the whole content, you can specify the lines as the same way that Python does with the slice notation. Use `<` and `>` insted of `[` and `]` because `[` and `]` can be a part of a file name.
+If the file is too long to display the whole content, you can specify the lines as the same way that Python does with the slice notation.
 
 ~~~copy
-![file](mkdocs.yml<5:10>)
+{%mkdocs.yml[3:8]%}
 ~~~
 
-Imported file can be numbered like figures and tables. Use this shorthand notation:
+Imported file can be numbered like figures and tables. Use this inline notation:
 
 ~~~copy
-#![file](mkdocs.yml<:8>)
+#file {%mkdocs.yml[:8]%}
 ~~~
 
 ## Python module source
@@ -35,10 +35,8 @@ Python module sources that the current Jupyter kernel can find are also inspecte
 You can write to inspect the whole module content:
 
 ~~~copy
-#![python](pheasant)
+{%?pheasant%}
 ~~~
-
-Just version number now.
 
 A part of the module can be specified as usual.
 
@@ -47,7 +45,7 @@ from pheasant.core import page
 ```
 
 ~~~copy
-#![python](page.Page)
+{%?page.Page%}
 ~~~
 
 With this functionality, you can guarantee the reproducible relation between your source code and results easily.

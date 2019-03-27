@@ -61,7 +61,7 @@
                 </li>
                 <li class="">
                     
-    <a class="" href="../code/">Code</a>
+    <a class="" href="../embed/">Embed</a>
                 </li>
                 <li class=" current">
                     
@@ -157,28 +157,28 @@
 def sub(x: int, y: int) -&gt; int:
     &#34;&#34;&#34;Substract `y` from `x`.&#34;&#34;&#34;
     return x - y  # a comment in a code cell.</code></pre>
-    <p class="report"><span class="count">[1]</span>
-    <span class="start">2019-03-26 17:53:25</span> (<span class="elasped">4.80ms</span>)
-    <span class="right"><span class="kernel">python3</span><span class="count"> [44]</span>
-    </span></p></div></div>
+  <p class="report"><span class="count">[1]</span>
+  <span class="start">2019-03-27 15:26:31</span> (<span class="elasped">6.07ms</span>)
+  <span class="right"><span class="kernel">python3</span><span class="count"> [45]</span>
+  </span></p></div></div>
 
 <p>When a comment starts at the begining of a line after a code block, it divides the source into a code cell and a Markdown cell. This Markdown cell will continue until next Python code appears.</p>
 <p>Despite of a Markdown cell, you may want to devide successive codes into separate cells. This can be done by putting a special marker between codes to tell Pheasant your intention. The marker is <code># -</code> [sharp-space-minus] at the begining of lines. In this way you can divide the above two functions into separate cells (regardless of its usefullness.)</p>
 <div class="pheasant-fenced-code"><div class="input"><pre><code class="python">def add2(x: int, y: int) -&gt; int:
     &#34;&#34;&#34;Add `x` and `y`.&#34;&#34;&#34;
     return x + y  # a comment in a code cell.</code></pre>
-    <p class="report"><span class="count">[2]</span>
-    <span class="start">2019-03-26 17:53:25</span> (<span class="elasped">7.09ms</span>)
-    <span class="right"><span class="kernel">python3</span><span class="count"> [45]</span>
-    </span></p></div></div>
+  <p class="report"><span class="count">[2]</span>
+  <span class="start">2019-03-27 15:26:31</span> (<span class="elasped">6.25ms</span>)
+  <span class="right"><span class="kernel">python3</span><span class="count"> [46]</span>
+  </span></p></div></div>
 
 <div class="pheasant-fenced-code"><div class="input"><pre><code class="python">def sub2(x: int, y: int) -&gt; int:
     &#34;&#34;&#34;Substract `y` from `x`.&#34;&#34;&#34;
     return x - y  # a comment in a code cell.</code></pre>
-    <p class="report"><span class="count">[3]</span>
-    <span class="start">2019-03-26 17:53:25</span> (<span class="elasped">6.09ms</span>)
-    <span class="right"><span class="kernel">python3</span><span class="count"> [46]</span>
-    </span></p></div></div>
+  <p class="report"><span class="count">[3]</span>
+  <span class="start">2019-03-27 15:26:31</span> (<span class="elasped">5.99ms</span>)
+  <span class="right"><span class="kernel">python3</span><span class="count"> [47]</span>
+  </span></p></div></div>
 
 <h2 id="42-internal-mechanism"><span class="pheasant-header"><span class="header"><span class="number">4.2</span> <span class="title">Internal mechanism</span></span></span></h2>
 <p>By defaults, MkDocs processes Markdown files only for pages. This setting is defined in the MkDocs's utility library: <code>mkdocs.utils.markdown_extensions</code>. Pheasant plugin appends <code>.py</code> to this setting in the Plugin's source:</p>
@@ -194,10 +194,10 @@ markdown_extensions.append(&#34;.py&#34;)</code></pre></div></div>
 
 <p>becomes:</p>
 <div class="pheasant-fenced-code"><div class="input"><pre><code class="python">print(1)</code></pre>
-    <p class="report"><span class="count">[4]</span>
-    <span class="start">2019-03-26 17:53:25</span> (<span class="elasped">6.97ms</span>)
-    <span class="right"><span class="kernel">python3</span><span class="count"> [47]</span>
-    </span></p></div><div class="stdout"><pre><code class="text">1</code></pre></div></div>
+  <p class="report"><span class="count">[4]</span>
+  <span class="start">2019-03-27 15:26:31</span> (<span class="elasped">7.03ms</span>)
+  <span class="right"><span class="kernel">python3</span><span class="count"> [48]</span>
+  </span></p></div><div class="stdout"><pre><code class="text">1</code></pre></div></div>
 
 <p>And,</p>
 <div class="pheasant-fenced-code"><div class="source"><pre><code class="python"># ~~~
@@ -223,7 +223,7 @@ print(1)
         <a href="../../api/" class="btn btn-neutral float-right" title="API">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
-        <a href="../code/" class="btn btn-neutral" title="Code"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../embed/" class="btn btn-neutral" title="Embed"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -251,7 +251,7 @@ print(1)
           <a href="https://github.com/daizutabi/pheasant/" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
       
       
-        <span><a href="../code/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+        <span><a href="../embed/" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
       
         <span style="margin-left: 15px"><a href="../../api/" style="color: #fcfcfc">Next &raquo;</a></span>

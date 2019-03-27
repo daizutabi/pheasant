@@ -48,8 +48,8 @@ class Header(Renderer):
             yield self.render("header", context) + "\n"
         else:
             rest = ""
-            if context["inline_code"]:
-                content = parser.parse(context["inline_code"])
+            if context["inline_pattern"]:
+                content = parser.parse(context["inline_pattern"])
             else:
                 content = ""
                 while not content:
@@ -100,7 +100,7 @@ class Header(Renderer):
         header = context["prefix"] if kind == "header" else ""
         prefix = self.config["kind_prefix"][kind] if kind != "header" else ""
         title, tag = split_tag(title)
-        title, inline_code = split_inline_code(title)
+        title, inline_pattern = split_inline_pattern(title)
         context = {
             "kind": kind,
             "header": header,
@@ -108,7 +108,7 @@ class Header(Renderer):
             "title": title,
             "number_list": number_list,
             "number_string": number_string,
-            "inline_code": inline_code,
+            "inline_pattern": inline_pattern,
         }
 
         if tag:
@@ -123,7 +123,7 @@ class Header(Renderer):
 
 
 def get_content(source: str) -> Tuple[str, str]:
-    source = source.strip()
+    source = source.lstrip()
     if source == "":
         return "", ""
     index = source.find("\n\n")
@@ -207,8 +207,8 @@ def split_tag(title: str) -> Tuple[str, str]:
         return title, ""
 
 
-def split_inline_code(title: str) -> Tuple[str, str]:
-    """Split an inline code from `title`. Return (title, inline code).
+def split_inline_pattern(title: str) -> Tuple[str, str]:
+    """Split an inline pattern from `title`. Return (title, inline pattern).
 
     Parameters
     ----------
@@ -217,12 +217,12 @@ def split_inline_code(title: str) -> Tuple[str, str]:
 
     Returns
     -------
-    (title, inline code)
+    (title, inline pattern)
     """
-    from pheasant.jupyter.renderer import Jupyter
-
-    match = re.search(Jupyter.INLINE_CODE_PATTERN, title)
+    match = re.search(r"\{.+\}", title)
     if match:
-        return title.replace(match.group(), "").strip(), match.group()
+        inline_pattern = match.group()
+        title = title.replace(inline_pattern, "").strip()
+        return title, inline_pattern
     else:
         return title, ""

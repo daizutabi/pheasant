@@ -46,10 +46,13 @@ def test_replace_for_display():
     def replace(output):
         return output.replace("pheasant.jupyter.display.", "")
 
+    assert replace_for_display("a=1;") == "a=1"
+    assert replace(replace_for_display("a=1")) == 'a=1\ndisplay(a, output="markdown")'
+    assert replace(replace_for_display("a")) == 'display(a, output="markdown")'
+    assert replace(replace_for_display("^a")) == 'display(a, output="html")'
     assert replace(replace_for_display("a")) == 'display(a, output="markdown")'
     assert replace_for_display("for k:\n  a") == "for k:\n  a"
-
-    output = replace(replace_for_display("b = 1;a = b", skip_equal=False))
+    output = replace(replace_for_display("b = 1;a = b"))
     assert output == 'b = 1\na = b\ndisplay(a, output="markdown")'
 
 
