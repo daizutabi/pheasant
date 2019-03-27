@@ -139,7 +139,7 @@
 <h2 id="51-parser"><span class="pheasant-header"><span class="header"><span class="number">5.1</span> <span class="title">Parser</span></span></span></h2>
 <div class="pheasant-fenced-code"><div class="input"><pre><code class="python">from pheasant import Parser</code></pre>
   <p class="report"><span class="count">[1]</span>
-  <span class="start">2019-03-27 14:47:48</span> (<span class="elasped">5.03ms</span>)
+  <span class="start">2019-03-27 15:13:04</span> (<span class="elasped">4.00ms</span>)
   <span class="right"><span class="kernel">python3</span><span class="count"> [49]</span>
   </span></p></div></div>
 
@@ -171,7 +171,7 @@
     def render_end(self, context, splitter, parser):
         yield &#34;&#34;</code></pre>
   <p class="report"><span class="count">[2]</span>
-  <span class="start">2019-03-27 14:47:48</span> (<span class="elasped">9.03ms</span>)
+  <span class="start">2019-03-27 15:13:05</span> (<span class="elasped">9.96ms</span>)
   <span class="right"><span class="kernel">python3</span><span class="count"> [50]</span>
   </span></p></div></div>
 
@@ -190,7 +190,7 @@ parser.register(end_pattern, a.render_end)
 
 parser.patterns</code></pre>
   <p class="report"><span class="count">[3]</span>
-  <span class="start">2019-03-27 14:47:48</span> (<span class="elasped">9.00ms</span>)
+  <span class="start">2019-03-27 15:13:05</span> (<span class="elasped">11.1ms</span>)
   <span class="right"><span class="kernel">python3</span><span class="count"> [51]</span>
   </span></p></div><div class="output"><pre><code class="text">{&#39;a__number&#39;: &#39;(?P&lt;a__number&gt;(?P&lt;a__number___number&gt;[1-9]))&#39;,
  &#39;a__plus&#39;: &#39;(?P&lt;a__plus&gt;(?P&lt;a__plus___plus&gt;\\+))&#39;,
@@ -199,25 +199,25 @@ parser.patterns</code></pre>
 
 <div class="pheasant-fenced-code"><div class="input"><pre><code class="python">parser.parse(&#34;3&#34;)</code></pre>
   <p class="report"><span class="count">[4]</span>
-  <span class="start">2019-03-27 14:47:48</span> (<span class="elasped">8.00ms</span>)
+  <span class="start">2019-03-27 15:13:05</span> (<span class="elasped">6.01ms</span>)
   <span class="right"><span class="kernel">python3</span><span class="count"> [52]</span>
   </span></p></div><div class="output"><pre><code class="text">&#39;333&#39;</code></pre></div></div>
 
 <div class="pheasant-fenced-code"><div class="input"><pre><code class="python">parser.parse(&#34;+2&#34;)</code></pre>
   <p class="report"><span class="count">[5]</span>
-  <span class="start">2019-03-27 14:47:48</span> (<span class="elasped">5.45ms</span>)
+  <span class="start">2019-03-27 15:13:05</span> (<span class="elasped">8.01ms</span>)
   <span class="right"><span class="kernel">python3</span><span class="count"> [53]</span>
   </span></p></div><div class="output"><pre><code class="text">&#39;[22]&#39;</code></pre></div></div>
 
 <div class="pheasant-fenced-code"><div class="input"><pre><code class="python">parser.parse(&#34;+++5&#34;)</code></pre>
   <p class="report"><span class="count">[6]</span>
-  <span class="start">2019-03-27 14:47:48</span> (<span class="elasped">7.97ms</span>)
+  <span class="start">2019-03-27 15:13:05</span> (<span class="elasped">6.00ms</span>)
   <span class="right"><span class="kernel">python3</span><span class="count"> [54]</span>
   </span></p></div><div class="output"><pre><code class="text">&#39;[[[55555]]]&#39;</code></pre></div></div>
 
 <div class="pheasant-fenced-code"><div class="input"><pre><code class="python">parser.parse(&#34;a[x3y2]&#34;)</code></pre>
   <p class="report"><span class="count">[7]</span>
-  <span class="start">2019-03-27 14:47:48</span> (<span class="elasped">6.00ms</span>)
+  <span class="start">2019-03-27 15:13:05</span> (<span class="elasped">8.00ms</span>)
   <span class="right"><span class="kernel">python3</span><span class="count"> [55]</span>
   </span></p></div><div class="output"><pre><code class="text">&#39;a&lt;x&gt;&lt;y&gt;333666666&#39;</code></pre></div></div>
               
