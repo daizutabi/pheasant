@@ -163,11 +163,14 @@ def replace_for_display(code: str) -> str:
         return code
     match = re.match(r"(\w+) *?=", codes[-1])
     if match:
+        precode = code + "\n"
         code = match.group(1)
     else:
-        code = "_pheasant_dummy"
-        codes[-1] = f"{code} = {codes[-1]}"
-    precode = "\n".join(codes) + "\n"
+        if len(codes) == 1:
+            precode = ""
+        else:
+            codes, code = codes[:-1], codes[-1]
+            precode = "\n".join(codes) + "\n"
 
     return f'{precode}pheasant.jupyter.display.display({code}, output="{output}")'
 
