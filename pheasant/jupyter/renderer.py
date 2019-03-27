@@ -97,7 +97,7 @@ class Jupyter(Renderer):
                 cache[self.cursor].valid = False
         return cell.output
 
-    def execute(self, code: str, language: str) -> List:
+    def execute(self, code: str, language: str = "python") -> List:
         if language not in self.config["kernel_name"]:
             return []
         outputs = execute(code, self.config["kernel_name"][language])

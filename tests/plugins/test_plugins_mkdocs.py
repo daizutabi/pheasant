@@ -26,8 +26,8 @@ def test_plugins_mkdocs():
 
     nav = get_navigation(files, config)
     nav = plugin.on_nav(nav, config)
-    assert len(files.documentation_pages()) == 1
-    assert len(plugin.converter.pages) == 1
+    assert len(files.documentation_pages()) == 2
+    assert len(plugin.converter.pages) == 2
 
     for file in files.documentation_pages():
         page = file.page

@@ -17,6 +17,7 @@ def test_python_parse_source(convert):
     assert convert("# あ\n# い\n# う\n") == "# あいう\n"
     assert convert("# あa\n# い\n# う\n") == "# あa いう\n"
     assert convert("# あa\n# bい\n#う\n") == "# あa bいう\n"
+    assert convert("# あa\n# bい\n#う") == "# あa bいう\n"
 
 
 def test_python_parse_code(convert):

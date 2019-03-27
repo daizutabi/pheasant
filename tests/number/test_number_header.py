@@ -83,3 +83,25 @@ def test_ignore(header):
 
     output = header.parse("# title\n")
     assert "number" not in output
+
+
+def test_inline_code(header):
+    output = header.parse("#FIG title {{2*3}}\n")
+    assert '<div class="content">{{2*3}}</div>' in output
+
+
+def test_get_content(header):
+    output = header.parse("#FIG title\n \n \n\nabc\n\ndef\n")
+    assert '<div class="content"><p>abc</p></div>' in output
+    assert "</div>\n\ndef" in output
+
+    output = header.parse("#FIG title\n \n \n\n# test\n")
+    assert '<div class="content"># <span class="header"' in output
+
+    from pheasant.code.renderer import Code
+    code = Code()
+    code.parser = header.parser
+
+    source = "#fig title\n~~~\na\n\nb\n~~~\n \n\ntest\n"
+    output = header.parse(source)
+    assert '<div class="content"><p>a</p>\n<p>b</p></div>' in output

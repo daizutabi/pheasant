@@ -35,7 +35,7 @@ class Code(Renderer):
         if copy:
             splitter.send(context["source"] + "\n")
 
-    @comment('language')
+    @comment("language")
     def render_inline_code(self, context, splitter, parser) -> Iterator[str]:
         language = context["language"]
         if context["header"]:
@@ -58,7 +58,7 @@ class Code(Renderer):
                 splitter.send(source)
         elif language == "python":
             kernel_name = get_kernel_name(language)
-            if kernel_name is None:
+            if kernel_name is None:  # pragma: no cover
                 yield f'<p style="font-color:red">Kernel not found for {language}</p>\n'
             else:
                 source = inspect(kernel_name, context["source"])

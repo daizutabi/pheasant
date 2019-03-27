@@ -13,3 +13,4 @@ plugins:
 
 nav:
   - Home: index.md
+  - Script: conftest.py

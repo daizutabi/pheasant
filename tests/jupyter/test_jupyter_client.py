@@ -1,8 +1,8 @@
 import pytest
 
-from pheasant.jupyter.client import (execute, find_kernel_names,
-                                     get_kernel_manager, get_kernel_name,
-                                     kernel_managers, execution_report)
+from pheasant.jupyter.client import (execute, execution_report,
+                                     find_kernel_names, get_kernel_manager,
+                                     get_kernel_name, kernel_managers)
 
 
 def test_find_kernel_names():
@@ -36,10 +36,25 @@ def test_execute():
 
 
 def test_execution_report():
-    execute('2*3')
+    execute("2*3")
     assert "start" in execution_report
     assert "end" in execution_report
     assert "elasped" in execution_report
     assert "total" in execution_report
     assert "execution_count" in execution_report
     assert "message" in execution_report
+
+
+def test_no_kernel():
+    assert get_kernel_name("abc") is None
+
+    with pytest.raises(ValueError):
+        execute("abc", language="abc")
+
+
+def test_kernel_manager():
+    km = get_kernel_manager("python")
+    km.shutdown_kernel()
+    assert not km.is_alive()
+    km = get_kernel_manager("python")
+    assert km.is_alive()

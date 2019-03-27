@@ -67,3 +67,9 @@ def test_parse_anchor(anchor, source_parsed):
         '<S C"title">Figure A</S></p></D>\n'
     ])
     assert output == answer
+
+
+def test_parse_anchor_misc(anchor):
+    assert anchor.parse("{#tag-a#}") == '[1](.#tag-a)'
+    assert anchor.parse("{##tag-a#}") == '{#tag-a#}'
+    assert 'Unknown tag' in anchor.parse("{#tag-A#}")

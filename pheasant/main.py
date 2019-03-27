@@ -3,28 +3,18 @@ import sys
 
 import click
 
-import pheasant
+from pheasant import __version__
+
+pgk_dir = os.path.dirname(os.path.abspath(__file__))
 
 
 @click.command()
-@click.option("--version", is_flag=True)
+@click.version_option(
+    f"{__version__} from {pgk_dir} (Python {sys.version[:3]}).", "-V", "--version"
+)
 def cli(version):
-    if version:
-        print_version()
-        return
+    """Pheasant command"""
 
 
-def print_version():
-    pgk_dir = os.path.dirname(os.path.abspath(__file__))
-    print(
-        f"pheasant, version {pheasant.__version__} from "
-        f"{pgk_dir} (Python {sys.version[:3]})."
-    )
-
-
-def main():
+if __name__ == "__main__":  # pragma: no cover
     cli()
-
-
-if __name__ == "__main__":
-    main()

@@ -86,7 +86,7 @@ def ast_name(node: ast.AST) -> str:
     if match:
         return match.group(1)
     else:
-        return "Unknown"
+        return "Unknown"  # pragma: no cover
 
 
 def find_end_line(lines: List[str], lineno: int) -> int:

@@ -53,10 +53,10 @@ def get_kernel_manager(kernel_name: str) -> KernelManager:
         kernel_manager = kernel_managers[kernel_name]
 
         if not kernel_manager.is_alive():
-            if not kernel_manager.has_kernel:
+            if kernel_manager.has_kernel:
                 kernel_manager.restart_kernel()
                 logger.info(f'Restarting kernel: "{kernel_name}".')
-            else:
+            else:  # pragma: no cover
                 kernel_manager.start_kernel()
                 logger.info(f'Starting kernel: "{kernel_name}".')
     else:
@@ -65,14 +65,14 @@ def get_kernel_manager(kernel_name: str) -> KernelManager:
         logger.info(f'Starting kernel: "{kernel_name}".')
         kernel_manager.start_kernel()
 
-        def shutdown_kernel():
+        def shutdown_kernel():  # pragma: no cover
             logger.info(f'Shutting down kernel: "{kernel_name}".')
             kernel_manager.shutdown_kernel()
 
         atexit.register(shutdown_kernel)
         kernel_managers[kernel_name] = kernel_manager
 
-    if not kernel_manager.is_alive():
+    if not kernel_manager.is_alive():  # pragma: no cover
         raise ValueError(f'Kernel could not start: "{kernel_name}".')
     else:
         return kernel_manager
@@ -86,8 +86,8 @@ def get_kernel_client(kernel_name: str):
     logger.info(f'Creating kernel client for "{kernel_name}".')
     kernel_client = kernel_manager.client()
     kernel_client.start_channels()
-    while not kernel_client.is_complete('print("OK")'):
-        pass
+    # while not kernel_client.is_complete('print("OK")'):
+    #     pass
     logger.info(f'Kernel client for "{kernel_name}" ready.')
     kernel_clients[kernel_name] = kernel_client
     return kernel_client

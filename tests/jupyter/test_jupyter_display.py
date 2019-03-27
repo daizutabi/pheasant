@@ -69,3 +69,9 @@ def test_display_sympy():
 def test_base64image():
     with pytest.raises(ValueError):
         base64image(b"000", "png", "unknown")
+
+
+def test_misc():
+    assert repr(BokehHTML()) == 'bokeh'
+    assert repr(HoloviewsHTML()) == 'holoviews'
+    assert display(1) == 1

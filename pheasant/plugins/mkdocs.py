@@ -49,7 +49,7 @@ class PheasantPlugin(BasePlugin):
             if path.endswith(".css"):
                 config["extra_css"].insert(0, path)
             else:
-                config["extra_javascript"].insert(0, path)
+                config["extra_javascript"].insert(0, path)  # pragma: no cover
 
         config["extra_css"].append(
             "https://cdn.jsdelivr.net/gh/tonsky/FiraCode@1.206/distr/fira_code.css"
@@ -70,15 +70,9 @@ class PheasantPlugin(BasePlugin):
         return nav
 
     def on_page_read_source(self, source, page, **kwargs):
-        # print("=================")
-        # print(self.converter.pages[page.file.abs_src_path].output)
-        # print("=================")
         return self.converter.pages[page.file.abs_src_path].output
 
     def on_page_content(self, content, page, **kwargs):
-        # print("---------------------")
-        # print(content)
-        # print("---------------------")
         return "\n".join(
             [self.converter.pages[page.file.abs_src_path].meta["extra_html"], content]
         )
@@ -86,7 +80,7 @@ class PheasantPlugin(BasePlugin):
     def on_post_page(self, output, **kwargs):
         return output.replace('.js" defer></script>', '.js"></script>')
 
-    def on_serve(self, server, **kwargs):
+    def on_serve(self, server, **kwargs):  # pragma: no cover
         watcher = server.watcher
         builder = list(watcher._tasks.values())[0]["func"]
         root = os.path.join(os.path.dirname(pheasant.__file__), "theme")

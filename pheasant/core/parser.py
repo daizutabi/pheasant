@@ -26,6 +26,7 @@ class Parser(Base):
         pattern = rename_pattern(pattern, render_name)
         self.patterns[render_name] = pattern
         self.renders[render_name] = render
+        self.pattern = None
         return cell_class
 
     def parse(self, source: str, decorate: Union[Callable, bool] = True) -> str:

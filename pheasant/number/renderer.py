@@ -4,6 +4,7 @@ from dataclasses import field
 from typing import Any, Dict, Iterator, List, Optional, Tuple
 
 from pheasant.core import markdown
+from pheasant.core.decorator import comment
 from pheasant.core.renderer import Renderer
 
 
@@ -122,13 +123,14 @@ class Header(Renderer):
 
 
 def get_content(source: str) -> Tuple[str, str]:
-    if source.strip() == "":
+    source = source.strip()
+    if source == "":
         return "", ""
     index = source.find("\n\n")
     if index == -1:
         content, rest = source, ""
     else:
-        content, rest = source[:index], source[index + 2 :]
+        content, rest = source[:index], "\n" + source[index + 2 :]
     content = markdown.convert(content)
     return content, rest
 
@@ -142,16 +144,13 @@ class Anchor(Renderer):
         self.register(Header.TAG_PATTERN, self.render_tag)
         self.set_template("anchor")
 
+    @comment("tag")
     def render_tag(self, context, splitter, parser) -> Iterator[str]:
         if self.header is None:
             raise ValueError("A Header instance has not set yet.")
         tag = context["tag"]
-
-        if context["tag"].startswith("#"):
-            yield context["_source"].replace(context["tag"], context["tag"][1:])
-        else:
-            context = self.resolve(tag)
-            yield self.render("anchor", context, reference=True)
+        context = self.resolve(tag)
+        yield self.render("anchor", context, reference=True)
 
     def resolve(self, tag: str) -> Dict[str, Any]:
         tag_context = self.header.tag_context  # type: ignore

@@ -1,3 +1,5 @@
+import pytest
+
 from pheasant.script.splitter import split
 
 
@@ -10,8 +12,9 @@ def test_split_docstring():
     assert next(splitter) == ("Code", "a\n")
 
 
-def test_parse_docstring(script):
-    source = '"""\ndoc string\ndoc string\n\ntext\n"""\n'
+@pytest.mark.parametrize("nl", ["\n", ""])
+def test_parse_docstring(script, nl):
+    source = f'"""\ndoc string\ndoc string\n\ntext{nl}"""\n'
     output = script.convert(source, 0)
     answer = "\n".join(
         [
@@ -24,7 +27,7 @@ def test_parse_docstring(script):
     output = script.convert(source, 80)
     assert output == source
 
-    source = '# a\n"""markdown\ndoc string\ndoc string\n\ntext\n"""\n# b\n'
+    source = f'# a\n"""markdown\ndoc string\ndoc string\n\ntext{nl}"""\n# b\n'
     output = script.convert(source, 0)
     assert output == "a\n\ndoc string doc string\n\ntext\n\nb\n"
     output = script.convert(source, 80)
