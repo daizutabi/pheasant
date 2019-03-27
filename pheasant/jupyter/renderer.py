@@ -1,7 +1,7 @@
 import re
 from ast import literal_eval
 from dataclasses import dataclass, field
-from typing import Dict, Iterator, List, Match
+from typing import Dict, Iterator, List
 
 from pheasant.core.decorator import comment, surround
 from pheasant.core.renderer import Renderer
