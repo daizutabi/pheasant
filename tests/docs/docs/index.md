@@ -1,20 +1,17 @@
+~~~
+d
+~~~
+{{a=1;}}1-{{a}}-
+
+
 ```python
 a = 13
-```
-
-```python display
-13
-```
-
-
-```python
-a = 23
+a
 ```
 
 ```python
 import matplotlib.pyplot as plt
 ```
-
 
 ```python inline
 plt.plot([1, 2])

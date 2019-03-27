@@ -20,6 +20,8 @@ class Decorator(Base):
         if not isinstance(renderers, list):
             renderers = [renderers]
         for renderer in renderers:
+            if renderer.parser:
+                renderer.parser.decorator = self
             for render_name, render in renderer.renders.items():
                 self.decorates[render_name] = decorate  # type: ignore
                 self.class_names[render_name] = self.class_name(render_name)

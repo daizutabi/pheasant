@@ -1,7 +1,8 @@
 from dataclasses import field
 from typing import Dict, List
 
-from pheasant.code.renderer import Code
+# from pheasant.code.renderer import Code
+from pheasant.embed.renderer import Embed
 from pheasant.core.converter import Converter
 from pheasant.core.decorator import Decorator
 from pheasant.core.page import Page
@@ -15,7 +16,8 @@ class Pheasant(Converter):
     script: Script = field(default_factory=Script, init=False)
     jupyter: Jupyter = field(default_factory=Jupyter, init=False)
     header: Header = field(default_factory=Header, init=False)
-    code: Code = field(default_factory=Code, init=False)
+    # code: Code = field(default_factory=Code, init=False)
+    embed: Embed = field(default_factory=Embed, init=False)
     anchor: Anchor = field(default_factory=Anchor, init=False)
     decorator: Decorator = field(default_factory=Decorator, init=False)
     pages: Dict[str, Page] = field(default_factory=dict, init=False)
@@ -24,11 +26,13 @@ class Pheasant(Converter):
         super().__post_init__()
         self.anchor.header = self.header
         self.register("script", [self.script])
-        self.register("main", [self.header, self.jupyter, self.code], self.decorator)
+        # self.register("main", [self.header, self.jupyter, self.code], self.decorator)
+        self.register("main", [self.header, self.jupyter, self.embed])
         self.register("link", [self.anchor])
 
         self.decorator.name = "pheasant"
-        self.decorator.register("surround", [self.header, self.code])
+        self.decorator.register("surround", [self.header, self.embed])
+        # self.decorator.register("surround", [self.header, self.code])
         self.decorator.register(self.surround, [self.jupyter])
         self.setup()
 
