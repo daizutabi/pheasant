@@ -78,10 +78,6 @@ class Jupyter(Renderer):
             cached = cache[self.cursor - 1]
             if cell == cached:
                 return surround(cached.output, "cached")
-                # if cached.output.startswith("<div"):
-                #     return f'<div class="cached">{cached.output}</div>'
-                # else:
-                #     return f'<span class="cached">{cached.output}</span>'
 
         outputs = self.execute(code, context["language"])
         report = format_report()
