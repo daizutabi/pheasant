@@ -44,26 +44,19 @@ class Renderer(Base):
         """Called per page."""
         pass
 
-    def set_template(
-        self, templates: Union[str, List[str]], directory: str = ""
-    ) -> None:
-        if not directory:
-            module = importlib.import_module(self.__module__)
-            directory = os.path.join(os.path.dirname(module.__file__), "templates")
-        loader = FileSystemLoader([directory])
+    def set_template(self, names: Union[str, List[str]], directory: str = ".") -> None:
+        module = importlib.import_module(self.__module__)
+        default = os.path.join(os.path.dirname(module.__file__), "templates")
+        loader = FileSystemLoader([directory, default])
         env = Environment(loader=loader, autoescape=select_autoescape(["jinja2"]))
-        if isinstance(templates, str):
-            templates = [templates]
-        for template in templates:
-            if "." not in template:
-                template = f"{template}.jinja2"
-            key = f"{template}_template"
-            self.config[key] = env.get_template(template)
+        names = [names] if isinstance(names, str) else names
+        for name in names:
+            template = f"{name}.jinja2" if "." not in name else name
+            self.config[f"{name}_template"] = env.get_template(template)
 
-    def render(self, template: str, context: Dict[str, Any], **kwargs) -> str:
-        return self.config[template + "_template"].render(
-            context, config=self.config, **kwargs
-        )
+    def render(self, name: str, context: Dict[str, Any], **kwargs) -> str:
+        template = self.config[f"{name}_template"]
+        return template.render(context, config=self.config, **kwargs)
 
     def parse(self, source: str) -> str:
         return self.parser.parse(source, decorate=self.decorate)

@@ -3,7 +3,8 @@ import re
 from dataclasses import field
 from typing import Any, Dict, Iterator, List, Optional, Tuple
 
-from pheasant.core import markdown
+from markdown import Markdown
+
 from pheasant.core.decorator import comment
 from pheasant.core.renderer import Renderer
 
@@ -16,6 +17,8 @@ class Header(Renderer):
 
     HEADER_PATTERN = r"^(?P<prefix>#+)(?P<kind>\w*?) +(?P<title>.+?)\n"
     TAG_PATTERN = r"\{#(?P<tag>\S+?)#\}"
+
+    markdown = Markdown(extensions=["tables"])
 
     def __post_init__(self):
         super().__post_init__()
@@ -121,7 +124,7 @@ def get_content_from_cell(cell, kind, splitter, parser) -> str:
     if cell.source.startswith("~~~") and kind in "figure table":
         content = cell.context["source"] + "\n"
         content = parser.parse(content, decorate=False)
-        return markdown.convert(content)
+        return Header.markdown.convert(content)
     else:
         if cell.source.startswith("```") and "option" in cell.context:
             cell.context["option"] += " inline"
@@ -137,7 +140,7 @@ def get_content(source: str) -> Tuple[str, str]:
         content, rest = source, ""
     else:
         content, rest = source[:index], "\n" + source[index + 2 :]
-    content = markdown.convert(content)
+    content = Header.markdown.convert(content)
     return content, rest
 
 
