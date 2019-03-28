@@ -91,51 +91,34 @@ plt.plot([1, 2])
 
 Note that Matplotlib package has already been imported in the previous code block so that we don't need to import it again here.
 
-Pheasant also supports Bokeh's HTML output. First, create a figure object.
+Pheasant also supports Bokeh's HTML output.
 
 ```python
 from bokeh.plotting import figure
-
 plot = figure(plot_width=250, plot_height=250)
-```
-
-Now, you can use `plot.circle` function to add some scatter points.
-
-~~~copy
-```python
 plot.circle([1, 2, 3, 4, 5], [1, 2, 3, 4, 5], size=10)
 plot
 ```
-~~~
 
-The last line of the above code block returns a `Figure` object. To show the corresponding figure instead of it, we can use the `display` option:
-
-~~~copy
-```python display
-plot
-```
-~~~
-
-As well as a fenced code with `display` option, we can choose inline code style: `{{#plot}}`
+As well as a fenced code style, we can choose inline code style: `{{#plot}}`
 
 {{plot}}
 
 
 Furthermore, Pheasant supports HoloViews objects as well as interactive HoloMap.
 
-~~~copy
-```python display
+```python
 import holoviews as hv
 curve = hv.Curve(((1, 2), (2, 3)))
+curve
 ```
-~~~
 
 Also, `{{#curve}}` generates a HoloView ojbect: {{curve}}
 
 HoloMap can work as in a Jupyter Notebook.
 
 
-```python display
+```python
 import numpy as np
 
 def sine_curve(phase, freq):
@@ -149,20 +132,20 @@ hv.HoloMap(curve_dict, kdims='Frequency')
 
 Finally, Altair plots from official [Example Gallery](https://altair-viz.github.io/gallery/index.html).
 
-```python display
+```python
 import altair as alt
 import pandas as pd
 
 source = pd.DataFrame({
     'a': ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'],
-    'b': [14, 55, 43, 91, 81, 53, 19, 87, 52]
+    'b': [25, 55, 43, 91, 81, 53, 19, 87, 52]
 })
 
 chart = alt.Chart(source).mark_bar().encode(x='a', y='b')
 chart
 ```
 
-```python display
+```python
 import altair as alt
 from vega_datasets import data
 
@@ -186,10 +169,6 @@ line = alt.Chart().mark_rule(color='firebrick').encode(
 
 alt.layer(bars, line, data=source)
 ```
-
-
-
-
 
 ### Auto numbering of headers, figures, tables, *etc*.
 
@@ -220,7 +199,7 @@ In the above Markdown source, `{##<tag>#}` is an ID tag for hyperlink described 
 
 ~~~~copy
 #Figure A Matplotlib figure
-```python inline
+```python
 plt.plot([2, 4])
 ```
 ~~~~
@@ -239,7 +218,7 @@ Pandas's DataFarme is useful to create a table programmatically.
 
 ~~~copy
 #Table A Pandas's DataFrame
-```python inline
+```python
 import pandas as pd
 pd.DataFrame([[1, 2], [3, 4]], index=list('XY'), columns=list('ab'))
 ```

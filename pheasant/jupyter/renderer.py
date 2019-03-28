@@ -1,5 +1,5 @@
+import ast
 import re
-from ast import literal_eval
 from dataclasses import dataclass, field
 from typing import Dict, Iterator, List
 
@@ -57,15 +57,20 @@ class Jupyter(Renderer):
     def render_fenced_code(self, context, splitter, parser) -> Iterator[str]:
         code = context["code"]
         if "inline" in context["option"]:
-            splitter.send("{{" + code + "}}")
+            splitter.send("{{```" + code + "}}")  # with fenced code mark
             return
-        if "display" in context["option"]:
-            code = replace_for_display(code)
+        code = replace_for_display(code)
         yield self.execute_and_render(code, context, "fenced_code") + "\n"
 
     @comment("code")
     def render_inline_code(self, context, splitter, parser) -> Iterator[str]:
-        code = replace_for_display(context["code"])
+        code = context["code"]
+        if code.startswith("```"):  # no semicolon replace if code came from fenced code
+            code = code[3:]
+            context["code"] = code
+        else:
+            code = code.replace(";", "\n")
+        code = replace_for_display(code)
         context["language"] = "python"  # FIXME choice of other languages
         yield self.execute_and_render(code, context, "inline_code")
 
@@ -133,12 +138,10 @@ def replace_for_display(code: str) -> str:
     ----------
     code
         The code to be executed in the inline mode.
-    skip_equal
-        If True, skip the statement which contains equal character.
 
     Returns
     -------
-    codes
+    codes, replaced
         Replaced python code list.
     """
     if code.startswith("^"):
@@ -147,19 +150,20 @@ def replace_for_display(code: str) -> str:
     else:
         output = "markdown"
 
-    code = code.replace(";", "\n")
-    codes = code.split("\n")
-    if codes[-1].startswith(" "):
+    try:
+        node = ast.parse(code).body[-1]
+    except SyntaxError:
         return code
 
-    match = re.match(r"(\w+) *?=", codes[-1])
-    if match:
+    if not isinstance(node, ast.Expr):
         return code
-    if len(codes) == 1:
-        precode = ""
-    else:
-        codes, code = codes[:-1], codes[-1]
-        precode = "\n".join(codes) + "\n"
+
+    lines = code.split("\n")
+    precode = "\n".join(lines[: node.lineno - 1])
+    if precode:
+        precode += "\n"
+    code_gen = (line for line in lines[node.lineno - 1 :] if not line.startswith("#"))
+    code = "\n".join(code_gen)
 
     return f'{precode}pheasant.jupyter.display.display({code}, output="{output}")'
 
@@ -171,7 +175,7 @@ def select_outputs(outputs):
             if (text.startswith('"') and text.endswith('"')) or (
                 text.startswith("'") and text.endswith("'")
             ):
-                output["data"]["text/plain"] = literal_eval(text)
+                output["data"]["text/plain"] = ast.literal_eval(text)
     for output in outputs:
         if output["type"] == "display_data":
             outputs = [output for output in outputs if output["type"] == "display_data"]

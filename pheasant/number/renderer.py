@@ -55,12 +55,7 @@ class Header(Renderer):
                 while not content:
                     cell = next(splitter)
                     if cell.match:
-                        if cell.source.startswith("~~~") and kind in "figure table":
-                            content = cell.context["source"] + "\n"
-                            content = parser.parse(content, decorate=False)
-                            content = markdown.convert(content)
-                        else:
-                            content = parser.parse_from_cell(cell, splitter)
+                        content = get_content_from_cell(cell, kind, splitter, parser)
                     else:
                         content, rest = get_content(cell.source)
             yield self.render("header", context, content=content) + "\n"
@@ -120,6 +115,17 @@ class Header(Renderer):
             }
             context.update(tag=tag)
         return context
+
+
+def get_content_from_cell(cell, kind, splitter, parser) -> str:
+    if cell.source.startswith("~~~") and kind in "figure table":
+        content = cell.context["source"] + "\n"
+        content = parser.parse(content, decorate=False)
+        return markdown.convert(content)
+    else:
+        if cell.source.startswith("```") and "option" in cell.context:
+            cell.context["option"] += " inline"
+        return parser.parse_from_cell(cell, splitter)
 
 
 def get_content(source: str) -> Tuple[str, str]:

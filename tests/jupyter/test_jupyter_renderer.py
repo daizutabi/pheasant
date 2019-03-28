@@ -71,8 +71,6 @@ def test_replace_for_display():
     assert replace(replace_for_display("^a")) == 'display(a, output="html")'
     assert replace(replace_for_display("a")) == 'display(a, output="markdown")'
     assert replace_for_display("for k:\n  a") == "for k:\n  a"
-    output = replace(replace_for_display("b = 1;a = b;a"))
-    assert output == 'b = 1\na = b\ndisplay(a, output="markdown")'
 
 
 def test_render_no_kernel(jupyter):

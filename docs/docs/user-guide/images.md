@@ -84,11 +84,6 @@ Thanks to this Pheasant feature, you can put images anywhere. For example, in a 
 
 Herer, a fenced code is required because `{{#axes[0]}}` and `{{#axes[1]}}` are not normal Markdown sources.
 
-```python
-help(display)
-```
-
-
 If you prefer a Pandas DataFrame, use "html" output option. When this option is set, `display` function returns an IPython HTML object. So you can use the `data` attribute to get a HTML string.
 
 ~~~copy
@@ -138,45 +133,15 @@ HoloViews provides an explorable multi-dimensional dictionary of HoloViews objec
 
 First, a normal HoloViews object.
 
-~~~copy
 ```python
 import holoviews as hv
 curve = hv.Curve(([1, 2, 3], [2, 3, 1]))
 curve
 ```
-~~~
-
-```python
-type(curve)
-```
-
-As you can see, HoloView's `Curve` object doesn't supply any visual representation. To get a HTML source to visualize it, we have to render the object.
-
-```python
-renderer = hv.renderer('bokeh')
-html = renderer.html(curve)
-print(html[:40], '...')
-```
-
-Extra assets which should be written in a HTML source to display the image are provided by the `renderer`'s class method: `html_assets()`.
-
-```python
-js_html, css_html = renderer.html_assets()
-print(js_html.strip()[:50])
-```
-```python
-print(css_html.strip()[:50])
-```
-
-The above process to display a HTML image from a HoloViews object can be done by just an inline code like this.
-
-~~~copy
-{{curve}}
-~~~
 
 Showing a HoloMap is straightforward. From HoloViews's official documents,
 
-```python display
+```python
 import numpy as np
 frequencies = [0.5, 0.75, 1.0, 1.25]
 
@@ -188,7 +153,7 @@ curve_dict = {f:sine_curve(0,f) for f in frequencies}
 hv.HoloMap(curve_dict, kdims='frequency')
 ```
 
-```python display
+```python
 phases = [0, np.pi/2, np.pi, 3*np.pi/2]
 curve_dict_2D = {(p,f):sine_curve(p,f) for p in phases for f in frequencies}
 hv.HoloMap(curve_dict_2D, kdims=['phase', 'frequency'])
