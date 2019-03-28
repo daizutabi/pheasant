@@ -135,8 +135,7 @@ First, a normal HoloViews object.
 
 ```python
 import holoviews as hv
-curve = hv.Curve(([1, 2, 3], [2, 3, 1]))
-curve
+hv.Curve(([1, 2, 3], [2, 3, 1]))
 ```
 
 Showing a HoloMap is straightforward. From HoloViews's official documents,

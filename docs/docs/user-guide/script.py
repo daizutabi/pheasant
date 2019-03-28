@@ -1,5 +1,4 @@
 # # Standalone Script
-
 # Using Atom's [Hydorgen](https://nteract.gitbooks.io/hydrogen/) package, you can
 # execute any Python script codes in a Markdown source. So you can edit your Markdown
 # verifying its execution and outputs. But unfortunately (as long as I know), the
@@ -7,9 +6,7 @@
 # cannot be ran by Python interpreter. Pheasant connects between a pure Python script
 # and a Markdown source for MkDocs. Actually, this page is written by a pure Python
 # code.
-
 # ## How to
-
 # A basic idea is that Markdown cells and code cells generally appear alternately. We
 # can write a Markdown cell with a successive comment lines. In order to be recognized
 # as a Markdown cell, `#` must be at the begining of lines. But we can insert a blank
@@ -51,26 +48,20 @@ def sub2(x: int, y: int) -> int:
     return x - y  # a comment in a code cell.
 
 
-# ## Internal mechanism
-
-# By defaults, MkDocs processes Markdown files only for pages. This setting is defined
-# in the MkDocs's utility library: `mkdocs.utils.markdown_extensions`. Pheasant plugin
-# appends `.py` to this setting in the Plugin's source:
-
+# By defaults, MkDocs processes Markdown files only for pages. This setting is
+# defined in the MkDocs's utility library: `mkdocs.utils.markdown_extensions`.
+# Pheasant plugin appends `.py` to this setting in the Plugin's source:
 # ~~~python
 # from mkdocs.utils import markdown_extensions
 # markdown_extensions.append(".py")
 # ~~~
-
 
 # By this setting, MkDocs reads a `.py` file as a Markdown source. Then, Pheasant will
 # convert it into a real Markdown format in order to be processed by other converters
 # later.
 
 # ## Fenced code block
-
 # You can write a fenced code block in commented-Markdown source.
-
 
 # ~~~python
 # # ```python
@@ -104,7 +95,6 @@ def sub2(x: int, y: int) -> int:
 # ~~~
 
 # ## Comment writing package
-
 # In this scheme, we have to write many comments for Markdown cells. But a linter such
 # as pycodestyle doesn't allow us to write a very long comment in one line longer than
 # (for example) 79 characters. This means that we have to write 'Markdown source' with

@@ -25,7 +25,7 @@ If you use Pheasant as a plugin of MkDocs, you also need to install it.
 $ pip install mkdocs
 ~~~
 
-Then, in your `mkdocs.yml`, add lines below to register Pheasant as a MkDocs plugin.
+In your `mkdocs.yml`, add lines below to register Pheasant as a MkDocs plugin.
 
 ~~~yaml
 plugins:
@@ -36,7 +36,7 @@ plugins:
 
 ### Auto generation of the executed outputs with Jupyter client
 
-A markdown source below:
+In a markdown fenced code below,
 
 ~~~
 ```python
@@ -44,24 +44,39 @@ print(1)
 ```
 ~~~
 
-
-is converted into:
+a `print` function is executed via [Jupyter client](https://jupyter-client.readthedocs.io/en/stable/) and converted into HTML source:
 
 ~~~html
 <div class="input"><pre><code class="python">print(1)</code></pre></div>
 <div class="stdout"><pre><code class="text">1</code></pre></div>
 ~~~
 
-after execution of `print` function via [Jupyter client](https://jupyter-client.readthedocs.io/en/stable/) and finally rendered as:
+Then, finally rendered as:
 
 ```python
 print(1)
 ```
 
+Other language can be used if the kernel has been installed. For example,
+
+~~~copy
+```javascript
+console.log("Hello Javascript")
+```
+~~~
+
+You can check the kernel name and its execution count at the right side of input cells.
+
+Language and kernel name dictionary can be obtained by `find_kernel_names` function:
+
+```python
+from pheasant.jupyter.client import find_kernel_names
+find_kernel_names()
+```
 
 ### Inline code embeded in a Markdown source
 
-**"Inline code"** is a powerful feature of Pheasant. Any python codes surrounded by `{{#` and `}}` are executed and the result remains there. For example, `{{#3*5}}` becomes {{3*5}}. Variables can be assigned in an inline code like this: `{{#name='Pheasant'}}`{{name='Pheasant'}}. Then, `"I'm {{#name}}."` becomes "I'm {{name}}." Note that a semicolon at the end of expression hides the output.
+**"Inline code"** is a powerful feature of Pheasant. Any python codes surrounded by `{{#` and `}}` are executed and the result remains there. For example, `{{#3*5}}` becomes {{3*5}}. Variables can be assigned in an inline code like this: `{{#name='Pheasant'}}`{{name='Pheasant'}}. Then, `"I'm {{#name}}."` becomes "I'm {{name}}."
 
 ### Visualization
 
@@ -73,7 +88,7 @@ import matplotlib.pyplot as plt
 ```
 ~~~
 
-Then, plot a line.
+Plot a line.
 
 ~~~copy
 ```python
@@ -81,15 +96,13 @@ plt.plot([1, 3])
 ```
 ~~~
 
-Executin of the above Markdown source on a Jupyter kernel creates a plain text output as a execute result and a PNG image as display data. You may want to display only the image. You can set `inline` option to a fenced code after language description:
+Executin of the above Markdown source on a Jupyter kernel creates a plain text output as an execute result and a PNG image as display data. You may want to display only the image. You can set `inline` option to a fenced code after language description:
 
 ~~~copy
 ```python inline
 plt.plot([1, 2])
 ```
 ~~~
-
-Note that Matplotlib package has already been imported in the previous code block so that we don't need to import it again here.
 
 Pheasant also supports Bokeh's HTML output.
 
@@ -109,14 +122,10 @@ Furthermore, Pheasant supports HoloViews objects as well as interactive HoloMap.
 
 ```python
 import holoviews as hv
-curve = hv.Curve(((1, 2), (2, 3)))
-curve
+hv.Curve(((1, 2), (2, 3)))
 ```
 
-Also, `{{#curve}}` generates a HoloView ojbect: {{curve}}
-
 HoloMap can work as in a Jupyter Notebook.
-
 
 ```python
 import numpy as np
@@ -130,7 +139,7 @@ curve_dict = {f: sine_curve(0, f) for f in frequencies}
 hv.HoloMap(curve_dict, kdims='Frequency')
 ```
 
-Finally, Altair plots from official [Example Gallery](https://altair-viz.github.io/gallery/index.html).
+Finally, Altair plots from official [Example Gallery](https://altair-viz.github.io/gallery/index.html),
 
 ```python
 import altair as alt
@@ -141,8 +150,7 @@ source = pd.DataFrame({
     'b': [25, 55, 43, 91, 81, 53, 19, 87, 52]
 })
 
-chart = alt.Chart(source).mark_bar().encode(x='a', y='b')
-chart
+alt.Chart(source).mark_bar().encode(x='a', y='b')
 ```
 
 ```python
@@ -238,7 +246,7 @@ A **plain** Markdown source which is not processed by Pheasant has to be separat
 In addition, Pheasant provides an easy way to number figures, tables, *etc*. regardless of whether they actually have any blank lines or not. Try this:
 
 ~~~copy
-#Figure {{curve}} Inline numbering method.
+#Figure {{plot}} Inline numbering method.
 ~~~
 
 ### Hyperlink

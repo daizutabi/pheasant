@@ -8,6 +8,7 @@ matrix:
 
 install:
   - npm install -g ijavascript
+  - ijsinstall
   - pip install pycodestyle pyflakes mypy
   - pip install pytest-cov coveralls
   - pip install -e .[develop]

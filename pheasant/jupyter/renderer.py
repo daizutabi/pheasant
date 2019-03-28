@@ -21,12 +21,13 @@ class Cell:
 
 
 class Jupyter(Renderer):
+    language: str = "python"
     abs_src_path: str = "."  # should be set the real path later
     cursor: int = 0
     cache: Dict[str, List[Cell]] = field(default_factory=dict)
 
     FENCED_CODE_PATTERN = (
-        r"^(?P<mark>`{3,})(?P<language>\w+) ?(?P<option>.*?)\n"
+        r"^(?P<mark>`{3,})(?P<language>\w*) ?(?P<option>.*?)\n"
         r"(?P<code>.*?)\n(?P=mark)\n"
     )
     INLINE_CODE_PATTERN = r"\{\{(?P<code>.+?)\}\}"
@@ -55,11 +56,15 @@ class Jupyter(Renderer):
         self.cursor = 0
 
     def render_fenced_code(self, context, splitter, parser) -> Iterator[str]:
+        if not context["language"]:
+            context["language"] = self.language
+        else:
+            self.language = context["language"]
         code = context["code"]
         if "inline" in context["option"]:
             splitter.send("{{```" + code + "}}")  # with fenced code mark
             return
-        if "text" not in context["option"]:
+        if self.language == "python" and "text" not in context["option"]:
             code = replace_for_display(code)
         yield self.execute_and_render(code, context, "fenced_code") + "\n"
 
@@ -71,8 +76,9 @@ class Jupyter(Renderer):
             context["code"] = code
         else:
             code = code.replace(";", "\n")
-        code = replace_for_display(code)
-        context["language"] = "python"  # FIXME choice of other languages
+        if self.language == 'python':
+            code = replace_for_display(code)
+        context["language"] = self.language
         yield self.execute_and_render(code, context, "inline_code")
 
     def execute_and_render(self, code, context, template) -> str:

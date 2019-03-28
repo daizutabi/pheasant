@@ -6,6 +6,11 @@
 # paragraph 1
 # paragraph 1
 
+# ~~~markdown
+# !!! Note
+#     note
+# ~~~
+
 """markdown
 docstring 1
 docstring 2

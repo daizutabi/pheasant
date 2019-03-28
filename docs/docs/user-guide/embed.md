@@ -1,6 +1,6 @@
-# Inspect and Load Codes
+# Embeded objects
 
-Pheasant can read codes from a file system or Python module.
+Pheasant can embed codes from a file system or Python module.
 
 ## File system
 
@@ -14,7 +14,7 @@ writes the content of the real `mkdocs.yml` of this document:
 
 {% mkdocs.yml %}
 
-The root directory of a relative path is the directory where `mkdocs.yml` exists.
+The root directory is the directory where `mkdocs.yml` exists.
 
 If the file is too long to display the whole content, you can specify the lines as the same way that Python does with the slice notation.
 
@@ -41,11 +41,11 @@ You can write to inspect the whole module content:
 A part of the module can be specified as usual.
 
 ```python
-from pheasant.core import page
+from pheasant.jupyter.renderer import Jupyter
 ```
 
 ~~~copy
-{%?page.Page%}
+{%?Jupyter[:23]%}
 ~~~
 
 With this functionality, you can guarantee the reproducible relation between your source code and results easily.

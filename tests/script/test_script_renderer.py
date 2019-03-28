@@ -16,3 +16,8 @@ def test_render_script_option(script, source):
     output = script.convert(source, 0)
     assert "```python display\n@pytest.fixture()\ndef script" in output
     assert "```python inline display\ndef g()" in output
+
+
+def test_render_markdown(script):
+    assert script.convert("# ~~~\n# a\n# b\n# ~~~\n", 0) == "~~~\na\nb\n~~~\n"
+    assert script.convert("# ~~~markdown\n# a\n# b\n# ~~~\n", 0) == "a\nb\n"

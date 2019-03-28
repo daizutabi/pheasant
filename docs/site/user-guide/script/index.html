@@ -74,11 +74,9 @@
         
             <li><a class="toctree-l4" href="#41-how-to">4.1 How to</a></li>
         
-            <li><a class="toctree-l4" href="#42-internal-mechanism">4.2 Internal mechanism</a></li>
+            <li><a class="toctree-l4" href="#42-fenced-code-block">4.2 Fenced code block</a></li>
         
-            <li><a class="toctree-l4" href="#43-fenced-code-block">4.3 Fenced code block</a></li>
-        
-            <li><a class="toctree-l4" href="#44-comment-writing-package">4.4 Comment writing package</a></li>
+            <li><a class="toctree-l4" href="#43-comment-writing-package">4.3 Comment writing package</a></li>
         
         </ul>
     
@@ -153,7 +151,7 @@ def sub(x: int, y: int) -&gt; int:
     &#34;&#34;&#34;Substract `y` from `x`.&#34;&#34;&#34;
     return x - y  # a comment in a code cell.</code></pre>
   <p class="report"><span class="count">[1]</span>
-  <span class="start">2019-03-28 14:16:06</span> (<span class="elasped">5.00ms</span>)
+  <span class="start">2019-03-28 20:45:06</span> (<span class="elasped">5.96ms</span>)
   <span class="right"><span class="kernel">python3</span><span class="count"> [39]</span>
   </span></p></div></div>
 
@@ -163,7 +161,7 @@ def sub(x: int, y: int) -&gt; int:
     &#34;&#34;&#34;Add `x` and `y`.&#34;&#34;&#34;
     return x + y  # a comment in a code cell.</code></pre>
   <p class="report"><span class="count">[2]</span>
-  <span class="start">2019-03-28 14:16:06</span> (<span class="elasped">7.07ms</span>)
+  <span class="start">2019-03-28 20:45:06</span> (<span class="elasped">6.00ms</span>)
   <span class="right"><span class="kernel">python3</span><span class="count"> [40]</span>
   </span></p></div></div>
 
@@ -171,17 +169,15 @@ def sub(x: int, y: int) -&gt; int:
     &#34;&#34;&#34;Substract `y` from `x`.&#34;&#34;&#34;
     return x - y  # a comment in a code cell.</code></pre>
   <p class="report"><span class="count">[3]</span>
-  <span class="start">2019-03-28 14:16:06</span> (<span class="elasped">15.7ms</span>)
+  <span class="start">2019-03-28 20:45:06</span> (<span class="elasped">19.1ms</span>)
   <span class="right"><span class="kernel">python3</span><span class="count"> [41]</span>
   </span></p></div></div>
 
-<h2 id="42-internal-mechanism"><span class="pheasant-header"><span class="header"><span class="number">4.2</span> <span class="title">Internal mechanism</span></span></span></h2>
-<p>By defaults, MkDocs processes Markdown files only for pages. This setting is defined in the MkDocs's utility library: <code>mkdocs.utils.markdown_extensions</code>. Pheasant plugin appends <code>.py</code> to this setting in the Plugin's source:</p>
+<p>By defaults, MkDocs processes Markdown files only for pages. This setting is defined in the MkDocs's utility library: <code>mkdocs.utils.markdown_extensions</code>. Pheasant plugin appends <code>.py</code> to this setting in the Plugin's source:
 <div class="pheasant-fenced-code"><div class="source"><pre><code class="python">from mkdocs.utils import markdown_extensions
-markdown_extensions.append(&#34;.py&#34;)</code></pre></div></div>
-
+markdown_extensions.append(&#34;.py&#34;)</code></pre></div></div></p>
 <p>By this setting, MkDocs reads a <code>.py</code> file as a Markdown source. Then, Pheasant will convert it into a real Markdown format in order to be processed by other converters later.</p>
-<h2 id="43-fenced-code-block"><span class="pheasant-header"><span class="header"><span class="number">4.3</span> <span class="title">Fenced code block</span></span></span></h2>
+<h2 id="42-fenced-code-block"><span class="pheasant-header"><span class="header"><span class="number">4.2</span> <span class="title">Fenced code block</span></span></span></h2>
 <p>You can write a fenced code block in commented-Markdown source.</p>
 <div class="pheasant-fenced-code"><div class="source"><pre><code class="python"># ```python
 # print(1)
@@ -190,7 +186,7 @@ markdown_extensions.append(&#34;.py&#34;)</code></pre></div></div>
 <p>becomes:</p>
 <div class="pheasant-fenced-code"><div class="input"><pre><code class="python">print(1)</code></pre>
   <p class="report"><span class="count">[4]</span>
-  <span class="start">2019-03-28 14:16:06</span> (<span class="elasped">15.6ms</span>)
+  <span class="start">2019-03-28 20:45:06</span> (<span class="elasped">15.6ms</span>)
   <span class="right"><span class="kernel">python3</span><span class="count"> [42]</span>
   </span></p></div><div class="stdout"><pre><code class="text">1</code></pre></div></div>
 
@@ -206,7 +202,7 @@ markdown_extensions.append(&#34;.py&#34;)</code></pre></div></div>
 print(1)
 ```</code></pre></div></div>
 
-<h2 id="44-comment-writing-package"><span class="pheasant-header"><span class="header"><span class="number">4.4</span> <span class="title">Comment writing package</span></span></span></h2>
+<h2 id="43-comment-writing-package"><span class="pheasant-header"><span class="header"><span class="number">4.3</span> <span class="title">Comment writing package</span></span></span></h2>
 <p>In this scheme, we have to write many comments for Markdown cells. But a linter such as pycodestyle doesn't allow us to write a very long comment in one line longer than (for example) 79 characters. This means that we have to write 'Markdown source' with several 'New Line' characters even we are writing 'one' paragraph. In order to overcome this incovenient situation, a comment wrapping pakage <a href="https://github.com/daizutabi/pyls-cwrap"><code>pyls-cwrap</code></a> has been prepared. You can install this package as <code>pip install pyls-cwrap</code>. In Atom, if you use <a href="https://atom.io/packages/ide-python"><code>ide-python</code></a>, just press [Ctrl]+[Shift]+[C] (Windows, default setting), sequential comments are automatically formatted.</p>
               
             </div>

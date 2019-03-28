@@ -24,4 +24,3 @@ nav:
 markdown_extensions:
   - admonition
   - pymdownx.arithmatex
-#   - attr_list

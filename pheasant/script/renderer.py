@@ -6,7 +6,7 @@ from pheasant.core.renderer import Renderer
 from pheasant.script.formatter import format_source
 from pheasant.script.splitter import DOCSTRING_PATTERN, split
 
-COMMENT_PATTERN = re.compile(r"^#\s*", re.MULTILINE)
+COMMENT_PATTERN = re.compile(r"^#\s?", re.MULTILINE)
 
 
 class Comment(Renderer):
@@ -18,12 +18,18 @@ class Comment(Renderer):
 
     def __post_init__(self):
         super().__post_init__()
-        self.register(Comment.HEADER_PATTERN, self.render_escape, "comment__header")
-        pattern = Comment.FENCED_CODE_PATTERN
-        self.register(pattern, self.render_escape, "comment__fenced_code")
+        self.register(Comment.HEADER_PATTERN, self.render_header)
+        self.register(Comment.FENCED_CODE_PATTERN, self.render_fenced_code)
 
-    def render_escape(self, context, splitter, parser) -> Iterator[str]:
+    def render_header(self, context, splitter, parser) -> Iterator[str]:
         yield context["_source"]
+
+    def render_fenced_code(self, context, splitter, parser) -> Iterator[str]:
+        markdown = context["mark"] + "markdown\n"
+        if context["_source"].startswith(markdown) and self.max_line_length == 0:
+            yield context["_source"][len(markdown) : -len(context["mark"]) - 1]
+        else:
+            yield context["_source"]
 
     def decorate(self, cell) -> None:
         if cell.match is None:
