@@ -9,11 +9,11 @@ from pheasant.core.decorator import Decorator
 
 
 class Parser(Base):
-    patterns: Dict[str, str] = field(default_factory=dict)
-    renders: Dict[str, Render] = field(default_factory=OrderedDict)
-    cell_classes: Dict[str, type] = field(default_factory=dict)
-    pattern: Optional[Pattern] = None
-    decorator: Optional[Decorator] = None
+    patterns: Dict[str, str] = field(default_factory=dict, init=False)
+    renders: Dict[str, Render] = field(default_factory=OrderedDict, init=False)
+    cell_classes: Dict[str, type] = field(default_factory=dict, init=False)
+    pattern: Optional[Pattern] = field(default=None, init=False)
+    decorator: Optional[Decorator] = field(default=None, init=False)
 
     def __post_repr__(self):
         return len(self.patterns)
@@ -24,13 +24,13 @@ class Parser(Base):
         cell_class = make_cell_class(pattern, render, render_name)
         self.cell_classes[render_name] = cell_class
         pattern = rename_pattern(pattern, render_name)
-        self.patterns[render_name] = pattern
         self.renders[render_name] = render
-        self.pattern = None
+        self.patterns[render_name] = pattern
+        self.pattern = None  # Delete the pattern compiled before.
         return cell_class
 
     def parse(self, source: str, decorate: Union[Callable, bool] = True) -> str:
-        """Parse the source and deligate to the render function.
+        """Parse the source and deligate the process to a render function.
 
         Parameters
         ----------
@@ -70,10 +70,8 @@ class Parser(Base):
     def split(self, source: str) -> Splitter:
         """Split the source into a cell and yield it.
 
-        Split function returns a Splitter generator. This generator can receive a
+        This function returns a Splitter generator. This generator can receive a
         source through `send` method to return the source you get from generator.
-
-
         """
         if not self.patterns:
             raise ValueError("No pattern registered")

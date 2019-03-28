@@ -4,7 +4,8 @@ import re
 from setuptools import find_packages, setup
 
 
-def get_version(package):
+def get_version(package: str) -> str:
+    """Return version of the package."""
     path = os.path.join(
         os.path.dirname(os.path.abspath(__file__)), package, "__init__.py"
     )

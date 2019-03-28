@@ -13,9 +13,9 @@ class MetaClass(type):
 
 
 class Base(metaclass=MetaClass):
-    name: str = field(default="")
+    name: str = ""
     config: Dict[str, Any] = field(default_factory=dict)
-    meta: Dict[str, Any] = field(default_factory=dict)
+    meta: Dict[str, Any] = field(default_factory=dict, init=False)
 
     def __post_init__(self):
         self.name = self.name or self.__class__.__name__.lower()
@@ -43,6 +43,7 @@ class Base(metaclass=MetaClass):
 
 def get_render_name(render: Render) -> str:
     """Return a render name which is used to resolve the mattched pattern.
+
     Usualy, render_name = '<class_name>__<render_function_name>' in lower case.
     If render function name starts with 'render_', it is omitted from the name.
 
@@ -74,9 +75,10 @@ def get_render_name(render: Render) -> str:
 
 
 def rename_pattern(pattern: str, render_name: str) -> str:
-    """Rename a pattern with a render name to enable to determine the render which
-    should process the pattern. Triple underscores divides the pattern name into
-    a render name to determine a render and a real name for a render processing.
+    """Rename a pattern with a render name to determine the corresponding render.
+
+    Triple underscores divides the pattern name into a render name to determine a
+    render and a real name for a render processing.
     """
     name_pattern = r"\(\?P<(.+?)>(.+?)\)"
     replace = f"(?P<{render_name}___\\1>\\2)"

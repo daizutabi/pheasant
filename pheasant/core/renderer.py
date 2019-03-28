@@ -10,12 +10,9 @@ from pheasant.core.parser import Parser, Render  # Render is type, not class
 
 
 class Renderer(Base):
-    patterns: Dict[str, str] = field(default_factory=dict)
-    renders: Dict[str, Render] = field(default_factory=dict)
-
-    def __post_init__(self):
-        super().__post_init__()
-        self._parser: Optional[Parser] = None
+    patterns: Dict[str, str] = field(default_factory=dict, init=False)
+    renders: Dict[str, Render] = field(default_factory=dict, init=False)
+    _parser: Optional[Parser] = field(default=None, init=False)
 
     def __post_repr__(self):
         return len(self.renders)
