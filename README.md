@@ -25,8 +25,8 @@
 
 ## Description
 
-Pheasant is a Markdown converter which is designed to be used as a plugin for static site generators, especially MkDocs. The one of the main features of Pheasant is auto Markdown generation of outputs after execution of any Python codes described in a fenced code block of Markdown source. This processure is done by the Jupyter client functionality. In addition to the code execution, Pheasant can automatically number headers, figures, tables, *etcs*.
+Pheasant is a Markdown converter which is designed to be used as a plugin for static site generators, especially MkDocs. The one of the main features of Pheasant is auto Markdown generation of outputs after execution of any Python or other language codes written in a fenced code block of Markdown source. This process is executed by the Jupyter client functionality. In addition to the code execution, Pheasant can automatically number headers, figures, tables, *etcs*.
 
-## Documentation
+## Document
 
-See [Pheasant documentation](https://pheasant.daizutabi.net).
+See [Pheasant document](https://pheasant.daizutabi.net).
