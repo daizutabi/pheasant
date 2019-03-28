@@ -59,7 +59,8 @@ class Jupyter(Renderer):
         if "inline" in context["option"]:
             splitter.send("{{```" + code + "}}")  # with fenced code mark
             return
-        code = replace_for_display(code)
+        if "text" not in context["option"]:
+            code = replace_for_display(code)
         yield self.execute_and_render(code, context, "fenced_code") + "\n"
 
     @comment("code")
