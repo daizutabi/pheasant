@@ -9,9 +9,9 @@ extra_raw_css = [
 ]
 
 extra_javascript = [
-    f"{BASE_URL}/vega@{VEGA_VERSION}",
-    f"{BASE_URL}/vega-lite@{VEGALITE_VERSION}",
-    f"{BASE_URL}/vega-embed@{VEGAEMBED_VERSION}",
+    f"{BASE_URL}vega@{VEGA_VERSION}",
+    f"{BASE_URL}vega-lite@{VEGALITE_VERSION}",
+    f"{BASE_URL}vega-embed@{VEGAEMBED_VERSION}",
 ]
 
 HTML_TEMPLATE = jinja2.Template(
