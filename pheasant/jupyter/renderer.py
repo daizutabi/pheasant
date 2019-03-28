@@ -66,7 +66,7 @@ class Jupyter(Renderer):
             return
         if self.language == "python" and "text" not in context["option"]:
             code = replace_for_display(code)
-        yield self.execute_and_render(code, context, "fenced_code") + "\n"
+        yield "\n" + self.execute_and_render(code, context, "fenced_code") + "\n\n"
 
     @comment("code")
     def render_inline_code(self, context, splitter, parser) -> Iterator[str]:

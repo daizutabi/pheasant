@@ -46,8 +46,6 @@ class Pheasant(Converter):
                     message(f"Converting Markdown: {path}")
                 self.convert_from_file(path, "main")
             # Copy Jupyter extra resources
-            # extra = self.jupyter.meta.get(path)
-            # extra = extra_html(extra) if extra else ""
             self.pages[path].meta["extra_html"] = self.jupyter.extra_html
         for path in paths:
             self.anchor.abs_src_path = path

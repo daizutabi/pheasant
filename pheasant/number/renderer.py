@@ -45,7 +45,7 @@ class Header(Renderer):
         context = self.resolve(context)
         kind = context["kind"]
         if kind == "header":
-            yield self.render("header", context) + "\n"
+            yield self.render("header", context) + "\n\n"
         else:
             rest = ""
             if context["inline_pattern"]:
@@ -58,7 +58,7 @@ class Header(Renderer):
                         content = get_content_from_cell(cell, kind, splitter, parser)
                     else:
                         content, rest = get_content(cell.source)
-            yield self.render("header", context, content=content) + "\n"
+            yield self.render("header", context, content=content) + "\n\n"
             if rest:
                 splitter.send(rest)
 

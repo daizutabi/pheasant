@@ -100,7 +100,7 @@ Then,
 
 ~~~copy
 #Tab A Pandas DataFrame with a Matplotlib plot
-```python inline
+```python
 import pandas as pd
 pd.DataFrame([axes], columns=['Red', 'Blue'])
 ```

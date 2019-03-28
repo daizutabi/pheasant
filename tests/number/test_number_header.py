@@ -39,15 +39,15 @@ def test_join(header, source_simple):
     output = output.replace("span", "S").replace("class=", "C").replace("div", "D")
     answer = "\n".join(
         [
-            '# <S C"header"><S C"number">1</S> <S C"title" id="tag-a">Title</S></S>',
-            '## <S C"header"><S C"number">1.1</S> <S C"title">Section A</S></S>',
+            '# <S C"header"><S C"number">1</S> <S C"title" id="tag-a">Title</S></S>\n',
+            '## <S C"header"><S C"number">1.1</S> <S C"title">Section A</S></S>\n',
             "Text {#tag-b#}",
-            '## <S C"header"><S C"number">1.2</S> <S C"title">Section B</S></S>',
-            '## <S C"header"><S C"number">1.3</S> <S C"title">Subsection C</S></S>',
+            '## <S C"header"><S C"number">1.2</S> <S C"title">Section B</S></S>\n',
+            '## <S C"header"><S C"number">1.3</S> <S C"title">Subsection C</S></S>\n',
             "Text {#tag-a#}",
             '<D C"figure"><D C"content" id="tag-b"><D>Content A</D></D>',
             '<p><S C"prefix">Figure</S> <S C"number">1.1</S>',
-            '<S C"title">Figure A</S></p></D>\n',
+            '<S C"title">Figure A</S></p></D>\n\n',
         ]
     )
     assert output == answer
@@ -93,7 +93,7 @@ def test_inline_code(header):
 def test_get_content(header):
     output = header.parse("#FIG title\n \n \n\nabc\n\ndef\n")
     assert '<div class="content"><p>abc</p></div>' in output
-    assert "</div>\n\ndef" in output
+    assert "</div>\n\n\ndef" in output
 
     output = header.parse("#FIG title\n \n \n\n# test\n")
     assert '<div class="content"># <span class="header"' in output

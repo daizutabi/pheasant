@@ -32,9 +32,9 @@ def test_code_parse_file(file):
     source = "def func(x):\n    return 2 * x\n\nprint(f(3))\n"
     output = file(path, source)
     answer = (
-        '<div class="source"><pre>'
+        '\n<div class="source"><pre>'
         '<code class="python">def func(x):\n    return 2 * x\n\nprint(f(3))'
-        "</code></pre></div>\n"
+        "</code></pre></div>\n\n"
     )
     assert output == answer
 
@@ -48,5 +48,5 @@ def test_code_parse_file_not_founed(parse):
 def test_code_parse_inspect(parse):
     execute("import pheasant")
     output = parse("?pheasant")
-    answer = '<div class="source">' '<pre><code class="python">__version__ ='
+    answer = '\n<div class="source">' '<pre><code class="python">__version__ ='
     assert output.startswith(answer)

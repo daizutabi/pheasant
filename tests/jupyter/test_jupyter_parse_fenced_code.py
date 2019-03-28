@@ -22,8 +22,8 @@ def test_jupyter_parse_text(parse):
     output = parse("print(1)")
     answer = "".join(
         [
-            '<div class="input"><pre><code class="python">print(1)</code></pre></div>'
-            '<div class="stdout"><pre><code class="python">1</code></pre></div>\n'
+            '\n<div class="input"><pre><code class="python">print(1)</code></pre></div>'
+            '<div class="stdout"><pre><code class="python">1</code></pre></div>\n\n'
         ]
     )
     assert output == answer
@@ -31,8 +31,8 @@ def test_jupyter_parse_text(parse):
     output = parse("1")
     answer = "".join(
         [
-            '<div class="input"><pre><code class="python">1</code></pre></div>'
-            '<div class="output"><pre><code class="python">1</code></pre></div>\n'
+            '\n<div class="input"><pre><code class="python">1</code></pre></div>'
+            '<div class="output"><pre><code class="python">1</code></pre></div>\n\n'
         ]
     )
     assert output == answer
@@ -40,10 +40,10 @@ def test_jupyter_parse_text(parse):
     output = parse("'abc'")
     answer = "".join(
         [
-            '<div class="input">'
+            '\n<div class="input">'
             '<pre><code class="python">&#39;abc&#39;</code></pre></div>'
             '<div class="output">'
-            '<pre><code class="python">&#39;abc&#39;</code></pre></div>\n'
+            '<pre><code class="python">&#39;abc&#39;</code></pre></div>\n\n'
         ]
     )
     assert output == answer
@@ -51,11 +51,11 @@ def test_jupyter_parse_text(parse):
     output = parse("1/0")
     answer = "".join(
         [
-            '<div class="input">'
+            '\n<div class="input">'
             '<pre><code class="python">1/0</code></pre></div>'
             '<div class="error">'
             '<pre><code class="python">ZeroDivisionError: division by zero'
-            "</code></pre></div>\n"
+            "</code></pre></div>\n\n"
         ]
     )
     assert output == answer
