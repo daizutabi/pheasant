@@ -44,22 +44,21 @@ class Renderer(Base):
         """Called per page."""
         pass
 
-    def set_template(self, names: Union[str, List[str]] = "") -> None:
-        module = importlib.import_module(self.__module__)
-        directory = os.path.join(os.path.dirname(module.__file__), "templates")
-        if isinstance(names, str):
-            names = [names]
-        for name in names:
-            template = f"{name}_template"
-            template_file = f"{name}_template_file"
-            if template_file in self.config:
-                path = self.config[template_file]
-            else:
-                path = os.path.join(directory, f"{name}.jinja2")
-            directory, path = os.path.split(os.path.abspath(path))
-            loader = FileSystemLoader([directory])
-            env = Environment(loader=loader, autoescape=select_autoescape(["jinja2"]))
-            self.config[template] = env.get_template(path)
+    def set_template(
+        self, templates: Union[str, List[str]], directory: str = ""
+    ) -> None:
+        if not directory:
+            module = importlib.import_module(self.__module__)
+            directory = os.path.join(os.path.dirname(module.__file__), "templates")
+        loader = FileSystemLoader([directory])
+        env = Environment(loader=loader, autoescape=select_autoescape(["jinja2"]))
+        if isinstance(templates, str):
+            templates = [templates]
+        for template in templates:
+            if "." not in template:
+                template = f"{template}.jinja2"
+            key = f"{template}_template"
+            self.config[key] = env.get_template(template)
 
     def render(self, template: str, context: Dict[str, Any], **kwargs) -> str:
         return self.config[template + "_template"].render(
