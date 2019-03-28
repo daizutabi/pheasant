@@ -7,6 +7,7 @@ matrix:
       python: 3.7
 
 install:
+  - npm install -g ijavascript
   - pip install pycodestyle pyflakes mypy
   - pip install pytest-cov coveralls
   - pip install -e .[develop]
