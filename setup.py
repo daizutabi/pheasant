@@ -50,6 +50,8 @@ setup(
             "selenium",
             "openpyxl",
             "python-pptx",
+            "altair",
+            "vega_datasets",
         ]
     },
     entry_points={
