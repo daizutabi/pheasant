@@ -185,11 +185,11 @@ def sine_curve(phase, freq):
     return hv.Curve((xvals, [np.sin(phase+freq*x) for x in xvals]))
 
 curve_dict = {f:sine_curve(0,f) for f in frequencies}
-hmap = hv.HoloMap(curve_dict, kdims='frequency')
+hv.HoloMap(curve_dict, kdims='frequency')
 ```
 
 ```python display
 phases = [0, np.pi/2, np.pi, 3*np.pi/2]
 curve_dict_2D = {(p,f):sine_curve(p,f) for p in phases for f in frequencies}
-hmap = hv.HoloMap(curve_dict_2D, kdims=['phase', 'frequency'])
+hv.HoloMap(curve_dict_2D, kdims=['phase', 'frequency'])
 ```

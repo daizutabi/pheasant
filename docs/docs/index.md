@@ -61,7 +61,7 @@ print(1)
 
 ### Inline code embeded in a Markdown source
 
-**"Inline code"** is a powerful feature of Pheasant. Any python codes surrounded by `{{#` and `}}` are executed and the result remains there. For example, `{{#4*5}}` becomes {{4*5}}. Variables can be assigned in an inline code like this: `{{#name='Pheasant';}}`{{name='Pheasant';}}. Then, `"I'm {{#name}}."` becomes "I'm {{name}}." Note that a semicolon at the end of expression hides the output.
+**"Inline code"** is a powerful feature of Pheasant. Any python codes surrounded by `{{#` and `}}` are executed and the result remains there. For example, `{{#3*5}}` becomes {{3*5}}. Variables can be assigned in an inline code like this: `{{#name='Pheasant'}}`{{name='Pheasant'}}. Then, `"I'm {{#name}}."` becomes "I'm {{name}}." Note that a semicolon at the end of expression hides the output.
 
 ### Visualization
 
@@ -144,8 +144,52 @@ def sine_curve(phase, freq):
 
 frequencies = [0.5, 0.75, 1.0]
 curve_dict = {f: sine_curve(0, f) for f in frequencies}
-holomap = hv.HoloMap(curve_dict, kdims='Frequency')
+hv.HoloMap(curve_dict, kdims='Frequency')
 ```
+
+Finally, Altair plots from official [Example Gallery](https://altair-viz.github.io/gallery/index.html).
+
+```python display
+import altair as alt
+import pandas as pd
+
+source = pd.DataFrame({
+    'a': ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'],
+    'b': [14, 55, 43, 91, 81, 53, 19, 87, 52]
+})
+
+chart = alt.Chart(source).mark_bar().encode(x='a', y='b')
+chart
+```
+
+```python display
+import altair as alt
+from vega_datasets import data
+
+source = data.seattle_weather()
+brush = alt.selection(type='interval', encodings=['x'])
+
+bars = alt.Chart().mark_bar().encode(
+    x='month(date):O',
+    y='mean(precipitation):Q',
+    opacity=alt.condition(brush, alt.OpacityValue(1), alt.OpacityValue(0.7))
+).add_selection(
+    brush
+)
+
+line = alt.Chart().mark_rule(color='firebrick').encode(
+    y='mean(precipitation):Q',
+    size=alt.SizeValue(3)
+).transform_filter(
+    brush
+)
+
+alt.layer(bars, line, data=source)
+```
+
+
+
+
 
 ### Auto numbering of headers, figures, tables, *etc*.
 

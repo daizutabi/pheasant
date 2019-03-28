@@ -5,11 +5,13 @@ IMPORTANT: `display` function is called from jupyter kernel.
 import base64
 import io
 import re
-from typing import Any, Callable, Dict, List
+from typing import Any, Callable, Dict, Iterable, List
 
 from IPython.display import HTML, Latex
 
 
+# The result of repr() is written in output['data']['text/plain']
+# This value is used to determine which module's extra resources are needed later.
 class BokehHTML(HTML):
     def __repr__(self):
         return "bokeh"
@@ -137,6 +139,31 @@ def altair_extra_resources() -> Dict[str, List[str]]:
     from pheasant.jupyter.altair import extra_raw_css, extra_javascript
 
     return {"extra_raw_css": extra_raw_css, "extra_javascript": extra_javascript}
+
+
+EXTRA_MODULES = ["altair", "bokeh", "holoviews"]  # order is important
+
+
+def _extra_resources(module: str) -> Dict[str, List[str]]:
+    module_dict = {
+        "bokeh": bokeh_extra_resources,
+        "holoviews": holoviews_extra_resources,
+        "altair": altair_extra_resources,
+    }
+    return module_dict[module]()
+
+
+def extra_resources(modules: Iterable[str]) -> Dict[str, List[str]]:
+    keys = ["extra_" + x for x in ["css", "javascript", "raw_css", "raw_javascript"]]
+    extra: Dict[str, List[str]] = {key: [] for key in keys}
+    for module in EXTRA_MODULES:  # order is important
+        if module in modules:
+            data = _extra_resources(module)
+            for key in data:
+                for item in data[key]:
+                    if item not in extra[key]:
+                        extra[key].append(item)
+    return extra
 
 
 def extra_html(extra: Dict[str, List[str]]) -> str:

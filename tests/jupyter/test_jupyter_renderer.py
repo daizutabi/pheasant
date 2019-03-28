@@ -20,39 +20,58 @@ def test_format_timedelta():
 
 
 def test_render_inline_option(jupyter):
-    from pheasant.jupyter.renderer import Jupyter
-
-    jupyter = Jupyter()
     jupyter.execute("import pheasant.jupyter.display")
     jupyter.execute("import holoviews as hv")
     jupyter.execute("from bokeh.plotting import figure")
+    jupyter.execute("import altair as alt")
+    jupyter.execute("import pandas as pd")
 
     jupyter.execute("plot = figure(plot_width=250, plot_height=250)")
     output = jupyter.parse("```python inline\nplot\n```\n")
     assert '<div class="display"' in output
-    assert len(jupyter.meta["."]["extra_css"]) == 3
-    assert jupyter.meta["."]["extra_module"] == ["bokeh"]
+    assert "bokeh" in jupyter.meta["."]["extra_module"]
 
     output = jupyter.parse("```python inline\nhv.Curve(([1,2],[3,4]))\n```\n")
     assert '<div class="display"' in output
-    assert len(jupyter.meta["."]["extra_css"]) == 5
-    assert "bokeh" in jupyter.meta["."]["extra_module"] == ["bokeh", "holoviews"]
-    _ = jupyter.parse("```python inline\nhv.Curve(([1,2],[3,4]))\n```\n")
-    assert len(jupyter.meta["."]["extra_css"]) == 5
-    assert "bokeh" in jupyter.meta["."]["extra_module"] == ["bokeh", "holoviews"]
+    assert "holoviews" in jupyter.meta["."]["extra_module"]
+
+    jupyter.execute(
+        (
+            "source = pd.DataFrame({"
+            "'a': ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'],"
+            "'b': [14, 55, 43, 91, 81, 53, 19, 87, 52]})"
+        )
+    )
+
+    output = jupyter.parse(
+        (
+            "```python inline\nalt."
+            "Chart(source).mark_bar().encode(x='a', y='b')\n```\n"
+        )
+    )
+    assert "document.addEventListener" in output
+    assert "altair" in jupyter.meta["."]["extra_module"]
+
+    _ = jupyter.parse("```python inline\nplot\n```\n")
+
+
+def test_render_extra_html(jupyter):
+    extra = jupyter.extra_html
+    assert "bokeh" in extra
+    assert "HoloView" in extra
+    assert "vega" in extra
 
 
 def test_replace_for_display():
     def replace(output):
         return output.replace("pheasant.jupyter.display.", "")
 
-    assert replace_for_display("a=1;") == "a=1"
-    assert replace(replace_for_display("a=1")) == 'a=1\ndisplay(a, output="markdown")'
+    assert replace_for_display("a=1") == "a=1"
     assert replace(replace_for_display("a")) == 'display(a, output="markdown")'
     assert replace(replace_for_display("^a")) == 'display(a, output="html")'
     assert replace(replace_for_display("a")) == 'display(a, output="markdown")'
     assert replace_for_display("for k:\n  a") == "for k:\n  a"
-    output = replace(replace_for_display("b = 1;a = b"))
+    output = replace(replace_for_display("b = 1;a = b;a"))
     assert output == 'b = 1\na = b\ndisplay(a, output="markdown")'
 
 

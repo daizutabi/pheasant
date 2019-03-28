@@ -7,10 +7,8 @@ from pheasant.core.decorator import comment, surround
 from pheasant.core.renderer import Renderer
 from pheasant.jupyter.client import (execute, execution_report,
                                      find_kernel_names)
-from pheasant.jupyter.display import (altair_extra_resources,
-                                      bokeh_extra_resources,
-                                      holoviews_extra_resources,
-                                      select_display_data)
+from pheasant.jupyter.display import (EXTRA_MODULES, extra_html,
+                                      extra_resources, select_display_data)
 
 
 @dataclass
@@ -98,26 +96,16 @@ class Jupyter(Renderer):
         if language not in self.config["kernel_name"]:
             return []
         outputs = execute(code, self.config["kernel_name"][language])
-        self.update_extra_resourse(outputs)
+        self.update_extra_module(outputs)
         select_display_data(outputs)
         return outputs
 
-    def update_extra_resourse(self, outputs: List[dict]) -> None:
-        module_dict = {
-            "bokeh": bokeh_extra_resources,
-            "holoviews": holoviews_extra_resources,
-            "altair": altair_extra_resources,
-        }
-        extra = self.meta.setdefault(self.abs_src_path, {})
-        if not extra:
-            for key in ["css", "javascript", "raw_css", "raw_javascript"]:
-                extra[f"extra_{key}"] = []
-            extra["extra_module"] = []
+    def update_extra_module(self, outputs: List[dict]) -> None:
+        extra = self.meta.setdefault(self.abs_src_path, {"extra_module": set()})
 
-        if len(extra["extra_module"]) == len(module_dict):
+        if len(extra["extra_module"]) == len(EXTRA_MODULES):
             return
 
-        new_modules = []
         for output in outputs:
             if (
                 "data" in output
@@ -125,14 +113,17 @@ class Jupyter(Renderer):
                 and "text/plain" in output["data"]
             ):
                 module = output["data"]["text/plain"]
-                if module in module_dict.keys() and module not in extra["extra_module"]:
-                    new_modules.append(module)
+                if module in EXTRA_MODULES:
+                    extra["extra_module"].add(module)
 
-        for module in new_modules:
-            extra["extra_module"].append(module)
-            resources = module_dict[module]()
-            for key, values in resources.items():
-                extra[key].extend(value for value in values if value not in extra[key])
+    @property
+    def extra_html(self) -> str:
+        extra = self.meta.get(self.abs_src_path, None)
+        if extra is None:
+            return ""
+
+        extra = extra_resources(extra["extra_module"])
+        return extra_html(extra)
 
 
 def replace_for_display(code: str) -> str:
@@ -150,9 +141,6 @@ def replace_for_display(code: str) -> str:
     codes
         Replaced python code list.
     """
-    if code.endswith(";"):
-        return code[:-1]
-
     if code.startswith("^"):
         code = code[1:]
         output = "html"
@@ -163,16 +151,15 @@ def replace_for_display(code: str) -> str:
     codes = code.split("\n")
     if codes[-1].startswith(" "):
         return code
+
     match = re.match(r"(\w+) *?=", codes[-1])
     if match:
-        precode = code + "\n"
-        code = match.group(1)
+        return code
+    if len(codes) == 1:
+        precode = ""
     else:
-        if len(codes) == 1:
-            precode = ""
-        else:
-            codes, code = codes[:-1], codes[-1]
-            precode = "\n".join(codes) + "\n"
+        codes, code = codes[:-1], codes[-1]
+        precode = "\n".join(codes) + "\n"
 
     return f'{precode}pheasant.jupyter.display.display({code}, output="{output}")'
 

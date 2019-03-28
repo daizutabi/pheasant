@@ -5,7 +5,7 @@ import pytest
 from pheasant.jupyter.renderer import Jupyter
 
 
-@pytest.fixture()
+@pytest.fixture(scope="module")
 def jupyter():
     jupyter = Jupyter()
 

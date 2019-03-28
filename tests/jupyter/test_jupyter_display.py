@@ -1,3 +1,4 @@
+import altair as alt
 import holoviews as hv
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -6,9 +7,11 @@ import sympy as sp
 from bokeh.plotting import figure
 from IPython.display import HTML, Latex
 
-from pheasant.jupyter.display import (base64image, bokeh_extra_resources,
-                                      display, holoviews_extra_resources,
-                                      BokehHTML, HoloviewsHTML)
+from pheasant.jupyter.display import (AltairHTML, BokehHTML, HoloviewsHTML,
+                                      altair_extra_resources, base64image,
+                                      bokeh_extra_resources, display,
+                                      extra_resources,
+                                      holoviews_extra_resources)
 
 
 def test_display_matplotlib():
@@ -61,6 +64,38 @@ def test_holoviews_extra_resources():
     assert isinstance(resources["extra_raw_javascript"], list)
 
 
+def test_display_altair():
+    source = pd.DataFrame(
+        {
+            "a": ["A", "B", "C", "D", "E", "F", "G", "H", "I"],
+            "b": [14, 55, 43, 91, 81, 53, 19, 87, 52],
+        }
+    )
+    chart = alt.Chart(source).mark_bar().encode(x="a", y="b")
+    html = display(chart)
+    assert isinstance(html, AltairHTML)
+
+
+def test_altair_extra_resources():
+    resources = altair_extra_resources()
+    assert "extra_css" not in resources
+    assert "extra_raw_css" in resources
+    assert isinstance(resources["extra_raw_css"], list)
+    assert "extra_javascript" in resources
+    assert isinstance(resources["extra_javascript"], list)
+    assert "extra_raw_javascript" not in resources
+
+
+def test_extra_resources():
+    extra = extra_resources(["bokeh", "holoviews", "altair"])
+    extra == bokeh_extra_resources()
+    assert "vega" in extra["extra_javascript"][0]
+    assert len(extra["extra_css"]) == 5
+    assert len(extra["extra_raw_css"]) == 2
+    assert len(extra["extra_javascript"]) == 11
+    assert len(extra["extra_raw_javascript"]) == 2
+
+
 def test_display_sympy():
     x = sp.symbols("x")
     assert isinstance(display(3 * x ** 2), Latex)
@@ -72,6 +107,7 @@ def test_base64image():
 
 
 def test_misc():
-    assert repr(BokehHTML()) == 'bokeh'
-    assert repr(HoloviewsHTML()) == 'holoviews'
+    assert repr(BokehHTML()) == "bokeh"
+    assert repr(HoloviewsHTML()) == "holoviews"
+    assert repr(AltairHTML()) == "altair"
     assert display(1) == 1
