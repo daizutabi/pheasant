@@ -1,11 +1,11 @@
 # Pheasant
 
 [![PyPI version][pypi-image]][pypi-link]
+[![Python versions][pyversions-image]][pyversions-link]
 [![Travis][travis-image]][travis-link]
 [![AppVeyor][appveyor-image]][appveyor-link]
 [![Coverage Status][coveralls-image]][coveralls-link]
 [![Code style: black][black-image]][black-link]
-[![Python versions][pyversions-image]][pyversions-link]
 
 [pypi-image]: https://badge.fury.io/py/pheasant.svg
 [pypi-link]: https://pypi.org/project/pheasant
