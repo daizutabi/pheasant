@@ -48,7 +48,7 @@ You can use the `display` function to get different images at the every evaluati
 
 ~~~copy
 ```python hide
-from pheasant.jupyter.display import display
+from pheasant.renderers.jupyter.display import display
 axes = []
 for k, color in enumerate(['red', 'blue']):
     plt.plot([0, k + 3], color)

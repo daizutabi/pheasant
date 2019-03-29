@@ -3,7 +3,7 @@ import re
 import pytest
 
 from pheasant.core.converter import Converter
-from pheasant.number.renderer import Header
+from pheasant.renderers.number.number import Header
 
 
 def test_converter(jupyter):

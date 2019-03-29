@@ -3,16 +3,18 @@ import os
 import pytest
 
 from pheasant.core.converter import Converter
-from pheasant.jupyter.renderer import Jupyter
-from pheasant.number.renderer import Anchor, Header
+from pheasant.renderers.jupyter.jupyter import Jupyter
+from pheasant.renderers.number.number import Anchor, Header
 
 
 @pytest.fixture(scope="module")
 def jupyter():
     jupyter = Jupyter()
-    directory = os.path.normpath(os.path.join(__file__, "../../jupyter/templates"))
+    directory = os.path.normpath(
+        os.path.join(__file__, "../../renderers/jupyter/templates")
+    )
     jupyter.set_template("fenced_code", directory)
-    jupyter.execute("import pheasant.jupyter.display", "python")
+    jupyter.execute("import pheasant.renderers.jupyter.display", "python")
     return jupyter
 
 
