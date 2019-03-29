@@ -14,8 +14,20 @@ class Renderer(Base):
     renders: Dict[str, Render] = field(default_factory=dict, init=False)
     _parser: Optional[Parser] = field(default=None, init=False)
 
+    def __post_init__(self):
+        super().__post_init__()
+        self.init()
+
     def __post_repr__(self):
         return len(self.renders)
+
+    def init(self) -> None:
+        """Called from __post_init__."""
+        pass
+
+    def reset(self) -> None:
+        """Called per page."""
+        pass
 
     def register(self, pattern: str, render: Render, render_name: str = "") -> None:
         if not render_name:
@@ -35,14 +47,6 @@ class Renderer(Base):
             render = self.renders[render_name]
             parser.register(pattern, render, render_name)
         self._parser = parser
-
-    def setup(self) -> None:
-        """Called once on build."""
-        pass
-
-    def reset(self) -> None:
-        """Called per page."""
-        pass
 
     def set_template(self, names: Union[str, List[str]], directory: str = ".") -> None:
         module = importlib.import_module(self.__module__)

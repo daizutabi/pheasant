@@ -3,6 +3,7 @@ import re
 from dataclasses import dataclass, field
 from typing import Dict, Iterator, List
 
+from pheasant.core.base import format_timedelta
 from pheasant.core.decorator import comment, surround
 from pheasant.core.renderer import Renderer
 from pheasant.jupyter.client import (execute, execution_report,
@@ -16,15 +17,15 @@ class Cell:
     code: str
     context: Dict[str, str]
     template: str
-    valid: bool = True
+    valid: bool = field(default=True, init=False)
     output: str = field(default="", compare=False)
 
 
 class Jupyter(Renderer):
     language: str = "python"
-    abs_src_path: str = "."  # should be set the real path later
-    cursor: int = 0
-    cache: Dict[str, List[Cell]] = field(default_factory=dict)
+    abs_src_path: str = "."
+    cursor: int = field(default=0, init=False)
+    cache: Dict[str, List[Cell]] = field(default_factory=dict, init=False)
 
     FENCED_CODE_PATTERN = (
         r"^(?P<mark>`{3,})(?P<language>\w*) ?(?P<option>.*?)\n"
@@ -33,17 +34,13 @@ class Jupyter(Renderer):
     INLINE_CODE_PATTERN = r"\{\{(?P<code>.+?)\}\}"
     RE_INLINE_CODE_PATTERN = re.compile(INLINE_CODE_PATTERN)
 
-    def __post_init__(self):
-        super().__post_init__()
+    def init(self):
         self.register(Jupyter.FENCED_CODE_PATTERN, self.render_fenced_code)
         self.register(Jupyter.INLINE_CODE_PATTERN, self.render_inline_code)
         self.set_template(["fenced_code", "inline_code"])
         self.config["kernel_name"] = {
             key: values[0] for key, values in find_kernel_names().items()
         }
-        self.reset()
-
-    def setup(self):
         codes = [
             "import pheasant.jupyter.display",
             "import pandas",
@@ -76,7 +73,7 @@ class Jupyter(Renderer):
             context["code"] = code
         else:
             code = code.replace(";", "\n")
-        if self.language == 'python':
+        if self.language == "python":
             code = replace_for_display(code)
         context["language"] = self.language
         yield self.execute_and_render(code, context, "inline_code")
@@ -199,25 +196,3 @@ def format_report():
     report["total"] = format_timedelta(report["total"])
     report["count"] = report["execution_count"]
     return report
-
-
-def format_timedelta(dt) -> str:
-    sec = dt.total_seconds()
-    if sec >= 3600:
-        return f"{sec//3600:.00f}h{sec//60%60:.00f}min{sec%3600%60:.00f}s"
-    elif sec >= 60:
-        return f"{sec//60:.00f}min{sec%60:.00f}s"
-    elif sec >= 10:
-        return f"{sec:0.1f}s"
-    elif sec >= 1:
-        return f"{sec:0.2f}s"
-    elif sec >= 1e-1:
-        return f"{sec*1e3:.00f}ms"
-    elif sec >= 1e-2:
-        return f"{sec*1e3:.01f}ms"
-    elif sec >= 1e-3:
-        return f"{sec*1e3:.02f}ms"
-    elif sec >= 1e-6:
-        return f"{sec*1e6:.00f}us"
-    else:
-        return f"<1us"

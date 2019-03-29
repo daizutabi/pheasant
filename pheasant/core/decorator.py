@@ -1,9 +1,11 @@
+import datetime
 import functools
 import re
 from dataclasses import field
 from typing import Callable, Dict, Union
 
-from pheasant.core.base import Base
+from pheasant.core.base import Base, format_timedelta
+from pheasant.jupyter.client import execution_report
 
 SURROUND_TAG = re.compile(
     r"^([^<]*)<(?P<tag>(span|div))(.*)</(?P=tag)>([^>]*)$", re.DOTALL
@@ -58,5 +60,31 @@ def comment(name):
                 yield from render(self, context, splitter, parser)
 
         return render_
+
+    return deco
+
+
+def monitor(format=True):
+    def deco(func):
+        @functools.wraps(func)
+        def func_(*args, **kwargs):
+            start_kernel = execution_report["total"]
+            start_func = datetime.datetime.now()
+            output = func(*args, **kwargs)
+            end_func = datetime.datetime.now()
+            end_kernel = execution_report["total"]
+
+            timedelta = end_func - start_func
+            if format:
+                timedelta = format_timedelta(timedelta)
+            func_.func_time = timedelta
+
+            timedelta = end_kernel - start_kernel
+            if format:
+                timedelta = format_timedelta(timedelta)
+            func_.kernel_time = timedelta
+            return output
+
+        return func_
 
     return deco

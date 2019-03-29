@@ -8,7 +8,6 @@ from mkdocs.utils import markdown_extensions, string_types
 
 import pheasant
 from pheasant.core.pheasant import Pheasant
-from pheasant.jupyter.client import execution_report
 
 logger = logging.getLogger("mkdocs")
 
@@ -22,6 +21,7 @@ class PheasantPlugin(BasePlugin):
         ("baz", config_options.Type(bool, default=True)),
     )
     converter = Pheasant()
+    logger.info(f"[Pheasant] Converter created.")
 
     def on_config(self, config, **kwargs):
         if self.config:
@@ -31,6 +31,7 @@ class PheasantPlugin(BasePlugin):
             self.config["extra_css"] = config["extra_css"]
             self.config["extra_javascript"] = config["extra_javascript"]
 
+        logger.info(f"[Pheasant] Converter configured.")
         return config
 
     def on_files(self, files, config):
@@ -51,21 +52,20 @@ class PheasantPlugin(BasePlugin):
             else:
                 config["extra_javascript"].insert(0, path)  # pragma: no cover
 
-        config["extra_css"].append(
-            "https://cdn.jsdelivr.net/gh/tonsky/FiraCode@1.206/distr/fira_code.css"
-        )
-        logger.info(f"[Pheasant] extra_css altered: {config['extra_css']}")
-
         return files
 
     def on_nav(self, nav, config, **kwargs):
         def message(msg):
-            logger.debug(f"[Pheasant] {msg}")
+            logger.info(f"[Pheasant] {msg}".replace(config["docs_dir"], ""))
 
         paths = [page.file.abs_src_path for page in nav.pages]
-        logger.info(f"[Pheasant] Converting: Page number = {len(paths)}.")
+        logger.info(f"[Pheasant] Converting {len(paths)} pages.")
         self.converter.convert_from_files(paths, message=message)
-        logger.info(f"[Pheasant] Kernel execution time: {execution_report['total']}")
+        func_time = self.converter.convert_from_files.func_time
+        kernel_time = self.converter.convert_from_files.kernel_time
+        time = f" (total: {func_time}, kernel: {kernel_time})"
+        msg = "Conversion finished:" + " " * 32 + f"{time} "
+        message(msg)
 
         return nav
 
@@ -77,7 +77,7 @@ class PheasantPlugin(BasePlugin):
             [self.converter.pages[page.file.abs_src_path].meta["extra_html"], content]
         )
 
-    def on_post_page(self, output, **kwargs):
+    def on_post_page(self, output, **kwargs):  # This is needed for holoviews.
         return output.replace('.js" defer></script>', '.js"></script>')
 
     def on_serve(self, server, **kwargs):  # pragma: no cover

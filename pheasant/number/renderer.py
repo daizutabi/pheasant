@@ -13,15 +13,14 @@ class Header(Renderer):
     tag_context: Dict[str, Any] = field(default_factory=dict)
     number_list: Dict[str, List[int]] = field(default_factory=dict)
     header_kind: Dict[str, str] = field(default_factory=dict)
-    abs_src_path: str = "."  # should be set the real path later
+    abs_src_path: str = "."
 
     HEADER_PATTERN = r"^(?P<prefix>#+)(?P<kind>\w*?) +(?P<title>.+?)\n"
     TAG_PATTERN = r"\{#(?P<tag>\S+?)#\}"
 
     markdown = Markdown(extensions=["tables"])
 
-    def __post_init__(self):
-        super().__post_init__()
+    def init(self):
         self.register(Header.HEADER_PATTERN, self.render_header)
         self.set_template("header")
         self.config["kind_prefix"] = {}
@@ -30,17 +29,11 @@ class Header(Renderer):
             self.header_kind[kind[:3].lower()] = kind
             self.config["kind_prefix"][kind] = kind[0].upper() + kind[1:]
         self.config["kind"] = list(self.header_kind.values())
-        self.setup()
-
-    def setup(self):
         self.reset()
 
     def reset(self) -> None:
         self.meta["ignored_path"] = set()
         self.meta["ignored_depth"] = 100
-        self.reset_number_list()
-
-    def reset_number_list(self) -> None:
         for kind in self.config["kind"]:
             self.number_list[kind] = [0] * 6
 
@@ -148,20 +141,19 @@ class Anchor(Renderer):
     header: Optional[Header] = field(default=None)
     abs_src_path: str = field(default=".")  # should be set the real path later
 
-    def __post_init__(self):
-        super().__post_init__()
+    def init(self):
         self.register(Header.TAG_PATTERN, self.render_tag)
         self.set_template("anchor")
 
     @comment("tag")
     def render_tag(self, context, splitter, parser) -> Iterator[str]:
-        if self.header is None:
-            raise ValueError("A Header instance has not set yet.")
         tag = context["tag"]
         context = self.resolve(tag)
         yield self.render("anchor", context, reference=True)
 
     def resolve(self, tag: str) -> Dict[str, Any]:
+        if self.header is None:
+            raise ValueError("A Header instance has not set yet.")
         tag_context = self.header.tag_context  # type: ignore
         found = tag in tag_context
         if found:

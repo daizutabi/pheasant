@@ -11,13 +11,12 @@ COMMENT_PATTERN = re.compile(r"^#\s?", re.MULTILINE)
 
 class Comment(Renderer):
     max_line_length: int = 0
-    option: str = ""
+    option: str = field(default="", init=False)
 
     HEADER_PATTERN = r"^(?P<source>#.*?\n)"
     FENCED_CODE_PATTERN = r"^(?P<mark>~{3,}|`{3,}).*?\n(?P=mark)\n"
 
-    def __post_init__(self):
-        super().__post_init__()
+    def init(self):
         self.register(Comment.HEADER_PATTERN, self.render_header)
         self.register(Comment.FENCED_CODE_PATTERN, self.render_fenced_code)
 
@@ -50,10 +49,9 @@ def add_sharp(source: str) -> str:
 
 
 class Script(Renderer):
-    comment: Comment = field(default_factory=Comment)
+    comment: Comment = field(default_factory=Comment, init=False)
 
-    def __post_init__(self):
-        super().__post_init__()
+    def init(self):
         self.register(r"^(?P<source>.+)", self.render_entire)
 
     def render_entire(self, context, splitter, parser) -> Iterator[str]:

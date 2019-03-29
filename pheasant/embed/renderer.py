@@ -15,8 +15,7 @@ class Embed(Renderer):
     )
     INLINE_CODE_PATTERN = r"\{%(?P<source>.+?)%\}"
 
-    def __post_init__(self):
-        super().__post_init__()
+    def init(self):
         self.register(Embed.FENCED_CODE_PATTERN, self.render_fenced_code)
         self.register(Embed.INLINE_CODE_PATTERN, self.render_inline_code)
         self.set_template("fenced_code")

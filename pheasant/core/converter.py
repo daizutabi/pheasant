@@ -4,7 +4,7 @@ from dataclasses import field
 from typing import Any, Dict, Iterable, Iterator, List, Optional, Union
 
 from pheasant.core.base import Base
-from pheasant.core.decorator import Decorator
+from pheasant.core.decorator import monitor
 from pheasant.core.page import Page
 from pheasant.core.parser import Parser
 from pheasant.core.renderer import Renderer
@@ -14,6 +14,10 @@ class Converter(Base):
     parsers: Dict[str, Parser] = field(default_factory=OrderedDict)
     renderers: Dict[str, List[Renderer]] = field(default_factory=dict)
     pages: Dict[str, Page] = field(default_factory=dict)
+
+    def __post_init__(self):
+        super().__post_init__()
+        self.init()
 
     def __post_repr__(self):
         return ", ".join(f"'{name}'" for name in self.parsers)
@@ -38,9 +42,9 @@ class Converter(Base):
             if renderer.name in config:
                 renderer._update("config", config[renderer.name])
 
-    def setup(self):
-        for renderer in self.renderer_iter():
-            renderer.setup()
+    def init(self) -> None:
+        """Called from __post_init__."""
+        pass
 
     def reset(self):
         for renderer in self.renderer_iter():
@@ -51,7 +55,7 @@ class Converter(Base):
         self,
         name: str,
         renderers: Union[Renderer, Iterable[Renderer]],
-        decorator: Optional[Decorator] = None,
+        # decorator: Optional[Decorator] = None,
     ):
         """Register renderer's processes
 
@@ -65,8 +69,6 @@ class Converter(Base):
         if name in self.parsers:
             raise ValueError(f"Duplicated parser name '{name}'")
         parser = Parser(name)  # type: ignore
-        if decorator:
-            parser.decorator = decorator
         if isinstance(renderers, Renderer):
             renderers = [renderers]
         for renderer in renderers:
@@ -99,6 +101,7 @@ class Converter(Base):
 
         return source
 
+    @monitor(format=True)
     def convert_from_file(
         self, path: str, names: Optional[Union[str, Iterable[str]]] = None
     ) -> str:
@@ -114,6 +117,7 @@ class Converter(Base):
         page.output = self.convert(source, names)
         return page.output
 
+    @monitor(format=True)
     def convert_from_output(
         self, path: str, names: Optional[Union[str, Iterable[str]]] = None
     ) -> str:
