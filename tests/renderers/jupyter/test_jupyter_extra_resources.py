@@ -2,7 +2,7 @@ import pytest
 from bokeh.resources import CDN
 
 from pheasant.renderers.jupyter.display import (bokeh_extra_resources,
-                                      holoviews_extra_resources)
+                                                holoviews_extra_resources)
 
 
 @pytest.mark.parametrize(
