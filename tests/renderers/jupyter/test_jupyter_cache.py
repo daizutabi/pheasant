@@ -1,4 +1,4 @@
-from pheasant.jupyter.renderer import Jupyter
+from pheasant.renderers.jupyter.jupyter import Jupyter
 
 
 def test_cache():

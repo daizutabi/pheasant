@@ -27,7 +27,7 @@ docstring 4
 # -
 import pytest
 
-from pheasant.script.renderer import Script
+from pheasant.renderers.script.script import Script
 
 
 @pytest.fixture()

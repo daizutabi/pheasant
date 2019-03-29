@@ -70,7 +70,7 @@ You can check the kernel name and its execution count at the right side of input
 Language and kernel name dictionary can be obtained by `find_kernel_names` function:
 
 ```python
-from pheasant.jupyter.client import find_kernel_names
+from pheasant.renderers.jupyter.client import find_kernel_names
 find_kernel_names()
 ```
 

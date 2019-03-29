@@ -2,7 +2,7 @@ import os
 
 import pytest
 
-from pheasant.jupyter.client import execute
+from pheasant.renderers.jupyter.client import execute
 
 
 @pytest.fixture()

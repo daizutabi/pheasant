@@ -3,7 +3,7 @@ from typing import Pattern
 
 import pytest
 
-from pheasant.jupyter.renderer import Jupyter
+from pheasant.renderers.jupyter.jupyter import Jupyter
 
 
 @pytest.fixture()

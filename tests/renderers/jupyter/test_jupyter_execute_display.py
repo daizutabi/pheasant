@@ -1,6 +1,6 @@
 import pytest
 
-from pheasant.jupyter.client import execute
+from pheasant.renderers.jupyter.client import execute
 
 
 def test_import():
@@ -11,7 +11,7 @@ def test_import():
             "import pandas as pd",
             "import sympy as sp",
             "from bokeh.plotting import figure",
-            "from pheasant.jupyter.display import display",
+            "from pheasant.renderers.jupyter.display import display",
         ]
     )
     assert execute(code) == []

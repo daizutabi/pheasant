@@ -5,7 +5,7 @@ from dataclasses import field
 from typing import Callable, Dict, Union
 
 from pheasant.core.base import Base, format_timedelta
-from pheasant.jupyter.client import execution_report
+from pheasant.renderers.jupyter.client import execution_report
 
 SURROUND_TAG = re.compile(
     r"^([^<]*)<(?P<tag>(span|div))(.*)</(?P=tag)>([^>]*)$", re.DOTALL

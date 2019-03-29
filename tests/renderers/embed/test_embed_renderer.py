@@ -1,6 +1,6 @@
-from pheasant.embed.renderer import (get_language_from_path, inspect,
+from pheasant.renderers.embed.embed import (get_language_from_path, inspect,
                                      resolve_path)
-from pheasant.jupyter.client import get_kernel_name
+from pheasant.renderers.jupyter.client import get_kernel_name
 
 
 def test_renderer(embed):

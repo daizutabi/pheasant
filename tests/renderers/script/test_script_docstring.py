@@ -1,6 +1,6 @@
 import pytest
 
-from pheasant.script.splitter import split
+from pheasant.renderers.script.splitter import split
 
 
 def test_split_docstring():

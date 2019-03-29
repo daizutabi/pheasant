@@ -3,7 +3,7 @@ from typing import Pattern
 
 
 def test_complile_pattern():
-    from pheasant.number.renderer import Header
+    from pheasant.renderers.number.number import Header
 
     assert isinstance(re.compile(Header.HEADER_PATTERN), Pattern)
     assert isinstance(re.compile(Header.TAG_PATTERN), Pattern)
@@ -54,7 +54,7 @@ def test_join(header, source_simple):
 
 
 def test_ignore(header):
-    from pheasant.number.renderer import Header
+    from pheasant.renderers.number.number import Header
 
     header = Header()
     assert header.meta["ignored_depth"] == 100
@@ -98,7 +98,7 @@ def test_get_content(header):
     output = header.parse("#FIG title\n \n \n\n# test\n")
     assert '<div class="content"># <span class="header"' in output
 
-    from pheasant.embed.renderer import Embed
+    from pheasant.renderers.embed.embed import Embed
     embed = Embed()
     embed.parser = header.parser
 

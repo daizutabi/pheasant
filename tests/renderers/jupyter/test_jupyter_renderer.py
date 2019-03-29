@@ -1,6 +1,6 @@
 from datetime import timedelta
 
-from pheasant.jupyter.renderer import format_timedelta, replace_for_display
+from pheasant.renderers.jupyter.jupyter import format_timedelta, replace_for_display
 
 
 def test_format_timedelta():
@@ -20,7 +20,7 @@ def test_format_timedelta():
 
 
 def test_render_inline_option(jupyter):
-    jupyter.execute("import pheasant.jupyter.display")
+    jupyter.execute("import pheasant.renderers.jupyter.display")
     jupyter.execute("import holoviews as hv")
     jupyter.execute("from bokeh.plotting import figure")
     jupyter.execute("import altair as alt")
@@ -64,7 +64,7 @@ def test_render_extra_html(jupyter):
 
 def test_replace_for_display():
     def replace(output):
-        return output.replace("pheasant.jupyter.display.", "")
+        return output.replace("pheasant.renderers.jupyter.display.", "")
 
     assert replace_for_display("a=1") == "a=1"
     assert replace(replace_for_display("a")) == 'display(a, output="markdown")'

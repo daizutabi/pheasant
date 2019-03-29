@@ -5,10 +5,10 @@ from typing import Dict, List
 from pheasant.core.converter import Converter
 from pheasant.core.decorator import Decorator, monitor
 from pheasant.core.page import Page
-from pheasant.embed.renderer import Embed
-from pheasant.jupyter.renderer import Jupyter
-from pheasant.number.renderer import Anchor, Header
-from pheasant.script.renderer import Script
+from pheasant.renderers.embed.embed import Embed
+from pheasant.renderers.jupyter.jupyter import Jupyter
+from pheasant.renderers.number.number import Anchor, Header
+from pheasant.renderers.script.script import Script
 
 
 class Pheasant(Converter):

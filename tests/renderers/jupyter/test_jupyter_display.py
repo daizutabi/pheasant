@@ -7,7 +7,7 @@ import sympy as sp
 from bokeh.plotting import figure
 from IPython.display import HTML, Latex
 
-from pheasant.jupyter.display import (AltairHTML, BokehHTML, HoloviewsHTML,
+from pheasant.renderers.jupyter.display import (AltairHTML, BokehHTML, HoloviewsHTML,
                                       altair_extra_resources, base64image,
                                       bokeh_extra_resources, display,
                                       extra_resources,

@@ -4,7 +4,7 @@ from typing import Dict, Iterator
 
 from pheasant.core.decorator import comment
 from pheasant.core.renderer import Renderer
-from pheasant.jupyter.client import execute, get_kernel_name
+from pheasant.renderers.jupyter.client import execute, get_kernel_name
 
 
 class Embed(Renderer):

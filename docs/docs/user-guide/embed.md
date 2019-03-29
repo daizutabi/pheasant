@@ -41,7 +41,7 @@ You can write to inspect the whole module content:
 A part of the module can be specified as usual.
 
 ```python
-from pheasant.jupyter.renderer import Jupyter
+from pheasant.renderers.jupyter.jupyter import Jupyter
 ```
 
 ~~~copy

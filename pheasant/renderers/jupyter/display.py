@@ -129,14 +129,14 @@ def _split_css_html_assets(css_html: str) -> Dict[str, List[str]]:
 
 
 def altair_to_html(obj, **kwargs) -> HTML:
-    from pheasant.jupyter.altair import to_html
+    from pheasant.renderers.jupyter.altair import to_html
 
     html = to_html(obj)
     return AltairHTML(html)
 
 
 def altair_extra_resources() -> Dict[str, List[str]]:
-    from pheasant.jupyter.altair import extra_raw_css, extra_javascript
+    from pheasant.renderers.jupyter.altair import extra_raw_css, extra_javascript
 
     return {"extra_raw_css": extra_raw_css, "extra_javascript": extra_javascript}
 

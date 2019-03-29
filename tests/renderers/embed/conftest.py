@@ -1,10 +1,10 @@
 import pytest
 import os
 
-from pheasant.embed.renderer import Embed
+from pheasant.renderers.embed.embed import Embed
 from pheasant.core.parser import Parser
-from pheasant.jupyter.renderer import Jupyter
-from pheasant.number.renderer import Header
+from pheasant.renderers.jupyter.jupyter import Jupyter
+from pheasant.renderers.number.number import Header
 
 
 @pytest.fixture()

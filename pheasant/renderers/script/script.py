@@ -3,8 +3,8 @@ from dataclasses import field
 from typing import Iterator
 
 from pheasant.core.renderer import Renderer
-from pheasant.script.formatter import format_source
-from pheasant.script.splitter import DOCSTRING_PATTERN, split
+from pheasant.renderers.script.formatter import format_source
+from pheasant.renderers.script.splitter import DOCSTRING_PATTERN, split
 
 COMMENT_PATTERN = re.compile(r"^#\s?", re.MULTILINE)
 

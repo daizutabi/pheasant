@@ -1,6 +1,6 @@
 import pytest
 
-from pheasant.number.renderer import Anchor, Header
+from pheasant.renderers.number.number import Anchor, Header
 
 
 @pytest.fixture(scope="module")

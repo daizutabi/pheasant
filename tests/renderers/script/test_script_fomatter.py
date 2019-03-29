@@ -1,6 +1,6 @@
 import pytest
 
-from pheasant.script.formatter import format_source
+from pheasant.renderers.script.formatter import format_source
 
 
 @pytest.mark.parametrize(

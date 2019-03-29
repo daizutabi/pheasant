@@ -6,10 +6,11 @@ from typing import Dict, Iterator, List
 from pheasant.core.base import format_timedelta
 from pheasant.core.decorator import comment, surround
 from pheasant.core.renderer import Renderer
-from pheasant.jupyter.client import (execute, execution_report,
-                                     find_kernel_names)
-from pheasant.jupyter.display import (EXTRA_MODULES, extra_html,
-                                      extra_resources, select_display_data)
+from pheasant.renderers.jupyter.client import (execute, execution_report,
+                                               find_kernel_names)
+from pheasant.renderers.jupyter.display import (EXTRA_MODULES, extra_html,
+                                                extra_resources,
+                                                select_display_data)
 
 
 @dataclass
@@ -42,7 +43,7 @@ class Jupyter(Renderer):
             key: values[0] for key, values in find_kernel_names().items()
         }
         codes = [
-            "import pheasant.jupyter.display",
+            "import pheasant.renderers.jupyter.display",
             "import pandas",
             "pandas.options.display.max_colwidth = 0",
         ]
@@ -169,7 +170,8 @@ def replace_for_display(code: str) -> str:
     code_gen = (line for line in lines[node.lineno - 1 :] if not line.startswith("#"))
     code = "\n".join(code_gen)
 
-    return f'{precode}pheasant.jupyter.display.display({code}, output="{output}")'
+    display = "pheasant.renderers.jupyter.display.display"
+    return f'{precode}{display}({code}, output="{output}")'
 
 
 def select_outputs(outputs):
