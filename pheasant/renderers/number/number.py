@@ -41,6 +41,8 @@ class Header(Renderer):
         context = self.resolve(context)
         kind = context["kind"]
         if kind == "header":
+            if context["inline_pattern"]:
+                context["title"] = parser.parse(context["_title"], decorate=False)
             yield self.render("header", context) + "\n\n"
         else:
             rest = ""
@@ -97,6 +99,7 @@ class Header(Renderer):
             "header": header,
             "prefix": prefix,
             "title": title,
+            "_title": context["title"],
             "number_list": number_list,
             "number_string": number_string,
             "inline_pattern": inline_pattern,

@@ -1,4 +1,8 @@
-# Pheasant
+```python hide
+from pheasant import __version__
+```
+
+# Pheasant {{__version__}}
 
 Welcome to Pheasant! In this section, overview and some interesting features of Pheasant are presented.
 

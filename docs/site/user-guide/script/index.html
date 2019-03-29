@@ -151,8 +151,8 @@ def sub(x: int, y: int) -&gt; int:
     &#34;&#34;&#34;Substract `y` from `x`.&#34;&#34;&#34;
     return x - y  # a comment in a code cell.</code></pre>
 <p class="report"><span class="count">[1]</span>
-<span class="start">2019-03-29 12:49:38</span> (<span class="elasped">15.6ms</span>)
-<span class="right"><span class="kernel">python3</span><span class="count"> [39]</span>
+<span class="start">2019-03-29 13:04:16</span> (<span class="elasped">15.7ms</span>)
+<span class="right"><span class="kernel">python3</span><span class="count"> [41]</span>
 </span></p></div></div>
 
 <p>When a comment starts at the begining of a line after a code block, it divides the source into a code cell and a Markdown cell. This Markdown cell will continue until next Python code appears.</p>
@@ -161,16 +161,16 @@ def sub(x: int, y: int) -&gt; int:
     &#34;&#34;&#34;Add `x` and `y`.&#34;&#34;&#34;
     return x + y  # a comment in a code cell.</code></pre>
 <p class="report"><span class="count">[2]</span>
-<span class="start">2019-03-29 12:49:38</span> (<span class="elasped">15.8ms</span>)
-<span class="right"><span class="kernel">python3</span><span class="count"> [40]</span>
+<span class="start">2019-03-29 13:04:16</span> (<span class="elasped">15.5ms</span>)
+<span class="right"><span class="kernel">python3</span><span class="count"> [42]</span>
 </span></p></div></div>
 
 <div class="pheasant-fenced-code"><div class="input"><pre><code class="python">def sub2(x: int, y: int) -&gt; int:
     &#34;&#34;&#34;Substract `y` from `x`.&#34;&#34;&#34;
     return x - y  # a comment in a code cell.</code></pre>
 <p class="report"><span class="count">[3]</span>
-<span class="start">2019-03-29 12:49:38</span> (<span class="elasped">15.6ms</span>)
-<span class="right"><span class="kernel">python3</span><span class="count"> [41]</span>
+<span class="start">2019-03-29 13:04:16</span> (<span class="elasped">15.8ms</span>)
+<span class="right"><span class="kernel">python3</span><span class="count"> [43]</span>
 </span></p></div></div>
 
 <p>By defaults, MkDocs processes Markdown files only for pages. This setting is defined in the MkDocs's utility library: <code>mkdocs.utils.markdown_extensions</code>. Pheasant plugin appends <code>.py</code> to this setting in the Plugin's source:</p>
@@ -187,8 +187,8 @@ markdown_extensions.append(&#34;.py&#34;)</code></pre></div></div>
 <p>becomes:</p>
 <div class="pheasant-fenced-code"><div class="input"><pre><code class="python">print(1)</code></pre>
 <p class="report"><span class="count">[4]</span>
-<span class="start">2019-03-29 12:49:38</span> (<span class="elasped">15.6ms</span>)
-<span class="right"><span class="kernel">python3</span><span class="count"> [42]</span>
+<span class="start">2019-03-29 13:04:16</span> (<span class="elasped">3.97ms</span>)
+<span class="right"><span class="kernel">python3</span><span class="count"> [44]</span>
 </span></p></div><div class="stdout"><pre><code class="text">1</code></pre></div></div>
 
 <p>And,</p>
