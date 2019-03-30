@@ -53,6 +53,7 @@ setup(
             "python-pptx",
             "altair",
             "vega_datasets",
+            "pelican",
         ]
     },
     entry_points={
