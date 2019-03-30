@@ -83,7 +83,7 @@ class Jupyter(Renderer):
         self.cursor += 1
         cell = Cell(code, context, template)
         cache = self.cache.setdefault(self.abs_src_path, [])
-        if len(cache) >= self.cursor:
+        if len(cache) >= self.cursor and "run" not in context["option"]:
             cached = cache[self.cursor - 1]
             if cell == cached:
                 return surround(cached.output, "cached")
