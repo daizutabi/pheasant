@@ -109,12 +109,12 @@ h2, h3, h4, h5 {
   background: transparent;
 }
 
-.pheasant-fenced-code .error {
+/* .pheasant-fenced-code .error {
   position: relative;
   margin: 2px 0px 2px 2em;
   padding: 0px;
   background: transparent;
-}
+} */
 
 .pheasant-fenced-code pre {
   border: 1px solid #ccc;
