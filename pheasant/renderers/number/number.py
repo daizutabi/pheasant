@@ -182,7 +182,7 @@ def normalize_number_list(
 
 
 def number_list_format(number_list: List[int]) -> str:
-    return ".".join([str(x) for x in number_list])
+    return ".".join([str(x) for x in number_list if x])
 
 
 def split_tag(title: str) -> Tuple[str, str]:

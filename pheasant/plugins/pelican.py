@@ -1,8 +1,12 @@
+import re
+
 from markdown import Markdown
 from pelican import signals
 from pelican.readers import MarkdownReader
 
 from pheasant.core.pheasant import Pheasant
+
+HEADER_PATTERN = re.compile(r"<[hH][1-6]")
 
 
 class PheasantReader(MarkdownReader):
@@ -26,6 +30,12 @@ class PheasantReader(MarkdownReader):
             metadata = self._parse_metadata(self._md.Meta)
         else:
             metadata = {}
+
+        match = HEADER_PATTERN.search(content)
+        if match:
+            abstract = content[:match.start()]
+            if abstract.strip():
+                metadata["abstract"] = abstract
         return content, metadata
 
 
