@@ -13,7 +13,6 @@ code {
   font-size: 14px;
   margin: 0px;
   padding: 0px;
-  /* background: #e0e0ff; */
 }
 
 p {
@@ -121,7 +120,7 @@ h2, h3, h4, h5 {
   border: 1px solid #ccc;
   border-radius: 4px;
   margin: 0px;
-  padding: 0px;
+  padding: 4px 6px;
 }
 
 .pheasant-fenced-code .input pre {
@@ -176,7 +175,7 @@ h2, h3, h4, h5 {
   line-height: 1.34;
   font-size: 80%;
   background: transparent;
-  padding: 6px 8px;
+  padding: 0px;
 }
 
 .pheasant-fenced-code div:before {
