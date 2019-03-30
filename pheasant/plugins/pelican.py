@@ -11,9 +11,7 @@ HEADER_PATTERN = re.compile(r"<[hH][1-6]")
 
 class PheasantReader(MarkdownReader):
     enabled = True
-
-    file_extensions = ["md"]
-
+    file_extensions = ["md", "py"]
     converter = Pheasant()
 
     def read(self, source_path):
@@ -33,7 +31,7 @@ class PheasantReader(MarkdownReader):
 
         match = HEADER_PATTERN.search(content)
         if match:
-            abstract = content[:match.start()]
+            abstract = content[: match.start()]
             if abstract.strip():
                 metadata["abstract"] = abstract
         return content, metadata
@@ -41,6 +39,7 @@ class PheasantReader(MarkdownReader):
 
 def add_reader(readers):
     readers.reader_classes["md"] = PheasantReader
+    readers.reader_classes["py"] = PheasantReader
 
 
 def register():

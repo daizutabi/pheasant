@@ -48,9 +48,9 @@ def sub2(x: int, y: int) -> int:
     return x - y  # a comment in a code cell.
 
 
-# By defaults, MkDocs processes Markdown files only for pages. This setting is
-# defined in the MkDocs's utility library: `mkdocs.utils.markdown_extensions`.
-# Pheasant plugin appends `.py` to this setting in the Plugin's source:
+# By defaults, MkDocs processes Markdown files only for pages. This setting is defined
+# in the MkDocs's utility library: `mkdocs.utils.markdown_extensions`. Pheasant plugin
+# appends `.py` to this setting in the Plugin's source:
 # ~~~python
 # from mkdocs.utils import markdown_extensions
 # markdown_extensions.append(".py")
