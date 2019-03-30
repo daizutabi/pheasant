@@ -61,7 +61,13 @@ class Header(Renderer):
                 splitter.send(rest)
 
     def resolve(self, context):
-        kind = self.header_kind[context["kind"][:3].lower()]
+        kind = context["kind"][:3].lower()
+        if kind in self.header_kind:
+            kind = self.header_kind[kind]
+        else:
+            self.header_kind[kind] = kind
+            self.number_list[kind] = [0] * 6
+            self.config["kind_prefix"][kind] = kind
         depth = len(context["prefix"]) - 1
         title = context["title"]
 
@@ -84,6 +90,7 @@ class Header(Renderer):
             self.number_list[kind][depth] += 1
             reset = [0] * (len(self.number_list[kind]) - depth - 1)
             self.number_list[kind][depth + 1 :] = reset
+            # title, number_list = split_number(title, self.number_list[kind])
             number_list = normalize_number_list(self.number_list, kind, depth)
             number_string = number_list_format(number_list)
         else:
