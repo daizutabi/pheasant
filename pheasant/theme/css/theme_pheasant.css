@@ -52,21 +52,21 @@ h2, h3, h4, h5 {
 
 .pheasant-header .figure .content,
 .pheasant-header .table .content,
-.pheasant-header .figure p,
-.pheasant-header .table p {
+.pheasant-header .figure .caption,
+.pheasant-header .table .caption {
   display: table;
   margin: 1px auto 0px auto;
 }
 
-.pheasant-header .figure p,
-.pheasant-header .table p,
-.pheasant-header .file p,
-.pheasant-header .code p {
+.pheasant-header .figure .caption,
+.pheasant-header .table .caption,
+.pheasant-header .file .caption,
+.pheasant-header .code .caption {
   font-size: 95%;
 }
 
-.pheasant-header .file p,
-.pheasant-header .code p {
+.pheasant-header .file .caption,
+.pheasant-header .code .caption {
   margin: 1px auto 0px 2em;
 }
 
