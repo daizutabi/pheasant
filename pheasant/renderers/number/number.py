@@ -122,7 +122,7 @@ def get_content_from_cell(cell, kind, splitter, parser) -> str:
         content = parser.parse(content, decorate=False)
         return Header.markdown.convert(content)
     else:
-        if cell.source.startswith("```") and "option" in cell.context:
+        if cell.source.startswith("```") and kind in "figure table":
             cell.context["option"] += " inline"
         return parser.parse_from_cell(cell, splitter)
 

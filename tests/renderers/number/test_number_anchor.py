@@ -63,7 +63,7 @@ def test_parse_anchor(anchor, source_parsed):
         '## <S C"header"><S C"number">1.3</S> <S C"title">Subsection C</S></S>\n',
         'Text [1](.#tag-a)',
         '<D C"figure"><D C"content" id="tag-b"><D>Content A</D></D>',
-        '<p><S C"prefix">Figure</S> <S C"number">1.1</S>',
+        '<p C"caption"><S C"prefix">Figure</S> <S C"number">1.1</S>',
         '<S C"title">Figure A</S></p></D>\n\n'
     ])
     print(output)
