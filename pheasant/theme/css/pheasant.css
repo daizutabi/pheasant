@@ -59,20 +59,17 @@ h2, h3, h4, h5 {
 
 .pheasant-header .figure .caption,
 .pheasant-header .table .caption,
-.pheasant-header .file .caption,
-.pheasant-header .code .caption {
+.pheasant-header .other .caption {
   font-size: 95%;
 }
 
-.pheasant-header .file .caption,
-.pheasant-header .code .caption {
+.pheasant-header .other .caption {
   margin: 1px auto 0px 2em;
 }
 
 .pheasant-header .figure .prefix,
 .pheasant-header .table .prefix,
-.pheasant-header .file .prefix,
-.pheasant-header .code .prefix {
+.pheasant-header .other .prefix {
   color: #44f;
   font-weight: bold;
   margin-right: 0.2em;
@@ -80,8 +77,7 @@ h2, h3, h4, h5 {
 
 .pheasant-header .figure .number,
 .pheasant-header .table .number,
-.pheasant-header .file .number,
-.pheasant-header .code .number {
+.pheasant-header .other .number {
   color: #44f;
   font-weight: bold;
   margin-right: 0.4em;
@@ -89,8 +85,7 @@ h2, h3, h4, h5 {
 
 .pheasant-header .figure .title,
 .pheasant-header .table .title,
-.pheasant-header .file .title,
-.pheasant-header .code .title {
+.pheasant-header .other .title {
 }
 
 /**************************************************

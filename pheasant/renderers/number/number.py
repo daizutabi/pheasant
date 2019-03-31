@@ -15,7 +15,7 @@ class Header(Renderer):
     header_kind: Dict[str, str] = field(default_factory=dict)
     abs_src_path: str = "."
 
-    HEADER_PATTERN = r"^(?P<prefix>#+)(?P<kind>\w*?) +(?P<title>.+?)\n"
+    HEADER_PATTERN = r"^(?P<prefix>#+)(?P<kind>\w*) *(?P<title>.*?)\n"
     TAG_PATTERN = r"\{#(?P<tag>\S+?)#\}"
 
     markdown = Markdown(extensions=["tables"])
@@ -25,7 +25,7 @@ class Header(Renderer):
         self.set_template("header")
         self.config["kind_prefix"] = {}
         self.header_kind[""] = "header"
-        for kind in ["figure", "table", "code", "file"]:
+        for kind in ["figure", "table"]:
             self.header_kind[kind[:3].lower()] = kind
             self.config["kind_prefix"][kind] = kind[0].upper() + kind[1:]
         self.config["kind"] = list(self.header_kind.values())
@@ -65,9 +65,11 @@ class Header(Renderer):
         if kind in self.header_kind:
             kind = self.header_kind[kind]
         else:
-            self.header_kind[kind] = kind
-            self.number_list[kind] = [0] * 6
-            self.config["kind_prefix"][kind] = kind
+            kind = context["kind"]
+            if kind not in self.config["kind"]:
+                self.config["kind"].append(kind)
+                self.number_list[kind] = [0] * 6
+                self.config["kind_prefix"][kind] = kind
         depth = len(context["prefix"]) - 1
         title = context["title"]
 
@@ -87,10 +89,14 @@ class Header(Renderer):
             numbered = True
 
         if numbered:
-            self.number_list[kind][depth] += 1
-            reset = [0] * (len(self.number_list[kind]) - depth - 1)
-            self.number_list[kind][depth + 1 :] = reset
-            # title, number_list = split_number(title, self.number_list[kind])
+            title, number_list = split_number(title)
+            if number_list:
+                self.number_list[kind] = [0] * 6
+                self.number_list[kind][depth : depth + len(number_list)] = number_list
+            else:
+                self.number_list[kind][depth] += 1
+                reset = [0] * (5 - depth)
+                self.number_list[kind][depth + 1 :] = reset
             number_list = normalize_number_list(self.number_list, kind, depth)
             number_string = number_list_format(number_list)
         else:
@@ -185,7 +191,9 @@ def normalize_number_list(
     if kind == "header":
         return number_list[kind][: depth + 1]
     else:
-        return number_list["header"][: depth + 1] + [number_list[kind][depth]]
+        return number_list["header"][:depth] + [
+            num for num in number_list[kind][depth:] if num
+        ]
 
 
 def number_list_format(number_list: List[int]) -> str:
@@ -237,3 +245,16 @@ def split_inline_pattern(title: str) -> Tuple[str, str]:
         return title, inline_pattern
     else:
         return title, ""
+
+
+def split_number(title: str) -> Tuple[str, List[int]]:
+    if title and "1" <= title[0] <= "9":
+        index = title.find(" ")
+        if index != -1:
+            number, title = title[:index], title[index + 1 :]
+        else:
+            number, title = title, ""
+        number_list = [int(num) for num in number.split(".")]
+    else:
+        number_list = []
+    return title, number_list
