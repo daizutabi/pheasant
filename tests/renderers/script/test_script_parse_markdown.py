@@ -15,7 +15,7 @@ def test_python_parse_source(convert):
     assert convert("# # Title\n\n# ## Section\n") == "# Title\n\n## Section\n"
     assert convert("# # Title\n\n# abc\n# def\n# ghi\n") == "# Title\n\nabc def ghi\n"
     assert convert("# あ\n# い\n# う\n") == "あいう\n"
-    assert convert("# あa\n# い\n# う\n") == "あa いう\n"
+    assert convert("# あa\n# い\n# う\n") == "あaいう\n"
     assert convert("# あa\n# bい\n# う\n") == "あa bいう\n"
 
 

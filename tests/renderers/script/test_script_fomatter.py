@@ -7,8 +7,8 @@ from pheasant.renderers.script.formatter import format_source
     "source, output",
     [
         ("abc\ndef\nghi.\n", "abc def ghi.\n"),
-        ("abc\nあいう\nghi.\n", "abc あいう ghi.\n"),
-        ("abc\nあいう\nえお.\n", "abc あいうえお.\n"),
+        ("abc\nあいう\nghi.\n", "abcあいうghi.\n"),
+        ("abc\nあいう\nえお.\n", "abcあいうえお.\n"),
         ("abか\nあいう\nえお.\n", "abかあいうえお.\n"),
     ],
 )
