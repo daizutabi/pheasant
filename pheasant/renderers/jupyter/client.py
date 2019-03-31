@@ -104,15 +104,22 @@ def execute(
     kernel_client = get_kernel_client(kernel_name)
 
     outputs = []
+    stdout = ""
 
     def output_hook(msg):
+        nonlocal stdout
         output = output_from_msg(msg)
-        if output:
+        if output and output["type"] == "stream" and output["name"] == "stdout":
+            stdout += output["text"]
+        elif output:
             outputs.append(output)
 
     msg = kernel_client.execute_interactive(
         code, allow_stdin=False, output_hook=output_hook
     )
+    if stdout:
+        outputs.insert(0, dict(type="stream", name="stdout", text=stdout.strip()))
+
     create_execution_report(msg)
     return outputs
 
@@ -145,7 +152,7 @@ def output_from_msg(msg) -> Optional[dict]:
     elif msg_type == "display_data":
         return dict(type=msg_type, data=content["data"])
     elif msg_type == "stream":
-        return dict(type=msg_type, name=content["name"], text=content["text"].strip())
+        return dict(type=msg_type, name=content["name"], text=content["text"])
     elif msg_type == "error":
         traceback = [strip_ansi(tr) for tr in content["traceback"]]
         return dict(

@@ -7,7 +7,7 @@ def test_cache():
     assert jupyter.cursor == 0
 
     jupyter.abs_src_path = "test"
-    context = {"a": "a", "b": "b", "language": "python"}
+    context = {"a": "a", "b": "b", "language": "python", "option": ""}
     template = "fenced_code"
     output = jupyter.execute_and_render("1", context, template)
     assert jupyter.cursor == 1

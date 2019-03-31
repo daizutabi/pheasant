@@ -32,12 +32,13 @@ def format_source(source: str, max_line_length: int = 88) -> str:
 
 def wrap(source: str, max_line_length: int) -> Iterator[str]:
     line = join(source)
-    if max_line_length == 0 or len(line) <= max_line_length:
-        yield line
-        return
 
     is_wides = [is_wide(character) for character in line]
     distance = list(accumulate(2 if x else 1 for x in is_wides))
+    if max_line_length == 0 or distance[len(line) - 1] <= max_line_length:
+        yield line
+        return
+
     splittable = [is_splittable(line, index) for index in range(1, len(line))]
 
     begin = end = cursor = 0
