@@ -25,7 +25,7 @@ If the file is too long to display the whole content, you can specify the lines 
 Imported file can be numbered like figures and tables. Use this inline notation:
 
 ~~~copy
-#file {%mkdocs.yml[:8]%}
+#File 1.2 {%mkdocs.yml[:8]%}
 ~~~
 
 ## Python module source

@@ -39,7 +39,7 @@ def wrap(source: str, max_line_length: int) -> Iterator[str]:
         yield line
         return
 
-    splittable = [is_splittable(line, index) for index in range(1, len(line))]
+    splittable = [is_splittable(line, index) for index in range(len(line))]
 
     begin = end = cursor = 0
     while True:
@@ -59,12 +59,15 @@ def is_wide(character: str) -> bool:
 
 
 def is_splittable(line: str, index: int) -> bool:
-    return line[index] == " " or is_wide(line[index - 1]) or is_wide(line[index])
+    if index < len(line) - 1:
+        return line[index] == " " or is_wide(line[index]) or is_wide(line[index + 1])
+    else:
+        return False
 
 
 def join(source: str) -> str:
     def joint(tail: str, head: str) -> str:
-        if is_wide(tail) and is_wide(head):
+        if is_wide(tail) or is_wide(head):
             return ""
         else:
             return " "
