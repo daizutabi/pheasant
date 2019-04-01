@@ -21,7 +21,7 @@ nav:
   - User Guide:
     - Images: user-guide/images.md
     - Embed: user-guide/embed.md
-    - Latex: user-guide/latex.md
+    - Sympy: user-guide/sympy.md
     - Script: user-guide/script.py
   - About:
     - Release Notes: about/release-notes.md
