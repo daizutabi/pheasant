@@ -19,6 +19,10 @@ pheasant, version 2.0.6 from /path/to/pheasant (Python 3.7)
 
 ## Change log
 
+### Version 2.0.10 (2019-04-02)
+
+* Sympy and numbered equation supported.
+
 ### Version 2.0.4 (2019-03-28)
 
 * Altair plot can be embeded.

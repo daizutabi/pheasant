@@ -25,10 +25,10 @@ class Header(Renderer):
         self.set_template("header")
         self.config["kind_prefix"] = {}
         self.header_kind[""] = "header"
-        for kind in ["figure", "table", "equation"]:
+        for kind in ["figure", "table"]:
             self.header_kind[kind[:3].lower()] = kind
             self.config["kind_prefix"][kind] = kind[0].upper() + kind[1:]
-        self.header_kind["eq"] = kind
+        self.header_kind["eq"] = "equation"
         self.config["kind"] = list(self.header_kind.values())
         self.reset()
 
@@ -46,7 +46,12 @@ class Header(Renderer):
                 context["title"] = parser.parse(context["_title"], decorate=False)
             yield self.render("header", context) + "\n\n"
         elif kind == "equation":
-            context["content"] = parser.parse(context["_title"], decorate=False)
+            content = split_tag(context["_title"])[0]
+            context["environment"] = kind
+            if content.startswith("* "):
+                content = content[2:]
+                context["environment"] += "*"
+            context["content"] = parser.parse(content, decorate=False)
             yield self.render("header", context) + "\n\n"
         else:
             rest = ""
@@ -108,7 +113,7 @@ class Header(Renderer):
             number_string = ""
 
         header = context["prefix"] if kind == "header" else ""
-        prefix = self.config["kind_prefix"][kind] if kind != "header" else ""
+        prefix = self.config["kind_prefix"].get(kind, "")
         title, tag = split_tag(title)
         title, inline_pattern = split_inline_pattern(title)
         context = {
@@ -176,16 +181,14 @@ class Anchor(Renderer):
             raise ValueError("A Header instance has not set yet.")
         tag_context = self.header.tag_context  # type: ignore
         found = tag in tag_context
+        context = {"found": found, "tag": tag}
         if found:
-            context = tag_context[tag]
-            context["found"] = True
-            relpath = os.path.relpath(
+            context.update(tag_context[tag])
+            relpath = os.path.relpath(  # type: ignore
                 context["abs_src_path"], os.path.dirname(self.abs_src_path)
             )
             relpath = relpath.replace("\\", "/")
             context["ref"] = "#".join([relpath, tag])
-        else:
-            context = {"found": False, "tag": tag}
         return context
 
 

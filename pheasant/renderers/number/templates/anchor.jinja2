@@ -1,5 +1,9 @@
 {%- if found -%}
+  {%- if kind == 'equation' -%}
+   {{ "\\eqref{" + tag + "}" }}
+  {%- else -%}
    [{{ number_string }}]({{ ref }})
+  {%- endif -%}
 {%- else -%}
    <span style="color: red;">Unknown tag: '{{ tag }}'</span>
 {%- endif -%}

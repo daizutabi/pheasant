@@ -10,8 +10,6 @@ theme: readthedocs
 
 extra_css:
     - https://cdn.jsdelivr.net/gh/tonsky/FiraCode@1.206/distr/fira_code.css
-extra_javascript:
-    - https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML
 
 plugins:
   - pheasant:

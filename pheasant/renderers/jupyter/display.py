@@ -27,6 +27,11 @@ class AltairHTML(HTML):
         return "altair"
 
 
+class SympyLatex(Latex):
+    def __repr__(self):
+        return "sympy"
+
+
 def matplotlib_to_base64(obj, output: str = "markdown") -> str:
     """Convert a Matplotlib's figure into base64 string."""
 
@@ -66,7 +71,20 @@ def sympy_to_latex(obj, **kwargs) -> Latex:
     """Convert a Sympy's object into latex string."""
     import sympy
 
-    return Latex(sympy.latex(obj))
+    return SympyLatex(sympy.latex(obj))
+
+
+def sympy_extra_resources() -> Dict[str, List[str]]:
+    js = "".join(
+        [
+            '<script type="text/x-mathjax-config">MathJax.Hub.Config({\n',
+            'TeX: { equationNumbers: { autoNumber: "AMS" } } });</script>\n',
+            '<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/'
+            '2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>\n',
+        ]
+    )
+
+    return {"extra_raw_javascript": [js]}
 
 
 def bokeh_to_html(obj, **kwargs) -> HTML:
@@ -141,7 +159,7 @@ def altair_extra_resources() -> Dict[str, List[str]]:
     return {"extra_raw_css": extra_raw_css, "extra_javascript": extra_javascript}
 
 
-EXTRA_MODULES = ["altair", "bokeh", "holoviews"]  # order is important
+EXTRA_MODULES = ["altair", "bokeh", "holoviews", "sympy"]  # order is important
 
 
 def _extra_resources(module: str) -> Dict[str, List[str]]:
@@ -149,6 +167,7 @@ def _extra_resources(module: str) -> Dict[str, List[str]]:
         "bokeh": bokeh_extra_resources,
         "holoviews": holoviews_extra_resources,
         "altair": altair_extra_resources,
+        "sympy": sympy_extra_resources,
     }
     return module_dict[module]()
 

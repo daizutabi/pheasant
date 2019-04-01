@@ -27,11 +27,44 @@ On the other hand, in an inline code, a Sympy object just returns a latex string
 $${{x**2+x+1}}$$
 ~~~
 
-~~~copy
-* You can concatenate Sympy objects to make a expression in a form you want:
+* You can concatenate Sympy objects and/or normal latex source in the same line to make a expression form you want:
 
-$${{x**2}} - {{x}} + {{x}}$$
+~~~copy
+$${{x**2}} - {{x}} + {{x}} + \frac1y$$
 ~~~
+
+Here, $-{{x}}+{{x}}$ does not cancel out automatically.
+
+## Numbering
+
+Pheasant uses MathJax's [Automatic Equation Numbering](http://docs.mathjax.org/en/latest/tex.html#automatic-equation-numbering). Use the custom header syntax like the figure and table. You can add a tag for link.
+
+~~~
+#Eq f(x) = {{x**2}} {##eq-a#}
+~~~
+
+#Eq f(x) = {{x**2}} {#eq-a#}
+
+Using starred form, the equation won’t be numbered.
+
+~~~copy
+#Eq* f(x) = {{x**2}}
+~~~
+
+~~~
+As usual, you can refer to equation: See Eq. {##eq-a#}
+~~~
+
+As usual, you can refer to equation: See Eq. {#eq-a#}
+
+Also, you can use native latex syntax. From MathJax document:
+
+~~~copy
+In equation \eqref{eq:sample}, we find the value of an interesting integral:
+
+#Eq \int_0^\infty \frac{x^3}{e^x-1}\,dx = \frac{\pi^4}{15} \label{eq:sample}
+~~~
+
 
 ## Matrix
 
@@ -43,12 +76,12 @@ b = np.array([1000, 2000, 3000, 4000])
 sympy.Matrix(xw + np.ones((3, 1), int) @ b.reshape((1, -1)))
 ```
 
+<!-- break -->
 ```python
 from pheasant.renderers.jupyter.sympy import sympy_matrix
 sympy_matrix('y', 2, 3)
 ```
 
-<!-- break -->
 ```python debug
 Y
 ```

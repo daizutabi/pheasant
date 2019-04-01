@@ -17,6 +17,8 @@
 {%- endblock -%}
 
 {%- block equation -%}
-<p>{% autoescape false %}$${{ content }}$${% endautoescape %}
-{% if number_string %}<span class="number">({{ number_string }})</span>{% endif %}</p>
+<p>
+{% autoescape false %}{{ "\\begin{" + environment + "}\n" + content }}
+{% if tag %}{{ "\\label{" + tag + "}\n" }}{% endif %}{{ "\\end{" + environment +"}\n" }}{% endautoescape %}
+</p>
 {%- endblock -%}

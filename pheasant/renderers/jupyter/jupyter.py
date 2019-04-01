@@ -128,7 +128,7 @@ class Jupyter(Renderer):
         for output in outputs:
             if (
                 "data" in output
-                and "text/html" in output["data"]
+                and ("text/html" in output["data"] or "text/latex" in output["data"])
                 and "text/plain" in output["data"]
             ):
                 module = output["data"]["text/plain"]
