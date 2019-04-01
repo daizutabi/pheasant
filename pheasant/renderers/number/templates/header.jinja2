@@ -15,3 +15,8 @@
 {% if title %}<span class="title">{{ title }}</span>{% endif %}</p>
 <div class="content">{% autoescape false %}{{ content }}{% endautoescape %}</div>
 {%- endblock -%}
+
+{%- block equation -%}
+<p>{% autoescape false %}$${{ content }}$${% endautoescape %}
+{% if number_string %}<span class="number">({{ number_string }})</span>{% endif %}</p>
+{%- endblock -%}

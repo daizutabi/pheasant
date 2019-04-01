@@ -1,6 +1,7 @@
 from datetime import timedelta
 
-from pheasant.renderers.jupyter.jupyter import format_timedelta, replace_for_display
+from pheasant.renderers.jupyter.jupyter import (format_timedelta,
+                                                replace_for_display)
 
 
 def test_format_timedelta():
@@ -75,3 +76,20 @@ def test_replace_for_display():
 
 def test_render_no_kernel(jupyter):
     assert jupyter.execute("a", language="abc") == []
+
+
+def test_render_without_language(jupyter):
+    output = jupyter.parse("```\n2*3\n```\n")
+    assert '<code class="python">6</code></pre></div>' in output
+
+
+def test_render_debug_option(jupyter):
+    output = jupyter.parse("```python debug\n2*3\n```\n")
+    assert 'class="python">pheasant.renderers.jupyter.display.display(2*3' in output
+    assert "[{&#39;type&#39;: &#39;execute_result&#39;, &#39;data&#39;" in output
+
+
+def test_render_latex(jupyter):
+    jupyter.execute("import sympy")
+    output = jupyter.parse("```python\nx=sympy.symbols('x')\nx**2\n```\n")
+    assert "$$x^{2}$$" in output

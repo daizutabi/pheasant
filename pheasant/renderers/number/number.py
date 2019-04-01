@@ -25,9 +25,10 @@ class Header(Renderer):
         self.set_template("header")
         self.config["kind_prefix"] = {}
         self.header_kind[""] = "header"
-        for kind in ["figure", "table"]:
+        for kind in ["figure", "table", "equation"]:
             self.header_kind[kind[:3].lower()] = kind
             self.config["kind_prefix"][kind] = kind[0].upper() + kind[1:]
+        self.header_kind["eq"] = kind
         self.config["kind"] = list(self.header_kind.values())
         self.reset()
 
@@ -43,6 +44,9 @@ class Header(Renderer):
         if kind == "header":
             if context["inline_pattern"]:
                 context["title"] = parser.parse(context["_title"], decorate=False)
+            yield self.render("header", context) + "\n\n"
+        elif kind == "equation":
+            context["content"] = parser.parse(context["_title"], decorate=False)
             yield self.render("header", context) + "\n\n"
         else:
             rest = ""

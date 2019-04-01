@@ -1,6 +1,8 @@
 import re
 from typing import Pattern
 
+from pheasant.renderers.number.number import split_number
+
 
 def test_complile_pattern():
     from pheasant.renderers.number.number import Header
@@ -15,6 +17,8 @@ def test_renderer(header):
     assert header.config["header_template"] is not None
     assert header.header_kind == {
         "": "header",
+        "eq": "equation",
+        "equ": "equation",
         "fig": "figure",
         "tab": "table",
     }
@@ -88,6 +92,22 @@ def test_inline_code(header):
     assert '<div class="content">{{2*3}}</div>' in output
 
 
+def test_header_with_number(header):
+    output = header.parse("#FIG 1.2.3 title\nabc\n\n")
+    assert '<span class="number">1.2.3</span>' in output
+
+
+def test_header_equation(header):
+    output = header.parse("#eq 1\n")
+    assert '<div class="equation"><p>$$1$$\n<span class="number">(1)' in output
+
+
+def test_header_unknown_kind(header):
+    output = header.parse("#abc title\nabc\n\n")
+    assert "abc" in header.config["kind"]
+    assert 'class="prefix">abc</span> <span class="number">1<' in output
+
+
 def test_get_content(header):
     output = header.parse("#FIG title\n \n \n\nabc\n\ndef\n")
     assert '<div class="content"><p>abc</p></div>' in output
@@ -97,9 +117,15 @@ def test_get_content(header):
     assert '<div class="content"># <span class="header"' in output
 
     from pheasant.renderers.embed.embed import Embed
+
     embed = Embed()
     embed.parser = header.parser
 
     source = "#fig title\n~~~\na\n\nb\n~~~\n \n\ntest\n"
     output = header.parse(source)
     assert '<div class="content"><p>a</p>\n<p>b</p></div>' in output
+
+
+def test_split_number():
+    assert split_number("1.2.3") == ("", [1, 2, 3])
+    assert split_number("1.2.3 ABC") == ("ABC", [1, 2, 3])

@@ -1,9 +1,11 @@
 {%- if kind == 'header' -%}
   {{ header }} <span class="header"{% if tag %} id="{{ tag }}"{% endif %}>{%- block header -%}{%- endblock -%}</span>
 {%- else -%}
-  <div class="{% if kind in ['figure', 'table'] %}{{ kind }}{% else %}other{% endif %}"{% if tag %} id="{{ tag }}"{% endif %}>
+  <div class="{% if kind in ['figure', 'table', 'equation'] %}{{ kind }}{% else %}other{% endif %}"{% if tag %} id="{{ tag }}"{% endif %}>
   {%- if kind == 'figure' -%}
     {%- block figure -%}{%- endblock -%}
+  {%- elif kind == 'equation' -%}
+    {%- block equation -%}{%- endblock -%}
   {%- else -%}
     {%- block other -%}{%- endblock -%}
   {%- endif -%}
