@@ -28,7 +28,7 @@ $${{x**2+x+1}}$$
 ~~~
 
 ~~~copy
-* You can concat Sympy objects to make a expression in a form you want:
+* You can concatenate Sympy objects to make a expression in a form you want:
 
 $${{x**2}} - {{x}} + {{x}}$$
 ~~~
