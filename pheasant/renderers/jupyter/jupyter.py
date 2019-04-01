@@ -73,20 +73,20 @@ class Jupyter(Renderer):
 
     @comment("code")
     def render_inline_code(self, context, splitter, parser) -> Iterator[str]:
-        code = context["code"]
         context["option"] = self.option
-        if "fenced-code" not in context["option"]:
+        context["language"] = self.language
+        code = context["code"]
+        if "fenced-code" not in self.option:
             code = code.replace(";", "\n")
         if self.language == "python":
             code = replace_for_display(code)
-        context["language"] = self.language
         yield self.execute_and_render(code, context, "inline_code")
 
     def execute_and_render(self, code, context, template) -> str:
         self.cursor += 1
         cell = Cell(code, context, template)
         cache = self.cache.setdefault(self.abs_src_path, [])
-        if len(cache) >= self.cursor and "run" not in context.get("option", ""):
+        if len(cache) >= self.cursor and "run" not in context["option"]:
             cached = cache[self.cursor - 1]
             if cell == cached:
                 return surround(cached.output, "cached")
