@@ -192,7 +192,7 @@ CONVERTERS: Dict[str, Callable] = {
 def display(obj: Any, **kwargs: Any) -> Any:
     if hasattr(obj, "__module__"):
         module = obj.__module__.split(".")[0]
-        converter = CONVERTERS.get(module, lambda obj: obj)
+        converter = CONVERTERS.get(module, lambda obj, **kwargs: obj)
         return converter(obj, **kwargs)
     else:
         return obj

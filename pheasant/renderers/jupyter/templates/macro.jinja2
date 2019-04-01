@@ -1,10 +1,10 @@
-{%- macro output_display(output) -%}
-  {%- if output.type == 'display_data' or 'text/html' in output.data or 'text/latex' in output.data -%}
+{%- macro output_display(output, inline) -%}
+  {%- if output.type == 'display_data' or 'text/html' in output.data or 'text/latex' in output.data and not inline-%}
   {{ "\n\n" }}<div class="display"><div class="content">
     {%- for type in output.data -%}
       {%- if type == 'text/html' -%}
         {%- autoescape false -%}{{ output.data[type] }}{%- endautoescape -%}
-      {%- elif type == 'text/latex' -%}
+      {%- elif type == 'text/latex'-%}
         {%- autoescape false -%}{{ output.data[type] }}{%- endautoescape -%}
       {%- elif type == 'image/png' -%}
           <p><img alt="{{ type }}" src="data:{{ type }};base64,{{ output.data[type] }}"/></p>

@@ -24,6 +24,7 @@ class Cell:
 
 class Jupyter(Renderer):
     language: str = "python"
+    option: str = ""
     abs_src_path: str = "."
     cursor: int = field(default=0, init=False)
     cache: Dict[str, List[Cell]] = field(default_factory=dict, init=False)
@@ -60,19 +61,21 @@ class Jupyter(Renderer):
             self.language = context["language"]
         code = context["code"]
         if "inline" in context["option"]:
-            splitter.send("{{```" + code + "}}")  # with fenced code mark
+            self.option = context["option"] + " fenced-code"
+            splitter.send("{{" + code + "}}")
+            self.option = ""
             return
         if self.language == "python" and "text" not in context["option"]:
             code = replace_for_display(code)
+        if "debug" in context["option"]:
+            context["code"] = code
         yield "\n" + self.execute_and_render(code, context, "fenced_code") + "\n\n"
 
     @comment("code")
     def render_inline_code(self, context, splitter, parser) -> Iterator[str]:
         code = context["code"]
-        if code.startswith("```"):  # no semicolon replace if code came from fenced code
-            code = code[3:]
-            context["code"] = code
-        else:
+        context["option"] = self.option
+        if "fenced-code" not in context["option"]:
             code = code.replace(";", "\n")
         if self.language == "python":
             code = replace_for_display(code)
@@ -91,8 +94,14 @@ class Jupyter(Renderer):
         outputs = self.execute(code, context["language"])
         report = format_report()
         report["cursor"] = self.cursor
-        if template == "inline_code":
+
+        if "debug" in context["option"]:
+            outputs = [{"type": "execute_result", "data": {"text/plain": outputs}}]
+        elif template == "inline_code":
             outputs = select_outputs(outputs)
+        else:
+            latex_display_format(outputs)
+
         cell.output = self.render(template, context, outputs=outputs, report=report)
         if len(cache) == self.cursor - 1:
             cache.append(cell)
@@ -174,7 +183,7 @@ def replace_for_display(code: str) -> str:
     return f'{precode}{display}({code}, output="{output}")'
 
 
-def select_outputs(outputs):
+def select_outputs(outputs: List):
     for output in outputs:
         if "data" in output and "text/plain" in output["data"]:
             text = output["data"]["text/plain"]
@@ -187,6 +196,13 @@ def select_outputs(outputs):
             outputs = [output for output in outputs if output["type"] == "display_data"]
             break
     return outputs
+
+
+def latex_display_format(outputs: List) -> None:
+    for output in outputs:
+        if "data" in output and "text/latex" in output["data"]:
+            text = output["data"]["text/latex"]
+            output["data"]["text/latex"] = f"$${text}$$"
 
 
 def format_report():

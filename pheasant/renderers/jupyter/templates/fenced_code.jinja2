@@ -16,5 +16,5 @@
         <div class="output"><pre><code class="text">{{ output.data['text/plain'] }}</code></pre></div>
     {%- endif -%}
   {%- endfor -%}
-  {%- for output in outputs -%}{{ output_display(output) }}{%- endfor -%}
+  {%- for output in outputs -%}{{ output_display(output, false) }}{%- endfor -%}
 {%- endif -%}
