@@ -196,7 +196,7 @@ h2, h3, h4, h5 {
   color: #bb9;
 }
 .pheasant-fenced-code .stderr:before {
-  content: "Stderr:";
+  /* content: "Stderr:"; */
   color: #fdd;
 }
 .pheasant-fenced-code .output:before {

@@ -70,9 +70,15 @@ class PheasantPlugin(BasePlugin):
         return nav
 
     def on_page_read_source(self, source, page, **kwargs):
-        return self.converter.pages[page.file.abs_src_path].output
+        try:
+            return self.converter.pages[page.file.abs_src_path].output
+        except KeyError:
+            return "XXX"
 
     def on_page_content(self, content, page, **kwargs):
+        if page.file.abs_src_path not in self.converter.pages:
+            return content
+
         return "\n".join(
             [self.converter.pages[page.file.abs_src_path].meta["extra_html"], content]
         )
