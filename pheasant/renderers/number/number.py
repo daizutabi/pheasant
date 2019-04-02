@@ -1,3 +1,4 @@
+"""Automatic numbering renderer."""
 import os
 import re
 from dataclasses import field
