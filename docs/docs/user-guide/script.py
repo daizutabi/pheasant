@@ -1,11 +1,10 @@
 # # Standalone Script
 # Using Atom's [Hydorgen](https://nteract.gitbooks.io/hydrogen/) package, you can
 # execute any Python script codes in a Markdown source. So you can edit your Markdown
-# verifying its execution and outputs. But unfortunately (as long as I know), the
-# entire Markdown source cannot be executed all at once as a standalone script and
-# cannot be ran by Python interpreter. Pheasant connects between a pure Python script
-# and a Markdown source for MkDocs. Actually, this page is written by a pure Python
-# code.
+# verifying its execution and outputs. But unfortunately (as long as I know), the entire
+# Markdown source cannot be executed all at once as a standalone script and cannot be
+# ran by Python interpreter. Pheasant connects between a pure Python script and a
+# Markdown source for MkDocs. Actually, this page is written by a pure Python code.
 # ## How to
 # A basic idea is that Markdown cells and code cells generally appear alternately. We
 # can write a Markdown cell with a successive comment lines. In order to be recognized
@@ -33,8 +32,8 @@ def sub(x: int, y: int) -> int:
 # Despite of a Markdown cell, you may want to devide successive codes into separate
 # cells. This can be done by putting a special marker between codes to tell Pheasant
 # your intention. The marker is `# -` [sharp-space-minus] at the begining of lines. In
-# this way you can divide the above two functions into separate cells (regardless of
-# its usefullness.)
+# this way you can divide the above two functions into separate cells (regardless of its
+# usefullness.)
 
 
 def add2(x: int, y: int) -> int:

@@ -46,10 +46,12 @@ def wrap(source: str, max_line_length: int) -> Iterator[str]:
         if splittable[cursor]:
             end = cursor
         cursor += 1
-        if cursor == len(line) - 1:
+        if cursor == len(line):
             yield line[begin:].strip()
             break
         elif distance[cursor] - distance[begin] >= max_line_length and begin != end:
+            if line[cursor] == ' ':
+                end = cursor
             yield line[begin : end + 1].strip()
             begin = end = end + 1
 
