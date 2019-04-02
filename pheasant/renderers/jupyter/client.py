@@ -104,21 +104,15 @@ def execute(
     kernel_client = get_kernel_client(kernel_name)
 
     outputs = []
-    stdout = ""
 
     def output_hook(msg):
-        nonlocal stdout
         output = output_from_msg(msg)
-        if output and output["type"] == "stream" and output["name"] == "stdout":
-            stdout += output["text"]
-        elif output:
+        if output:
             outputs.append(output)
 
     msg = kernel_client.execute_interactive(
         code, allow_stdin=False, output_hook=output_hook
     )
-    if stdout:
-        outputs.insert(0, dict(type="stream", name="stdout", text=stdout.strip()))
 
     create_execution_report(msg)
     return outputs

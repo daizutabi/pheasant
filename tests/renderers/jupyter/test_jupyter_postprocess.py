@@ -23,7 +23,7 @@ def test_select_display_data_text():
 
     outputs = execute("print(1)")
     select_display_data(outputs)
-    assert outputs == [{"type": "stream", "name": "stdout", "text": "1"}]
+    assert outputs == [{"type": "stream", "name": "stdout", "text": "1\n"}]
 
     outputs = execute("1/0")
     select_display_data(outputs)
@@ -39,7 +39,7 @@ def test_select_display_data_text_with_display():
 
     outputs = execute("display(print(1))")
     select_display_data(outputs)
-    assert outputs == [{"type": "stream", "name": "stdout", "text": "1"}]
+    assert outputs == [{"type": "stream", "name": "stdout", "text": "1\n"}]
 
     outputs = execute("display(1/0)")
     select_display_data(outputs)
