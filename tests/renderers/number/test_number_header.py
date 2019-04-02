@@ -128,3 +128,5 @@ def test_get_content(header):
 def test_split_number():
     assert split_number("1.2.3") == ("", [1, 2, 3])
     assert split_number("1.2.3 ABC") == ("ABC", [1, 2, 3])
+    assert split_number("1 ABC") == ("1 ABC", [])
+    assert split_number("1. ABC") == ("ABC", [1])

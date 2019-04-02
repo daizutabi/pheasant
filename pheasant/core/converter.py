@@ -108,7 +108,7 @@ class Converter(Base):
         with io.open(path, "r", encoding="utf-8-sig", errors="strict") as f:
             source = f.read()
 
-        break_str = "<!-- break -->"
+        break_str = "<!--break-->"
         if break_str in source:
             source = source.split(break_str)[0]
 

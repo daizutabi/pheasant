@@ -208,6 +208,9 @@ def number_list_format(number_list: List[int]) -> str:
     return ".".join([str(x) for x in number_list if x])
 
 
+RE_TAG_PATTERN = re.compile(Header.TAG_PATTERN)
+
+
 def split_tag(title: str) -> Tuple[str, str]:
     """Split a tag from `title`. Return (title, tag).
 
@@ -227,11 +230,14 @@ def split_tag(title: str) -> Tuple[str, str]:
     >>> split_tag('text')
     ('text', '')
     """
-    match = re.search(Header.TAG_PATTERN, title)
+    match = RE_TAG_PATTERN.search(title)
     if match:
         return title.replace(match.group(), "").strip(), match.group(1)
     else:
         return title, ""
+
+
+RE_INLINE_PATTERN = re.compile(r"\{.+\}")
 
 
 def split_inline_pattern(title: str) -> Tuple[str, str]:
@@ -246,7 +252,7 @@ def split_inline_pattern(title: str) -> Tuple[str, str]:
     -------
     (title, inline pattern)
     """
-    match = re.search(r"\{.+\}", title)
+    match = RE_INLINE_PATTERN.search(title)
     if match:
         inline_pattern = match.group()
         title = title.replace(inline_pattern, "").strip()
@@ -255,11 +261,16 @@ def split_inline_pattern(title: str) -> Tuple[str, str]:
         return title, ""
 
 
+RE_NUMBER_PATTERN = re.compile(r"[0-9]+\.")
+
+
 def split_number(title: str) -> Tuple[str, List[int]]:
-    if title and "1" <= title[0] <= "9":
+    if RE_NUMBER_PATTERN.match(title):
         index = title.find(" ")
         if index != -1:
             number, title = title[:index], title[index + 1 :]
+            if number.endswith("."):
+                number = number[:-1]
         else:
             number, title = title, ""
         number_list = [int(num) for num in number.split(".")]
