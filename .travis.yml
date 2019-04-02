@@ -10,8 +10,8 @@ install:
   - pip install pycodestyle pyflakes mypy
   - pip install pytest-cov coveralls
   - pip install -e .[develop]
-  - npm install -g ijavascript
-  - ijsinstall
+  # - npm install -g ijavascript
+  # - ijsinstall
 
 before_script:
   - pycodestyle pheasant
