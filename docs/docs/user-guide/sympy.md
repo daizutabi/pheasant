@@ -1,6 +1,6 @@
-# Sympy
+# SymPy
 
-First, import the Sympy package.
+First, import the SymPy package.
 
 ```python
 import sympy
@@ -8,14 +8,14 @@ import sympy
 
 ## Basic usage
 
-Sympy symbols or expressions in a fenced code block are automatically rendered in display mode:
+SymPy symbols or expressions in a fenced code block are automatically rendered in display mode:
 
 ```python
 x = sympy.Symbol('x')
 x**5
 ```
 
-On the other hand, in an inline code, a Sympy object just returns a latex string like this `{{#x**2}}` = {{x**2}}. This is intentional behavior. You can choose inline mode or display mode. Furthermore, you can form an expression you want.
+On the other hand, in an inline code, a SymPy object just returns a latex string like this `{{#x**2}}` = {{x**2}}. This is intentional behavior. You can choose inline mode or display mode. Furthermore, you can form an expression you want.
 
 ~~~copy
 * This is an inline code example: ${{x**2+x+1}}$
@@ -27,7 +27,7 @@ On the other hand, in an inline code, a Sympy object just returns a latex string
 $${{x**2+x+1}}$$
 ~~~
 
-* You can concatenate Sympy objects and/or normal latex source in the same line to make a expression form you want:
+* You can concatenate SymPy objects and/or normal latex source in the same line to make a expression form you want:
 
 ~~~copy
 $${{x**2}} - {{x}} + {{x}} + \frac1y$$

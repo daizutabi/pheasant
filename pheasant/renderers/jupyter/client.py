@@ -86,8 +86,8 @@ def get_kernel_client(kernel_name: str):
     logger.info(f'Creating kernel client for "{kernel_name}".')
     kernel_client = kernel_manager.client()
     kernel_client.start_channels()
-    # while not kernel_client.is_complete('print("OK")'):
-    #     pass
+    while not kernel_client.is_complete('print("OK")'):
+        pass
     logger.info(f'Kernel client for "{kernel_name}" ready.')
     kernel_clients[kernel_name] = kernel_client
     return kernel_client
