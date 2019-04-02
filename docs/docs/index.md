@@ -205,7 +205,7 @@ Header   | # (title)
 Figure   | #Figure (title), #Fig (title)
 Table    | #Table (title), #Tab (title)
 Equation | #Eq (equation), #Eq* (equation)
-<other>  | #<other> (title)
+[other]  | #[other] (title)
 
 In the above Markdown source, `{##<tag>#}` is an ID tag for hyperlink described below. Off course, you can use any code to create a figure.
 
