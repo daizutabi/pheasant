@@ -63,7 +63,7 @@ print(1)
 
 Other language can be used if the kernel has been installed. For example,
 
-~~~copy
+~~~
 ```javascript
 console.log("Hello Javascript")
 ```
