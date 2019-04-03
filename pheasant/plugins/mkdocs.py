@@ -58,7 +58,18 @@ class PheasantPlugin(BasePlugin):
         def message(msg):
             logger.info(f"[Pheasant] {msg}".replace(config["docs_dir"], ""))
 
-        paths = [page.file.abs_src_path for page in nav.pages]
+        skipped = any(page.title.endswith("*") for page in nav.pages)
+        if skipped:
+            paths = []
+            for page in nav.pages:
+                if not page.title.endswith("*"):
+                    message(f"Skip conversion: {page.file.abs_src_path}.")
+                else:
+                    page.title = page.title[:-1]
+                    paths.append(page.file.abs_src_path)
+        else:
+            paths = [page.file.abs_src_path for page in nav.pages]
+
         logger.info(f"[Pheasant] Converting {len(paths)} pages.")
         self.converter.convert_from_files(paths, message=message)
         func_time = self.converter.convert_from_files.func_time

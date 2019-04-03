@@ -12,5 +12,7 @@ plugins:
   - pheasant:
 
 nav:
-  - Home: index.md
-  - Script: conftest.py
+  - Home*: index.md
+  - Script*: conftest.py
+  - Section:
+    - Dummy: dummy.md

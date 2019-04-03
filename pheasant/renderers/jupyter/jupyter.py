@@ -60,6 +60,11 @@ class Jupyter(Renderer):
         else:
             self.language = context["language"]
         code = context["code"]
+        if code.startswith("# option:"):
+            index = code.index("\n")
+            context["option"] += " " + code[9:index]
+            code = code[index + 1 :]
+            context["code"] = code
         if "inline" in context["option"]:
             self.option = context["option"] + " fenced-code"
             splitter.send("{{" + code + "}}")

@@ -14,10 +14,14 @@ You can determine your currently installed version using `pheasant --version`:
 
 ~~~
 $ pheasant --version
-pheasant, version 2.0.12 from /path/to/pheasant (Python 3.7)
+pheasant, version 2.0.13 from /path/to/pheasant (Python 3.7)
 ~~~
 
 ## Change log
+
+### Version 2.0.13 (2019-04-04)
+
+* Page selection if page titles end with `*` (MkDocs Plugin).
 
 ### Version 2.0.11 (2019-04-03)
 

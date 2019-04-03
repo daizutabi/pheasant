@@ -10,7 +10,7 @@
   {%- for output in outputs if output.type != 'display_data' -%}
     {%- if output.type == 'error' -%}
         <div class="error"><pre><code class="text">{{ output.ename }}: {{ output.evalue }}</code></pre></div>
-    {%- elif output.type == 'stream' -%}
+    {%- elif output.type == 'stream' and 'nostd' not in option -%}
         <div class="{{ output.name }}"><pre><code class="text">{{ output.text }}</code></pre></div>
     {%- elif 'text/plain' in output.data -%}
         <div class="output"><pre><code class="text">{{ output.data['text/plain'] }}</code></pre></div>

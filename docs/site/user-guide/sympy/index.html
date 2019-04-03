@@ -149,7 +149,7 @@ TeX: { equationNumbers: { autoNumber: "AMS" } } });</script>
 <p>First, import the SymPy package.</p>
 <div class="pheasant-fenced-code"><div class="input"><pre><code class="python">import sympy</code></pre>
 <p class="report"><span class="count">[1]</span>
-<span class="start">2019-04-03 06:39:10</span> (<span class="elasped">354ms</span>)
+<span class="start">2019-04-04 08:07:13</span> (<span class="elasped">352ms</span>)
 <span class="right"><span class="kernel">python3</span><span class="count"> [41]</span>
 </span></p></div></div>
 
@@ -158,7 +158,7 @@ TeX: { equationNumbers: { autoNumber: "AMS" } } });</script>
 <div class="pheasant-fenced-code"><div class="input"><pre><code class="python">x = sympy.Symbol(&#39;x&#39;)
 x**5</code></pre>
 <p class="report"><span class="count">[2]</span>
-<span class="start">2019-04-03 06:39:11</span> (<span class="elasped">7.05ms</span>)
+<span class="start">2019-04-04 08:07:14</span> (<span class="elasped">6.97ms</span>)
 <span class="right"><span class="kernel">python3</span><span class="count"> [42]</span>
 </span></p></div>
 
@@ -236,11 +236,90 @@ xw = np.array([[11, 12, 13, 14], [21, 22, 23, 24], [31, 32, 33, 34]])
 b = np.array([1000, 2000, 3000, 4000])
 sympy.Matrix(xw + np.ones((3, 1), int) @ b.reshape((1, -1)))</code></pre>
 <p class="report"><span class="count">[13]</span>
-<span class="start">2019-04-03 06:39:11</span> (<span class="elasped">9.58ms</span>)
+<span class="start">2019-04-04 08:07:14</span> (<span class="elasped">8.45ms</span>)
 <span class="right"><span class="kernel">python3</span><span class="count"> [53]</span>
 </span></p></div>
 
 <div class="display"><div class="content">$$\left[\begin{matrix}1011 & 2012 & 3013 & 4014\\1021 & 2022 & 3023 & 4024\\1031 & 2032 & 3033 & 4034\end{matrix}\right]$$</div></div></div>
+
+<!-- break -->
+
+<div class="pheasant-fenced-code"><div class="input"><pre><code class="python">from pheasant.renderers.jupyter.sympy import sympy_matrix
+sympy_matrix(&#39;y&#39;, 2, 3)</code></pre>
+<p class="report"><span class="count">[14]</span>
+<span class="start">2019-04-04 08:07:14</span> (<span class="elasped">149ms</span>)
+<span class="right"><span class="kernel">python3</span><span class="count"> [54]</span>
+</span></p></div><div class="error"><pre><code class="text">ImportError: cannot import name &#39;sympy_matrix&#39; from &#39;pheasant.renderers.jupyter.sympy&#39; (c:\users\daizu\documents\github\pheasant\pheasant\renderers\jupyter\sympy.py)</code></pre></div></div>
+
+<div class="pheasant-fenced-code"><div class="input"><pre><code class="python">pheasant.renderers.jupyter.display.display(Y, output=&#34;markdown&#34;)</code></pre>
+<p class="report"><span class="count">[15]</span>
+<span class="start">2019-04-04 08:07:14</span> (<span class="elasped">122ms</span>)
+<span class="right"><span class="option"> (debug) </span><span class="kernel">python3</span><span class="count"> [55]</span>
+</span></p></div><div class="output"><pre><code class="text">[{&#39;type&#39;: &#39;error&#39;, &#39;ename&#39;: &#39;NameError&#39;, &#39;evalue&#39;: &#34;name &#39;Y&#39; is not defined&#34;, &#39;traceback&#39;: [&#39;---------------------------------------------------------------------------&#39;, &#39;NameError                                 Traceback (most recent call last)&#39;, &#39;&lt;ipython-input-55-ba22f6fb623d&gt; in &lt;module&gt;\n----&gt; 1 pheasant.renderers.jupyter.display.display(Y, output=&#34;markdown&#34;)\n&#39;, &#34;NameError: name &#39;Y&#39; is not defined&#34;]}]</code></pre></div></div>
+
+<div>
+<div class="MathJax_Preview">&lt;span class="pheasant-inline-code"&gt;&lt;span class="error"&gt;NameError: name &#39;Y&#39; is not defined&lt;/span&gt;&lt;/span&gt;</div>
+<script type="math/tex; mode=display"><span class="pheasant-inline-code"><span class="error">NameError: name &#39;Y&#39; is not defined</span></span></script>
+</div>
+<div class="pheasant-fenced-code"><div class="input"><pre><code class="python">from pheasant.core.array import Matrix, Vector, partial, ones
+N, n, m = 3, 2, 4
+Y = Matrix(&#39;y&#39;, N, m)
+X = Matrix(&#39;x&#39;, N, n)
+W = Matrix(&#39;w&#39;, n, m)
+B = Vector(&#39;b&#39;, m)</code></pre>
+<p class="report"><span class="count">[17]</span>
+<span class="start">2019-04-04 08:07:14</span> (<span class="elasped">111ms</span>)
+<span class="right"><span class="kernel">python3</span><span class="count"> [57]</span>
+</span></p></div><div class="error"><pre><code class="text">ModuleNotFoundError: No module named &#39;pheasant.core.array&#39;</code></pre></div></div>
+
+<div class="pheasant-fenced-code"><div class="input"><pre><code class="python">pheasant.renderers.jupyter.display.display(Y, output=&#34;markdown&#34;)</code></pre>
+<p class="report"><span class="count">[18]</span>
+<span class="start">2019-04-04 08:07:14</span> (<span class="elasped">115ms</span>)
+<span class="right"><span class="option"> (debug) </span><span class="kernel">python3</span><span class="count"> [58]</span>
+</span></p></div><div class="output"><pre><code class="text">[{&#39;type&#39;: &#39;error&#39;, &#39;ename&#39;: &#39;NameError&#39;, &#39;evalue&#39;: &#34;name &#39;Y&#39; is not defined&#34;, &#39;traceback&#39;: [&#39;---------------------------------------------------------------------------&#39;, &#39;NameError                                 Traceback (most recent call last)&#39;, &#39;&lt;ipython-input-58-ba22f6fb623d&gt; in &lt;module&gt;\n----&gt; 1 pheasant.renderers.jupyter.display.display(Y, output=&#34;markdown&#34;)\n&#39;, &#34;NameError: name &#39;Y&#39; is not defined&#34;]}]</code></pre></div></div>
+
+<div class="pheasant-fenced-code"><div class="source"><pre><code class="markdown">$$
+{{Y}}={{X}}\cdot{{W}} \\ + {{ones(N, 1)}}\cdot{{B}}
+$$</code></pre></div></div>
+
+<div>
+<div class="MathJax_Preview">
+&lt;span class="pheasant-inline-code"&gt;&lt;span class="error"&gt;NameError: name &#39;Y&#39; is not defined&lt;/span&gt;&lt;/span&gt;=&lt;span class="pheasant-inline-code"&gt;&lt;span class="error"&gt;NameError: name &#39;X&#39; is not defined&lt;/span&gt;&lt;/span&gt;\cdot&lt;span class="pheasant-inline-code"&gt;&lt;span class="error"&gt;NameError: name &#39;W&#39; is not defined&lt;/span&gt;&lt;/span&gt; \\ + &lt;span class="pheasant-inline-code"&gt;&lt;span class="error"&gt;NameError: name &#39;ones&#39; is not defined&lt;/span&gt;&lt;/span&gt;\cdot&lt;span class="pheasant-inline-code"&gt;&lt;span class="error"&gt;NameError: name &#39;B&#39; is not defined&lt;/span&gt;&lt;/span&gt;
+</div>
+<script type="math/tex; mode=display">
+<span class="pheasant-inline-code"><span class="error">NameError: name &#39;Y&#39; is not defined</span></span>=<span class="pheasant-inline-code"><span class="error">NameError: name &#39;X&#39; is not defined</span></span>\cdot<span class="pheasant-inline-code"><span class="error">NameError: name &#39;W&#39; is not defined</span></span> \\ + <span class="pheasant-inline-code"><span class="error">NameError: name &#39;ones&#39; is not defined</span></span>\cdot<span class="pheasant-inline-code"><span class="error">NameError: name &#39;B&#39; is not defined</span></span>
+</script>
+</div>
+<div class="pheasant-fenced-code"><div class="input"><pre><code class="python">import sympy as sp
+import numpy as np
+sp.init_printing()
+
+xw = np.array([[11, 12, 13, 14], [21, 22, 23, 24], [31, 32, 33, 34]])
+b = np.array([1000, 2000, 3000, 4000])
+sp.Matrix(xw + np.ones((3, 1), int) @ b.reshape((1, -1)))</code></pre>
+<p class="report"><span class="count">[24]</span>
+<span class="start">2019-04-04 08:07:15</span> (<span class="elasped">1.82s</span>)
+<span class="right"><span class="option"> (text) </span><span class="kernel">python3</span><span class="count"> [64]</span>
+</span></p></div>
+
+<div class="display"><div class="content">$$$$\left[\begin{matrix}1011 & 2012 & 3013 & 4014\\1021 & 2022 & 3023 & 4024\\1031 & 2032 & 3033 & 4034\end{matrix}\right]$$$$</div></div></div>
+
+<div class="pheasant-fenced-code"><div class="input"><pre><code class="python">sp.Matrix(xw + b)</code></pre>
+<p class="report"><span class="count">[25]</span>
+<span class="start">2019-04-04 08:07:17</span> (<span class="elasped">6.07ms</span>)
+<span class="right"><span class="kernel">python3</span><span class="count"> [65]</span>
+</span></p></div>
+
+<div class="display"><div class="content">$$\left[\begin{matrix}1011 & 2012 & 3013 & 4014\\1021 & 2022 & 3023 & 4024\\1031 & 2032 & 3033 & 4034\end{matrix}\right]$$</div></div></div>
+
+<div class="pheasant-fenced-code"><div class="input"><pre><code class="python">x = sp.Symbol(&#39;x&#39;)
+x ** 3</code></pre>
+<p class="report"><span class="count">[26]</span>
+<span class="start">2019-04-04 08:07:17</span> (<span class="elasped">995ms</span>)
+<span class="right"><span class="option"> (text) </span><span class="kernel">python3</span><span class="count"> [66]</span>
+</span></p></div>
+
+<div class="display"><div class="content">$$$$x^{3}$$$$</div></div></div>
               
             </div>
           </div>

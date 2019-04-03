@@ -1,6 +1,6 @@
 import os
 from dataclasses import field
-from typing import Dict, List
+from typing import Dict, Iterable, List
 
 from pheasant.core.converter import Converter
 from pheasant.core.decorator import Decorator, monitor
@@ -30,7 +30,8 @@ class Pheasant(Converter):
         self.decorator.register("surround", [self.header, self.jupyter, self.embed])
 
     @monitor(format=True)
-    def convert_from_files(self, paths: List[str], message=None) -> List[str]:
+    def convert_from_files(self, paths: Iterable[str], message=None) -> List[str]:
+        paths = list(paths)
         common = os.path.commonpath(paths)
         if message:
             message("Converter resetting...")

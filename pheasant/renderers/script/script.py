@@ -57,6 +57,8 @@ class Script(Renderer):
     def render_entire(self, context, splitter, parser) -> Iterator[str]:
         for kind, source in split(context["source"]):
             if kind == "Comment":
+                if source.startswith("# __break") and self.comment.max_line_length == 0:
+                    return
                 output = self.comment.parse(delete_sharp(source))
                 if self.comment.max_line_length > 0:
                     output = add_sharp(output)
