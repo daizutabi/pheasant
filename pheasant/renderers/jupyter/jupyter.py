@@ -174,7 +174,7 @@ def replace_for_display(code: str) -> str:
         output = "markdown"
 
     try:
-        node = ast.parse(code).body[-1]
+        node = ast.parse(code).body[-1]  # type: ignore
     except SyntaxError:
         return code
 

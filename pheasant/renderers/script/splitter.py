@@ -53,7 +53,7 @@ def split_line(source: str) -> Iterator[Tuple[str, str]]:
         source = source + "\n"
     lines = source.split("\n")[:-1]
     node = ast.parse(source)
-    names = [ast_name(obj) for obj in node.body]
+    names = [ast_name(obj) for obj in node.body]  # type: ignore
 
     def iterator(kind, lines):
         for line in lines:
@@ -63,7 +63,7 @@ def split_line(source: str) -> Iterator[Tuple[str, str]]:
         yield from iterator("Comment", lines)
         return
 
-    begin_linenos = [obj.lineno - 1 for obj in node.body]  # 0-indexed
+    begin_linenos = [obj.lineno - 1 for obj in node.body]  # type: ignore
     linenos = begin_linenos[1:] + [len(lines)]
     end_linenos = [find_end_line(lines, lineno) for lineno in linenos]
 

@@ -76,7 +76,8 @@ b = np.array([1000, 2000, 3000, 4000])
 sympy.Matrix(xw + np.ones((3, 1), int) @ b.reshape((1, -1)))
 ```
 
-<!-- break -->
+<!--break-->
+
 ```python
 from pheasant.renderers.jupyter.sympy import sympy_matrix
 sympy_matrix('y', 2, 3)
