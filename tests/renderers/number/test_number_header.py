@@ -99,6 +99,8 @@ def test_header_with_number(header):
 def test_header_equation(header):
     output = header.parse("#eq 1\n")
     assert '<div class="equation"><p>\n\\begin{equation}\n1' in output
+    output = header.parse("#eq* 1\n")
+    assert '<div class="equation"><p>\n\\begin{equation*}\n1' in output
 
 
 def test_header_unknown_kind(header):

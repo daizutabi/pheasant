@@ -15,4 +15,5 @@ nav:
   - Home*: index.md
   - Script*: conftest.py
   - Section:
-    - Dummy: dummy.md
+    - Dummy: section/dummy.md
+    - Include*: section/index.md

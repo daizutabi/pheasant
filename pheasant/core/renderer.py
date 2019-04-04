@@ -55,7 +55,11 @@ class Renderer(Base):
         env = Environment(loader=loader, autoescape=select_autoescape(["jinja2"]))
         names = [names] if isinstance(names, str) else names
         for name in names:
-            template = f"{name}.jinja2" if "." not in name else name
+            if ":" in name:
+                name, path = name.split(":")
+            else:
+                path = name
+            template = f"{path}.jinja2" if "." not in name else name
             self.config[f"{name}_template"] = env.get_template(template)
 
     def render(self, name: str, context: Dict[str, Any], **kwargs) -> str:

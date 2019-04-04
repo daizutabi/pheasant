@@ -17,7 +17,7 @@ install:
   - activate test-environment
   - conda install -q -c pyviz/label/dev pyviz
   - conda install -q pytest-cov
-  - pip install -e .[develop]
+  - pip install -e .
 
 test_script:
-  - pytest
+  - python setup.py test

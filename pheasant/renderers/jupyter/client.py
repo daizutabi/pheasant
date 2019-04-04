@@ -3,7 +3,7 @@ import atexit
 import datetime
 import logging
 import re
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, Iterator, List, Optional
 
 import jupyter_client
 from jupyter_client.manager import KernelManager
@@ -86,8 +86,6 @@ def get_kernel_client(kernel_name: str):
     logger.info(f'Creating kernel client for "{kernel_name}".')
     kernel_client = kernel_manager.client()
     kernel_client.start_channels()
-    while not kernel_client.is_complete('print("OK")'):
-        pass
     logger.info(f'Kernel client for "{kernel_name}" ready.')
     kernel_clients[kernel_name] = kernel_client
     return kernel_client
@@ -115,7 +113,7 @@ def execute(
     )
 
     create_execution_report(msg)
-    return outputs
+    return list(stream_joiner(outputs))
 
 
 def create_execution_report(msg) -> None:
@@ -173,3 +171,34 @@ def strip_ansi(source: str) -> str:
         Source to remove the ANSI from
     """
     return _ANSI_RE.sub("", source)
+
+
+def stream_joiner(outputs: List[Dict]) -> Iterator[Dict]:
+    name = text = ""
+    for output in outputs:
+        if output["type"] != "stream":
+            if text:
+                yield stream_cell(name, text)
+                name = text = ""
+            yield output
+            continue
+        if not name:
+            name = output["name"]
+        if output["name"] == name:
+            text += output["text"]
+        else:
+            yield stream_cell(name, text)
+            name, text = output["name"], output["text"]
+    if text:
+        yield stream_cell(name, text)
+
+
+def stream_cell(name: str, text: str) -> Dict[str, str]:
+    if "\x08" in text:
+        text, source = "", text
+        for char in source:
+            if char == "\x08":
+                text = text[:-1]
+            else:
+                text += char
+    return {"type": "stream", "name": name, "text": text}

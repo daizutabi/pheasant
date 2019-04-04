@@ -41,6 +41,7 @@ class Pheasant(Converter):
         for path in paths:
             self.jupyter.abs_src_path = path  # for cache and extra resources
             self.header.abs_src_path = path  # for hypyerlink between pages
+            self.embed.abs_src_path = path  # for embedding contents
             self.jupyter.reset()  # Reset cell number for every page
             if path.endswith(".py"):
                 self.convert_from_file(path, ["script", "main"])

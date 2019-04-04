@@ -1,13 +1,18 @@
 import os
+import re
 from ast import literal_eval
-from typing import Dict, Iterator
+from dataclasses import field
+from typing import Any, Dict, Iterator
 
 from pheasant.core.decorator import comment
 from pheasant.core.renderer import Renderer
 from pheasant.renderers.jupyter.client import execute, get_kernel_name
+from pheasant.renderers.script.script import Script
 
 
 class Embed(Renderer):
+    script: Script = field(default_factory=Script, init=False)
+    abs_src_path: str = "."
 
     FENCED_CODE_PATTERN = (
         r"^(?P<mark>~{3,})(?P<language>\w*) ?(?P<option>.*?)\n"
@@ -35,35 +40,59 @@ class Embed(Renderer):
 
     @comment("source")
     def render_inline_code(self, context, splitter, parser) -> Iterator[str]:
-        context.update(resolve_path(context["source"].strip()))
+        context.update(resolve_path(context["source"].strip(), self.abs_src_path))
         language = context["language"]
-        path = context["path"]
-        if context["mode"] == "file":
+        if context["mode"] in ["file", "include"]:
+            path = context["abs_src_path"]
             if not os.path.exists(path):
                 yield f'<p style="font-color:red">File not found: {path}</p>\n'
                 return
             source = read_file(path)
+            if context["mode"] == "include":
+                if path.endswith(".py"):
+                    source = self.script.parse(source)
+                source = shift_header(source, context.get("shift", 0))
         else:
-            language = 'python'
+            language = "python"
             kernel_name = get_kernel_name(language)
             if kernel_name is None:  # pragma: no cover
                 yield f'<p style="font-color:red">Kernel not found for {language}</p>\n'
                 return
-            source = inspect(path, kernel_name)
+            source = inspect(context["path"], kernel_name)
         source = select_source(source, context.get("lineno"))
-        source = f"~~~{language}\n{source}\n~~~\n"
+        if context["mode"] in ["file", "inspect"]:
+            source = f"~~~{language}\n{source}\n~~~\n"
+        else:
+            source += "\n"
         splitter.send(source)
 
 
-def resolve_path(path: str) -> Dict[str, str]:
-    context = {"mode": "file"}
+def resolve_path(path: str, root: str) -> Dict[str, str]:
+    context: Dict[str, Any] = {}
     if "?" in path and not path.startswith("?"):
         path, context["language"] = path.split("?")
     if "[" in path and ":" in path and path.endswith("]"):
         path, context["lineno"] = path[:-1].split("[")
+
     if path.startswith("?"):
         context["mode"] = "inspect"
         path = path[1:]
+    elif path.startswith("="):
+        context["mode"] = "file"
+        path = path[1:]
+    else:
+        context = {"mode": "include"}
+        match = re.match(r"(.+)>(\d)$", path)
+        if match:
+            path, context["shift"] = match.group(1), int(match.group(2))
+
+    if path.startswith("/"):
+        path = path[1:]
+        context["abs_src_path"] = os.path.abspath(path)
+    else:
+        directory = os.path.dirname(root)
+        context["abs_src_path"] = os.path.abspath(os.path.join(directory, path))
+
     context["path"] = path
     if "language" not in context:
         context["language"] = get_language_from_path(context["path"])
@@ -106,34 +135,11 @@ def select_source(source: str, lineno: str) -> str:
     return "\n".join(lines[begin:end])
 
 
-# CODE LATER
-# def resolve_path(path: str) -> Tuple[str, str, str]:
-#     if "?" in path:
-#         path, language = path.split("?")
-#     else:
-#         language = ""
-#
-#     match = re.match(r"(.+)<(.+?)>", path)
-#     if match:
-#         path, slice_str = match.groups()
-#     else:
-#         slice_str = ""
-#
-#     if not language:
-#         ext = os.path.splitext(path)[-1]
-#         if ext:
-#             ext = ext[1:]  # Remove a dot.
-#         language_exts = {"python": ["py"], "yaml": ["yml"]}  # FIXME
-#         for language, exts in language_exts.items():
-#             if ext in exts:
-#                 break
-#         else:
-#             language = ""
-#
-#     if slice_str:
-#         sources = source.split("\n")
-#         if ":" not in slice_str:
-#             source = sources[int(slice_str)]
-#         else:
-#             slice_list = [int(s) if s else None for s in slice_str.split(":")]
-#             source = "\n".join(sources[slice(*slice_list)])
+HEADER_PATTERN = re.compile(r"^(#.*?\n)", re.MULTILINE)
+
+
+def shift_header(source, shift):
+    if shift < 1:
+        return source
+    prefix = "#" * shift
+    return HEADER_PATTERN.sub(prefix + r"\1", source)

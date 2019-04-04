@@ -93,3 +93,14 @@ def test_render_latex(jupyter):
     jupyter.execute("import sympy")
     output = jupyter.parse("```python\nx=sympy.symbols('x')\nx**2\n```\n")
     assert "$$x^{2}$$" in output
+
+
+def test_render_fenced_code_with_option():
+    from pheasant.renderers.jupyter.jupyter import Jupyter
+    jupyter = Jupyter()
+    output = jupyter.parse("```python abc\n# option: def ghi\nprint(1)\n```\n")
+    assert 'class="python">print(1)' in output
+    assert '(abc def ghi)' in output
+
+    output = jupyter.parse("```python\n# option: def ghi\nprint(1)\n```\n")
+    assert '(def ghi)' in output

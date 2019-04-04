@@ -1,4 +1,5 @@
 import io
+import re
 from collections import OrderedDict
 from dataclasses import field
 from typing import Any, Dict, Iterable, Iterator, List, Optional, Union
@@ -8,6 +9,8 @@ from pheasant.core.decorator import monitor
 from pheasant.core.page import Page
 from pheasant.core.parser import Parser
 from pheasant.core.renderer import Renderer
+
+COMMENT_PATTERN = re.compile("<!--.*?-->", re.DOTALL)
 
 
 class Converter(Base):
@@ -111,6 +114,7 @@ class Converter(Base):
         break_str = "<!--break-->"
         if break_str in source:
             source = source.split(break_str)[0]
+        source = COMMENT_PATTERN.sub("", source)
 
         page = Page(path, source=source)  # type: ignore
         self.pages[path] = page

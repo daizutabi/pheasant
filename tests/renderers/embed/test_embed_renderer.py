@@ -1,3 +1,5 @@
+import os
+
 from pheasant.renderers.embed.embed import (get_language_from_path, inspect,
                                             resolve_path)
 from pheasant.renderers.jupyter.client import get_kernel_name
@@ -7,11 +9,11 @@ def test_renderer(embed):
     output = embed.parse("~~~\nabc\n~~~\n")
     assert 'class="markdown"' in output
 
-    output = embed.parse("{%setup.py[1:2]%}")
+    output = embed.parse("{%=setup.py[1:2]%}")
     assert '<code class="python">import re</code>' in output
 
     output = embed.parse("{%abc.py%}")
-    assert output == '<p style="font-color:red">File not found: abc.py</p>\n'
+    assert '<p style="font-color:red">File not found:' in output
 
 
 def test_get_languate_from_path():
@@ -26,4 +28,10 @@ def test_inspect_error():
 
 
 def test_resolve_path():
-    assert resolve_path("abc.py?python")["language"] == "python"
+    assert resolve_path("abc.py?python", ".")["language"] == "python"
+    path = "C:\\a\\b\\abc.py"
+    assert resolve_path("abc.py", "C:\\a\\b\\c.md")["abs_src_path"] == path
+    path = os.path.normpath(os.path.join(__file__, "../../../../abc.py"))
+    assert resolve_path("abc.py", ".")["abs_src_path"] == path
+    assert resolve_path("/abc.py", ".")["abs_src_path"] == path
+    assert resolve_path("/abc.py", "C:\\a\\b\\c.md")["abs_src_path"] == path

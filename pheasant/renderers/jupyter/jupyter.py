@@ -62,7 +62,11 @@ class Jupyter(Renderer):
         code = context["code"]
         if code.startswith("# option:"):
             index = code.index("\n")
-            context["option"] += " " + code[9:index]
+            option = code[9:index].strip()
+            if context["option"]:
+                context["option"] = " ".join([context["option"], option])
+            else:
+                context["option"] = option
             code = code[index + 1 :]
             context["code"] = code
         if "inline" in context["option"]:
