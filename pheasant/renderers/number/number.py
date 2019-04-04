@@ -16,7 +16,7 @@ class Header(Renderer):
     header_kind: Dict[str, str] = field(default_factory=dict)
     abs_src_path: str = "."
 
-    HEADER_PATTERN = r"^(?P<prefix>#+)(?P<kind>\w*) *(?P<title>.*?)\n"
+    HEADER_PATTERN = r"^(?P<prefix>#+)(?P<kind>[!\w]*) *(?P<title>.*?)\n"
     TAG_PATTERN = r"\{#(?P<tag>\S+?)#\}"
 
     markdown = Markdown(extensions=["tables"])
@@ -40,6 +40,9 @@ class Header(Renderer):
             self.number_list[kind] = [0] * 6
 
     def render_header(self, context, splitter, parser) -> Iterator[str]:
+        if context["kind"] == '!':
+            self.reset()
+            return
         context = self.resolve(context)
         kind = context["kind"]
         if kind == "header":
