@@ -1,6 +1,7 @@
 import ast
 import re
 from dataclasses import dataclass, field
+from itertools import takewhile
 from typing import Dict, Iterator, List
 
 from pheasant.core.base import format_timedelta
@@ -110,6 +111,11 @@ class Jupyter(Renderer):
             outputs = select_outputs(outputs)
         else:
             latex_display_format(outputs)
+
+        def not_system_exit(output):
+            return output['type'] != 'error' or output['ename'] != 'SystemExit'
+
+        outputs = list(takewhile(not_system_exit, outputs))
 
         cell.output = self.render(template, context, outputs=outputs, report=report)
         if len(cache) == self.cursor - 1:

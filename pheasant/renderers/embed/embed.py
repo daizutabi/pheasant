@@ -61,7 +61,7 @@ class Embed(Renderer):
             source = inspect(context["path"], kernel_name)
         source = select_source(source, context.get("lineno"))
         if context["mode"] in ["file", "inspect"]:
-            source = f"~~~{language}\n{source}\n~~~\n"
+            source = f"\n~~~{language}\n{source}\n~~~\n"
         else:
             source += "\n"
         splitter.send(source)
