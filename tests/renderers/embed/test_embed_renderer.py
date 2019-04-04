@@ -29,8 +29,6 @@ def test_inspect_error():
 
 def test_resolve_path():
     assert resolve_path("abc.py?python", ".")["language"] == "python"
-    path = "C:\\a\\b\\abc.py"
-    assert resolve_path("abc.py", "C:\\a\\b\\c.md")["abs_src_path"] == path
     path = os.path.normpath(os.path.join(__file__, "../../../../abc.py"))
     assert resolve_path("abc.py", ".")["abs_src_path"] == path
     assert resolve_path("/abc.py", ".")["abs_src_path"] == path
