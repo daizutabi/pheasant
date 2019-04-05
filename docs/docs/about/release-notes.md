@@ -14,10 +14,14 @@ You can determine your currently installed version using `pheasant --version`:
 
 ~~~
 $ pheasant --version
-pheasant, version 2.1.1 from /path/to/pheasant (Python 3.7)
+pheasant, version 2.1.2 from /path/to/pheasant (Python 3.7)
 ~~~
 
 ## Change log
+
+### Version 2.1.2 (2019-04-06)
+
+* Bug fix: Altair plot with a True option (True -> true)
 
 ### Version 2.1.1 (2019-04-05)
 
