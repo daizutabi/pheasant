@@ -208,7 +208,9 @@ CONVERTERS: Dict[str, Callable] = {
 }
 
 
-def display(obj: Any, **kwargs: Any) -> Any:
+def display(*obj: Any, **kwargs: Any) -> Any:
+    if len(obj) == 1:
+        obj = obj[0]
     if hasattr(obj, "__module__"):
         module = obj.__module__.split(".")[0]
         converter = CONVERTERS.get(module, lambda obj, **kwargs: obj)
