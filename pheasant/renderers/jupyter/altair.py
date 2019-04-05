@@ -1,5 +1,8 @@
-from altair.vegalite.v2.display import VEGALITE_VERSION, VEGAEMBED_VERSION, VEGA_VERSION
+import json
+
 import jinja2
+from altair.vegalite.v2.display import (VEGA_VERSION, VEGAEMBED_VERSION,
+                                        VEGALITE_VERSION)
 
 BASE_URL = "https://cdn.jsdelivr.net/npm/"
 
@@ -36,5 +39,5 @@ def to_html(obj):
     global counter
     counter += 1
     output_div = f"pheasant-altair-{counter}"
-    spec = obj.to_dict()
+    spec = json.dumps(obj.to_dict())
     return HTML_TEMPLATE.render(output_div=output_div, spec=spec)
