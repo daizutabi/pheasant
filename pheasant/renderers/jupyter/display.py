@@ -62,6 +62,10 @@ def base64image(binary: bytes, fmt: str, output: str) -> str:
 
 def pandas_to_html(dataframe, **kwargs) -> HTML:
     """Convert a pandas.DataFrame into a <table> tag."""
+    if not hasattr(dataframe, 'to_html'):
+        series = dataframe.copy()
+        series.name = str(series.dtype)
+        dataframe = series.to_frame()
     html = dataframe.to_html(escape=False)
     html = delete_style(html)
     return HTML(html)
