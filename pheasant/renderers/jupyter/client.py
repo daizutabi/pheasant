@@ -196,9 +196,15 @@ def stream_joiner(outputs: List[Dict]) -> Iterator[Dict]:
 def stream_cell(name: str, text: str) -> Dict[str, str]:
     if "\x08" in text:
         text, source = "", text
+        index = 0
         for char in source:
             if char == "\x08":
                 text = text[:-1]
+            elif char == "\r":
+                text = text[:index]
+            elif char == "\n":
+                text += char
+                index = len(text)
             else:
                 text += char
     return {"type": "stream", "name": name, "text": text}
