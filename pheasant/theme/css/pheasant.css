@@ -29,6 +29,16 @@ h2, h3, h4, h5 {
     max-width: none;
 }
 
+.ui-tooltip {
+	font-size: 10px !important;
+  font-weight: bold !important;
+  color: white !important;
+	background: #666 !important;
+  border: 1px solid #666 !important;
+  padding: 4px !important;
+  box-shadow: none !important;
+}
+
 /**************************************************
  Numbering style
 **************************************************/
@@ -119,22 +129,22 @@ h2, h3, h4, h5 {
 
 .pheasant-input-button-container {
   position: absolute;
-  top: 0px;
-  right: 10px;
+  top: 2px;
+  right: 5px;
 }
-.pheasant-fenced-code .pheasant-input-button {
+.pheasant-fenced-code .toggle-report-button {
   border: none;
   background: none;
   outline: none;
-  color: gray;
+  color: #aac;
 }
 
-.pheasant-fenced-code .pheasant-input-button:before {
+.pheasant-fenced-code .toggle-report-button:before {
   content: "\f070";
   font-family: FontAwesome;
 }
 
-.pheasant-fenced-code.report-hide .pheasant-input-button:before {
+.pheasant-fenced-code.report-hide .toggle-report-button:before {
   content: "\f06e";
   font-family: FontAwesome;
 }
