@@ -64,17 +64,17 @@ You can also include a pure Python source code.
 {% link/included.py %}
 ~~~
 
-If the included file contains header statement, the documents structure may be broken. For example, an included file contains:
+If the included file contains header statements, the document structure may be broken. For example, an included file contains:
 
-#File <code>link/section.md</code> includes section headers. {% =link/section.md %}
+#File <code>link/section.md</code> {% =link/section.md %}
 
-Then,
+Then if you include the file, the content is rendered as
 
 ~~~copy
 {% link/section.md %}
 ~~~
 
-Here, a new `<h1>` section starts that you don't want to. To maintain the document structure, you can shift the header level like below:
+A new `<h1>` section starts that you don't want to. To maintain the document structure, you can shift the header level like below:
 
 ~~~copy
 {% link/section.md>2 %}
