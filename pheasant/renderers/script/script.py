@@ -13,7 +13,8 @@ class Comment(Renderer):
     max_line_length: int = 0
     option: str = field(default="", init=False)
 
-    HEADER_PATTERN = r"^(?P<source>#.*?\n)"
+    # HEADER_PATTERN = r"^(?P<source>#.*?\n)"
+    HEADER_PATTERN = r"^(?P<prefix>#+.*? +?)(?P<title>.*?\n)"
     FENCED_CODE_PATTERN = r"^(?P<mark>~{3,}|`{3,}).*?\n(?P=mark)\n"
 
     def init(self):
@@ -21,7 +22,20 @@ class Comment(Renderer):
         self.register(Comment.FENCED_CODE_PATTERN, self.render_fenced_code)
 
     def render_header(self, context, splitter, parser) -> Iterator[str]:
-        yield context["_source"]
+        prefix, title = context["prefix"], context["title"]
+
+        def header():
+            title_ = format_source(title, self.max_line_length - len(prefix))
+            return add_prefix(title_, prefix)
+
+        for cell in splitter:
+            if cell._render != self.render_header or cell.context["prefix"] != prefix:
+                yield header()
+                splitter.send(cell.source)
+                return
+            else:
+                title += cell.context["title"]
+        yield header()
 
     def render_fenced_code(self, context, splitter, parser) -> Iterator[str]:
         markdown = context["mark"] + "markdown\n"
@@ -39,12 +53,12 @@ class Comment(Renderer):
                 cell.output = format_source(cell.source, self.max_line_length)
 
 
-def delete_sharp(source: str) -> str:
+def delete_prefix(source: str) -> str:
     return COMMENT_PATTERN.sub("", source)
 
 
-def add_sharp(source: str) -> str:
-    gen = ("# " + line if line else line for line in source.split("\n")[:-1])
+def add_prefix(source: str, prefix: str = "# ") -> str:
+    gen = (prefix + line if line else line for line in source.split("\n")[:-1])
     return "\n".join(gen) + "\n"
 
 
@@ -59,9 +73,9 @@ class Script(Renderer):
             if kind == "Comment":
                 if source.startswith("# __break") and self.comment.max_line_length == 0:
                     return
-                output = self.comment.parse(delete_sharp(source))
+                output = self.comment.parse(delete_prefix(source))
                 if self.comment.max_line_length > 0:
-                    output = add_sharp(output)
+                    output = add_prefix(output)
                 yield output
             elif kind == "Code":
                 if self.comment.max_line_length == 0:
@@ -77,10 +91,10 @@ class Script(Renderer):
                     source = source[len(markdown) :]
                     if not source.endswith("\n"):
                         source = source + "\n"
-                    source = add_sharp(source)
+                    source = add_prefix(source)
                     output = parser.parse(source)
                     if self.comment.max_line_length > 0:
-                        output = delete_sharp(output)
+                        output = delete_prefix(output)
                 else:
                     markdown = ""
                     output = source

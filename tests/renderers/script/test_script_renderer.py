@@ -21,3 +21,7 @@ def test_render_script_option(script, source):
 def test_render_markdown(script):
     assert script.convert("# ~~~\n# a\n# b\n# ~~~\n", 0) == "~~~\na\nb\n~~~\n"
     assert script.convert("# ~~~markdown\n# a\n# b\n# ~~~\n", 0) == "a\nb\n"
+
+
+def test_render_hedader(script):
+    assert script.convert('# # title\n# # and title\n') == "# # title and title\n"
