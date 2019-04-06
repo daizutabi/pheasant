@@ -117,8 +117,35 @@ h2, h3, h4, h5 {
   padding: 4px 6px;
 }
 
+.pheasant-input-button-container {
+  position: absolute;
+  top: 0px;
+  right: 10px;
+}
+.pheasant-fenced-code .pheasant-input-button {
+  border: none;
+  background: none;
+  outline: none;
+  color: gray;
+}
+
+.pheasant-fenced-code .pheasant-input-button:before {
+  content: "\f070";
+  font-family: FontAwesome;
+}
+
+.pheasant-fenced-code.report-hide .pheasant-input-button:before {
+  content: "\f06e";
+  font-family: FontAwesome;
+}
+
 .pheasant-fenced-code .input pre {
   border-radius: 4px 4px 0px 0px;
+}
+
+.pheasant-fenced-code.report-hide .input pre {
+  border-radius: 4px;
+  margin-bottom: 2px;
 }
 
 .pheasant-fenced-code .report {
@@ -132,6 +159,11 @@ h2, h3, h4, h5 {
   padding: 0px 8px;
   line-height: 16px;
   margin-bottom: 2px;
+}
+
+
+.pheasant-fenced-code.report-hide .report {
+  display: none;
 }
 
 .pheasant-fenced-code .cached .report {
