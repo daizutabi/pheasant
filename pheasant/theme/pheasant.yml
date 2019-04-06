@@ -1,0 +1,6 @@
+extra_css:
+  - //cdn.jsdelivr.net/gh/tonsky/FiraCode@1.206/distr/fira_code.css
+  - //code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css
+
+extra_javascript:
+  - //code.jquery.com/ui/1.12.1/jquery-ui.min.js

@@ -6,7 +6,7 @@ import sympy
 
 ```python
 x = sympy.Symbol('x')
-x**5
+x**2
 ```
 
 ```python

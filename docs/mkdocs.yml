@@ -8,9 +8,6 @@ edit_uri: ""
 
 theme: readthedocs
 
-extra_css:
-  - https://cdn.jsdelivr.net/gh/tonsky/FiraCode@1.206/distr/fira_code.css
-
 plugins:
   - pheasant:
 

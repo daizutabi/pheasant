@@ -19,6 +19,10 @@ pheasant, version 2.1.3 from /path/to/pheasant (Python 3.7)
 
 ## Change log
 
+### Version 2.1.4 (2019-04-07)
+
+* Add link to extra_css and extra_javascript (theme/pheasant.yml)
+
 ### Version 2.1.3 (2019-04-06)
 
 * Multi-line header for python script. `# # a\n# # b\n` -> `# # a b\n`

@@ -1,6 +1,7 @@
 import logging
 import os
 
+import yaml
 from mkdocs.config import config_options
 from mkdocs.plugins import BasePlugin
 from mkdocs.structure.files import get_files
@@ -45,12 +46,19 @@ class PheasantPlugin(BasePlugin):
         config["extra_javascript"] = list(self.config["extra_javascript"])
 
         for file in files_:
-            files.append(file)
             path = file.src_path.replace("\\", "/")
             if path.endswith(".css"):
+                files.append(file)
                 config["extra_css"].insert(0, path)
-            else:
-                config["extra_javascript"].insert(0, path)  # pragma: no cover
+            elif path.endswith(".js"):
+                files.append(file)
+                config["extra_javascript"].insert(0, path)
+            elif path.endswith(".yml"):
+                path = os.path.normpath(os.path.join(root, path))
+                with open(path) as f:
+                    data = yaml.safe_load(f)
+                config["extra_css"].extend(data.get("extra_css", []))
+                config["extra_javascript"].extend(data.get("extra_javascript", []))
 
         return files
 
