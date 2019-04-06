@@ -52,9 +52,13 @@ With this functionality, you can guarantee the reproducible relation between you
 
 ## Include other file as Markdown source.
 
+Assume that there is a directory named `link` under the same directory of this file and there are some files under the `link` directory. You can include the content of a file like below:
+
 ~~~copy
 {% link/included.md %}
 ~~~
+
+You can also include a pure Python source code.
 
 ~~~copy
 {% link/included.py %}
