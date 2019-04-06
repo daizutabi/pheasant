@@ -70,9 +70,7 @@ Then,
 {% link/section.md %}
 ~~~
 
-Here, a new `<h1>` section starts. To maintain the document structure, you can shift the header level like this.
-
-You can shift the level of headers like below:
+Here, a new `<h1>` section starts that you don't want to. To maintain the document structure, you can shift the header level like below:
 
 ~~~copy
 {% link/section.md>2 %}
