@@ -96,6 +96,9 @@ class Cell:
     match: Optional[Match]
     output: str
 
+    def _render(self):  # for check the render function in rederer. See Script class.
+        pass
+
 
 def make_cell_class(pattern: str, render: Render, render_name: str) -> type:
     fields = [
@@ -111,7 +114,10 @@ def make_cell_class(pattern: str, render: Render, render_name: str) -> type:
         return "".join(self.render(splitter, parser))
 
     return make_dataclass(  # type: ignore
-        "Cell", fields, namespace={"render": _render, "parse": parse}, bases=(Cell,)
+        "Cell",
+        fields,
+        namespace={"render": _render, "parse": parse, "_render": render},
+        bases=(Cell,),
     )
 
 
