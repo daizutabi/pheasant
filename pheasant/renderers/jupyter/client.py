@@ -2,10 +2,10 @@
 import atexit
 import datetime
 import logging
+import re
 from typing import Any, Dict, Iterator, List, Optional
 
 import jupyter_client
-from ansi2html import Ansi2HTMLConverter
 from jupyter_client.manager import KernelManager
 
 logger = logging.getLogger(__name__)
@@ -14,8 +14,6 @@ kernel_names: Dict[str, list] = {}
 kernel_managers: Dict[str, Any] = {}
 kernel_clients: Dict[str, Any] = {}
 execution_report = {"total": datetime.timedelta(0)}
-
-ansi_converter = Ansi2HTMLConverter()
 
 
 def find_kernel_names() -> Dict[str, list]:
@@ -148,9 +146,7 @@ def output_from_msg(msg) -> Optional[dict]:
     elif msg_type == "stream":
         return dict(type=msg_type, name=content["name"], text=content["text"])
     elif msg_type == "error":
-        traceback = '<br/>'.join(
-            ansi_converter.convert(tr, full=False) for tr in content["traceback"][1:]
-        )
+        traceback = "\n".join([strip_ansi(tr) for tr in content["traceback"]])
         return dict(
             type=msg_type,
             ename=content["ename"],
@@ -196,3 +192,19 @@ def stream_cell(name: str, text: str) -> Dict[str, str]:
             else:
                 text += char
     return {"type": "stream", "name": name, "text": text.strip()}
+
+
+# from nbconvert.filters.ansi
+_ANSI_RE = re.compile("\x1b\\[(.*?)([@-~])")
+
+
+def strip_ansi(source: str) -> str:
+    """
+    Remove ANSI escape codes from text.
+
+    Parameters
+    ----------
+    source
+        Source to remove the ANSI from
+    """
+    return _ANSI_RE.sub("", source)

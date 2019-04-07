@@ -1,7 +1,6 @@
 /**************************************************
  Main
 **************************************************/
-
 body {
   font-size: 100%;
 }
@@ -20,20 +19,19 @@ p {
 }
 
 h2, h3, h4, h5 {
-  margin-top:20px;
-  margin-bottom:10px;
-
+  margin-top: 20px;
+  margin-bottom: 10px;
 }
 
 .wy-nav-content {
-    max-width: none;
+  max-width: none;
 }
 
 .ui-tooltip {
-	font-size: 10px !important;
+  font-size: 10px !important;
   font-weight: bold !important;
   color: white !important;
-	background: #666 !important;
+  background: #666 !important;
   border: 1px solid #666 !important;
   padding: 4px !important;
   box-shadow: none !important;
@@ -42,7 +40,6 @@ h2, h3, h4, h5 {
 /**************************************************
  Numbering style
 **************************************************/
-
 .pheasant-header .header .number {
   opacity: 0.5;
 }
@@ -95,29 +92,25 @@ h2, h3, h4, h5 {
 
 .pheasant-header .figure .title,
 .pheasant-header .table .title,
-.pheasant-header .other .title {
-}
+.pheasant-header .other .title {}
 
 /**************************************************
  Fenced code style
 **************************************************/
-
 .pheasant-fenced-code {
   margin-bottom: 10px;
 }
 
-.pheasant-fenced-code > div {
+.pheasant-fenced-code .input,
+.pheasant-fenced-code .output,
+.pheasant-fenced-code .stdout,
+.pheasant-fenced-code .stderr,
+.pheasant-fenced-code .error,
+.pheasant-fenced-code .display {
   position: relative;
   margin: 2px 0px 2px 2em;
   padding: 0px;
-  background: transparent;
-}
-
-.pheasant-fenced-code .error {
-  position: relative;
-  margin: 2px 0px 2px 2em;
-  padding: 0px;
-  background: transparent;
+  line-height: normal;
 }
 
 .pheasant-fenced-code pre {
@@ -127,38 +120,50 @@ h2, h3, h4, h5 {
   padding: 4px 6px;
 }
 
-.pheasant-input-button-container {
+.pheasant-fenced-code code {
+  color: black;
+  font-family: "Fira Code";
+  line-height: 18px;
+  font-size: 80%;
+  background: transparent;
+  padding: 0px;
+}
+
+.pheasant-button-container {
   position: absolute;
   top: 2px;
   right: 5px;
 }
-.pheasant-fenced-code .toggle-report-button {
+
+.pheasant-fenced-code .toggle-button {
   border: none;
   background: none;
   outline: none;
   color: #aac;
 }
 
-.pheasant-fenced-code .toggle-report-button:before {
+.pheasant-fenced-code .toggle-button:before {
   content: "\f070";
   font-family: FontAwesome;
 }
 
-.pheasant-fenced-code.report-hide .toggle-report-button:before {
+.pheasant-fenced-code .hide .toggle-button:before {
   content: "\f06e";
   font-family: FontAwesome;
 }
 
-.pheasant-fenced-code .input pre {
+.pheasant-fenced-code .input pre,
+.pheasant-fenced-code .error pre {
   border-radius: 4px 4px 0px 0px;
 }
 
-.pheasant-fenced-code.report-hide .input pre {
+.pheasant-fenced-code .input.hide pre,
+.pheasant-fenced-code .error.hide pre {
   border-radius: 4px;
   margin-bottom: 2px;
 }
 
-.pheasant-fenced-code .report {
+.pheasant-fenced-code .input .report {
   border-bottom: 1px solid #bdd;
   border-left: 1px solid #bdd;
   border-right: 1px solid #bdd;
@@ -171,9 +176,30 @@ h2, h3, h4, h5 {
   margin-bottom: 2px;
 }
 
+.pheasant-fenced-code .error .traceback {
+  border-top: none;
+  border-bottom: 1px solid pink;
+  border-left: 1px solid pink;
+  border-right: 1px solid pink;
+  border-radius: 0px 0px 4px 4px;
+  background: #fff9f9;
+  color: #777;
+  font-size: 90%;
+  padding: 0px 8px;
+  line-height: 16px;
+  margin-bottom: 2px;
+}
 
-.pheasant-fenced-code.report-hide .report {
+.pheasant-fenced-code .input.hide .report,
+.pheasant-fenced-code .error.hide .traceback,
+.pheasant-fenced-code .stdout.hide code {
   display: none;
+}
+
+.pheasant-fenced-code .stdout.hide pre {
+  min-height: 26px;
+  background: #fafafa;
+  border-color: #ccc;
 }
 
 .pheasant-fenced-code .cached .report {
@@ -206,20 +232,17 @@ h2, h3, h4, h5 {
   color: #aaa;
 }
 
-.pheasant-fenced-code code {
-  font-family: "Fira Code";
-  line-height: 1.34;
-  font-size: 80%;
-  background: transparent;
-  padding: 0px;
-}
-
-.pheasant-fenced-code div:before {
-  font-family: san serif;
+.pheasant-fenced-code .input:before,
+.pheasant-fenced-code .output:before,
+.pheasant-fenced-code .stdout:before,
+.pheasant-fenced-code .stderr:before,
+.pheasant-fenced-code .source:before,
+.pheasant-fenced-code .display:before,
+.pheasant-fenced-code .error:before {
   content: "";
   position: absolute;
   left: -3.8em;
-  font-size: 80%;
+  font-size: 14px;
   width: 3.5em;
   text-align: right;
   margin-top: 5px;
@@ -229,34 +252,42 @@ h2, h3, h4, h5 {
   content: "In:";
   color: #99b;
 }
+
 .pheasant-fenced-code .cached .input:before {
   content: "#In:";
   color: #99b;
 }
+
 .pheasant-fenced-code .stdout:before {
   content: "Stdout:";
   color: #bb9;
 }
+
 .pheasant-fenced-code .stderr:before {
-  /* content: "Stderr:"; */
+  content: "Stderr:";
   color: #fdd;
 }
+
 .pheasant-fenced-code .output:before {
   content: "Out:";
   color: #bb9;
 }
+
 .pheasant-fenced-code .error:before {
   content: "Err:";
   color: red;
 }
+
 .pheasant-fenced-code .source:before {
   content: "Src:";
   color: #aca;
 }
+
 .pheasant-fenced-code .display:before {
   content: "Display:";
   color: #ccc;
 }
+
 .pheasant-fenced-code .docstring:before {
   content: "Doc:";
   color: #ccc;
@@ -266,26 +297,32 @@ h2, h3, h4, h5 {
   background-color: #dff;
   border-color: #bdd;
 }
+
 .pheasant-fenced-code .stdout pre {
   background-color: #ffd;
   border-color: #ddb;
 }
+
 .pheasant-fenced-code .stderr pre {
   background-color: #fdd;
   border-color: #fcc;
 }
+
 .pheasant-fenced-code .output pre {
   background-color: #ffd;
   border-color: #ddb;
 }
+
 .pheasant-fenced-code .error pre {
-  background-color: #fcc;
-  border-color: red;
+  background-color: #fdd;
+  border-color: pink;
 }
+
 .pheasant-fenced-code .source pre {
   background-color: #efe;
   border-color: #cec;
 }
+
 .pheasant-fenced-code .docstring pre {
   background-color: #efe;
   border-color: #cec;
@@ -304,7 +341,6 @@ h2, h3, h4, h5 {
 /**************************************************
  Pandas DataFrame style
 **************************************************/
-
 table.dataframe {
   border-collapse: collapse;
   border: none;
@@ -352,11 +388,32 @@ table.dataframe tbody td {
   background: #f1f6fc;
 }
 
-
 /**************************************************
  HoloViews
 **************************************************/
-
 .holoform label {
   color: black;
+}
+
+/**************************************************
+  ANSI
+**************************************************/
+.error code {
+  color: red;
+}
+
+.ansi31 {
+  color: red;
+}
+
+.ansi32 {
+  color: orange;
+}
+
+.ansi33 {
+  color: blue;
+}
+
+.ansi34 {
+  color: blue;
 }

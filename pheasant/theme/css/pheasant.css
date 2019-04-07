@@ -97,7 +97,6 @@ h2, h3, h4, h5 {
 /**************************************************
  Fenced code style
 **************************************************/
-
 .pheasant-fenced-code {
   margin-bottom: 10px;
 }
@@ -111,7 +110,7 @@ h2, h3, h4, h5 {
   position: relative;
   margin: 2px 0px 2px 2em;
   padding: 0px;
-  /* background: transparent; */
+  line-height: normal;
 }
 
 .pheasant-fenced-code pre {
@@ -119,6 +118,15 @@ h2, h3, h4, h5 {
   border-radius: 4px;
   margin: 0px;
   padding: 4px 6px;
+}
+
+.pheasant-fenced-code code {
+  color: black;
+  font-family: "Fira Code";
+  line-height: 18px;
+  font-size: 80%;
+  background: transparent;
+  padding: 0px;
 }
 
 .pheasant-button-container {
@@ -149,12 +157,13 @@ h2, h3, h4, h5 {
   border-radius: 4px 4px 0px 0px;
 }
 
-.pheasant-fenced-code .input.hide pre {
+.pheasant-fenced-code .input.hide pre,
+.pheasant-fenced-code .error.hide pre {
   border-radius: 4px;
   margin-bottom: 2px;
 }
 
-.pheasant-fenced-code .report {
+.pheasant-fenced-code .input .report {
   border-bottom: 1px solid #bdd;
   border-left: 1px solid #bdd;
   border-right: 1px solid #bdd;
@@ -167,21 +176,30 @@ h2, h3, h4, h5 {
   margin-bottom: 2px;
 }
 
-.pheasant-fenced-code .traceback {
+.pheasant-fenced-code .error .traceback {
+  border-top: none;
   border-bottom: 1px solid pink;
   border-left: 1px solid pink;
   border-right: 1px solid pink;
   border-radius: 0px 0px 4px 4px;
-  background: #fff0f0;
+  background: #fff9f9;
   color: #777;
-  font-size: 75%;
-  padding: 2px 8px;
+  font-size: 90%;
+  padding: 0px 8px;
   line-height: 16px;
   margin-bottom: 2px;
 }
 
-.pheasant-fenced-code .input.hide .report {
+.pheasant-fenced-code .input.hide .report,
+.pheasant-fenced-code .error.hide .traceback,
+.pheasant-fenced-code .stdout.hide code {
   display: none;
+}
+
+.pheasant-fenced-code .stdout.hide pre {
+  min-height: 26px;
+  background: #fafafa;
+  border-color: #ccc;
 }
 
 .pheasant-fenced-code .cached .report {
@@ -214,15 +232,6 @@ h2, h3, h4, h5 {
   color: #aaa;
 }
 
-.pheasant-fenced-code code {
-  color: black;
-  font-family: "Fira Code";
-  line-height: 1.34;
-  font-size: 80%;
-  background: transparent;
-  padding: 0px;
-}
-
 .pheasant-fenced-code .input:before,
 .pheasant-fenced-code .output:before,
 .pheasant-fenced-code .stdout:before,
@@ -233,7 +242,7 @@ h2, h3, h4, h5 {
   content: "";
   position: absolute;
   left: -3.8em;
-  font-size: 80%;
+  font-size: 14px;
   width: 3.5em;
   text-align: right;
   margin-top: 5px;

@@ -25,8 +25,15 @@ print("Hello Python")
 ```python
 for k in range(10):
   print(k)
+```
+
+
+```python
+for k in range(10):
+  print(k)
 'abc'
 ```
+
 
 <!--break-->
 

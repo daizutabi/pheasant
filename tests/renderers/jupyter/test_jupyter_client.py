@@ -77,4 +77,4 @@ def test_stream_joinner():
 
 def test_error_traceback():
     outputs = execute("1/0")
-    assert 'ansi' in outputs[0]['traceback']
+    assert 'ZeroDivisionError' in outputs[0]['traceback']
