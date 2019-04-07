@@ -39,10 +39,7 @@ class Pheasant(Converter):
         if message:
             message("Done. Start conversion of each page.")
         for path in paths:
-            self.jupyter.abs_src_path = path  # for cache and extra resources
-            self.header.abs_src_path = path  # for hypyerlink between pages
-            self.embed.abs_src_path = path  # for embedding contents
-            self.jupyter.reset()  # Reset cell number for every page
+            self.jupyter.cursor = 0  # Reset cell number for every page
             if path.endswith(".py"):
                 self.convert_from_file(path, ["script", "main"])
             else:
@@ -59,7 +56,6 @@ class Pheasant(Converter):
                 message(msg)
 
         for path in paths:
-            self.anchor.abs_src_path = path
-            self.convert_from_output(path, "link")
+            self.convert_from_file(path, "link")
 
         return [self.pages[path].output for path in paths]

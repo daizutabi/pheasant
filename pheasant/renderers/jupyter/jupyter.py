@@ -26,7 +26,7 @@ class Cell:
 class Jupyter(Renderer):
     language: str = "python"
     option: str = ""
-    abs_src_path: str = "."
+    active: bool = True
     cursor: int = field(default=0, init=False)
     cache: Dict[str, List[Cell]] = field(default_factory=dict, init=False)
 
@@ -87,6 +87,8 @@ class Jupyter(Renderer):
 
     def execute_and_render(self, code, context, template) -> str:
         self.cursor += 1
+        if not self.active:
+            return "XXX"
         cell = Cell(code, context, template)
         cache = self.cache.setdefault(self.abs_src_path, [])
         if len(cache) >= self.cursor and "run" not in context["option"]:

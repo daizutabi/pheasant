@@ -13,6 +13,9 @@ def test_converter(jupyter):
     converter.register("markdown", [jupyter, Header()])
     assert len(converter.parsers) == 1
 
+    converter.abs_src_path = "abc"
+    assert jupyter.abs_src_path == "abc"
+
     output = converter.convert("abd\n# a\n## b\n```python\n2*3\n```\n")
     output = re.sub(r"(\<.*?\>)|\n", "", output)
     assert output == "abd# 1 a## 1.1 b2*36"

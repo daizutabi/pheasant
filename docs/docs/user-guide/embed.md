@@ -68,14 +68,10 @@ If the included file contains header statements, the document structure may be b
 
 #File <code>link/section.md</code> {% =link/section.md %}
 
-If you include the file, the content is rendered as
+If you include the file, a new `<h1>` section starts that you don't want to. To maintain the document structure, you can shift the header level like below. Note that we are under a `<h2>` section now.
 
-~~~copy
-{% link/section.md %}
 ~~~
-
-A new `<h1>` section starts that you don't want to. To maintain the document structure, you can shift the header level like below:
-
-~~~copy
 {% link/section.md>2 %}
 ~~~
+
+In this case, "`# Title`" becomes "`### Title`" by "`>2`".

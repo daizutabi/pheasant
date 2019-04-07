@@ -17,6 +17,7 @@ class Converter(Base):
     parsers: Dict[str, Parser] = field(default_factory=OrderedDict)
     renderers: Dict[str, List[Renderer]] = field(default_factory=dict)
     pages: Dict[str, Page] = field(default_factory=dict)
+    _abs_src_path: str = "."
 
     def __post_init__(self):
         super().__post_init__()
@@ -53,6 +54,16 @@ class Converter(Base):
         for renderer in self.renderer_iter():
             renderer.reset()
         self.pages = {}
+
+    @property
+    def abs_src_path(self):
+        return self._abs_src_path
+
+    @abs_src_path.setter
+    def abs_src_path(self, path):
+        self._abs_src_path = path
+        for renderer in self.renderer_iter():
+            renderer.abs_src_path = path
 
     def register(
         self,
@@ -108,6 +119,12 @@ class Converter(Base):
     def convert_from_file(
         self, path: str, names: Optional[Union[str, Iterable[str]]] = None
     ) -> str:
+        self.abs_src_path = path
+        if path in self.pages:
+            page = self.pages[path]
+            page.output = self.convert(page.output, names)
+            return page.output
+
         with io.open(path, "r", encoding="utf-8-sig", errors="strict") as f:
             source = f.read()
 
@@ -119,12 +136,4 @@ class Converter(Base):
         page = Page(path, source=source)  # type: ignore
         self.pages[path] = page
         page.output = self.convert(source, names)
-        return page.output
-
-    @monitor(format=True)
-    def convert_from_output(
-        self, path: str, names: Optional[Union[str, Iterable[str]]] = None
-    ) -> str:
-        page = self.pages[path]
-        page.output = self.convert(page.output, names)
         return page.output

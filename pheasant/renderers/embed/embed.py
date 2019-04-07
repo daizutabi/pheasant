@@ -12,7 +12,6 @@ from pheasant.renderers.script.script import Script
 
 class Embed(Renderer):
     script: Script = field(default_factory=Script, init=False)
-    abs_src_path: str = "."
 
     FENCED_CODE_PATTERN = (
         r"^(?P<mark>~{3,})(?P<language>\w*) ?(?P<option>.*?)\n"

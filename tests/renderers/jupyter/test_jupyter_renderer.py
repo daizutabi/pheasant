@@ -103,3 +103,9 @@ def test_render_fenced_code_with_option():
 
     output = jupyter.parse("```python\n# option: def ghi\nprint(1)\n```\n")
     assert '(def ghi)' in output
+
+
+def test_render_inactive(jupyter):
+    jupyter.active = False
+    output = jupyter.parse("```python\nprint(1)\n```\n")
+    assert "XXX" in output

@@ -13,6 +13,7 @@ class Renderer(Base):
     patterns: Dict[str, str] = field(default_factory=dict, init=False)
     renders: Dict[str, Render] = field(default_factory=dict, init=False)
     _parser: Optional[Parser] = field(default=None, init=False)
+    abs_src_path: str = "."
 
     def __post_init__(self):
         super().__post_init__()
