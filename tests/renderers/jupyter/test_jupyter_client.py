@@ -64,10 +64,15 @@ def test_kernel_manager():
 
 def test_stream_joinner():
     outputs = execute("import sys\nsys.stdout.write('1')\nsys.stdout.write('\x082')\n1")
-    assert outputs[0]['text'] == '2'
-    assert outputs[1]['data']['text/plain'] == '1'
+    assert outputs[0]["text"] == "2"
+    assert outputs[1]["data"]["text/plain"] == "1"
 
     source = "sys.stdout.write('1')\nsys.stdout.write('2')\nsys.stderr.write('3')\n1"
     outputs = execute(source)
-    assert outputs[0]["text"] == '12'
-    assert outputs[1]["text"] == '3'
+    assert outputs[0]["text"] == "12"
+    assert outputs[1]["text"] == "3"
+
+
+def test_error_traceback():
+    outputs = execute("1/0")
+    assert 'ansi' in outputs[0]['traceback']

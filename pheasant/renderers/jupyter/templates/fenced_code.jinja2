@@ -9,7 +9,8 @@
 </span></p></div>
   {%- for output in outputs if output.type != 'display_data' -%}
     {%- if output.type == 'error' -%}
-        <div class="error"><pre><code class="text">{{ output.ename }}: {{ output.evalue }}</code></pre></div>
+        <div class="error"><pre><code class="nohighlight">{{ output.ename }}: {{ output.evalue }}</code></pre>
+        <p class="traceback">{%- autoescape false -%}{{ output.traceback }}{%- endautoescape -%}</p></div>
     {%- elif output.type == 'stream' and 'nostd' not in option -%}
         <div class="{{ output.name }}"><pre><code class="text">{{ output.text }}</code></pre></div>
     {%- elif 'text/plain' in output.data -%}

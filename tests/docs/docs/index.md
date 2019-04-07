@@ -13,6 +13,10 @@ x**2
 print("Hello Python")
 ```
 
+```python
+1/0
+```
+
 <!--break-->
 
 abc

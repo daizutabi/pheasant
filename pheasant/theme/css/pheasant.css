@@ -1,7 +1,6 @@
 /**************************************************
  Main
 **************************************************/
-
 body {
   font-size: 100%;
 }
@@ -20,20 +19,19 @@ p {
 }
 
 h2, h3, h4, h5 {
-  margin-top:20px;
-  margin-bottom:10px;
-
+  margin-top: 20px;
+  margin-bottom: 10px;
 }
 
 .wy-nav-content {
-    max-width: none;
+  max-width: none;
 }
 
 .ui-tooltip {
-	font-size: 10px !important;
+  font-size: 10px !important;
   font-weight: bold !important;
   color: white !important;
-	background: #666 !important;
+  background: #666 !important;
   border: 1px solid #666 !important;
   padding: 4px !important;
   box-shadow: none !important;
@@ -42,7 +40,6 @@ h2, h3, h4, h5 {
 /**************************************************
  Numbering style
 **************************************************/
-
 .pheasant-header .header .number {
   opacity: 0.5;
 }
@@ -95,18 +92,16 @@ h2, h3, h4, h5 {
 
 .pheasant-header .figure .title,
 .pheasant-header .table .title,
-.pheasant-header .other .title {
-}
+.pheasant-header .other .title {}
 
 /**************************************************
  Fenced code style
 **************************************************/
-
 .pheasant-fenced-code {
   margin-bottom: 10px;
 }
 
-.pheasant-fenced-code > div {
+.pheasant-fenced-code>div {
   position: relative;
   margin: 2px 0px 2px 2em;
   padding: 0px;
@@ -132,6 +127,7 @@ h2, h3, h4, h5 {
   top: 2px;
   right: 5px;
 }
+
 .pheasant-fenced-code .toggle-report-button {
   border: none;
   background: none;
@@ -149,7 +145,8 @@ h2, h3, h4, h5 {
   font-family: FontAwesome;
 }
 
-.pheasant-fenced-code .input pre {
+.pheasant-fenced-code .input pre,
+.pheasant-fenced-code .error pre {
   border-radius: 4px 4px 0px 0px;
 }
 
@@ -171,6 +168,18 @@ h2, h3, h4, h5 {
   margin-bottom: 2px;
 }
 
+.pheasant-fenced-code .traceback {
+  border-bottom: 1px solid pink;
+  border-left: 1px solid pink;
+  border-right: 1px solid pink;
+  border-radius: 0px 0px 4px 4px;
+  background: #fff0f0;
+  color: #777;
+  font-size: 75%;
+  padding: 2px 8px;
+  line-height: 16px;
+  margin-bottom: 2px;
+}
 
 .pheasant-fenced-code.report-hide .report {
   display: none;
@@ -229,34 +238,42 @@ h2, h3, h4, h5 {
   content: "In:";
   color: #99b;
 }
+
 .pheasant-fenced-code .cached .input:before {
   content: "#In:";
   color: #99b;
 }
+
 .pheasant-fenced-code .stdout:before {
   content: "Stdout:";
   color: #bb9;
 }
+
 .pheasant-fenced-code .stderr:before {
-  /* content: "Stderr:"; */
+  content: "Stderr:";
   color: #fdd;
 }
+
 .pheasant-fenced-code .output:before {
   content: "Out:";
   color: #bb9;
 }
+
 .pheasant-fenced-code .error:before {
   content: "Err:";
   color: red;
 }
+
 .pheasant-fenced-code .source:before {
   content: "Src:";
   color: #aca;
 }
+
 .pheasant-fenced-code .display:before {
   content: "Display:";
   color: #ccc;
 }
+
 .pheasant-fenced-code .docstring:before {
   content: "Doc:";
   color: #ccc;
@@ -266,26 +283,32 @@ h2, h3, h4, h5 {
   background-color: #dff;
   border-color: #bdd;
 }
+
 .pheasant-fenced-code .stdout pre {
   background-color: #ffd;
   border-color: #ddb;
 }
+
 .pheasant-fenced-code .stderr pre {
   background-color: #fdd;
   border-color: #fcc;
 }
+
 .pheasant-fenced-code .output pre {
   background-color: #ffd;
   border-color: #ddb;
 }
+
 .pheasant-fenced-code .error pre {
-  background-color: #fcc;
-  border-color: red;
+  background-color: #fdd;
+  border-color: pink;
 }
+
 .pheasant-fenced-code .source pre {
   background-color: #efe;
   border-color: #cec;
 }
+
 .pheasant-fenced-code .docstring pre {
   background-color: #efe;
   border-color: #cec;
@@ -304,7 +327,6 @@ h2, h3, h4, h5 {
 /**************************************************
  Pandas DataFrame style
 **************************************************/
-
 table.dataframe {
   border-collapse: collapse;
   border: none;
@@ -352,11 +374,32 @@ table.dataframe tbody td {
   background: #f1f6fc;
 }
 
-
 /**************************************************
  HoloViews
 **************************************************/
-
 .holoform label {
   color: black;
+}
+
+/**************************************************
+  ANSI
+**************************************************/
+.error code {
+  color: red;
+}
+
+.ansi31 {
+  color: red;
+}
+
+.ansi32 {
+  color: orange;
+}
+
+.ansi33 {
+  color: blue;
+}
+
+.ansi34 {
+  color: blue;
 }

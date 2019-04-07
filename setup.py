@@ -37,7 +37,7 @@ setup(
     license="MIT",
     packages=find_packages(exclude=["tests", "docs"]),
     include_package_data=True,
-    install_requires=["click", "ipykernel", "markdown", "jinja2"],
+    install_requires=["click", "ipykernel", "markdown", "jinja2", "ansi2html"],
     setup_requires=["pytest-runner"],
     tests_require=[
         "pytest",
