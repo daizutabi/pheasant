@@ -34,7 +34,9 @@ def test_execute():
     output = outputs[0]
     assert output["type"] == "stream"
     assert output["name"] == "stdout"
-    assert output["text"] == "1\n"
+    assert output["text"] == "1"
+    outputs = execute("print(1)\nprint(2)")
+    assert outputs[0]["text"] == "1\n2"
 
 
 def test_execution_report():

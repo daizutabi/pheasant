@@ -23,7 +23,7 @@ def test_jupyter_parse_text(parse):
     answer = "".join(
         [
             '\n<div class="input"><pre><code class="python">print(1)</code></pre></div>'
-            '<div class="stdout"><pre><code class="python">1\n</code></pre></div>\n\n'
+            '<div class="stdout"><pre><code class="python">1</code></pre></div>\n\n'
         ]
     )
     assert output == answer

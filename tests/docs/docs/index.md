@@ -14,7 +14,18 @@ print("Hello Python")
 ```
 
 ```python
-1/0
+11/0
+```
+
+```python
+[1,
+2] # d
+```
+
+```python
+for k in range(10):
+  print(k)
+'abc'
 ```
 
 <!--break-->

@@ -65,12 +65,12 @@ def test_render_extra_html(jupyter):
 
 def test_replace_for_display():
     def replace(output):
-        return output.replace("pheasant.renderers.jupyter.display.", "")
+        output = output.replace("pheasant.renderers.jupyter.display.", "")
+        return output.replace("__pheasant_dummy__", "D")
 
     assert replace_for_display("a=1") == "a=1"
-    assert replace(replace_for_display("a")) == 'display(a, output="markdown")'
-    assert replace(replace_for_display("^a")) == 'display(a, output="html")'
-    assert replace(replace_for_display("a")) == 'display(a, output="markdown")'
+    assert replace(replace_for_display("a")) == 'D = a\ndisplay(D, output="markdown")'
+    assert replace(replace_for_display("^a")) == 'D = a\ndisplay(D, output="html")'
     assert replace_for_display("for k:\n  a") == "for k:\n  a"
 
 
@@ -85,7 +85,7 @@ def test_render_without_language(jupyter):
 
 def test_render_debug_option(jupyter):
     output = jupyter.parse("```python debug\n2*3\n```\n")
-    assert 'class="python">pheasant.renderers.jupyter.display.display(2*3' in output
+    assert 'pheasant.renderers.jupyter.display.display(__pheasant_dummy__' in output
     assert "[{&#39;type&#39;: &#39;execute_result&#39;, &#39;data&#39;" in output
 
 
