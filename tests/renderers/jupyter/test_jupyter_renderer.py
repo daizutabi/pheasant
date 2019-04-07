@@ -21,7 +21,6 @@ def test_format_timedelta():
 
 
 def test_render_inline_option(jupyter):
-    jupyter.execute("import pheasant.renderers.jupyter.display")
     jupyter.execute("import holoviews as hv")
     jupyter.execute("from bokeh.plotting import figure")
     jupyter.execute("import altair as alt")

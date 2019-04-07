@@ -14,7 +14,6 @@ def jupyter():
         os.path.join(__file__, "../../renderers/jupyter/templates")
     )
     jupyter.set_template("fenced_code", directory)
-    jupyter.execute("import pheasant.renderers.jupyter.display", "python")
     return jupyter
 
 

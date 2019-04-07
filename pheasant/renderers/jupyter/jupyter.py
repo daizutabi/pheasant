@@ -44,13 +44,6 @@ class Jupyter(Renderer):
         self.config["kernel_name"] = {
             key: values[0] for key, values in find_kernel_names().items()
         }
-        codes = [
-            "import pheasant.renderers.jupyter.display",
-            "import pandas",
-            "pandas.options.display.max_colwidth = 0",
-        ]
-        code = "\n".join(codes)
-        self.execute(code, "python")
 
     def reset(self):
         self.cursor = 0
@@ -113,7 +106,7 @@ class Jupyter(Renderer):
             latex_display_format(outputs)
 
         def not_system_exit(output):
-            return output['type'] != 'error' or output['ename'] != 'SystemExit'
+            return output["type"] != "error" or output["ename"] != "SystemExit"
 
         outputs = list(takewhile(not_system_exit, outputs))
 
@@ -129,7 +122,10 @@ class Jupyter(Renderer):
     def execute(self, code: str, language: str = "python") -> List:
         if language not in self.config["kernel_name"]:
             return []
-        outputs = execute(code, self.config["kernel_name"][language])
+        kernel_name = self.config["kernel_name"][language]
+        if self.cursor == 1 and language == "python":
+            execute("import pheasant.renderers.jupyter.display", kernel_name)
+        outputs = execute(code, kernel_name)
         self.update_extra_module(outputs)
         select_display_data(outputs)
         return outputs
