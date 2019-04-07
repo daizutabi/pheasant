@@ -193,9 +193,10 @@ def replace_for_display(code: str) -> str:
         precode += "\n"
     code_gen = (line for line in lines[node.lineno - 1 :] if not line.startswith("#"))
     code = "\n".join(code_gen)
+    code = f"__pheasant_dummy__ = {code}\n"
 
     display = "pheasant.renderers.jupyter.display.display"
-    return f'{precode}{display}({code}, output="{output}")'
+    return f'{precode}{code}{display}(__pheasant_dummy__, output="{output}")'
 
 
 def select_outputs(outputs: List):
