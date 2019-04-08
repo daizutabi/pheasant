@@ -45,7 +45,6 @@ def publish():
     check()
     subprocess.run("python setup.py sdist --formats=gztar,zip".split())
     subprocess.run("python setup.py bdist_wheel".split())
-    sys.exit(0)
     subprocess.run("twine upload dist/*".split())
     print("You probably want to also tag the version now:")
     print("  git tag -a {0} -m 'Version {0}'".format(get_version("pheasant")))
