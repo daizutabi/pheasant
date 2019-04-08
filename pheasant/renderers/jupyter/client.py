@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 kernel_names: Dict[str, list] = {}
 kernel_managers: Dict[str, Any] = {}
 kernel_clients: Dict[str, Any] = {}
-execution_report = {"total": datetime.timedelta(0)}
+execution_report = {"page": datetime.timedelta(0), "total": datetime.timedelta(0)}
 
 
 def find_kernel_names() -> Dict[str, list]:
@@ -123,8 +123,9 @@ def create_execution_report(msg) -> None:
     msg["header"]["date"] = end_time
     execution_report["start"] = start_time
     execution_report["end"] = end_time
-    execution_report["elasped"] = end_time - start_time
-    execution_report["total"] += execution_report["elasped"]
+    execution_report["cell"] = end_time - start_time
+    execution_report["page"] += execution_report["cell"]
+    execution_report["total"] += execution_report["cell"]
     execution_report["execution_count"] = msg["content"]["execution_count"]
     execution_report["message"] = msg
 

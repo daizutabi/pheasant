@@ -1,4 +1,5 @@
 import ast
+import datetime
 import re
 from dataclasses import dataclass, field
 from itertools import takewhile
@@ -25,9 +26,10 @@ class Cell:
 
 class Jupyter(Renderer):
     language: str = "python"
-    option: str = ""
-    active: bool = True
+    option: str = field(default="", init=False)
+    active: bool = field(default=True, init=False)
     cursor: int = field(default=0, init=False)
+    total: int = field(default=0, init=False)
     cache: Dict[str, List[Cell]] = field(default_factory=dict, init=False)
 
     FENCED_CODE_PATTERN = (
@@ -47,6 +49,17 @@ class Jupyter(Renderer):
 
     def reset(self):
         self.cursor = 0
+        execution_report["page"] = datetime.timedelta(0)
+
+    def activate(self):
+        self.active = True
+        self.total = self.cursor
+        self.reset()
+
+    def deactivate(self):
+        self.active = False
+        self.total = 0
+        self.reset()
 
     def render_fenced_code(self, context, splitter, parser) -> Iterator[str]:
         if not context["language"]:
@@ -99,6 +112,8 @@ class Jupyter(Renderer):
         outputs = self.execute(code, context["language"])
         report = format_report()
         report["cursor"] = self.cursor
+        if self.total:
+            progress_bar(self, report)
 
         if "debug" in context["option"]:
             outputs = [{"type": "execute_result", "data": {"text/plain": outputs}}]
@@ -224,7 +239,30 @@ def format_report():
     datetime_format = r"%Y-%m-%d %H:%M:%S"
     report["start"] = report["start"].strftime(datetime_format)
     report["end"] = report["end"].strftime(datetime_format)
-    report["elasped"] = format_timedelta(report["elasped"])
+    report["cell"] = format_timedelta(report["cell"])
+    report["page"] = format_timedelta(report["page"])
     report["total"] = format_timedelta(report["total"])
     report["count"] = report["execution_count"]
     return report
+
+
+def progress_bar(jupyter, report):
+    if jupyter.cursor > jupyter.total:
+        return
+    length = 50
+    current = int(length * min(jupyter.cursor / jupyter.total, 1))
+    count = str(report["count"]).zfill(4)
+    if current >= length:
+        bar = "[" + "=" * length + "=]"
+    else:
+        bar = "[" + "=" * current + ">" + "-" * (length - current) + "]"
+    cursor = str(jupyter.cursor).zfill(3)
+    total = str(jupyter.total).zfill(3)
+    count = f"[{count}]"
+    progress = f"{cursor}/{total}"
+    time = f"{report['cell']:>8} {report['page']:>8} {report['total']:>8}"
+
+    line = " ".join([count, bar, progress, time])
+    print("\r" + line, end="")
+    if jupyter.cursor == jupyter.total:
+        print()

@@ -6,7 +6,7 @@ from pheasant.core.converter import Converter
 from pheasant.renderers.number.number import Header
 
 
-def test_converter(jupyter):
+def test_converter_init(jupyter):
     converter = Converter()
     assert converter.convert("abc") == "abc"
 
@@ -16,6 +16,10 @@ def test_converter(jupyter):
     converter.abs_src_path = "abc"
     assert jupyter.abs_src_path == "abc"
 
+
+def test_converter(jupyter):
+    converter = Converter()
+    converter.register("markdown", [jupyter, Header()])
     output = converter.convert("abd\n# a\n## b\n```python\n2*3\n```\n")
     output = re.sub(r"(\<.*?\>)|\n", "", output)
     assert output == "abd# 1 a## 1.1 b2*36"

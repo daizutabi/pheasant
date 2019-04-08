@@ -3,7 +3,7 @@
 {%- if 'hide' not in option -%}
 <div class="input"><pre><code class="{{ language }}">{{ code }}</code></pre>
 <p class="report"><span class="count">[{{ report.cursor }}]</span>
-<span class="start">{{ report.start }}</span> (<span class="elasped">{{ report.elasped }}</span>)
+<span class="start">{{ report.start }}</span> (<span class="elasped">{{ report.cell }}</span>)
 <span class="right">{%- if option -%}<span class="option"> ({{ option }}) </span>{%- endif -%}
 <span class="kernel">{{ config.kernel_name[language] }}</span><span class="count"> [{{ report.count }}]</span>
 </span></p></div>

@@ -4,7 +4,7 @@ Pheasant can embed codes from a file system or Python module.
 
 ## File system
 
-Extenal resources are read from file system by Pheasant syntax: `{%# =object %}`. For example,
+Extenal resources are read from file system by Pheasant syntax: `{%#=object%}`. For example,
 
 ~~~
 {%=/mkdocs.yml%}
@@ -16,7 +16,7 @@ writes the content of the real `mkdocs.yml` of this document:
 
 The root directory is the directory where `mkdocs.yml` exists.
 
-If the file is too long to display the whole content, you can specify the lines as the same way that Python does with the slice notation.
+If the file is too long to display the whole content, you can specify the lines as the same way of Python's slice notation.
 
 ~~~copy
 {%=/mkdocs.yml[3:8]%}
@@ -25,12 +25,12 @@ If the file is too long to display the whole content, you can specify the lines 
 Imported file can be numbered like figures and tables. Use this inline notation:
 
 ~~~copy
-#File 1.2 {%=/mkdocs.yml[:8]%}
+#File {%=/mkdocs.yml[:8]%}
 ~~~
 
 ## Python module source
 
-Python module sources that the current Jupyter kernel can find are also inspected. Now Pheasant imported its own package `pheasant`, so you can read the source from this document.
+Python module sources that the current Jupyter kernel can find are also inspected. Now Pheasant imported its own package `pheasant`, so you can read the source from this document by Pheasant syntax: `{%#?object%}`.
 
 You can write to inspect the whole module content:
 
@@ -45,7 +45,7 @@ from pheasant.renderers.jupyter.jupyter import Jupyter
 ```
 
 ~~~copy
-{%?Jupyter[:23]%}
+{%?Jupyter[:21]%}
 ~~~
 
 With this functionality, you can guarantee the reproducible relation between your source code and results easily.

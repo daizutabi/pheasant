@@ -2,7 +2,7 @@ import io
 import re
 from collections import OrderedDict
 from dataclasses import field
-from typing import Any, Dict, Iterable, Iterator, List, Optional, Union
+from typing import Any, Dict, Iterable, Iterator, List, Union
 
 from pheasant.core.base import Base
 from pheasant.core.decorator import monitor
@@ -90,9 +90,7 @@ class Converter(Base):
         self.parsers[name] = parser
         self.renderers[name] = list(renderers)
 
-    def convert(
-        self, source: str, names: Optional[Union[str, Iterable[str]]] = None
-    ) -> str:
+    def convert(self, source: str, names: Union[str, Iterable[str]] = "") -> str:
         """Convert source text.
 
         Parameters
@@ -107,22 +105,41 @@ class Converter(Base):
         -------
         Converted output text.
         """
-        if isinstance(names, str):
+        if names and isinstance(names, str):
             names = [names]
         for name in names or self.parsers:
-            parser = self.parsers[name]
-            source = parser.parse(source)
+            source = self.parsers[name].parse(source)
+            # source = parser.parse(source)
 
         return source
 
     @monitor(format=True)
     def convert_from_file(
-        self, path: str, names: Optional[Union[str, Iterable[str]]] = None
+        self, path: str, names: Union[str, Iterable[str]] = "", copy: bool = False
     ) -> str:
+        """Convert source text from file.
+
+        Parameters
+        ----------
+        path
+            The source path to be converted.
+        names
+            Parser names to be used. If not specified. all of the registered
+            parsers will be used.
+        copy
+            If True, the page source is copied from the converted output after
+            conversion.
+
+        Returns
+        -------
+        Converted output text.
+        """
         self.abs_src_path = path
         if path in self.pages:
             page = self.pages[path]
-            page.output = self.convert(page.output, names)
+            page.output = self.convert(page.source, names)
+            if copy:
+                page.source = page.output
             return page.output
 
         with io.open(path, "r", encoding="utf-8-sig", errors="strict") as f:
@@ -136,4 +153,6 @@ class Converter(Base):
         page = Page(path, source=source)  # type: ignore
         self.pages[path] = page
         page.output = self.convert(source, names)
+        if copy:
+            page.source = page.output
         return page.output

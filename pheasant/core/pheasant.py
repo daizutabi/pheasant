@@ -23,6 +23,7 @@ class Pheasant(Converter):
     def init(self):
         self.anchor.header = self.header
         self.register("script", [self.script])
+        self.register("preprocess", [self.jupyter, self.embed])
         self.register("main", [self.header, self.jupyter, self.embed])
         self.register("link", [self.anchor])
 
@@ -32,28 +33,21 @@ class Pheasant(Converter):
     @monitor(format=True)
     def convert_from_files(self, paths: Iterable[str], message=None) -> List[str]:
         paths = list(paths)
-        common = os.path.commonpath(paths)
         if message:
             message("Converter resetting...")
         self.reset()
         if message:
             message("Done. Start conversion of each page.")
         for path in paths:
-            self.jupyter.cursor = 0  # Reset cell number for every page
-            if path.endswith(".py"):
-                self.convert_from_file(path, ["script", "main"])
-            else:
-                self.convert_from_file(path, "main")
-            self.pages[path].meta["extra_html"] = self.jupyter.extra_html
             if message:
-                if common:
-                    path = path.replace(common, "")[1:]
-                path = path.replace("\\", "/")
-                func_time = self.convert_from_file.func_time
-                kernel_time = self.convert_from_file.kernel_time
-                time = f" (total: {func_time}, kernel: {kernel_time})"
-                msg = f"Converted: {path:40s} {time} "
-                message(msg)
+                message(f"Converting: {path}")
+            if path.endswith(".py"):
+                self.convert_from_file(path, "script", copy=True)
+            self.jupyter.deactivate()
+            self.convert_from_file(path, "preprocess")
+            self.jupyter.activate()
+            self.convert_from_file(path, "main", copy=True)
+            self.pages[path].meta["extra_html"] = self.jupyter.extra_html
 
         for path in paths:
             self.convert_from_file(path, "link")

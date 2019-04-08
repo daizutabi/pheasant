@@ -82,8 +82,8 @@ class PheasantPlugin(BasePlugin):
         self.converter.convert_from_files(paths, message=message)
         func_time = self.converter.convert_from_files.func_time
         kernel_time = self.converter.convert_from_files.kernel_time
-        time = f" (total: {func_time}, kernel: {kernel_time})"
-        msg = "Conversion finished:" + " " * 32 + f"{time} "
+        time = f"total: {func_time}, kernel: {kernel_time}"
+        msg = "Conversion finished:" + " " * 26 + f"{time} "
         message(msg)
 
         return nav

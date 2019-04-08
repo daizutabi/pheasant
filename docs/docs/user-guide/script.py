@@ -11,8 +11,8 @@
 # as a Markdown cell, `#` must be at the begining of lines. But we can insert a blank
 # line in a Markdown cell without `#` to make a paragraph.
 
-# Python code block is treated as a code cell as you expect. If a comment is not at the
-# begining of line, a code cell can contain comments.
+# Python code block is treated as a code cell as you expect. Code cells can contain any
+# comments as long as the comments don't start at the begining of line.
 
 
 def add(x: int, y: int) -> int:
@@ -25,42 +25,51 @@ def sub(x: int, y: int) -> int:
     return x - y  # a comment in a code cell.
 
 
-# When a comment starts at the begining of a line after a code block, it divides the
+# When a comment starts at the begining of line after a code block, it divides the
 # source into a code cell and a Markdown cell. This Markdown cell will continue until
 # next Python code appears.
 
 # Despite of a Markdown cell, you may want to devide successive codes into separate
 # cells. This can be done by putting a special marker between codes to tell Pheasant
-# your intention. The marker is `# -` [sharp-space-minus] at the begining of lines. In
-# this way you can divide the above two functions into separate cells (regardless of its
-# usefullness.)
+# your intention. The marker is `# -` [sharp-space-minus] at the begining of line. For
+# example,
 
-
-def add2(x: int, y: int) -> int:
-    """Add `x` and `y`."""
-    return x + y  # a comment in a code cell.
-
-
-# -
-def sub2(x: int, y: int) -> int:
-    """Substract `y` from `x`."""
-    return x - y  # a comment in a code cell.
-
-
-# By defaults, MkDocs processes Markdown files only for pages. This setting is defined
-# in the MkDocs's utility library: `mkdocs.utils.markdown_extensions`. Pheasant plugin
-# appends `.py` to this setting in the Plugin's source:
 # ~~~python
-# from mkdocs.utils import markdown_extensions
-# markdown_extensions.append(".py")
+# a, b = 1, 2
+# a
+# # -
+# b
 # ~~~
 
-# By this setting, MkDocs reads a `.py` file as a Markdown source. Then, Pheasant will
-# convert it into a real Markdown format in order to be processed by other converters
-# later.
+# becomes:
 
-# ## Fenced code block
-# You can write a fenced code block in commented-Markdown source.
+a, b = 1, 2
+a
+# -
+b
+
+# You can add options to a code block by adding them after a block devider (`# -`).
+
+# ~~~python
+# # -hide
+# c = 3
+# # Output: `c` is equal to {{c}}.
+# ~~~
+
+# Above python code is equivalent to the next Markdown source.
+# ~~~
+# ```python hide
+# c = 3
+# ```
+# Output: `c` is equal to {{c}}.
+# ~~~
+
+# -hide
+c = 3
+# Output: `c` is equal to {{c}}.
+
+# ## Fenced code block in Python source
+# You can write a fenced code block in a Python source as comment.
 
 # ~~~python
 # # ```python
