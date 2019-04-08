@@ -9,7 +9,8 @@ from pheasant.core.base import format_timedelta
 from pheasant.core.decorator import comment, surround
 from pheasant.core.renderer import Renderer
 from pheasant.renderers.jupyter.client import (execute, execution_report,
-                                               find_kernel_names)
+                                               find_kernel_names,
+                                               restart_kernel)
 from pheasant.renderers.jupyter.display import (EXTRA_MODULES, extra_html,
                                                 extra_resources,
                                                 select_display_data)
@@ -89,6 +90,13 @@ class Jupyter(Renderer):
 
     @comment("code")
     def render_inline_code(self, context, splitter, parser) -> Iterator[str]:
+        if context["code"].strip() == "!restart":
+            kernel_name = self.config["kernel_name"][self.language]
+            restart_kernel(kernel_name)
+            self.cache = {}
+            self.reset()
+            return
+
         context["option"] = self.option
         context["language"] = self.language
         code = context["code"]

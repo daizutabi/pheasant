@@ -27,11 +27,21 @@ for k in range(10):
   print(k)
 ```
 
-
 ```python
 for k in range(10):
   print(k)
 'abc'
+```
+
+```python
+a = 4
+a
+```
+
+{{!restart}}
+
+```python
+a
 ```
 
 

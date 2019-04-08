@@ -91,6 +91,13 @@ def get_kernel_client(kernel_name: str):
     return kernel_client
 
 
+def restart_kernel(kernel_name: str):
+    if kernel_name in kernel_clients:
+        del kernel_clients[kernel_name]
+    kernel_manager = get_kernel_manager(kernel_name)
+    kernel_manager.restart_kernel()
+
+
 def execute(
     code: str, kernel_name: Optional[str] = None, language: str = "python"
 ) -> List:
