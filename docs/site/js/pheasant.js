@@ -33,7 +33,13 @@ function ready(jQuery) {
     }
   });
 
-
+  $('.pheasant-fenced-code .report .count').attr('title', 'Page Cell Number').tooltip(tooltip);
+  $('.pheasant-fenced-code .report .start').attr('title', 'Evaluated at').tooltip(tooltip);
+  $('.pheasant-fenced-code .report .cell').attr('title', 'Cell Execution Time').tooltip(tooltip);
+  $('.pheasant-fenced-code .report .page').attr('title', 'Page Execution Time').tooltip(tooltip);
+  $('.pheasant-fenced-code .report .total').attr('title', 'Total Execution Time').tooltip(tooltip);
+  $('.pheasant-fenced-code .report .total-count').attr('title', 'Total Execution Count').tooltip(tooltip);
+  $('.pheasant-fenced-code .report .kernel').attr('title', 'Kernel Name').tooltip(tooltip);
 }
 
 $(ready);

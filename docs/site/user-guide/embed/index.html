@@ -211,14 +211,15 @@ edit_uri: &#34;&#34;
 <p>You can write to inspect the whole module content:</p>
 <div class="pheasant-fenced-code"><div class="source"><pre><code class="markdown">{%?pheasant%}</code></pre></div></div>
 
-<div class="pheasant-fenced-code"><div class="source"><pre><code class="python">__version__ = &#34;2.1.6&#34;
+<div class="pheasant-fenced-code"><div class="source"><pre><code class="python">__version__ = &#34;2.2.0&#34;
 </code></pre></div></div>
 
 <p>A part of the module can be specified as usual.</p>
 <div class="pheasant-fenced-code"><div class="input"><pre><code class="python">from pheasant.renderers.jupyter.jupyter import Jupyter</code></pre>
 <p class="report"><span class="count">[1]</span>
-<span class="start">2019-04-08 09:49:08</span> (<span class="elasped">11.0ms</span>)
-<span class="right"><span class="kernel">python3</span><span class="count"> [43]</span>
+<span class="start">2019-04-09 06:11:57</span> (<span class="cell">15.5ms</span>)
+<span class="right"><span class="kernel">python3</span> <span class="total-count">[43]</span>
+(<span class="page">141ms</span>) (<span class="total">5.35s</span>)
 </span></p></div></div>
 
 <div class="pheasant-fenced-code"><div class="source"><pre><code class="markdown">{%?Jupyter[:21]%}</code></pre></div></div>
@@ -258,8 +259,9 @@ edit_uri: &#34;&#34;
 <div class="pheasant-fenced-code"><div class="input"><pre><code class="python">def func(x, y):
     return x + y</code></pre>
 <p class="report"><span class="count">[2]</span>
-<span class="start">2019-04-08 09:49:08</span> (<span class="elasped">6.97ms</span>)
-<span class="right"><span class="kernel">python3</span><span class="count"> [45]</span>
+<span class="start">2019-04-09 06:11:57</span> (<span class="cell">5.00ms</span>)
+<span class="right"><span class="kernel">python3</span> <span class="total-count">[45]</span>
+(<span class="page">163ms</span>) (<span class="total">5.37s</span>)
 </span></p></div></div>
 
 <p>If the included file contains header statements, the document structure may be broken. For example, a file to be included contains:</p>

@@ -38,13 +38,6 @@ a = 4
 a
 ```
 
-{{!restart}}
-
-```python
-a
-```
-
-
 <!--break-->
 
 abc

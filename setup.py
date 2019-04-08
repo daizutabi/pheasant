@@ -1,5 +1,7 @@
 import os
 import re
+import subprocess
+import sys
 
 from setuptools import find_packages, setup
 
@@ -26,10 +28,41 @@ long_description = (
     "Pheasant can automatically number headers, figures, tables, etc."
 )
 
+
+def check():
+    def run(command):
+        assert subprocess.run(command.split()).returncode == 0
+        print(f"'{command}' --- OK")
+
+    run("pycodestyle pheasant")
+    run("pyflakes pheasant")
+    run("mypy pheasant")
+    run("pycodestyle tests")
+    run("pyflakes tests")
+
+
+def publish():
+    check()
+    subprocess.run("python setup.py sdist --formats=gztar,zip".split())
+    subprocess.run("python setup.py bdist_wheel".split())
+    sys.exit(0)
+    subprocess.run("twine upload dist/*".split())
+    print("You probably want to also tag the version now:")
+    print("  git tag -a {0} -m 'Version {0}'".format(get_version("pheasant")))
+    print("  git push origin --tags")
+    sys.exit(0)
+
+
+if sys.argv[-1] == "publish":
+    publish()
+
+if sys.argv[-1] == "check":
+    check()
+
 setup(
     name="pheasant",
     version=get_version("pheasant"),
-    description="Documentation tool for Pelican and MkDocs.",
+    description="Documentation tool for Markdown conversion by Jupyter client.",
     long_description=long_description,
     url="https://pheasant.daizutabi.net",
     author="daizutabi",
@@ -38,6 +71,7 @@ setup(
     packages=find_packages(exclude=["tests", "docs"]),
     include_package_data=True,
     install_requires=["click", "ipykernel", "markdown", "jinja2"],
+    python_requires=">=3.7",
     setup_requires=["pytest-runner"],
     tests_require=[
         "pytest",
@@ -65,5 +99,3 @@ setup(
         "Topic :: Documentation",
     ],
 )
-
-# https://pypi.python.org/pypi?%3Aaction=list_classifiers

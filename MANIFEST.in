@@ -1,7 +1,5 @@
-# Include the license file
-include LICENSE
 include README.md
-
-# Include the data files
-recursive-include templates *
-recursive-include static *
+include LICENSE
+recursive-include pheasant *.js *.css *.yml *.jinja2
+recursive-exclude * __pycache__
+recursive-exclude * *.py[co]

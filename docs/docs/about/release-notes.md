@@ -14,10 +14,14 @@ You can determine your currently installed version using `pheasant --version`:
 
 ~~~
 $ pheasant --version
-pheasant, version 2.1.6 from /path/to/pheasant (Python 3.7)
+pheasant, version 2.2.0 from /path/to/pheasant (Python 3.7)
 ~~~
 
 ## Change log
+
+### Version 2.2.0 (2019-04-09)
+
+* Rewrite MANIFEST.in, setup.py
 
 ### Version 2.1.6 (2019-04-08)
 

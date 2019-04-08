@@ -50,7 +50,7 @@ def wrap(source: str, max_line_length: int) -> Iterator[str]:
             yield line[begin:].strip()
             break
         elif distance[cursor] - distance[begin] >= max_line_length and begin != end:
-            if line[cursor] == ' ':
+            if line[cursor] == " ":
                 end = cursor
             yield line[begin : end + 1].strip()
             begin = end = end + 1
