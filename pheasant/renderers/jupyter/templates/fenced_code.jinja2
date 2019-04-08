@@ -3,9 +3,10 @@
 {%- if 'hide' not in option -%}
 <div class="input"><pre><code class="{{ language }}">{{ code }}</code></pre>
 <p class="report"><span class="count">[{{ report.cursor }}]</span>
-<span class="start">{{ report.start }}</span> (<span class="elasped">{{ report.cell }}</span>)
-<span class="right">{%- if option -%}<span class="option"> ({{ option }}) </span>{%- endif -%}
-<span class="kernel">{{ config.kernel_name[language] }}</span><span class="count"> [{{ report.count }}]</span>
+<span class="start">{{ report.start }}</span> (<span class="cell">{{ report.cell }}</span>)
+<span class="right">{%- if option -%}<span class="option">({{ option }})</span> {% endif -%}
+<span class="kernel">{{ config.kernel_name[language] }}</span> <span class="total-count">[{{ report.count }}]</span>
+(<span class="page">{{ report.page }}</span>) (<span class="total">{{ report.total }}</span>)
 </span></p></div>
   {%- for output in outputs if output.type != 'display_data' -%}
     {%- if output.type == 'error' -%}

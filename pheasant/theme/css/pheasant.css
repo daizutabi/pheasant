@@ -215,12 +215,12 @@ h2, h3, h4, h5 {
   color: #999;
 }
 
-.pheasant-fenced-code .report .elasped {
+.pheasant-fenced-code .report .cell {
   color: #777;
   font-weight: bold;
 }
 
-.pheasant-fenced-code .cached .report .elasped {
+.pheasant-fenced-code .cached .report .cell {
   font-weight: normal;
 }
 
@@ -396,25 +396,9 @@ table.dataframe tbody td {
   color: black;
 }
 
-/**************************************************
-  ANSI
-**************************************************/
-.error code {
-  color: red;
-}
 
-.ansi31 {
-  color: red;
-}
-
-.ansi32 {
-  color: orange;
-}
-
-.ansi33 {
-  color: blue;
-}
-
-.ansi34 {
-  color: blue;
+@media screen and (max-width: 768px) {
+  .pheasant-fenced-code .report .right {
+    display: none;
+  }
 }
