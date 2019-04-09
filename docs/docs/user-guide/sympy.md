@@ -27,7 +27,7 @@ On the other hand, in an inline code, a SymPy object just returns a latex string
 $${{x**2+x+1}}$$
 ~~~
 
-* You can concatenate SymPy objects and/or normal latex source in the same line to make a expression form you want:
+* You can concatenate SymPy objects and/or normal latex source in the same line to make an expression form you want:
 
 ~~~copy
 $${{x**2}} - {{x}} + {{x}} + \frac1y$$
