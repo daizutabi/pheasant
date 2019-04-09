@@ -294,12 +294,12 @@ h2, h3, h4, h5 {
 }
 
 .pheasant-button-container .toggle::before {
-  content: "\f070";
+  content: "\f06e";
   font-family: FontAwesome;
 }
 
 .pheasant-button-container .toggle.hide::before {
-  content: "\f06e";
+  content: "\f070";
   font-family: FontAwesome;
 }
 

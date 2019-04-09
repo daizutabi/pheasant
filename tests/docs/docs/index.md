@@ -18,7 +18,14 @@ print("Hello Python")
 ```python
 import sys
 sys.stderr.write("123")
-print(1)
+sys.stderr.flush()
+sys.stdout.write("123")
+sys.stdout.flush()
+sys.stderr.write("123")
+sys.stderr.flush()
+sys.stdout.write("123")
+sys.stdout.flush()
+1/0
 ```
 
 ```python
