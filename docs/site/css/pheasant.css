@@ -1,12 +1,8 @@
 /**************************************************
  Main
 **************************************************/
-body {
-  font-size: 100%;
-}
-
 code {
-  font-family: "Fira Code";
+  font-family: "Fira Code", "Courier New", Consolas, monospace;
   color: #03E;
   border: none;
   font-size: 14px;
@@ -97,6 +93,14 @@ h2, h3, h4, h5 {
 /**************************************************
  Fenced code style
 **************************************************/
+:root {
+  --input-color: #99b;
+  --output-color: #cc9;
+  --error-color: #f99;
+  --source-color: #aca;
+  --display-color: #ccc;
+}
+
 .pheasant-fenced-code {
   margin-bottom: 10px;
 }
@@ -116,14 +120,6 @@ h2, h3, h4, h5 {
   width: 3.5em;
   text-align: right;
   margin-top: 5px;
-}
-
-:root {
-  --input-color: #99b;
-  --output-color: #cc9;
-  --error-color: #f99;
-  --source-color: #aca;
-  --display-color: #ccc;
 }
 
 .pheasant-fenced-code .cell.input::before {
@@ -186,7 +182,6 @@ h2, h3, h4, h5 {
 
 .pheasant-fenced-code code {
   color: black;
-  font-family: "Fira Code";
   line-height: 18px;
   font-size: 80%;
   background: transparent;
@@ -391,8 +386,22 @@ table.dataframe tbody td {
   color: black;
 }
 
+
+/**************************************************
+ Media query
+**************************************************/
+
 @media screen and (max-width: 768px) {
   .pheasant-fenced-code .report .right {
     display: none;
   }
+
+  .pheasant-fenced-code .cell {
+    margin: 2px 0px 2px 0px;
+  }
+
+  .pheasant-fenced-code .cell::before {
+    display: none;
+  }
+
 }
