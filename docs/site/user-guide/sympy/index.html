@@ -148,34 +148,34 @@ TeX: { equationNumbers: { autoNumber: "AMS" } } });</script>
 
 <h1 id="4-sympy"><span class="pheasant-header"><span class="header"><span class="number">4</span> <span class="title">SymPy</span></span></span></h1>
 <p>First, import the SymPy package.</p>
-<div class="pheasant-fenced-code"><div class="input"><pre><code class="python">import sympy</code></pre>
-<p class="report"><span class="count">[1]</span>
-<span class="start">2019-04-09 06:11:57</span> (<span class="cell">351ms</span>)
+<div class="pheasant-fenced-code"><div class="cell input"><div class="code"><pre><code class="python">import sympy</code></pre></div>
+<div class="report"><p><span class="count">[1]</span>
+<span class="start">2019-04-09 13:34:03</span> (<span class="cell-time">351ms</span>)
 <span class="right"><span class="kernel">python3</span> <span class="total-count">[47]</span>
-(<span class="page">357ms</span>) (<span class="total">5.73s</span>)
-</span></p></div></div>
+(<span class="page-time">356ms</span>) (<span class="total-time">5.75s</span>)
+</span></p></div></div></div>
 
 <h2 id="41-basic-usage"><span class="pheasant-header"><span class="header"><span class="number">4.1</span> <span class="title">Basic usage</span></span></span></h2>
 <p>SymPy symbols or expressions in a fenced code block are automatically rendered in display mode:</p>
-<div class="pheasant-fenced-code"><div class="input"><pre><code class="python">x = sympy.Symbol(&#39;x&#39;)
-x**3</code></pre>
-<p class="report"><span class="count">[2]</span>
-<span class="start">2019-04-09 06:11:58</span> (<span class="cell">15.6ms</span>)
+<div class="pheasant-fenced-code"><div class="cell input"><div class="code"><pre><code class="python">x = sympy.Symbol(&#39;x&#39;)
+x**3</code></pre></div>
+<div class="report"><p><span class="count">[2]</span>
+<span class="start">2019-04-09 13:34:04</span> (<span class="cell-time">15.5ms</span>)
 <span class="right"><span class="kernel">python3</span> <span class="total-count">[48]</span>
-(<span class="page">372ms</span>) (<span class="total">5.74s</span>)
-</span></p></div>
+(<span class="page-time">372ms</span>) (<span class="total-time">5.77s</span>)
+</span></p></div></div>
 
-<div class="display"><div class="content">$$x^{3}$$</div></div></div>
+<div class="cell display"><div class="content">$$x^{3}$$</div></div></div>
 
 <p>On the other hand, in an inline code, a SymPy object just returns a latex string like this <code>{{x**2}}</code> = x^{2}. This is intentional behavior. You can choose inline mode or display mode. Furthermore, you can form an expression you want.</p>
-<div class="pheasant-fenced-code"><div class="source"><pre><code class="markdown">* This is an inline code example: ${{x**2+x+1}}$</code></pre></div></div>
+<div class="pheasant-fenced-code"><div class="cell source"><div class="code"><pre><code class="markdown">* This is an inline code example: ${{x**2+x+1}}$</code></pre></div></div></div>
 
 <ul>
 <li>This is an inline code example: <span><span class="MathJax_Preview">x^{2} + x + 1</span><script type="math/tex">x^{2} + x + 1</script></span></li>
 </ul>
-<div class="pheasant-fenced-code"><div class="source"><pre><code class="markdown">* This is a display code example:
+<div class="pheasant-fenced-code"><div class="cell source"><div class="code"><pre><code class="markdown">* This is a display code example:
 
-$${{x**2+x+1}}$$</code></pre></div></div>
+$${{x**2+x+1}}$$</code></pre></div></div></div>
 
 <ul>
 <li>This is a display code example:</li>
@@ -187,7 +187,7 @@ $${{x**2+x+1}}$$</code></pre></div></div>
 <ul>
 <li>You can concatenate SymPy objects and/or normal latex source in the same line to make a expression form you want:</li>
 </ul>
-<div class="pheasant-fenced-code"><div class="source"><pre><code class="markdown">$${{x**2}} - {{x}} + {{x}} + \frac1y$$</code></pre></div></div>
+<div class="pheasant-fenced-code"><div class="cell source"><div class="code"><pre><code class="markdown">$${{x**2}} - {{x}} + {{x}} + \frac1y$$</code></pre></div></div></div>
 
 <div>
 <div class="MathJax_Preview">x^{2} - x + x + \frac1y</div>
@@ -196,7 +196,7 @@ $${{x**2+x+1}}$$</code></pre></div></div>
 <p>Here, <span><span class="MathJax_Preview">-x+x</span><script type="math/tex">-x+x</script></span> does not cancel out automatically.</p>
 <h2 id="42-numbering"><span class="pheasant-header"><span class="header"><span class="number">4.2</span> <span class="title">Numbering</span></span></span></h2>
 <p>Pheasant uses MathJax's <a href="http://docs.mathjax.org/en/latest/tex.html#automatic-equation-numbering">Automatic Equation Numbering</a>. Use the custom header syntax like the figure and table. You can add a tag for link.</p>
-<div class="pheasant-fenced-code"><div class="source"><pre><code class="markdown">#Eq f(x) = {{x**2}} {#eq-a#}</code></pre></div></div>
+<div class="pheasant-fenced-code"><div class="cell source"><div class="code"><pre><code class="markdown">#Eq f(x) = {{x**2}} {#eq-a#}</code></pre></div></div></div>
 
 <div class="pheasant-header"><div class="equation" id="eq-a"><p>
 \begin{equation}
@@ -207,7 +207,7 @@ f(x) = x^{2}
 </p></div></div>
 
 <p>Using starred form, the equation won’t be numbered.</p>
-<div class="pheasant-fenced-code"><div class="source"><pre><code class="markdown">#Eq* f(x) = {{x**2}}</code></pre></div></div>
+<div class="pheasant-fenced-code"><div class="cell source"><div class="code"><pre><code class="markdown">#Eq* f(x) = {{x**2}}</code></pre></div></div></div>
 
 <div class="pheasant-header"><div class="equation"><p>
 \begin{equation*}
@@ -216,13 +216,13 @@ f(x) = x^{2}
 
 </p></div></div>
 
-<div class="pheasant-fenced-code"><div class="source"><pre><code class="markdown">As usual, you can refer to equation: See Eq. {#eq-a#}</code></pre></div></div>
+<div class="pheasant-fenced-code"><div class="cell source"><div class="code"><pre><code class="markdown">As usual, you can refer to equation: See Eq. {#eq-a#}</code></pre></div></div></div>
 
 <p>As usual, you can refer to equation: See Eq. \eqref{eq-a}</p>
 <p>Also, you can use native latex syntax. From MathJax document:</p>
-<div class="pheasant-fenced-code"><div class="source"><pre><code class="markdown">In equation \eqref{eq:sample}, we find the value of an interesting integral:
+<div class="pheasant-fenced-code"><div class="cell source"><div class="code"><pre><code class="markdown">In equation \eqref{eq:sample}, we find the value of an interesting integral:
 
-#Eq \int_0^\infty \frac{x^3}{e^x-1}\,dx = \frac{\pi^4}{15} \label{eq:sample}</code></pre></div></div>
+#Eq \int_0^\infty \frac{x^3}{e^x-1}\,dx = \frac{\pi^4}{15} \label{eq:sample}</code></pre></div></div></div>
 
 <p>In equation \eqref{eq:sample}, we find the value of an interesting integral:</p>
 <div class="pheasant-header"><div class="equation"><p>
@@ -233,18 +233,18 @@ f(x) = x^{2}
 </p></div></div>
 
 <h2 id="43-matrix"><span class="pheasant-header"><span class="header"><span class="number">4.3</span> <span class="title">Matrix</span></span></span></h2>
-<div class="pheasant-fenced-code"><div class="input"><pre><code class="python">import numpy as np
+<div class="pheasant-fenced-code"><div class="cell input"><div class="code"><pre><code class="python">import numpy as np
 
 xw = np.array([[11, 12, 13, 14], [21, 22, 23, 24], [31, 32, 33, 34]])
 b = np.array([1000, 2000, 3000, 4000])
-sympy.Matrix(xw + np.ones((3, 1), int) @ b.reshape((1, -1)))</code></pre>
-<p class="report"><span class="count">[13]</span>
-<span class="start">2019-04-09 06:11:58</span> (<span class="cell">12.0ms</span>)
+sympy.Matrix(xw + np.ones((3, 1), int) @ b.reshape((1, -1)))</code></pre></div>
+<div class="report"><p><span class="count">[13]</span>
+<span class="start">2019-04-09 13:34:04</span> (<span class="cell-time">13.0ms</span>)
 <span class="right"><span class="kernel">python3</span> <span class="total-count">[59]</span>
-(<span class="page">488ms</span>) (<span class="total">5.86s</span>)
-</span></p></div>
+(<span class="page-time">482ms</span>) (<span class="total-time">5.88s</span>)
+</span></p></div></div>
 
-<div class="display"><div class="content">$$\left[\begin{matrix}1011 & 2012 & 3013 & 4014\\1021 & 2022 & 3023 & 4024\\1031 & 2032 & 3033 & 4034\end{matrix}\right]$$</div></div></div>
+<div class="cell display"><div class="content">$$\left[\begin{matrix}1011 & 2012 & 3013 & 4014\\1021 & 2022 & 3023 & 4024\\1031 & 2032 & 3033 & 4034\end{matrix}\right]$$</div></div></div>
               
             </div>
           </div>

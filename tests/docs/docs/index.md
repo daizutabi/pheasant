@@ -1,5 +1,7 @@
 # Title {{2*3}}
 
+abc 2019
+
 ```python
 import sympy
 ```
@@ -14,13 +16,18 @@ print("Hello Python")
 ```
 
 ```python
-11/0
+import sys
+sys.stderr.write("123")
+print(1)
 ```
 
 ```python
-[1,
-2] # d
+11/0
 ```
+
+~~~
+a = 1
+~~~
 
 ```python
 for k in range(10):

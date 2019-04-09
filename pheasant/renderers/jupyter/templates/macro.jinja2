@@ -1,6 +1,6 @@
 {%- macro output_display(output, inline) -%}
   {%- if output.type == 'display_data' or 'text/html' in output.data or 'text/latex' in output.data and not inline-%}
-  {{ "\n\n" }}<div class="display"><div class="content">
+  {{ "\n\n" }}<div class="cell display"><div class="content">
     {%- for type in output.data -%}
       {%- if type == 'text/html' -%}
         {%- autoescape false -%}{{ output.data[type] }}{%- endautoescape -%}

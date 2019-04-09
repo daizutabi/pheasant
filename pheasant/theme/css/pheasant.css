@@ -101,24 +101,87 @@ h2, h3, h4, h5 {
   margin-bottom: 10px;
 }
 
-.pheasant-fenced-code .input,
-.pheasant-fenced-code .output,
-.pheasant-fenced-code .stdout,
-.pheasant-fenced-code .stderr,
-.pheasant-fenced-code .error,
-.pheasant-fenced-code .source,
-.pheasant-fenced-code .display {
+.pheasant-fenced-code .cell {
   position: relative;
   margin: 2px 0px 2px 2em;
   padding: 0px;
   line-height: normal;
 }
 
-.pheasant-fenced-code pre {
-  border: 1px solid #ccc;
+.pheasant-fenced-code .cell::before {
+  content: "";
+  position: absolute;
+  left: -3.8em;
+  font-size: 14px;
+  width: 3.5em;
+  text-align: right;
+  margin-top: 5px;
+}
+
+:root {
+  --input-color: #99b;
+  --output-color: #cc9;
+  --error-color: #f99;
+  --source-color: #aca;
+  --display-color: #ccc;
+}
+
+.pheasant-fenced-code .cell.input::before {
+  content: "In:";
+  color: var(--input-color);
+}
+
+.pheasant-fenced-code .cached .cell.input::before {
+  content: "#In:";
+  color: var(--input-color);
+}
+
+.pheasant-fenced-code .cell.stdout::before {
+  content: "Stdout:";
+  color: var(--output-color);
+}
+
+.pheasant-fenced-code .cell.stderr::before {
+  content: "Stderr:";
+  color: var(--error-color);
+}
+
+.pheasant-fenced-code .cell.output::before {
+  content: "Out:";
+  color: var(--output-color);
+}
+
+.pheasant-fenced-code .cell.error::before {
+  content: "Error:";
+  color: var(--error-color);
+}
+
+.pheasant-fenced-code .cell.source::before {
+  content: "Src:";
+  color: var(--source-color);
+}
+
+.pheasant-fenced-code .cell.docstring::before {
+  content: "Doc:";
+  color: var(--source-color);
+}
+
+.pheasant-fenced-code .cell.display::before {
+  content: "Display:";
+  color: var(--display-color);
+}
+
+.pheasant-fenced-code .code {
+  border-width: 1px;
+  border-style: solid;
   border-radius: 4px;
   margin: 0px;
   padding: 4px 6px;
+}
+
+.pheasant-fenced-code pre {
+  margin: 0px;
+  padding: 0px;
 }
 
 .pheasant-fenced-code code {
@@ -130,81 +193,63 @@ h2, h3, h4, h5 {
   padding: 0px;
 }
 
-.pheasant-button-container {
-  position: absolute;
-  top: 2px;
-  right: 5px;
+.pheasant-fenced-code .input .code {
+  border-color: #bdd;
+  background: #dff;
 }
 
-.pheasant-fenced-code .toggle-button {
-  border: none;
-  background: none;
-  outline: none;
-  color: #aac;
+.pheasant-fenced-code .stdout .code,
+.pheasant-fenced-code .output .code {
+  border-color: #ddb;
+  background: #ffd;
 }
 
-.pheasant-fenced-code .toggle-button:before {
-  content: "\f070";
-  font-family: FontAwesome;
+.pheasant-fenced-code .stderr .code,
+.pheasant-fenced-code .error .code {
+  border-color: #fcc;
+  background: #fee;
 }
 
-.pheasant-fenced-code .hide .toggle-button:before {
-  content: "\f06e";
-  font-family: FontAwesome;
+.pheasant-fenced-code .source .code,
+.pheasant-fenced-code .docstring .code {
+  border-color: #cec;
+  background: #efe;
 }
 
-.pheasant-fenced-code .input pre,
-.pheasant-fenced-code .error pre {
+.pheasant-fenced-code .input .code,
+.pheasant-fenced-code .error .code {
   border-radius: 4px 4px 0px 0px;
 }
 
-.pheasant-fenced-code .input.hide pre,
-.pheasant-fenced-code .error.hide pre {
-  border-radius: 4px;
+.pheasant-fenced-code .cell .report {
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 0px 0px 4px 4px;
+  border-top: none;
+  padding: 2px 6px;
   margin-bottom: 2px;
+  color: #777;
 }
 
 .pheasant-fenced-code .input .report {
-  border-bottom: 1px solid #bdd;
-  border-left: 1px solid #bdd;
-  border-right: 1px solid #bdd;
-  border-radius: 0px 0px 4px 4px;
+  border-color: #bdd;
   background: #eff;
-  color: #777;
-  font-size: 70%;
-  padding: 0px 8px;
-  line-height: 16px;
-  margin-bottom: 2px;
 }
 
-.pheasant-fenced-code .error .traceback {
-  border-top: none;
-  border-bottom: 1px solid pink;
-  border-left: 1px solid pink;
-  border-right: 1px solid pink;
-  border-radius: 0px 0px 4px 4px;
-  background: #fff9f9;
-  color: #777;
-  font-size: 90%;
-  padding: 0px 8px;
-  line-height: 16px;
-  margin-bottom: 2px;
-}
-
-.pheasant-fenced-code .input.hide .report,
-.pheasant-fenced-code .error.hide .traceback,
-.pheasant-fenced-code .stdout.hide code {
-  display: none;
-}
-
-.pheasant-fenced-code .stdout.hide pre {
-  min-height: 26px;
-  background: #fafafa;
-  border-color: #ccc;
-}
-
-.pheasant-fenced-code .cached .report {
+.pheasant-fenced-code .cached .input .report {
   background: transparent;
+}
+
+.pheasant-fenced-code .error .report {
+  border-color: #fcc;
+  background: transparent;
+}
+
+.pheasant-fenced-code .cell .report p,
+.pheasant-fenced-code .cell .report code {
+  font-size: 70%;
+  margin: 0px;
+  line-height: normal;
 }
 
 .pheasant-fenced-code .report .count {
@@ -215,12 +260,12 @@ h2, h3, h4, h5 {
   color: #999;
 }
 
-.pheasant-fenced-code .report .cell {
+.pheasant-fenced-code .report .cell-time {
   color: #777;
   font-weight: bold;
 }
 
-.pheasant-fenced-code .cached .report .cell {
+.pheasant-fenced-code .cached .report .cell-time {
   font-weight: normal;
 }
 
@@ -233,104 +278,55 @@ h2, h3, h4, h5 {
   color: #aaa;
 }
 
-.pheasant-fenced-code .input:before,
-.pheasant-fenced-code .output:before,
-.pheasant-fenced-code .stdout:before,
-.pheasant-fenced-code .stderr:before,
-.pheasant-fenced-code .source:before,
-.pheasant-fenced-code .display:before,
-.pheasant-fenced-code .error:before {
-  content: "";
+.pheasant-button-container {
   position: absolute;
-  left: -3.8em;
-  font-size: 14px;
-  width: 3.5em;
-  text-align: right;
-  margin-top: 5px;
+  top: 2px;
+  right: 5px;
 }
 
-.pheasant-fenced-code .input:before {
-  content: "In:";
-  color: #99b;
+.pheasant-button-container .toggle {
+  border: none;
+  background: none;
+  outline: none;
+  padding: 0px;
+  margin: 0px 0px 0px 6px;
+  line-height: normal;
 }
 
-.pheasant-fenced-code .cached .input:before {
-  content: "#In:";
-  color: #99b;
+.pheasant-button-container .toggle::before {
+  content: "\f070";
+  font-family: FontAwesome;
 }
 
-.pheasant-fenced-code .stdout:before {
-  content: "Stdout:";
-  color: #bb9;
+.pheasant-button-container .toggle.hide::before {
+  content: "\f06e";
+  font-family: FontAwesome;
 }
 
-.pheasant-fenced-code .stderr:before {
-  content: "Stderr:";
-  color: #fdd;
+.pheasant-button-container .toggle.input {
+  color: var(--input-color);
 }
 
-.pheasant-fenced-code .output:before {
-  content: "Out:";
-  color: #bb9;
+.pheasant-button-container .toggle.output {
+  color: var(--output-color);
 }
 
-.pheasant-fenced-code .error:before {
-  content: "Err:";
-  color: red;
+.pheasant-button-container .toggle.error {
+  color: var(--error-color);
 }
 
-.pheasant-fenced-code .source:before {
-  content: "Src:";
-  color: #aca;
+.pheasant-fenced-code .cell.hide .code {
+  border-radius: 4px;
+  margin-bottom: 2px;
 }
 
-.pheasant-fenced-code .display:before {
-  content: "Display:";
-  color: #ccc;
+.pheasant-fenced-code .cell.hide .report {
+  display: none;
 }
 
-.pheasant-fenced-code .docstring:before {
-  content: "Doc:";
-  color: #ccc;
-}
-
-.pheasant-fenced-code .input pre {
-  background-color: #dff;
-  border-color: #bdd;
-}
-
-.pheasant-fenced-code .stdout pre {
-  background-color: #ffd;
-  border-color: #ddb;
-}
-
-.pheasant-fenced-code .stderr pre {
-  background-color: #fdd;
-  border-color: #fcc;
-}
-
-.pheasant-fenced-code .output pre {
-  background-color: #ffd;
-  border-color: #ddb;
-}
-
-.pheasant-fenced-code .error pre {
-  background-color: #fdd;
-  border-color: pink;
-}
-
-.pheasant-fenced-code .source pre {
-  background-color: #efe;
-  border-color: #cec;
-}
-
-.pheasant-fenced-code .docstring pre {
-  background-color: #efe;
-  border-color: #cec;
-}
-
-.pheasant-inline-code span.cached {
-  background-color: #eec;
+.pheasant-fenced-code .cell.stdout.hide,
+.pheasant-fenced-code .cell.stderr.hide {
+  display: none;
 }
 
 .pheasant-fenced-code .display .content,
@@ -360,19 +356,19 @@ table.dataframe tbody td {
 
 table.dataframe thead th {
   color: darkblue;
-  background-color: lightcyan;
+  background: lightcyan;
   border: 1px solid #333366 !important;
 }
 
 table.dataframe tbody th {
   color: black;
-  background-color: #ffffee;
+  background: #ffffee;
   border: 1px solid #666633 !important;
 }
 
 table.dataframe tbody td {
   color: black;
-  background-color: #fcfcfc;
+  background: #fcfcfc;
   border-bottom: 1px solid #b9b9b9 !important;
   border-right: 1px solid #b9b9b9 !important;
 }
@@ -395,7 +391,6 @@ table.dataframe tbody td {
 .holoform label {
   color: black;
 }
-
 
 @media screen and (max-width: 768px) {
   .pheasant-fenced-code .report .right {
