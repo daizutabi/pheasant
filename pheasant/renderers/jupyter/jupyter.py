@@ -5,6 +5,9 @@ from dataclasses import dataclass, field
 from itertools import takewhile
 from typing import Dict, Iterator, List
 
+import colorama
+from termcolor import colored
+
 from pheasant.core.base import format_timedelta
 from pheasant.core.decorator import comment, surround
 from pheasant.core.renderer import Renderer
@@ -14,6 +17,8 @@ from pheasant.renderers.jupyter.client import (execute, execution_report,
 from pheasant.renderers.jupyter.display import (EXTRA_MODULES, extra_html,
                                                 extra_resources,
                                                 select_display_data)
+
+colorama.init()
 
 
 @dataclass
@@ -261,14 +266,25 @@ def progress_bar(jupyter, report):
     current = int(length * min(jupyter.cursor / jupyter.total, 1))
     count = str(report["count"]).zfill(4)
     if current >= length:
-        bar = "[" + "=" * length + "=]"
+        bar = colored("[" + "=" * length + "=]", "green")
     else:
-        bar = "[" + "=" * current + ">" + "-" * (length - current) + "]"
+        bar = (
+            colored("[", "green")
+            + colored("=" * current, "green")
+            + colored(">", "green", attrs=["bold"])
+            + colored("-" * (length - current), "yellow")
+            + colored("]", "yellow")
+        )
     cursor = str(jupyter.cursor).zfill(3)
     total = str(jupyter.total).zfill(3)
     count = f"[{count}]"
     progress = f"{cursor}/{total}"
     time = f"{report['cell']:>8} {report['page']:>8} {report['total']:>8}"
+
+    count = colored(count, "cyan", attrs=["bold"])
+    color = 'green' if current >= length else 'yellow'
+    progress = colored(progress, color)
+    time = colored(time, color)
 
     line = " ".join([count, bar, progress, time])
     print("\r" + line, end="")

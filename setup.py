@@ -46,7 +46,7 @@ def publish():
     subprocess.run("python setup.py sdist bdist_wheel".split())
     subprocess.run("twine upload dist/*".split())
     print("You probably want to also tag the version now:")
-    print("  git tag -a {0} -m 'Version {0}'".format(get_version("pheasant")))
+    print("  git tag -a v{0} -m 'Version {0}'".format(get_version("pheasant")))
     print("  git push origin --tags")
     sys.exit(0)
 
@@ -68,7 +68,14 @@ setup(
     license="MIT",
     packages=find_packages(exclude=["tests", "docs"]),
     include_package_data=True,
-    install_requires=["click", "ipykernel", "markdown", "jinja2"],
+    install_requires=[
+        "click",
+        "ipykernel",
+        "markdown",
+        "jinja2",
+        "termcolor",
+        "colorama",
+    ],
     python_requires=">=3.7",
     setup_requires=["pytest-runner"],
     tests_require=[

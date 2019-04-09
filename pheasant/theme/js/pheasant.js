@@ -1,8 +1,9 @@
 function ready(jQuery) {
   var tooltip = {
+    track: true,
     position: {
-      my: "right+5 top-28",
-      at: "right top",
+      my: "center top-28",
+      at: "center top",
     }
   };
 
@@ -46,22 +47,13 @@ function ready(jQuery) {
     });
   });
 
-
-  var tooltip_center = {
-    track: true,
-    position: {
-      my: "center top-28",
-      at: "center top",
-    }
-  };
-
-  $('.pheasant-fenced-code .report .count').attr('title', 'Cell Number').tooltip(tooltip_center).css("cursor", "pointer");
-  $('.pheasant-fenced-code .report .start').attr('title', 'Evaluated at').tooltip(tooltip_center).css("cursor", "pointer");
-  $('.pheasant-fenced-code .report .cell-time').attr('title', 'Cell Execution Time').tooltip(tooltip_center).css("cursor", "pointer");
-  $('.pheasant-fenced-code .report .page-time').attr('title', 'Page Execution Time').tooltip(tooltip_center).css("cursor", "pointer");
-  $('.pheasant-fenced-code .report .total-time').attr('title', 'Total Execution Time').tooltip(tooltip_center).css("cursor", "pointer");
-  $('.pheasant-fenced-code .report .total-count').attr('title', 'Total Execution Count').tooltip(tooltip_center).css("cursor", "pointer");
-  $('.pheasant-fenced-code .report .kernel').attr('title', 'Kernel Name').tooltip(tooltip_center).css("cursor", "pointer");
+  $('.pheasant-fenced-code .report .count').attr('title', 'Cell Number').tooltip(tooltip).css("cursor", "pointer");
+  $('.pheasant-fenced-code .report .start').attr('title', 'Evaluated at').tooltip(tooltip).css("cursor", "pointer");
+  $('.pheasant-fenced-code .report .cell-time').attr('title', 'Cell Execution Time').tooltip(tooltip).css("cursor", "pointer");
+  $('.pheasant-fenced-code .report .page-time').attr('title', 'Page Execution Time').tooltip(tooltip).css("cursor", "pointer");
+  $('.pheasant-fenced-code .report .total-time').attr('title', 'Total Execution Time').tooltip(tooltip).css("cursor", "pointer");
+  $('.pheasant-fenced-code .report .total-count').attr('title', 'Total Execution Count').tooltip(tooltip).css("cursor", "pointer");
+  $('.pheasant-fenced-code .report .kernel').attr('title', 'Kernel Name').tooltip(tooltip).css("cursor", "pointer");
 }
 
 $(ready);

@@ -211,15 +211,15 @@ edit_uri: &#34;&#34;
 <p>You can write to inspect the whole module content:</p>
 <div class="pheasant-fenced-code"><div class="cell source"><div class="code"><pre><code class="markdown">{%?pheasant%}</code></pre></div></div></div>
 
-<div class="pheasant-fenced-code"><div class="cell source"><div class="code"><pre><code class="python">__version__ = &#34;2.2.2&#34;
+<div class="pheasant-fenced-code"><div class="cell source"><div class="code"><pre><code class="python">__version__ = &#34;2.2.3&#34;
 </code></pre></div></div></div>
 
 <p>A part of the module can be specified as usual.</p>
 <div class="pheasant-fenced-code"><div class="cell input"><div class="code"><pre><code class="python">from pheasant.renderers.jupyter.jupyter import Jupyter</code></pre></div>
 <div class="report"><p><span class="count">[1]</span>
-<span class="start">2019-04-09 19:37:53</span> (<span class="cell-time">12.1ms</span>)
+<span class="start">2019-04-09 20:48:23</span> (<span class="cell-time">19.1ms</span>)
 <span class="right"><span class="kernel">python3</span> <span class="total-count">[43]</span>
-(<span class="page-time">114ms</span>) (<span class="total-time">5.13s</span>)
+(<span class="page-time">139ms</span>) (<span class="total-time">5.23s</span>)
 </span></p></div></div></div>
 
 <div class="pheasant-fenced-code"><div class="cell source"><div class="code"><pre><code class="markdown">{%?Jupyter[:21]%}</code></pre></div></div></div>
@@ -259,9 +259,9 @@ edit_uri: &#34;&#34;
 <div class="pheasant-fenced-code"><div class="cell input"><div class="code"><pre><code class="python">def func(x, y):
     return x + y</code></pre></div>
 <div class="report"><p><span class="count">[2]</span>
-<span class="start">2019-04-09 19:37:53</span> (<span class="cell-time">5.12ms</span>)
+<span class="start">2019-04-09 20:48:23</span> (<span class="cell-time">5.00ms</span>)
 <span class="right"><span class="kernel">python3</span> <span class="total-count">[45]</span>
-(<span class="page-time">132ms</span>) (<span class="total-time">5.14s</span>)
+(<span class="page-time">159ms</span>) (<span class="total-time">5.26s</span>)
 </span></p></div></div></div>
 
 <p>If the included file contains header statements, the document structure may be broken. For example, a file to be included contains:</p>

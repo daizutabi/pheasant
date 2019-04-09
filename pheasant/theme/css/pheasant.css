@@ -245,8 +245,7 @@ h2, h3, h4, h5 {
   background: transparent;
 }
 
-.pheasant-fenced-code .cell .report p,
-.pheasant-fenced-code .cell .report code {
+.pheasant-fenced-code .cell .report p {
   font-size: 70%;
   margin: 0px;
   line-height: normal;

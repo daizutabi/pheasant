@@ -150,9 +150,9 @@ TeX: { equationNumbers: { autoNumber: "AMS" } } });</script>
 <p>First, import the SymPy package.</p>
 <div class="pheasant-fenced-code"><div class="cell input"><div class="code"><pre><code class="python">import sympy</code></pre></div>
 <div class="report"><p><span class="count">[1]</span>
-<span class="start">2019-04-09 19:37:53</span> (<span class="cell-time">359ms</span>)
+<span class="start">2019-04-09 20:48:23</span> (<span class="cell-time">347ms</span>)
 <span class="right"><span class="kernel">python3</span> <span class="total-count">[47]</span>
-(<span class="page-time">364ms</span>) (<span class="total-time">5.51s</span>)
+(<span class="page-time">354ms</span>) (<span class="total-time">5.61s</span>)
 </span></p></div></div></div>
 
 <h2 id="41-basic-usage"><span class="pheasant-header"><span class="header"><span class="number">4.1</span> <span class="title">Basic usage</span></span></span></h2>
@@ -160,9 +160,9 @@ TeX: { equationNumbers: { autoNumber: "AMS" } } });</script>
 <div class="pheasant-fenced-code"><div class="cell input"><div class="code"><pre><code class="python">x = sympy.Symbol(&#39;x&#39;)
 x**3</code></pre></div>
 <div class="report"><p><span class="count">[2]</span>
-<span class="start">2019-04-09 19:37:54</span> (<span class="cell-time">10.00ms</span>)
+<span class="start">2019-04-09 20:48:23</span> (<span class="cell-time">15.7ms</span>)
 <span class="right"><span class="kernel">python3</span> <span class="total-count">[48]</span>
-(<span class="page-time">374ms</span>) (<span class="total-time">5.52s</span>)
+(<span class="page-time">370ms</span>) (<span class="total-time">5.63s</span>)
 </span></p></div></div>
 
 <div class="cell display"><div class="content">$$x^{3}$$</div></div></div>
@@ -239,9 +239,9 @@ xw = np.array([[11, 12, 13, 14], [21, 22, 23, 24], [31, 32, 33, 34]])
 b = np.array([1000, 2000, 3000, 4000])
 sympy.Matrix(xw + np.ones((3, 1), int) @ b.reshape((1, -1)))</code></pre></div>
 <div class="report"><p><span class="count">[13]</span>
-<span class="start">2019-04-09 19:37:54</span> (<span class="cell-time">16.0ms</span>)
+<span class="start">2019-04-09 20:48:23</span> (<span class="cell-time">12.0ms</span>)
 <span class="right"><span class="kernel">python3</span> <span class="total-count">[59]</span>
-(<span class="page-time">477ms</span>) (<span class="total-time">5.62s</span>)
+(<span class="page-time">475ms</span>) (<span class="total-time">5.73s</span>)
 </span></p></div></div>
 
 <div class="cell display"><div class="content">$$\left[\begin{matrix}1011 & 2012 & 3013 & 4014\\1021 & 2022 & 3023 & 4024\\1031 & 2032 & 3033 & 4034\end{matrix}\right]$$</div></div></div>
