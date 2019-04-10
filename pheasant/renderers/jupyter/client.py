@@ -154,12 +154,12 @@ def output_from_msg(msg) -> Optional[dict]:
     elif msg_type == "stream":
         return dict(type=msg_type, name=content["name"], text=content["text"])
     elif msg_type == "error":
-        traceback = "\n".join([strip_ansi(tr) for tr in content["traceback"]])
+        traceback = "\n".join([strip_ansi(tr) for tr in content["traceback"][1:-1]])
         return dict(
             type=msg_type,
             ename=content["ename"],
             evalue=content["evalue"],
-            traceback=traceback,
+            traceback=traceback.strip(),
         )
     else:
         return None

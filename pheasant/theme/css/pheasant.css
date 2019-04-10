@@ -68,7 +68,7 @@ h2, h3, h4, h5 {
 }
 
 .pheasant-header .other .caption {
-  margin: 1px auto 0px 2em;
+  margin: 1px auto 0px 0px;
 }
 
 .pheasant-header .figure .prefix,
@@ -116,11 +116,14 @@ h2, h3, h4, h5 {
 .pheasant-fenced-code .cell::before {
   content: "";
   position: absolute;
-  left: -3.4em;
+  left: -2.6em;
   font-size: 14px;
-  width: 3.2em;
+  width: 2.3em;
   text-align: right;
   margin-top: 5px;
+  font-family: san serif;
+  font-size: 80%;
+  font-weight: bold;
 }
 
 .pheasant-fenced-code .cell.input::before {
@@ -133,36 +136,38 @@ h2, h3, h4, h5 {
   color: var(--input-color);
 }
 
+.pheasant-fenced-code .cell.output::before {
+  content: "Out";
+  color: var(--output-color);
+}
+
 .pheasant-fenced-code .cell.stdout::before {
   content: "\f550";
   font-family: "Font Awesome 5 Free";
-  font-weight: bold;
   color: var(--output-color);
 }
 
 .pheasant-fenced-code .cell.stderr::before {
   content: "\f550";
   font-family: "Font Awesome 5 Free";
-  font-weight: bold;
   color: var(--error-color);
-}
-
-.pheasant-fenced-code .cell.output::before {
-  content: "Out";
-  color: var(--output-color);
 }
 
 .pheasant-fenced-code .cell.error::before {
   content: "\f071";
   font-family: "Font Awesome 5 Free";
-  font-weight: bold;
   color: var(--error-color);
 }
 
 .pheasant-fenced-code .cell.source::before {
   content: "\f121";
   font-family: "Font Awesome 5 Free";
-  font-weight: bold;
+  color: var(--source-color);
+}
+
+.pheasant-fenced-code .cell.file::before {
+  content: "\f15c";
+  font-family: "Font Awesome 5 Free";
   color: var(--source-color);
 }
 
@@ -217,6 +222,7 @@ h2, h3, h4, h5 {
 }
 
 .pheasant-fenced-code .source .code,
+.pheasant-fenced-code .file .code,
 .pheasant-fenced-code .docstring .code {
   border-color: #cec;
   background: #efe;
@@ -406,11 +412,9 @@ table.dataframe tbody td {
   color: black;
 }
 
-
 /**************************************************
  Media query
 **************************************************/
-
 @media screen and (max-width: 768px) {
   .pheasant-fenced-code .report .right {
     display: none;
@@ -423,5 +427,4 @@ table.dataframe tbody td {
   .pheasant-fenced-code .cell::before {
     display: none;
   }
-
 }

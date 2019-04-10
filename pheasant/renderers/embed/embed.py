@@ -32,6 +32,8 @@ class Embed(Renderer):
             if not context["language"]:
                 context["language"] = "markdown"
             copy = False
+        if not context["option"]:
+            context["option"] = "source"
         yield "\n" + self.render("fenced_code", context) + "\n\n"
 
         if copy:
@@ -60,7 +62,7 @@ class Embed(Renderer):
             source = inspect(context["path"], kernel_name)
         source = select_source(source, context.get("lineno"))
         if context["mode"] in ["file", "inspect"]:
-            source = f"\n~~~{language}\n{source}\n~~~\n"
+            source = f"\n~~~{language} file\n{source}\n~~~\n"
         else:
             source += "\n"
         splitter.send(source)

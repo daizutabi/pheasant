@@ -33,7 +33,7 @@ def test_embed_parse_file(file):
     source = "=hello.py"
     output = file(path, content, source)
     answer = (
-        '\n\n<div class="cell source"><div class="code"><pre>'
+        '\n\n<div class="cell file"><div class="code"><pre>'
         '<code class="python">def func(x):\n    return 2 * x\n\nprint(f(3))'
         "</code></pre></div></div>\n\n"
     )
@@ -49,6 +49,6 @@ def test_embed_parse_file_not_founed(parse):
 def test_embed_parse_inspect(parse):
     execute("import pheasant")
     output = parse("?pheasant")
-    answer = ('\n\n<div class="cell source"><div class="code">'
+    answer = ('\n\n<div class="cell file"><div class="code">'
               '<pre><code class="python">__version__ =')
     assert output.startswith(answer)
