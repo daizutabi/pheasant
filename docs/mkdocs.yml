@@ -6,7 +6,14 @@ site_author: daizutabi
 repo_url: https://github.com/daizutabi/pheasant/
 edit_uri: ""
 
-theme: readthedocs
+theme:
+    name: readthedocs
+    hljs_languages:
+      - yaml
+    custom_dir: custom_theme/
+
+extra_css:
+  - css/extra.css
 
 plugins:
   - pheasant:

@@ -121,9 +121,8 @@ h2, h3, h4, h5 {
   width: 2.3em;
   text-align: right;
   margin-top: 5px;
-  font-family: san serif;
   font-size: 80%;
-  font-weight: bold;
+  font-weight: 900;
 }
 
 .pheasant-fenced-code .cell.input::before {
@@ -186,7 +185,6 @@ h2, h3, h4, h5 {
 .pheasant-fenced-code .cell.display::before {
   content: "\f108";
   font-family: "Font Awesome 5 Free";
-  font-weight: bold;
   color: var(--display-color);
 }
 

@@ -8,7 +8,8 @@
   
   <meta name="author" content="daizutabi">
   <link rel="shortcut icon" href="../../img/favicon.ico">
-  <title>Script - Pheasant</title>
+  <title>Script &mdash; 
+    Pheasant 2.2.5 documentation</title>
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   <link rel="stylesheet" href="../../css/theme.css" type="text/css" />
@@ -19,6 +20,7 @@
   <link href="//use.fontawesome.com/releases/v5.8.1/css/all.css" rel="stylesheet">
   <link href="//use.fontawesome.com/releases/v5.8.1/css/v4-shims.css" rel="stylesheet">
   <link href="../../css/pheasant.css" rel="stylesheet">
+  <link href="../../css/extra.css" rel="stylesheet">
   
   <script>
     // Current page data
@@ -30,6 +32,7 @@
   <script src="../../js/jquery-2.1.1.min.js"></script>
   <script src="../../js/modernizr-2.8.3.min.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/yaml.min.js"></script>
   <script>hljs.initHighlightingOnLoad();</script> 
   
 </head>
@@ -41,7 +44,8 @@
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
       <div class="wy-side-nav-search">
-        <a href="../.." class="icon icon-home"> Pheasant</a>
+  <a href="../.." class="icon icon-home"> Pheasant</a>
+  <div class="version">2.2.5</div>
         
       </div>
 
@@ -158,9 +162,9 @@ def sub(x: int, y: int) -&gt; int:
     &#34;&#34;&#34;Substract `y` from `x`.&#34;&#34;&#34;
     return x - y  # a comment in a code cell.</code></pre></div>
 <div class="report"><p><span class="cell-count">[1]</span>
-<span class="start">2019-04-10 10:57:04</span> (<span class="cell-time">12.0ms</span>)
+<span class="start">2019-04-10 14:17:10</span> (<span class="cell-time">9.97ms</span>)
 <span class="right"><span class="total-count">[61]</span> <span class="kernel">python3</span>
-(<span class="page-time">18.0ms</span>|<span class="total-time">6.14s</span>)
+(<span class="page-time">15.0ms</span>|<span class="total-time">4.51s</span>)
 </span></p></div></div></div>
 
 <p>When a comment starts at the begining of line after a code block, it divides the source into a code cell and a Markdown cell. This Markdown cell will continue until next Python code appears.</p>
@@ -174,16 +178,16 @@ b</code></pre></div></div></div>
 <div class="pheasant-fenced-code"><div class="cell input"><div class="code"><pre><code class="python">a, b = 1, 2
 a</code></pre></div>
 <div class="report"><p><span class="cell-count">[2]</span>
-<span class="start">2019-04-10 10:57:04</span> (<span class="cell-time">6.00ms</span>)
+<span class="start">2019-04-10 14:17:10</span> (<span class="cell-time">8.00ms</span>)
 <span class="right"><span class="total-count">[62]</span> <span class="kernel">python3</span>
-(<span class="page-time">24.0ms</span>|<span class="total-time">6.15s</span>)
+(<span class="page-time">23.0ms</span>|<span class="total-time">4.52s</span>)
 </span></p></div></div><div class="cell output"><div class="code"><pre><code class="plaintext">1</code></pre></div></div></div>
 
 <div class="pheasant-fenced-code"><div class="cell input"><div class="code"><pre><code class="python">b</code></pre></div>
 <div class="report"><p><span class="cell-count">[3]</span>
-<span class="start">2019-04-10 10:57:04</span> (<span class="cell-time">13.0ms</span>)
+<span class="start">2019-04-10 14:17:11</span> (<span class="cell-time">8.99ms</span>)
 <span class="right"><span class="total-count">[63]</span> <span class="kernel">python3</span>
-(<span class="page-time">37.0ms</span>|<span class="total-time">6.16s</span>)
+(<span class="page-time">31.9ms</span>|<span class="total-time">4.53s</span>)
 </span></p></div></div><div class="cell output"><div class="code"><pre><code class="plaintext">2</code></pre></div></div></div>
 
 <p>You can add options to a code block by adding them after a block devider (<code># -</code>).</p>
@@ -207,9 +211,9 @@ Output: `c` is equal to {{c}}.</code></pre></div></div></div>
 <p>becomes:</p>
 <div class="pheasant-fenced-code"><div class="cell input"><div class="code"><pre><code class="python">print(1)</code></pre></div>
 <div class="report"><p><span class="cell-count">[6]</span>
-<span class="start">2019-04-10 10:57:04</span> (<span class="cell-time">7.99ms</span>)
+<span class="start">2019-04-10 14:17:11</span> (<span class="cell-time">10.0ms</span>)
 <span class="right"><span class="total-count">[66]</span> <span class="kernel">python3</span>
-(<span class="page-time">59.0ms</span>|<span class="total-time">6.18s</span>)
+(<span class="page-time">57.0ms</span>|<span class="total-time">4.55s</span>)
 </span></p></div></div><div class="cell stdout"><div class="code"><pre><code class="text">1</code></pre></div></div></div>
 
 <p>And,</p>

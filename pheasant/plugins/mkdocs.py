@@ -22,6 +22,7 @@ class PheasantPlugin(BasePlugin):
         ("baz", config_options.Type(bool, default=True)),
     )
     converter = Pheasant()
+    version = pheasant.__version__
     logger.info(f"[Pheasant] Converter created.")
 
     def on_config(self, config, **kwargs):

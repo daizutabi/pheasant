@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{%- block htmltitle %}
+  <title>{% if page and page.title and not page.is_hompage %}{{ page.title }} &mdash; {% endif %}
+    {{ config.site_name }} {{ config.plugins.pheasant.version }} documentation</title>
+{%- endblock %}
+
+{%- block site_name %}
+  <a href="{{ nav.homepage.url|url }}" class="icon icon-home"> {{ config.site_name }}</a>
+  <div class="version">{{ config.plugins.pheasant.version }}</div>
+{%- endblock %}

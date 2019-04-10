@@ -8,7 +8,8 @@
   
   <meta name="author" content="daizutabi">
   <link rel="shortcut icon" href="../../img/favicon.ico">
-  <title>Embed - Pheasant</title>
+  <title>Embed &mdash; 
+    Pheasant 2.2.5 documentation</title>
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   <link rel="stylesheet" href="../../css/theme.css" type="text/css" />
@@ -19,6 +20,7 @@
   <link href="//use.fontawesome.com/releases/v5.8.1/css/all.css" rel="stylesheet">
   <link href="//use.fontawesome.com/releases/v5.8.1/css/v4-shims.css" rel="stylesheet">
   <link href="../../css/pheasant.css" rel="stylesheet">
+  <link href="../../css/extra.css" rel="stylesheet">
   
   <script>
     // Current page data
@@ -30,6 +32,7 @@
   <script src="../../js/jquery-2.1.1.min.js"></script>
   <script src="../../js/modernizr-2.8.3.min.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/yaml.min.js"></script>
   <script>hljs.initHighlightingOnLoad();</script> 
   
 </head>
@@ -41,7 +44,8 @@
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
       <div class="wy-side-nav-search">
-        <a href="../.." class="icon icon-home"> Pheasant</a>
+  <a href="../.." class="icon icon-home"> Pheasant</a>
+  <div class="version">2.2.5</div>
         
       </div>
 
@@ -160,7 +164,14 @@ site_author: daizutabi
 repo_url: https://github.com/daizutabi/pheasant/
 edit_uri: &#34;&#34;
 
-theme: readthedocs
+theme:
+    name: readthedocs
+    hljs_languages:
+      - yaml
+    custom_dir: custom_theme/
+
+extra_css:
+  - css/extra.css
 
 plugins:
   - pheasant:
@@ -213,15 +224,15 @@ edit_uri: &#34;&#34;
 <p>You can write to inspect the whole module content:</p>
 <div class="pheasant-fenced-code"><div class="cell source"><div class="code"><pre><code class="markdown">{%?pheasant%}</code></pre></div></div></div>
 
-<div class="pheasant-fenced-code"><div class="cell file"><div class="code"><pre><code class="python">__version__ = &#34;2.2.4&#34;
+<div class="pheasant-fenced-code"><div class="cell file"><div class="code"><pre><code class="python">__version__ = &#34;2.2.5&#34;
 </code></pre></div></div></div>
 
 <p>A part of the module can be specified as usual.</p>
 <div class="pheasant-fenced-code"><div class="cell input"><div class="code"><pre><code class="python">from pheasant.renderers.jupyter.jupyter import Jupyter</code></pre></div>
 <div class="report"><p><span class="cell-count">[1]</span>
-<span class="start">2019-04-10 10:57:04</span> (<span class="cell-time">22.1ms</span>)
+<span class="start">2019-04-10 14:17:10</span> (<span class="cell-time">19.0ms</span>)
 <span class="right"><span class="total-count">[43]</span> <span class="kernel">python3</span>
-(<span class="page-time">142ms</span>|<span class="total-time">5.61s</span>)
+(<span class="page-time">130ms</span>|<span class="total-time">4.00s</span>)
 </span></p></div></div></div>
 
 <div class="pheasant-fenced-code"><div class="cell source"><div class="code"><pre><code class="markdown">{%?Jupyter[:21]%}</code></pre></div></div></div>
@@ -261,9 +272,9 @@ edit_uri: &#34;&#34;
 <div class="pheasant-fenced-code"><div class="cell input"><div class="code"><pre><code class="python">def func(x, y):
     return x + y</code></pre></div>
 <div class="report"><p><span class="cell-count">[2]</span>
-<span class="start">2019-04-10 10:57:04</span> (<span class="cell-time">4.99ms</span>)
+<span class="start">2019-04-10 14:17:10</span> (<span class="cell-time">4.99ms</span>)
 <span class="right"><span class="total-count">[45]</span> <span class="kernel">python3</span>
-(<span class="page-time">161ms</span>|<span class="total-time">5.63s</span>)
+(<span class="page-time">149ms</span>|<span class="total-time">4.02s</span>)
 </span></p></div></div></div>
 
 <p>If the included file contains header statements, the document structure may be broken. For example, a file to be included contains:</p>

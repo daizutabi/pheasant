@@ -13,6 +13,7 @@ logger = logging.getLogger(__name__)
 kernel_names: Dict[str, list] = {}
 kernel_managers: Dict[str, Any] = {}
 kernel_clients: Dict[str, Any] = {}
+shutdown_functions: Dict[str, Any] = {}
 execution_report = {"page": datetime.timedelta(0), "total": datetime.timedelta(0)}
 
 
@@ -71,6 +72,7 @@ def get_kernel_manager(kernel_name: str) -> KernelManager:
 
         atexit.register(shutdown_kernel)
         kernel_managers[kernel_name] = kernel_manager
+        shutdown_functions[kernel_name] = shutdown_kernel
 
     if not kernel_manager.is_alive():  # pragma: no cover
         raise ValueError(f'Kernel could not start: "{kernel_name}".')
@@ -78,14 +80,25 @@ def get_kernel_manager(kernel_name: str) -> KernelManager:
         return kernel_manager
 
 
-def get_kernel_client(kernel_name: str):
+def get_kernel_client(kernel_name: str, retry=0):
     if kernel_name in kernel_clients:
         return kernel_clients[kernel_name]
 
     kernel_manager = get_kernel_manager(kernel_name)
     logger.info(f'Creating kernel client for "{kernel_name}".')
-    kernel_client = kernel_manager.client()
+    kernel_client = kernel_manager.blocking_client()
     kernel_client.start_channels()
+    try:
+        kernel_client.execute_interactive("", timeout=3)
+    except TimeoutError:
+        if retry == 10:
+            raise TimeoutError
+        logger.error(f'Timeout. Retry...: "{kernel_name}".')
+        del kernel_managers[kernel_name]
+        kernel_manager.shutdown_kernel()
+        atexit.unregister(shutdown_functions[kernel_name])
+        return get_kernel_client(kernel_name, retry + 1)
+
     logger.info(f'Kernel client for "{kernel_name}" ready.')
     kernel_clients[kernel_name] = kernel_client
     return kernel_client
