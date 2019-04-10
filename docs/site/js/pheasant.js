@@ -1,10 +1,12 @@
 function ready(jQuery) {
   var tooltip = {
+    hide: false,
     track: true,
     position: {
       my: "center top-28",
       at: "center top",
-    }
+    },
+    tooltipClass: "ui-tooltip-pheasant"
   };
 
   $(".pheasant-fenced-code .cell.input .code")
@@ -47,7 +49,7 @@ function ready(jQuery) {
     });
   });
 
-  $('.pheasant-fenced-code .report .count').attr('title', 'Cell Number').tooltip(tooltip).css("cursor", "pointer");
+  $('.pheasant-fenced-code .report .cell-count').attr('title', 'Page Execution Count').tooltip(tooltip).css("cursor", "pointer");
   $('.pheasant-fenced-code .report .start').attr('title', 'Evaluated at').tooltip(tooltip).css("cursor", "pointer");
   $('.pheasant-fenced-code .report .cell-time').attr('title', 'Cell Execution Time').tooltip(tooltip).css("cursor", "pointer");
   $('.pheasant-fenced-code .report .page-time').attr('title', 'Page Execution Time').tooltip(tooltip).css("cursor", "pointer");

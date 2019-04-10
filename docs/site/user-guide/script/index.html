@@ -14,9 +14,11 @@
   <link rel="stylesheet" href="../../css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../css/theme_extra.css" type="text/css" />
   <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
-  <link href="../../css/pheasant.css" rel="stylesheet">
   <link href="//cdn.jsdelivr.net/gh/tonsky/FiraCode@1.206/distr/fira_code.css" rel="stylesheet">
   <link href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css" rel="stylesheet">
+  <link href="//use.fontawesome.com/releases/v5.8.1/css/all.css" rel="stylesheet">
+  <link href="//use.fontawesome.com/releases/v5.8.1/css/v4-shims.css" rel="stylesheet">
+  <link href="../../css/pheasant.css" rel="stylesheet">
   
   <script>
     // Current page data
@@ -155,10 +157,10 @@
 def sub(x: int, y: int) -&gt; int:
     &#34;&#34;&#34;Substract `y` from `x`.&#34;&#34;&#34;
     return x - y  # a comment in a code cell.</code></pre></div>
-<div class="report"><p><span class="count">[1]</span>
-<span class="start">2019-04-10 06:41:00</span> (<span class="cell-time">9.00ms</span>)
-<span class="right"><span class="kernel">python3</span> <span class="total-count">[61]</span>
-(<span class="page-time">14.0ms</span>) (<span class="total-time">6.76s</span>)
+<div class="report"><p><span class="cell-count">[1]</span>
+<span class="start">2019-04-10 09:35:27</span> (<span class="cell-time">9.01ms</span>)
+<span class="right"><span class="total-count">[61]</span> <span class="kernel">python3</span>
+(<span class="page-time">14.0ms</span>|<span class="total-time">6.26s</span>)
 </span></p></div></div></div>
 
 <p>When a comment starts at the begining of line after a code block, it divides the source into a code cell and a Markdown cell. This Markdown cell will continue until next Python code appears.</p>
@@ -171,17 +173,17 @@ b</code></pre></div></div></div>
 <p>becomes:</p>
 <div class="pheasant-fenced-code"><div class="cell input"><div class="code"><pre><code class="python">a, b = 1, 2
 a</code></pre></div>
-<div class="report"><p><span class="count">[2]</span>
-<span class="start">2019-04-10 06:41:00</span> (<span class="cell-time">7.00ms</span>)
-<span class="right"><span class="kernel">python3</span> <span class="total-count">[62]</span>
-(<span class="page-time">21.0ms</span>) (<span class="total-time">6.76s</span>)
+<div class="report"><p><span class="cell-count">[2]</span>
+<span class="start">2019-04-10 09:35:27</span> (<span class="cell-time">7.01ms</span>)
+<span class="right"><span class="total-count">[62]</span> <span class="kernel">python3</span>
+(<span class="page-time">21.0ms</span>|<span class="total-time">6.26s</span>)
 </span></p></div></div><div class="cell output"><div class="code"><pre><code class="plaintext">1</code></pre></div></div></div>
 
 <div class="pheasant-fenced-code"><div class="cell input"><div class="code"><pre><code class="python">b</code></pre></div>
-<div class="report"><p><span class="count">[3]</span>
-<span class="start">2019-04-10 06:41:00</span> (<span class="cell-time">11.0ms</span>)
-<span class="right"><span class="kernel">python3</span> <span class="total-count">[63]</span>
-(<span class="page-time">32.0ms</span>) (<span class="total-time">6.77s</span>)
+<div class="report"><p><span class="cell-count">[3]</span>
+<span class="start">2019-04-10 09:35:27</span> (<span class="cell-time">10.0ms</span>)
+<span class="right"><span class="total-count">[63]</span> <span class="kernel">python3</span>
+(<span class="page-time">31.0ms</span>|<span class="total-time">6.27s</span>)
 </span></p></div></div><div class="cell output"><div class="code"><pre><code class="plaintext">2</code></pre></div></div></div>
 
 <p>You can add options to a code block by adding them after a block devider (<code># -</code>).</p>
@@ -204,10 +206,10 @@ Output: `c` is equal to {{c}}.</code></pre></div></div></div>
 
 <p>becomes:</p>
 <div class="pheasant-fenced-code"><div class="cell input"><div class="code"><pre><code class="python">print(1)</code></pre></div>
-<div class="report"><p><span class="count">[6]</span>
-<span class="start">2019-04-10 06:41:00</span> (<span class="cell-time">7.99ms</span>)
-<span class="right"><span class="kernel">python3</span> <span class="total-count">[66]</span>
-(<span class="page-time">52.0ms</span>) (<span class="total-time">6.79s</span>)
+<div class="report"><p><span class="cell-count">[6]</span>
+<span class="start">2019-04-10 09:35:27</span> (<span class="cell-time">10.00ms</span>)
+<span class="right"><span class="total-count">[66]</span> <span class="kernel">python3</span>
+(<span class="page-time">54.0ms</span>|<span class="total-time">6.30s</span>)
 </span></p></div></div><div class="cell stdout"><div class="code"><pre><code class="text">1</code></pre></div></div></div>
 
 <p>And,</p>
@@ -271,8 +273,8 @@ print(1)
 </div>
     <script>var base_url = '../..';</script>
     <script src="../../js/theme.js"></script>
-      <script src="../../js/pheasant.js"></script>
       <script src="//code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+      <script src="../../js/pheasant.js"></script>
 
 </body>
 </html>

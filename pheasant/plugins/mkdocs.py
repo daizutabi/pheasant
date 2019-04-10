@@ -28,9 +28,8 @@ class PheasantPlugin(BasePlugin):
         if self.config:
             self.converter.update_config(self.config)
 
-        if "extra_css" not in self.config:
-            self.config["extra_css"] = config["extra_css"]
-            self.config["extra_javascript"] = config["extra_javascript"]
+        self.config["extra_css"] = config["extra_css"]
+        self.config["extra_javascript"] = config["extra_javascript"]
 
         logger.info(f"[Pheasant] Converter configured.")
         return config
@@ -42,23 +41,25 @@ class PheasantPlugin(BasePlugin):
         files_ = get_files(config)
         config["docs_dir"] = docs_dir
 
-        config["extra_css"] = list(self.config["extra_css"])
-        config["extra_javascript"] = list(self.config["extra_javascript"])
-
+        css = []
+        js = []
         for file in files_:
             path = file.src_path.replace("\\", "/")
             if path.endswith(".css"):
                 files.append(file)
-                config["extra_css"].insert(0, path)
+                css.append(path)
             elif path.endswith(".js"):
                 files.append(file)
-                config["extra_javascript"].insert(0, path)
+                js.append(path)
             elif path.endswith(".yml"):
                 path = os.path.normpath(os.path.join(root, path))
                 with open(path) as f:
                     data = yaml.safe_load(f)
-                config["extra_css"].extend(data.get("extra_css", []))
-                config["extra_javascript"].extend(data.get("extra_javascript", []))
+                css = data.get("extra_css", []) + css
+                js = data.get("extra_javascript", []) + js
+
+        config["extra_css"] = css + list(self.config["extra_css"])
+        config["extra_javascript"] = js + list(self.config["extra_javascript"])
 
         return files
 
