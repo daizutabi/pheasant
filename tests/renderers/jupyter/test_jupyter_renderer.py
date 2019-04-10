@@ -28,11 +28,11 @@ def test_render_inline_option(jupyter):
 
     jupyter.execute("plot = figure(plot_width=250, plot_height=250)")
     output = jupyter.parse("```python inline\nplot\n```\n")
-    assert '<div class="cell display"' in output
+    assert '<div class="cell jupyter display"' in output
     assert "bokeh" in jupyter.meta["."]["extra_module"]
 
     output = jupyter.parse("```python inline\nhv.Curve(([1,2],[3,4]))\n```\n")
-    assert '<div class="cell display"' in output
+    assert '<div class="cell jupyter display"' in output
     assert "holoviews" in jupyter.meta["."]["extra_module"]
 
     jupyter.execute(

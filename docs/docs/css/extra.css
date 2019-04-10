@@ -2,6 +2,60 @@
   color: #aaa;
 }
 
-.wy-menu-vertical .subnav li.current > ul li a {
-    padding-left: 2em;
+.wy-menu-vertical .subnav li.current>ul li a {
+  padding-left: 2em;
 }
+
+/* .wy-nav-side .open-close,
+.wy-nav-content .open-close {
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+  margin: auto;
+  width: 20px;
+  height: 30px;
+  text-align: right;
+}
+
+.wy-nav-side .open-close {
+  right: 0px;
+}
+
+.wy-nav-content .open-close {
+  left: 0px;
+}
+
+.open-close button {
+  color: #444;
+  border: none;
+  background: none;
+  outline: none;
+  height: 30px;
+}
+
+.open-close button:hover {
+  color: #aaa;
+}
+
+.open-close button::before {
+  font-size: 20px;
+  font-family: "Font Awesome 5 Free";
+  font-weight: bold;
+}
+
+.wy-nav-side button.close::before {
+  content: "\f053";
+}
+
+.wy-nav-content button.open::before {
+  content: "\f054";
+}
+
+.wy-nav-side.hide {
+  display: none;
+}
+
+
+.wy-nav-content-wrap.hide {
+  margin-left:20px;
+} */

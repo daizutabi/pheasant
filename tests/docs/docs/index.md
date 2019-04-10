@@ -47,10 +47,17 @@ for k in range(10):
 'abc'
 ```
 
-```python
+~~~bash file
 a = 4
-a
-```
+~~~
+
+~~~bash terminal
+a = 4
+~~~
+
+~~~bash
+a = 4
+~~~
 
 <!--break-->
 

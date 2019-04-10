@@ -9,10 +9,17 @@ function ready(jQuery) {
     tooltipClass: "ui-tooltip-pheasant"
   };
 
-  $(".pheasant-fenced-code .cell.input .code")
-    .append('<div class="pheasant-button-container"><button class="toggle input"></button></div>');
-  $(".pheasant-fenced-code .cell.error .code")
-    .append('<div class="pheasant-button-container"><button class="toggle error hide"></button></div>');
+  function button(className) {
+    return '<button class="button ' + className + '"></button>';
+  };
+
+  function container(className) {
+    return '<div class="pheasant-button-container">' + button(className) + '</div>';
+  };
+
+  $(".pheasant-fenced-code .cell.input .code").append(container('toggle input'));
+  $(".pheasant-fenced-code .cell.error .code").append(container('toggle error hide'));
+  $(".pheasant-fenced-code .cell.embed .code").append(container('embed'));
 
   $('.toggle.input').attr('title', 'Toggle Status Line').tooltip(tooltip).click(function(e) {
     $('.pheasant-fenced-code .input').toggleClass('hide')
@@ -22,7 +29,7 @@ function ready(jQuery) {
     $(this).find('.cell.input').each(function() {
       var stdout = $(this).parent().find('.cell.stdout');
       if (stdout.length) {
-        $('<button class="toggle output"></button>').prependTo($(this).find('.pheasant-button-container'))
+        $(button('toggle output')).prependTo($(this).find('.pheasant-button-container'))
           .attr('title', 'Toggle Stdout').tooltip(tooltip).click(function(e) {
             stdout.toggleClass('hide');
             $(this).toggleClass('hide');
@@ -30,7 +37,7 @@ function ready(jQuery) {
       };
       var stderr = $(this).parent().find('.cell.stderr').toggleClass('hide');
       if (stderr.length) {
-        $('<button class="toggle error hide"></button>').prependTo($(this).find('.pheasant-button-container'))
+        $(button('toggle error hide')).prependTo($(this).find('.pheasant-button-container'))
           .attr('title', 'Toggle Stderr').tooltip(tooltip).click(function(e) {
             stderr.toggleClass('hide');
             $(this).toggleClass('hide');
@@ -56,6 +63,10 @@ function ready(jQuery) {
   $('.pheasant-fenced-code .report .total-time').attr('title', 'Total Execution Time').tooltip(tooltip).css("cursor", "pointer");
   $('.pheasant-fenced-code .report .total-count').attr('title', 'Total Execution Count').tooltip(tooltip).css("cursor", "pointer");
   $('.pheasant-fenced-code .report .kernel').attr('title', 'Kernel Name').tooltip(tooltip).css("cursor", "pointer");
+
+  $('.source .pheasant-button-container .embed').attr('title', 'Source Code').tooltip(tooltip).css("cursor", "pointer");
+  $('.file .pheasant-button-container .embed').attr('title', 'File').tooltip(tooltip).css("cursor", "pointer");
+  $('.terminal .pheasant-button-container .embed').attr('title', 'Terminal').tooltip(tooltip).css("cursor", "pointer");
 }
 
 $(ready);

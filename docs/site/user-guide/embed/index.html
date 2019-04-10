@@ -153,10 +153,10 @@
 <p>Pheasant can embed codes from a file system or Python module.</p>
 <h2 id="31-file-system"><span class="pheasant-header"><span class="header"><span class="number">3.1</span> <span class="title">File system</span></span></span></h2>
 <p>Extenal resources are read from file system by Pheasant syntax: <code>{%=object%}</code>. For example,</p>
-<div class="pheasant-fenced-code"><div class="cell source"><div class="code"><pre><code class="markdown">{%=/mkdocs.yml%}</code></pre></div></div></div>
+<div class="pheasant-fenced-code"><div class="cell embed source"><div class="code"><pre><code class="markdown">{%=/mkdocs.yml%}</code></pre></div></div></div>
 
 <p>writes the content of the real <code>mkdocs.yml</code> of this document:</p>
-<div class="pheasant-fenced-code"><div class="cell file"><div class="code"><pre><code class="yaml">site_name: Pheasant
+<div class="pheasant-fenced-code"><div class="cell embed file"><div class="code"><pre><code class="yaml">site_name: Pheasant
 site_url: https://pheasant.daizutabi.net/
 site_description: Project documentation with MkDocs.
 site_author: daizutabi
@@ -172,6 +172,9 @@ theme:
 
 extra_css:
   - css/extra.css
+
+extra_javascript:
+  - js/extra.js
 
 plugins:
   - pheasant:
@@ -193,22 +196,22 @@ markdown_extensions:
 
 <p>The root directory is the directory where <code>mkdocs.yml</code> exists.</p>
 <p>If the file is too long to display the whole content, you can specify the lines as the same way of Python's slice notation.</p>
-<div class="pheasant-fenced-code"><div class="cell source"><div class="code"><pre><code class="markdown">{%=/mkdocs.yml[3:8]%}</code></pre></div></div></div>
+<div class="pheasant-fenced-code"><div class="cell embed source"><div class="code"><pre><code class="markdown">{%=/mkdocs.yml[3:8]%}</code></pre></div></div></div>
 
-<div class="pheasant-fenced-code"><div class="cell file"><div class="code"><pre><code class="yaml">site_author: daizutabi
+<div class="pheasant-fenced-code"><div class="cell embed file"><div class="code"><pre><code class="yaml">site_author: daizutabi
 
 repo_url: https://github.com/daizutabi/pheasant/
 edit_uri: &#34;&#34;
 </code></pre></div></div></div>
 
 <p>Imported file can be numbered like figures and tables. Use this inline notation:</p>
-<div class="pheasant-fenced-code"><div class="cell source"><div class="code"><pre><code class="markdown">#File {%=/mkdocs.yml[:8]%}</code></pre></div></div></div>
+<div class="pheasant-fenced-code"><div class="cell embed source"><div class="code"><pre><code class="markdown">#File {%=/mkdocs.yml[:8]%}</code></pre></div></div></div>
 
 <div class="pheasant-header"><div class="other"><p class="caption"><span class="prefix">File</span> <span class="number">1</span>
 </p>
 <div class="content">
 
-<div class="pheasant-fenced-code"><div class="cell file"><div class="code"><pre><code class="yaml">site_name: Pheasant
+<div class="pheasant-fenced-code"><div class="cell embed file"><div class="code"><pre><code class="yaml">site_name: Pheasant
 site_url: https://pheasant.daizutabi.net/
 site_description: Project documentation with MkDocs.
 site_author: daizutabi
@@ -222,22 +225,22 @@ edit_uri: &#34;&#34;
 <h2 id="32-python-module-source"><span class="pheasant-header"><span class="header"><span class="number">3.2</span> <span class="title">Python module source</span></span></span></h2>
 <p>Python module sources that the current Jupyter kernel can find are also inspected. Now Pheasant imported its own package <code>pheasant</code>, so you can read the source from this document by Pheasant syntax: <code>{%?object%}</code>.</p>
 <p>You can write to inspect the whole module content:</p>
-<div class="pheasant-fenced-code"><div class="cell source"><div class="code"><pre><code class="markdown">{%?pheasant%}</code></pre></div></div></div>
+<div class="pheasant-fenced-code"><div class="cell embed source"><div class="code"><pre><code class="markdown">{%?pheasant%}</code></pre></div></div></div>
 
-<div class="pheasant-fenced-code"><div class="cell file"><div class="code"><pre><code class="python">__version__ = &#34;2.2.5&#34;
+<div class="pheasant-fenced-code"><div class="cell embed file"><div class="code"><pre><code class="python">__version__ = &#34;2.2.5&#34;
 </code></pre></div></div></div>
 
 <p>A part of the module can be specified as usual.</p>
-<div class="pheasant-fenced-code"><div class="cell input"><div class="code"><pre><code class="python">from pheasant.renderers.jupyter.jupyter import Jupyter</code></pre></div>
+<div class="pheasant-fenced-code"><div class="cell jupyter input"><div class="code"><pre><code class="python">from pheasant.renderers.jupyter.jupyter import Jupyter</code></pre></div>
 <div class="report"><p><span class="cell-count">[1]</span>
-<span class="start">2019-04-10 14:17:10</span> (<span class="cell-time">19.0ms</span>)
+<span class="start">2019-04-10 21:43:52</span> (<span class="cell-time">19.1ms</span>)
 <span class="right"><span class="total-count">[43]</span> <span class="kernel">python3</span>
-(<span class="page-time">130ms</span>|<span class="total-time">4.00s</span>)
+(<span class="page-time">121ms</span>|<span class="total-time">3.94s</span>)
 </span></p></div></div></div>
 
-<div class="pheasant-fenced-code"><div class="cell source"><div class="code"><pre><code class="markdown">{%?Jupyter[:21]%}</code></pre></div></div></div>
+<div class="pheasant-fenced-code"><div class="cell embed source"><div class="code"><pre><code class="markdown">{%?Jupyter[:21]%}</code></pre></div></div></div>
 
-<div class="pheasant-fenced-code"><div class="cell file"><div class="code"><pre><code class="python">class Jupyter(Renderer):
+<div class="pheasant-fenced-code"><div class="cell embed file"><div class="code"><pre><code class="python">class Jupyter(Renderer):
     language: str = &#34;python&#34;
     option: str = field(default=&#34;&#34;, init=False)
     active: bool = field(default=True, init=False)
@@ -262,19 +265,19 @@ edit_uri: &#34;&#34;
 <p>With this functionality, you can guarantee the reproducible relation between your source code and results easily.</p>
 <h2 id="33-include-other-file-as-markdown-source"><span class="pheasant-header"><span class="header"><span class="number">3.3</span> <span class="title">Include other file as Markdown source.</span></span></span></h2>
 <p>Assume that there is a directory named <code>link</code> under the same directory of this file and there are some files under the <code>link</code> directory. You can include the content of a file like below:</p>
-<div class="pheasant-fenced-code"><div class="cell source"><div class="code"><pre><code class="markdown">{% link/included.md %}</code></pre></div></div></div>
+<div class="pheasant-fenced-code"><div class="cell embed source"><div class="code"><pre><code class="markdown">{% link/included.md %}</code></pre></div></div></div>
 
 <p>[The content  of <code>included.md</code>]</p>
 <p>You can also include a pure Python source code.</p>
-<div class="pheasant-fenced-code"><div class="cell source"><div class="code"><pre><code class="markdown">{% link/included.py %}</code></pre></div></div></div>
+<div class="pheasant-fenced-code"><div class="cell embed source"><div class="code"><pre><code class="markdown">{% link/included.py %}</code></pre></div></div></div>
 
 <p>Script can be included.</p>
-<div class="pheasant-fenced-code"><div class="cell input"><div class="code"><pre><code class="python">def func(x, y):
+<div class="pheasant-fenced-code"><div class="cell jupyter input"><div class="code"><pre><code class="python">def func(x, y):
     return x + y</code></pre></div>
 <div class="report"><p><span class="cell-count">[2]</span>
-<span class="start">2019-04-10 14:17:10</span> (<span class="cell-time">4.99ms</span>)
+<span class="start">2019-04-10 21:43:52</span> (<span class="cell-time">4.01ms</span>)
 <span class="right"><span class="total-count">[45]</span> <span class="kernel">python3</span>
-(<span class="page-time">149ms</span>|<span class="total-time">4.02s</span>)
+(<span class="page-time">140ms</span>|<span class="total-time">3.96s</span>)
 </span></p></div></div></div>
 
 <p>If the included file contains header statements, the document structure may be broken. For example, a file to be included contains:</p>
@@ -282,7 +285,7 @@ edit_uri: &#34;&#34;
 <span class="title"><code>link/section.md</code></span></p>
 <div class="content">
 
-<div class="pheasant-fenced-code"><div class="cell file"><div class="code"><pre><code class="text"># Title
+<div class="pheasant-fenced-code"><div class="cell embed file"><div class="code"><pre><code class="text"># Title
 
 ## Section
 
@@ -291,7 +294,7 @@ Text.</code></pre></div></div></div>
 </div></div></div>
 
 <p>If you include the file, a new <code>&lt;h1&gt;</code> section starts that you don't want to. To maintain the document structure, you can shift the header level like below. Note that we are under a <code>&lt;h2&gt;</code> section now.</p>
-<div class="pheasant-fenced-code"><div class="cell source"><div class="code"><pre><code class="markdown">{% link/section.md&gt;2 %}</code></pre></div></div></div>
+<div class="pheasant-fenced-code"><div class="cell embed source"><div class="code"><pre><code class="markdown">{% link/section.md&gt;2 %}</code></pre></div></div></div>
 
 <p>In this case, "<code># Title</code>" becomes "<code>### Title</code>" by "<code>&gt;2</code>".</p>
               
@@ -343,6 +346,7 @@ Text.</code></pre></div></div></div>
     <script src="../../js/theme.js"></script>
       <script src="//code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
       <script src="../../js/pheasant.js"></script>
+      <script src="../../js/extra.js"></script>
 
 </body>
 </html>

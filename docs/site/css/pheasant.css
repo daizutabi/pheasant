@@ -98,7 +98,7 @@ h2, h3, h4, h5 {
   --input-color: #99b;
   --output-color: #cc9;
   --error-color: #f99;
-  --source-color: #aca;
+  --source-color: #beb;
   --display-color: #ccc;
 }
 
@@ -113,7 +113,7 @@ h2, h3, h4, h5 {
   line-height: normal;
 }
 
-.pheasant-fenced-code .cell::before {
+.pheasant-fenced-code .cell.jupyter::before {
   content: "";
   position: absolute;
   left: -2.6em;
@@ -122,7 +122,6 @@ h2, h3, h4, h5 {
   text-align: right;
   margin-top: 5px;
   font-size: 80%;
-  font-weight: 900;
 }
 
 .pheasant-fenced-code .cell.input::before {
@@ -140,51 +139,31 @@ h2, h3, h4, h5 {
   color: var(--output-color);
 }
 
+.pheasant-fenced-code .cell.stdout::before,
+.pheasant-fenced-code .cell.stderr::before,
+.pheasant-fenced-code .cell.error::before,
+.pheasant-fenced-code .cell.display::before {
+  font-family: "Font Awesome 5 Free";
+  font-weight: bold;
+}
+
 .pheasant-fenced-code .cell.stdout::before {
   content: "\f550";
-  font-family: "Font Awesome 5 Free";
   color: var(--output-color);
 }
 
 .pheasant-fenced-code .cell.stderr::before {
   content: "\f550";
-  font-family: "Font Awesome 5 Free";
   color: var(--error-color);
 }
 
 .pheasant-fenced-code .cell.error::before {
   content: "\f071";
-  font-family: "Font Awesome 5 Free";
   color: var(--error-color);
-}
-
-.pheasant-fenced-code .cell.source::before {
-  content: "\f121";
-  font-family: "Font Awesome 5 Free";
-  color: var(--source-color);
-}
-
-.pheasant-fenced-code .cell.file::before {
-  content: "\f15c";
-  font-family: "Font Awesome 5 Free";
-  color: var(--source-color);
-  left: -2.8em;
-}
-
-.pheasant-fenced-code .cell.terminal::before {
-  content: "\f120";
-  font-family: "Font Awesome 5 Free";
-  color: var(--source-color);
-}
-
-.pheasant-fenced-code .cell.docstring::before {
-  content: "Doc";
-  color: var(--source-color);
 }
 
 .pheasant-fenced-code .cell.display::before {
   content: "\f108";
-  font-family: "Font Awesome 5 Free";
   color: var(--display-color);
 }
 
@@ -307,7 +286,7 @@ h2, h3, h4, h5 {
   right: 5px;
 }
 
-.pheasant-button-container .toggle {
+.pheasant-button-container .button {
   border: none;
   background: none;
   outline: none;
@@ -316,17 +295,38 @@ h2, h3, h4, h5 {
   line-height: normal;
 }
 
-.pheasant-button-container .toggle::before {
+.pheasant-button-container .button::before {
   display: inline-block;
   width: 20px;
   height: 16px;
-  content: "\f06e";
+  margin-top: 3px;
   font-family: "Font Awesome 5 Free";
+}
+
+.pheasant-button-container .toggle::before {
+  content: "\f06e";
 }
 
 .pheasant-button-container .toggle.hide::before {
   content: "\f070";
-  font-family: "Font Awesome 5 Free";
+}
+
+.pheasant-button-container .embed::before {
+  color: var(--source-color);
+}
+
+.source .pheasant-button-container .embed::before {
+  content: "\f121";
+  font-weight: bold;
+}
+
+.file .pheasant-button-container .embed::before {
+  content: "\f15c";
+}
+
+.terminal .pheasant-button-container .embed::before {
+  content: "\f120";
+  font-weight: bold;
 }
 
 .pheasant-button-container .toggle.input {
@@ -431,6 +431,9 @@ table.dataframe tbody td {
   }
 
   .pheasant-fenced-code .cell::before {
+    display: none;
+  }
+  .pheasant-button-container {
     display: none;
   }
 }

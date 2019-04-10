@@ -19,7 +19,7 @@ def test_code_parse_source(parse):
     output = parse("python", "print(1)\na = 1")
     answer = "".join(
         [
-            '\n<div class="cell source"><div class="code">'
+            '\n<div class="cell embed source"><div class="code">'
             '<pre><code class="python">print(1)\na = 1</code></pre></div></div>\n\n'
         ]
     )
@@ -30,7 +30,7 @@ def test_code_parse_source_copy(parse):
     output = parse("copy", "text.")
     answer = "".join(
         [
-            '\n<div class="cell source"><div class="code">'
+            '\n<div class="cell embed source"><div class="code">'
             '<pre><code class="markdown">text.</code></pre></div></div>\n\ntext.\n'
         ]
     )
@@ -41,7 +41,7 @@ def test_code_parse_source_copy_jupyter(parse):
     output = parse("copy", "```python\n2*3\n```")
     answer = "".join(
         [
-            '\n<div class="cell source"><div class="code">'
+            '\n<div class="cell embed source"><div class="code">'
             '<pre><code class="markdown">```python\n2*3\n```</code></pre></div>'
             '</div>\n\n\n<div class="input">'
             '<pre><code class="python">2*3</code></pre></div>'
@@ -56,7 +56,7 @@ def test_code_parse_source_copy_number(parse):
     output = parse("copy", "# Title\n## Section\nText")
     answer = "".join(
         [
-            '\n<div class="cell source"><div class="code">'
+            '\n<div class="cell embed source"><div class="code">'
             '<pre><code class="markdown"># Title\n## Section\nText</code></pre>'
             '</div></div>\n\n# <span class="header"><span class="number">1</span> '
             '<span class="title">Title</span></span>\n\n'
@@ -71,7 +71,7 @@ def test_code_parse_source_copy_pre_post(parse):
     output = parse("copy", "text.", "pre", "post")
     answer = "".join(
         [
-            'pre\n\n<div class="cell source"><div class="code">'
+            'pre\n\n<div class="cell embed source"><div class="code">'
             '<pre><code class="markdown">text.</code></pre></div></div>\n\ntext.\npost'
         ]
     )
@@ -86,7 +86,7 @@ def test_code_parse_source_copy_pre_post_jupyter(parse):
             '<pre><code class="python">1</code></pre></div>'
             '<div class="output">'
             '<pre><code class="python">1</code></pre></div>\n\n'
-            '\n<div class="cell source"><div class="code">'
+            '\n<div class="cell embed source"><div class="code">'
             '<pre><code class="markdown">text.</code></pre></div></div>\n\n'
             "text.\n"
             '\n<div class="input">'
