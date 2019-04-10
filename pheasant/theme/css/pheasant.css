@@ -169,6 +169,13 @@ h2, h3, h4, h5 {
   content: "\f15c";
   font-family: "Font Awesome 5 Free";
   color: var(--source-color);
+  left: -2.8em;
+}
+
+.pheasant-fenced-code .cell.terminal::before {
+  content: "\f120";
+  font-family: "Font Awesome 5 Free";
+  color: var(--source-color);
 }
 
 .pheasant-fenced-code .cell.docstring::before {
@@ -223,6 +230,7 @@ h2, h3, h4, h5 {
 
 .pheasant-fenced-code .source .code,
 .pheasant-fenced-code .file .code,
+.pheasant-fenced-code .terminal .code,
 .pheasant-fenced-code .docstring .code {
   border-color: #cec;
   background: #efe;

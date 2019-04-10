@@ -6,13 +6,13 @@
 
 To upgrade Pheasant to the latest version, use pip:
 
-~~~
-pip install -U pheasant
+~~~bash terminal
+$ pip install -U pheasant
 ~~~
 
-You can determine your currently installed version using `pheasant --version`:
+You can check your currently installed version using `pheasant --version`:
 
-~~~
+~~~bash terminal
 $ pheasant --version
 pheasant, version 2.2.4 from /path/to/pheasant (Python 3.7)
 ~~~

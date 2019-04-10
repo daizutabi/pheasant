@@ -19,19 +19,19 @@ Highlights include:
 
 You can install Pheasant from PyPI.
 
-~~~bash
+~~~bash terminal
 $ pip install pheasant
 ~~~
 
 If you use Pheasant as a plugin of MkDocs, you also need to install it.
 
-~~~bash
+~~~bash terminal
 $ pip install mkdocs
 ~~~
 
 In your `mkdocs.yml`, add lines below to register Pheasant as a MkDocs plugin.
 
-~~~yaml
+~~~yaml file
 plugins:
   - pheasant
 ~~~
