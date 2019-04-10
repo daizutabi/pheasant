@@ -426,13 +426,10 @@ table.dataframe tbody td {
     display: none;
   }
 
-  .pheasant-fenced-code .cell {
-    margin: 2px 0px 2px 0px;
-  }
-
   .pheasant-fenced-code .cell::before {
     display: none;
   }
+
   .pheasant-button-container {
     display: none;
   }
