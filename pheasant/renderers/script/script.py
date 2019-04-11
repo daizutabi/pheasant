@@ -16,10 +16,12 @@ class Comment(Renderer):
     # HEADER_PATTERN = r"^(?P<source>#.*?\n)"
     HEADER_PATTERN = r"^(?P<prefix>#+.*? +?)(?P<title>.*?\n)"
     FENCED_CODE_PATTERN = r"^(?P<mark>~{3,}|`{3,}).*?\n(?P=mark)\n"
+    LIST_PATTERN = r"^ *?(?P<prefix>[-\+\*]|\d+\.) +.*?\n"
 
     def init(self):
         self.register(Comment.HEADER_PATTERN, self.render_header)
         self.register(Comment.FENCED_CODE_PATTERN, self.render_fenced_code)
+        self.register(Comment.LIST_PATTERN, self.render_list)
 
     def render_header(self, context, splitter, parser) -> Iterator[str]:
         prefix, title = context["prefix"], context["title"]
@@ -43,6 +45,9 @@ class Comment(Renderer):
             yield context["_source"][len(markdown) : -len(context["mark"]) - 1]
         else:
             yield context["_source"]
+
+    def render_list(self, context, splitter, parser) -> Iterator[str]:
+        yield context["_source"]
 
     def decorate(self, cell) -> None:
         if cell.match is None:
