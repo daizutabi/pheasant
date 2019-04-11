@@ -45,9 +45,9 @@ def publish():
     check()
     subprocess.run("python setup.py sdist bdist_wheel".split())
     subprocess.run("twine upload dist/*".split())
-    print("You probably want to also tag the version now:")
-    print("  git tag -a v{0} -m 'Version {0}'".format(get_version("pheasant")))
-    print("  git push origin --tags")
+    version = get_version("pheasant")
+    subprocess.run(["git", "tag", "-a", f"v{version}", "-m" f"'Version {version}'"])
+    subprocess.run(["git", "push", "origin", "--tags"])
     sys.exit(0)
 
 
