@@ -61,7 +61,7 @@ Then, finally rendered as:
 print(1)
 ```
 
-Other language can be used if the kernel has been installed. For example,
+Other language code can be executed if a kernel for the language has been installed. For example,
 
 ~~~
 ```javascript
@@ -69,9 +69,9 @@ console.log("Hello Javascript")
 ```
 ~~~
 
-You can check the kernel name and its execution count at the right side of input cells.
+You can check the kernel name and its total execution count during the conversion process at the right side of input cells.
 
-Language and kernel name dictionary can be obtained by `find_kernel_names` function:
+Mapping a language to kernel names can be obtained as a  dictionary by `find_kernel_names` function :
 
 ```python
 from pheasant.renderers.jupyter.client import find_kernel_names
@@ -80,11 +80,11 @@ find_kernel_names()
 
 ### Inline code embeded in a Markdown source
 
-**"Inline code"** is a powerful feature of Pheasant. Any python codes surrounded by `{{#` and `}}` are executed and the result remains there. For example, `{{#3*5}}` becomes {{3*5}}. Variables can be assigned in an inline code like this: `{{#name='Pheasant'}}`{{name='Pheasant'}}. Then, `"I'm {{#name}}."` becomes "I'm {{name}}."
+**"Inline code"** is a powerful feature of Pheasant. Any python codes surrounded by `{{#` and `}}` are automatically executed and the result remains there. For example, `{{#3*5}}` becomes {{3*5}}. Variables can be assigned in an inline code like this: `{{#name='Pheasant'}}`{{name='Pheasant'}}. Then, `"I'm {{#name}}."` becomes "I'm {{name}}."
 
 ### Visualization
 
-Pheasant supports various output formats other than standard stream or plain text output. For example, you can create a PNG image using Matplotlib. First, import Matplotlib plotting library.
+Pheasant supports various output formats other than standard stream (`sys.stdout`/`sys.stderr`) or plain text output. For example, you can create a PNG image using Matplotlib. First, import Matplotlib plotting library.
 
 ~~~copy
 ```python

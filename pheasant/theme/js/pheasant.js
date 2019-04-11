@@ -65,8 +65,8 @@ function ready(jQuery) {
   $('.pheasant-fenced-code .report .kernel').attr('title', 'Kernel Name').tooltip(tooltip).css("cursor", "pointer");
 
   $('.source .pheasant-button-container .embed').attr('title', 'Source Code').tooltip(tooltip).css("cursor", "pointer");
-  $('.file .pheasant-button-container .embed').attr('title', 'File').tooltip(tooltip).css("cursor", "pointer");
-  $('.terminal .pheasant-button-container .embed').attr('title', 'Terminal').tooltip(tooltip).css("cursor", "pointer");
+  $('.file .pheasant-button-container .embed').attr('title', 'Got from File').tooltip(tooltip).css("cursor", "pointer");
+  $('.terminal .pheasant-button-container .embed').attr('title', 'Terminal Command').tooltip(tooltip).css("cursor", "pointer");
 }
 
 $(ready);
