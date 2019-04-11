@@ -9,7 +9,7 @@
   <meta name="author" content="daizutabi">
   <link rel="shortcut icon" href="../../img/favicon.ico">
   <title>Script &mdash; 
-    Pheasant 2.2.6 documentation</title>
+    Pheasant 2.2.7 documentation</title>
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   <link rel="stylesheet" href="../../css/theme.css" type="text/css" />
@@ -45,7 +45,7 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
       <div class="wy-side-nav-search">
   <a href="../.." class="icon icon-home"> Pheasant</a>
-  <div class="version">2.2.6</div>
+  <div class="version">2.2.7</div>
         
       </div>
 
@@ -79,19 +79,6 @@
     <a class="current" href="./">Script</a>
     <ul class="subnav">
             
-    <li class="toctree-l3"><a href="#5-standalone-script">5 Standalone Script</a></li>
-    
-        <ul>
-        
-            <li><a class="toctree-l4" href="#51-how-to">5.1 How to</a></li>
-        
-            <li><a class="toctree-l4" href="#52-fenced-code-block-in-python-source">5.2 Fenced code block in Python source</a></li>
-        
-            <li><a class="toctree-l4" href="#53-comment-writing-package">5.3 Comment writing package</a></li>
-        
-        </ul>
-    
-
     </ul>
                 </li>
     </ul>
@@ -162,9 +149,9 @@ def sub(x: int, y: int) -&gt; int:
     &#34;&#34;&#34;Substract `y` from `x`.&#34;&#34;&#34;
     return x - y  # a comment in a code cell.</code></pre></div>
 <div class="report"><p><span class="cell-count">[1]</span>
-<span class="start">2019-04-11 09:43:49</span> (<span class="cell-time">9.03ms</span>)
+<span class="start">2019-04-12 08:11:06</span> (<span class="cell-time">11.0ms</span>)
 <span class="right"><span class="total-count">[61]</span> <span class="kernel">python3</span>
-(<span class="page-time">15.0ms</span>|<span class="total-time">4.63s</span>)
+(<span class="page-time">16.0ms</span>|<span class="total-time">5.89s</span>)
 </span></p></div></div></div>
 
 <p>When a comment starts at the begining of line after a code block, it divides the source into a code cell and a Markdown cell. This Markdown cell will continue until next Python code appears.</p>
@@ -178,16 +165,16 @@ b</code></pre></div></div></div>
 <div class="pheasant-fenced-code"><div class="cell jupyter input"><div class="code"><pre><code class="python">a, b = 1, 2
 a</code></pre></div>
 <div class="report"><p><span class="cell-count">[2]</span>
-<span class="start">2019-04-11 09:43:49</span> (<span class="cell-time">8.03ms</span>)
+<span class="start">2019-04-12 08:11:06</span> (<span class="cell-time">8.00ms</span>)
 <span class="right"><span class="total-count">[62]</span> <span class="kernel">python3</span>
-(<span class="page-time">23.0ms</span>|<span class="total-time">4.63s</span>)
+(<span class="page-time">24.0ms</span>|<span class="total-time">5.90s</span>)
 </span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="plaintext">1</code></pre></div></div></div>
 
 <div class="pheasant-fenced-code"><div class="cell jupyter input"><div class="code"><pre><code class="python">b</code></pre></div>
 <div class="report"><p><span class="cell-count">[3]</span>
-<span class="start">2019-04-11 09:43:49</span> (<span class="cell-time">8.99ms</span>)
+<span class="start">2019-04-12 08:11:06</span> (<span class="cell-time">6.00ms</span>)
 <span class="right"><span class="total-count">[63]</span> <span class="kernel">python3</span>
-(<span class="page-time">32.0ms</span>|<span class="total-time">4.64s</span>)
+(<span class="page-time">30.0ms</span>|<span class="total-time">5.91s</span>)
 </span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="plaintext">2</code></pre></div></div></div>
 
 <p>You can add options to a code block by adding them after a block devider (<code># -</code>).</p>
@@ -211,9 +198,9 @@ Output: `c` is equal to {{c}}.</code></pre></div></div></div>
 <p>becomes:</p>
 <div class="pheasant-fenced-code"><div class="cell jupyter input"><div class="code"><pre><code class="python">print(1)</code></pre></div>
 <div class="report"><p><span class="cell-count">[6]</span>
-<span class="start">2019-04-11 09:43:49</span> (<span class="cell-time">7.00ms</span>)
+<span class="start">2019-04-12 08:11:06</span> (<span class="cell-time">9.03ms</span>)
 <span class="right"><span class="total-count">[66]</span> <span class="kernel">python3</span>
-(<span class="page-time">54.9ms</span>|<span class="total-time">4.67s</span>)
+(<span class="page-time">52.0ms</span>|<span class="total-time">5.93s</span>)
 </span></p></div></div><div class="cell jupyter stdout"><div class="code"><pre><code class="text">1</code></pre></div></div></div>
 
 <p>And,</p>

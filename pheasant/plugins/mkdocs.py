@@ -1,5 +1,7 @@
+import io
 import logging
 import os
+import shutil
 
 import yaml
 from mkdocs.config import config_options
@@ -33,6 +35,12 @@ class PheasantPlugin(BasePlugin):
         self.config["extra_javascript"] = config["extra_javascript"]
 
         logger.info(f"[Pheasant] Converter configured.")
+
+        self.cache_dir = os.path.join(config["docs_dir"], ".pheasant_cache")
+        if not os.path.exists(self.cache_dir):
+            logger.info(f"[Pheasant] Cache directory created.")
+            os.mkdir(self.cache_dir)
+
         return config
 
     def on_files(self, files, config):
@@ -70,15 +78,26 @@ class PheasantPlugin(BasePlugin):
 
         skipped = any(page.title.endswith("*") for page in nav.pages)
         if skipped:
-            paths = []
+            pages = []
             for page in nav.pages:
                 if not page.title.endswith("*"):
                     message(f"Skip conversion: {page.file.abs_src_path}.")
                 else:
                     page.title = page.title[:-1]
-                    paths.append(page.file.abs_src_path)
+                    pages.append(page)
         else:
-            paths = [page.file.abs_src_path for page in nav.pages]
+            pages = nav.pages
+
+        paths = []
+        for page in pages:
+            path = os.path.join(self.cache_dir, page.file.src_path)
+            if (
+                not os.path.exists(path)
+                or os.stat(path).st_mtime < os.stat(page.file.abs_src_path).st_mtime
+            ):
+                paths.append(page.file.abs_src_path)
+            else:
+                message(f"Use cache for {page.file.abs_src_path}.")
 
         logger.info(f"[Pheasant] Converting {len(paths)} pages.")
         self.converter.convert_from_files(paths, message=message)
@@ -94,15 +113,26 @@ class PheasantPlugin(BasePlugin):
         try:
             return self.converter.pages[page.file.abs_src_path].output
         except KeyError:
-            return "XXX"
+            return "Skipped."
 
     def on_page_content(self, content, page, **kwargs):
+        path = os.path.join(self.cache_dir, page.file.src_path)
         if page.file.abs_src_path not in self.converter.pages:
+            if os.path.exists(path):
+                with io.open(path, "r", encoding="utf-8-sig", errors="strict") as f:
+                    content = f.read()
+                logger.info(f"[Pheasant] Cached content used for {page.file.src_path}")
             return content
 
-        return "\n".join(
+        content = "\n".join(
             [self.converter.pages[page.file.abs_src_path].meta["extra_html"], content]
         )
+        directory = os.path.dirname(path)
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+        with io.open(path, "w", encoding="utf-8-sig", errors="strict") as f:
+            f.write(content)
+        return content
 
     def on_post_page(self, output, **kwargs):  # This is needed for holoviews.
         return output.replace('.js" defer></script>', '.js"></script>')

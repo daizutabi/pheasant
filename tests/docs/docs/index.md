@@ -8,7 +8,7 @@ import sympy
 
 ```python
 x = sympy.Symbol('x')
-x**2
+x**3
 ```
 
 ```python
@@ -25,7 +25,7 @@ sys.stderr.write("123")
 sys.stderr.flush()
 sys.stdout.write("123")
 sys.stdout.flush()
-1/0
+2/0
 ```
 
 ```python

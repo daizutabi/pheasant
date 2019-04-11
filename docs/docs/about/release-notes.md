@@ -19,22 +19,26 @@ pheasant, version 2.2.6 from /path/to/pheasant (Python 3.7)
 
 ## Change log
 
+### Version 2.2.7 (2019-04-17)
+
+* PheasantPlugin: introduce cache system.
+
 ### Version 2.2.6 (2019-04-11)
 
-* Script render: bug fix for list notations
+* Script render: bug fix for list notations.
 
 ### Version 2.2.5 (2019-04-10)
 
-* Custom theme for documentation
+* Custom theme for documentation.
 * Retry kernel start when timeout.
 
 ### Version 2.2.4 (2019-04-10)
 
-* Prompt icons
+* Prompt icons.
 
 ### Version 2.2.3 (2019-04-09)
 
-* termcolor
+* termcolor.
 
 ### Version 2.2.2 (2019-04-09)
 
