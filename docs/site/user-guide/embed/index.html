@@ -71,6 +71,19 @@
     <a class="current" href="./">Embed</a>
     <ul class="subnav">
             
+    <li class="toctree-l3"><a href="#3-embeded-objects">3 Embeded objects</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l4" href="#31-file-system">3.1 File system</a></li>
+        
+            <li><a class="toctree-l4" href="#32-python-module-source">3.2 Python module source</a></li>
+        
+            <li><a class="toctree-l4" href="#33-include-other-file-as-markdown-source">3.3 Include other file as Markdown source.</a></li>
+        
+        </ul>
+    
+
     </ul>
                 </li>
                 <li class="">
@@ -220,9 +233,9 @@ edit_uri: &#34;&#34;
 <p>A part of the module can be specified as usual.</p>
 <div class="pheasant-fenced-code"><div class="cell jupyter input"><div class="code"><pre><code class="python">from pheasant.renderers.jupyter.jupyter import Jupyter</code></pre></div>
 <div class="report"><p><span class="cell-count">[1]</span>
-<span class="start">2019-04-12 08:37:44</span> (<span class="cell-time">20.1ms</span>)
+<span class="start">2019-04-12 08:43:08</span> (<span class="cell-time">16.2ms</span>)
 <span class="right"><span class="total-count">[43]</span> <span class="kernel">python3</span>
-(<span class="page-time">123ms</span>|<span class="total-time">8.52s</span>)
+(<span class="page-time">156ms</span>|<span class="total-time">4.09s</span>)
 </span></p></div></div></div>
 
 <div class="pheasant-fenced-code"><div class="cell embed source"><div class="code"><pre><code class="markdown">{%?Jupyter[:21]%}</code></pre></div></div></div>
@@ -262,9 +275,9 @@ edit_uri: &#34;&#34;
 <div class="pheasant-fenced-code"><div class="cell jupyter input"><div class="code"><pre><code class="python">def func(x, y):
     return x + y</code></pre></div>
 <div class="report"><p><span class="cell-count">[2]</span>
-<span class="start">2019-04-12 08:37:44</span> (<span class="cell-time">4.00ms</span>)
+<span class="start">2019-04-12 08:43:08</span> (<span class="cell-time">3.97ms</span>)
 <span class="right"><span class="total-count">[45]</span> <span class="kernel">python3</span>
-(<span class="page-time">144ms</span>|<span class="total-time">8.54s</span>)
+(<span class="page-time">178ms</span>|<span class="total-time">4.12s</span>)
 </span></p></div></div></div>
 
 <p>If the included file contains header statements, the document structure may be broken. For example, a file to be included contains:</p>

@@ -89,7 +89,7 @@ class PheasantPlugin(BasePlugin):
 
         paths = []
         for page in pages:
-            path = os.path.join(self.cache_dir, page.file.src_path, '.cached')
+            path = os.path.join(self.cache_dir, page.file.src_path + '.cached')
             if (
                 not os.path.exists(path)
                 or os.stat(path).st_mtime < os.stat(page.file.abs_src_path).st_mtime
@@ -115,7 +115,7 @@ class PheasantPlugin(BasePlugin):
             return "Skipped."
 
     def on_page_content(self, content, page, **kwargs):
-        path = os.path.join(self.cache_dir, page.file.src_path, '.cached')
+        path = os.path.join(self.cache_dir, page.file.src_path + '.cached')
         if page.file.abs_src_path not in self.converter.pages:
             if os.path.exists(path):
                 with io.open(path, "r", encoding="utf-8-sig", errors="strict") as f:
