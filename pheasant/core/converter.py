@@ -43,7 +43,7 @@ class Converter(Base):
 
     def update_config(self, config: Dict[str, Any]):
         for renderer in self.renderer_iter():
-            if renderer.name in config:
+            if renderer.name in config and isinstance(config[renderer.name], dict):
                 renderer._update("config", config[renderer.name])
 
     def init(self) -> None:

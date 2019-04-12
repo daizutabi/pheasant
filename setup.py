@@ -3,7 +3,7 @@ import re
 import subprocess
 import sys
 
-from setuptools import find_packages, setup
+from setuptools import setup
 
 
 def get_version(package: str) -> str:
@@ -18,6 +18,15 @@ def get_version(package: str) -> str:
         return m.group(1)
     else:
         return "0.0.0"
+
+
+def get_packages(package):
+    """Return root package and all sub-packages."""
+    return [
+        dirpath
+        for dirpath, dirnames, filenames in os.walk(package)
+        if os.path.exists(os.path.join(dirpath, "__init__.py"))
+    ]
 
 
 long_description = (
@@ -66,7 +75,7 @@ setup(
     author="daizutabi",
     author_email="daizutabi@gmail.com",
     license="MIT",
-    packages=find_packages(exclude=["tests", "docs"]),
+    packages=get_packages("pheasant"),
     include_package_data=True,
     install_requires=[
         "click",

@@ -28,7 +28,7 @@ class Base(metaclass=MetaClass):
     def __post_repr__(self):
         return ""
 
-    def _update(self, name, update: Dict[str, Any]) -> None:
+    def _update(self, name: str, update: Dict[str, Any]) -> None:
         arg = getattr(self, name)
         for key, value in update.items():
             if key not in arg:

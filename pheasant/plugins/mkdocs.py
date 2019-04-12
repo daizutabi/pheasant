@@ -8,7 +8,7 @@ import yaml
 from mkdocs.config import config_options
 from mkdocs.plugins import BasePlugin
 from mkdocs.structure.files import get_files
-from mkdocs.utils import markdown_extensions, string_types
+from mkdocs.utils import markdown_extensions
 
 import pheasant
 from pheasant.core.pheasant import Pheasant
@@ -19,11 +19,7 @@ markdown_extensions.append(".py")
 
 
 class PheasantPlugin(BasePlugin):
-    config_scheme = (
-        ("foo", config_options.Type(string_types, default="a default value")),
-        ("bar", config_options.Type(int, default=0)),
-        ("baz", config_options.Type(bool, default=True)),
-    )
+    config_scheme = (("jupyter", config_options.Type(bool, default=True)),)
     converter = Pheasant()
     version = pheasant.__version__
     logger.info(f"[Pheasant] Converter created.")
@@ -31,6 +27,8 @@ class PheasantPlugin(BasePlugin):
     def on_config(self, config, **kwargs):
         if self.config:
             self.converter.update_config(self.config)
+        if not self.config["jupyter"]:
+            self.converter.jupyter.death = True
 
         self.config["extra_css"] = config["extra_css"]
         self.config["extra_javascript"] = config["extra_javascript"]

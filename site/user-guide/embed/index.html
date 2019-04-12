@@ -71,19 +71,6 @@
     <a class="current" href="./">Embed</a>
     <ul class="subnav">
             
-    <li class="toctree-l3"><a href="#3-embeded-objects">3 Embeded objects</a></li>
-    
-        <ul>
-        
-            <li><a class="toctree-l4" href="#31-file-system">3.1 File system</a></li>
-        
-            <li><a class="toctree-l4" href="#32-python-module-source">3.2 Python module source</a></li>
-        
-            <li><a class="toctree-l4" href="#33-include-other-file-as-markdown-source">3.3 Include other file as Markdown source.</a></li>
-        
-        </ul>
-    
-
     </ul>
                 </li>
                 <li class="">
@@ -233,9 +220,9 @@ edit_uri: &#34;&#34;
 <p>A part of the module can be specified as usual.</p>
 <div class="pheasant-fenced-code"><div class="cell jupyter input"><div class="code"><pre><code class="python">from pheasant.renderers.jupyter.jupyter import Jupyter</code></pre></div>
 <div class="report"><p><span class="cell-count">[1]</span>
-<span class="start">2019-04-13 04:25:21</span> (<span class="cell-time">15.2ms</span>)
+<span class="start">2019-04-13 05:14:39</span> (<span class="cell-time">17.0ms</span>)
 <span class="right"><span class="total-count">[43]</span> <span class="kernel">python3</span>
-(<span class="page-time">138ms</span>|<span class="total-time">4.06s</span>)
+(<span class="page-time">139ms</span>|<span class="total-time">4.09s</span>)
 </span></p></div></div></div>
 
 <div class="pheasant-fenced-code"><div class="cell embed source"><div class="code"><pre><code class="markdown">{%?Jupyter[:21]%}</code></pre></div></div></div>
@@ -244,6 +231,7 @@ edit_uri: &#34;&#34;
     language: str = &#34;python&#34;
     option: str = field(default=&#34;&#34;, init=False)
     active: bool = field(default=True, init=False)
+    death: bool = field(default=False, init=False)
     cursor: int = field(default=0, init=False)
     total: int = field(default=0, init=False)
     cache: Dict[str, List[Cell]] = field(default_factory=dict, init=False)
@@ -259,8 +247,7 @@ edit_uri: &#34;&#34;
         self.register(Jupyter.FENCED_CODE_PATTERN, self.render_fenced_code)
         self.register(Jupyter.INLINE_CODE_PATTERN, self.render_inline_code)
         self.set_template([&#34;fenced_code&#34;, &#34;inline_code&#34;])
-        self.config[&#34;kernel_name&#34;] = {
-            key: values[0] for key, values in find_kernel_names().items()</code></pre></div></div></div>
+        self.config[&#34;kernel_name&#34;] = {</code></pre></div></div></div>
 
 <p>With this functionality, you can guarantee the reproducible relation between your source code and results easily.</p>
 <h2 id="33-include-other-file-as-markdown-source"><span class="pheasant-header"><span class="header"><span class="number">3.3</span> <span class="title">Include other file as Markdown source.</span></span></span></h2>
@@ -275,9 +262,9 @@ edit_uri: &#34;&#34;
 <div class="pheasant-fenced-code"><div class="cell jupyter input"><div class="code"><pre><code class="python">def func(x, y):
     return x + y</code></pre></div>
 <div class="report"><p><span class="cell-count">[2]</span>
-<span class="start">2019-04-13 04:25:21</span> (<span class="cell-time">5.03ms</span>)
+<span class="start">2019-04-13 05:14:39</span> (<span class="cell-time">5.03ms</span>)
 <span class="right"><span class="total-count">[45]</span> <span class="kernel">python3</span>
-(<span class="page-time">159ms</span>|<span class="total-time">4.08s</span>)
+(<span class="page-time">176ms</span>|<span class="total-time">4.13s</span>)
 </span></p></div></div></div>
 
 <p>If the included file contains header statements, the document structure may be broken. For example, a file to be included contains:</p>
