@@ -1,6 +1,8 @@
 import io
 import logging
 import os
+import re
+from typing import List
 
 import yaml
 from mkdocs.config import config_options
@@ -40,6 +42,8 @@ class PheasantPlugin(BasePlugin):
             logger.info(f"[Pheasant] Cache directory created.")
             os.mkdir(self.cache_dir)
 
+        config["nav"] = build_nav(config["nav"], config["docs_dir"])
+        print(config["nav"])
         return config
 
     def on_files(self, files, config):
@@ -89,7 +93,7 @@ class PheasantPlugin(BasePlugin):
 
         paths = []
         for page in pages:
-            path = os.path.join(self.cache_dir, page.file.src_path + '.cached')
+            path = os.path.join(self.cache_dir, page.file.src_path + ".cached")
             if (
                 not os.path.exists(path)
                 or os.stat(path).st_mtime < os.stat(page.file.abs_src_path).st_mtime
@@ -97,6 +101,8 @@ class PheasantPlugin(BasePlugin):
                 paths.append(page.file.abs_src_path)
             else:
                 message(f"Use cache for {page.file.abs_src_path}.")
+
+        paths = []
 
         logger.info(f"[Pheasant] Converting {len(paths)} pages.")
         self.converter.convert_from_files(paths, message=message)
@@ -106,6 +112,7 @@ class PheasantPlugin(BasePlugin):
         msg = "Conversion finished:" + " " * 26 + f"{time} "
         message(msg)
 
+        print(nav)
         return nav
 
     def on_page_read_source(self, source, page, **kwargs):
@@ -115,7 +122,7 @@ class PheasantPlugin(BasePlugin):
             return "Skipped."
 
     def on_page_content(self, content, page, **kwargs):
-        path = os.path.join(self.cache_dir, page.file.src_path + '.cached')
+        path = os.path.join(self.cache_dir, page.file.src_path + ".cached")
         if page.file.abs_src_path not in self.converter.pages:
             if os.path.exists(path):
                 with io.open(path, "r", encoding="utf-8-sig", errors="strict") as f:
@@ -143,3 +150,53 @@ class PheasantPlugin(BasePlugin):
         server.watch(root, builder)
 
         return server
+
+
+def build_nav(nav: List, docs_dir: str, parent: str = "") -> List:
+    for index, entry in enumerate(nav):
+        if not isinstance(entry, dict):
+            entry = {entry: entry}
+            nav[index] = entry
+        for key, value in entry.items():
+            if isinstance(value, str):
+                path = os.path.join(docs_dir, value)
+                if os.path.isdir(path):
+                    nav_ = []
+                    for path in os.listdir(path):
+                        if path == "index.md":
+                            continue
+                        abs_path = os.path.join(docs_dir, value, path)
+                        title = get_title(abs_path)
+                        nav_.append({title: os.path.join(value, path)})
+                    entry[key] = build_nav(nav_, docs_dir, os.path.join(parent, value))
+    return nav
+
+
+def get_title(path):
+    if os.path.isdir(path):
+        return _get_title(os.path.join(path, "index.md"))
+    else:
+        return _get_title(path)
+
+
+TITLE_PATTERN = re.compile(r"^# +#?!? ?(.*)")
+
+
+def _get_title(path):
+    if os.path.exists(path):
+        content = read_file(path).strip()
+        match = TITLE_PATTERN.match(content)
+        if match:
+            return match.group(1)
+    else:
+        title = os.path.basename(os.path.dirname(path))
+        match = re.match(r"\w*[0-9]+[._ ](.*)", title)
+        if match:
+            return match.group(1)
+        else:
+            return title
+
+
+def read_file(path):
+    with io.open(path, "r", encoding="utf-8-sig", errors="strict") as f:
+        return f.read()
