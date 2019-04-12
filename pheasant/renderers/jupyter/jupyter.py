@@ -124,7 +124,7 @@ class Jupyter(Renderer):
                 return surround(cached.output, "cached")
 
         outputs = self.execute(code, context["language"])
-        report = format_report()
+        report = format_report() if not self.death else {}
         report["cursor"] = self.cursor
         if self.total:
             progress_bar(self, report)
