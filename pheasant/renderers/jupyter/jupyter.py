@@ -126,7 +126,7 @@ class Jupyter(Renderer):
         outputs = self.execute(code, context["language"])
         report = format_report() if not self.death else {}
         report["cursor"] = self.cursor
-        if self.total:
+        if self.total and not self.death:
             progress_bar(self, report)
 
         if "debug" in context["option"]:
