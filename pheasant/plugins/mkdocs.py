@@ -43,7 +43,6 @@ class PheasantPlugin(BasePlugin):
             os.mkdir(self.cache_dir)
 
         config["nav"] = build_nav(config["nav"], config["docs_dir"])
-        print(config["nav"])
         return config
 
     def on_files(self, files, config):
@@ -73,6 +72,9 @@ class PheasantPlugin(BasePlugin):
         config["extra_css"] = css + list(self.config["extra_css"])
         config["extra_javascript"] = js + list(self.config["extra_javascript"])
 
+        for file in files:
+            normalize_file(file, config)
+
         return files
 
     def on_nav(self, nav, config, **kwargs):
@@ -99,10 +101,6 @@ class PheasantPlugin(BasePlugin):
                 or os.stat(path).st_mtime < os.stat(page.file.abs_src_path).st_mtime
             ):
                 paths.append(page.file.abs_src_path)
-            else:
-                message(f"Use cache for {page.file.abs_src_path}.")
-
-        paths = []
 
         logger.info(f"[Pheasant] Converting {len(paths)} pages.")
         self.converter.convert_from_files(paths, message=message)
@@ -111,8 +109,6 @@ class PheasantPlugin(BasePlugin):
         time = f"total: {func_time}, kernel: {kernel_time}"
         msg = "Conversion finished:" + " " * 26 + f"{time} "
         message(msg)
-
-        print(nav)
         return nav
 
     def on_page_read_source(self, source, page, **kwargs):
@@ -199,4 +195,18 @@ def _get_title(path):
 
 def read_file(path):
     with io.open(path, "r", encoding="utf-8-sig", errors="strict") as f:
-        return f.read()
+        return f.readline()
+
+
+NORMALIZE_PATTERN = re.compile(r"(^|[\\/])\w*[0-9]+[._ ](.*?)")
+
+
+def normalize_file(file, config):
+    if file.dest_path.endswith(".html"):
+        file.dest_path = NORMALIZE_PATTERN.sub(r"\1\2", file.dest_path)
+        file.dest_path = file.dest_path.replace(" ", "_")
+        file.abs_dest_path = os.path.normpath(
+            os.path.join(config["site_dir"], file.dest_path)
+        )
+        file.url = NORMALIZE_PATTERN.sub(r"\1\2", file.url)
+        file.url = file.url.replace(" ", "_")
