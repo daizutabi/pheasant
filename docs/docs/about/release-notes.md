@@ -19,7 +19,11 @@ pheasant, version 2.2.6 from /path/to/pheasant (Python 3.7)
 
 ## Change log
 
-### Version 2.2.7 (2019-04-17)
+### Version 2.2.8 (2019-04-13)
+
+* Allow directory in nav entry for automatic page collection.
+
+### Version 2.2.7 (2019-04-12)
 
 * PheasantPlugin: introduce cache system.
 
