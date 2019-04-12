@@ -34,6 +34,7 @@ class Jupyter(Renderer):
     language: str = "python"
     option: str = field(default="", init=False)
     active: bool = field(default=True, init=False)
+    death: bool = field(default=False, init=False)
     cursor: int = field(default=0, init=False)
     total: int = field(default=0, init=False)
     cache: Dict[str, List[Cell]] = field(default_factory=dict, init=False)
@@ -150,7 +151,7 @@ class Jupyter(Renderer):
         return cell.output
 
     def execute(self, code: str, language: str = "python") -> List:
-        if language not in self.config["kernel_name"]:
+        if self.death or language not in self.config["kernel_name"]:
             return []
         kernel_name = self.config["kernel_name"][language]
         if self.cursor == 1 and language == "python":
