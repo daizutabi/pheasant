@@ -121,7 +121,7 @@ class PheasantPlugin(BasePlugin):
             if os.path.exists(path):
                 with io.open(path, "r", encoding="utf-8-sig", errors="strict") as f:
                     content = f.read()
-                logger.info(f"[Pheasant] Cached content used for {page.file.src_path}")
+                logger.debug(f"[Pheasant] Cached content used for {page.file.src_path}")
             return content
 
         content = "\n".join(

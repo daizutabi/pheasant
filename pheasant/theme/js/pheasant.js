@@ -9,6 +9,7 @@ function ready(jQuery) {
     tooltipClass: "ui-tooltip-pheasant"
   };
 
+
   function button(className) {
     return '<button class="button ' + className + '"></button>';
   };
