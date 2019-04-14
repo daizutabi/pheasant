@@ -1,4 +1,4 @@
-function ready(jQuery) {
+function ready() {
   var tooltip = {
     hide: false,
     track: true,
