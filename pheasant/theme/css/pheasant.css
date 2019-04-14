@@ -19,16 +19,6 @@ h2, h3, h4, h5 {
   margin-bottom: 10px;
 }
 
-.ui-tooltip-pheasant {
-  font-size: 10px !important;
-  font-weight: bold !important;
-  color: white !important;
-  background: #666 !important;
-  border: none !important;
-  padding: 3px 6px !important;
-  box-shadow: none !important;
-}
-
 /**************************************************
  Numbering style
 **************************************************/
