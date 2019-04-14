@@ -19,11 +19,6 @@ h2, h3, h4, h5 {
   margin-bottom: 10px;
 }
 
-.wy-nav-content {
-  max-width: none;
-  /* padding-left: 60px; */
-}
-
 .ui-tooltip-pheasant {
   font-size: 10px !important;
   font-weight: bold !important;
