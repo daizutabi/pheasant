@@ -288,8 +288,8 @@ h2, h3, h4, h5 {
   background: none;
   outline: none;
   padding: 0px;
-  margin: 0px 0px 0px 6px;
   line-height: normal;
+  font-size: 12px;
 }
 
 .pheasant-button-container .button::before {

@@ -4,7 +4,7 @@
 import altair as alt
 import pandas as pd
 
-df = pd.DataFrame([[1, 2, 3], [2, 13, 4]], columns=list("txy"))
+df = pd.DataFrame([[1, 2, 3], [2, 1, 4]], columns=list("txy"))
 
 chart = (
     alt.Chart(df)

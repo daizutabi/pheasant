@@ -55,16 +55,6 @@ class Converter(Base):
             renderer.reset()
         self.pages = {}
 
-    @property
-    def abs_src_path(self):
-        return self._abs_src_path
-
-    @abs_src_path.setter
-    def abs_src_path(self, path):
-        self._abs_src_path = path
-        for renderer in self.renderer_iter():
-            renderer.abs_src_path = path
-
     def register(
         self,
         name: str,
@@ -109,7 +99,6 @@ class Converter(Base):
             names = [names]
         for name in names or self.parsers:
             source = self.parsers[name].parse(source)
-            # source = parser.parse(source)
 
         return source
 
@@ -134,7 +123,13 @@ class Converter(Base):
         -------
         Converted output text.
         """
-        self.abs_src_path = path
+
+        if names and isinstance(names, str):
+            names = [names]
+        for name in names or self.renderers:
+            for renderer in self.renderers[name]:
+                renderer.abs_src_path = path
+
         if path in self.pages:
             page = self.pages[path]
             page.output = self.convert(page.source, names)

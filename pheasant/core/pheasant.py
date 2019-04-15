@@ -48,6 +48,8 @@ class Pheasant(Converter):
             self.convert_from_file(path, "main", copy=True)
             self.pages[path].meta["extra_html"] = self.jupyter.extra_html
 
+        self.jupyter.dump()
+
         for path in paths:
             self.convert_from_file(path, "link")
 

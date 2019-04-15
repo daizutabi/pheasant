@@ -1,7 +1,6 @@
 import io
 import logging
 import os
-import pickle
 import re
 from typing import List
 
@@ -35,11 +34,6 @@ class PheasantPlugin(BasePlugin):
         self.config["extra_javascript"] = config["extra_javascript"]
 
         logger.info(f"[Pheasant] Converter configured.")
-
-        self.cache_dir = os.path.join(config["docs_dir"], ".pheasant_cache")
-        if not os.path.exists(self.cache_dir):
-            logger.info(f"[Pheasant] Cache directory created.")
-            os.mkdir(self.cache_dir)
 
         config["nav"] = build_nav(config["nav"], config["docs_dir"])
         return config
@@ -92,14 +86,7 @@ class PheasantPlugin(BasePlugin):
         else:
             pages = nav.pages
 
-        paths = []
-        for page in pages:
-            path = os.path.join(self.cache_dir, page.file.src_path + ".cached")
-            if (
-                not os.path.exists(path)
-                or os.stat(path).st_mtime < os.stat(page.file.abs_src_path).st_mtime
-            ):
-                paths.append(page.file.abs_src_path)
+        paths = [page.file.abs_src_path for page in pages]
 
         logger.info(f"[Pheasant] Converting {len(paths)} pages.")
         self.converter.convert_from_files(paths, message=message)
@@ -117,26 +104,11 @@ class PheasantPlugin(BasePlugin):
             return "Skipped."
 
     def on_page_content(self, content, page, **kwargs):
-        path = os.path.join(self.cache_dir, page.file.src_path + ".cached")
         if page.file.abs_src_path not in self.converter.pages:
-            if os.path.exists(path):
-                with open(path, "rb") as f:
-                    page_cached = pickle.load(f)
-                content = page_cached.content
-                page.toc = page_cached.toc
-                logger.debug(f"[Pheasant] Cached content used for {page.file.src_path}")
             return content
-
-        content = "\n".join(
-            [self.converter.pages[page.file.abs_src_path].meta["extra_html"], content]
-        )
-        directory = os.path.dirname(path)
-        if not os.path.exists(directory):
-            os.makedirs(directory)
-        page.content = content
-        with open(path, "wb") as f:
-            pickle.dump(page, f)
-        return content
+        else:
+            extra = self.converter.pages[page.file.abs_src_path].meta["extra_html"]
+            return "\n".join([extra, content])
 
     def on_post_page(self, output, **kwargs):  # This is needed for holoviews.
         return output.replace('.js" defer></script>', '.js"></script>')
@@ -146,6 +118,7 @@ class PheasantPlugin(BasePlugin):
         builder = list(watcher._tasks.values())[0]["func"]
         root = os.path.join(os.path.dirname(pheasant.__file__), "theme")
         server.watch(root, builder)
+        watcher.ignore_dirs('.pheasant_cache')
 
         return server
 
@@ -161,8 +134,8 @@ def build_nav(nav: List, docs_dir: str, parent: str = "") -> List:
                 if os.path.isdir(path):
                     nav_ = []
                     for path in os.listdir(path):
-                        if path == "index.md":
-                            continue
+                        # if path == "index.md":
+                        #     continue
                         abs_path = os.path.join(docs_dir, value, path)
                         title = get_title(abs_path)
                         nav_.append({title: os.path.join(value, path)})

@@ -1,5 +1,7 @@
 import ast
 import datetime
+import os
+import pickle
 import re
 from dataclasses import dataclass, field
 from itertools import takewhile
@@ -67,6 +69,36 @@ class Jupyter(Renderer):
         self.active = False
         self.total = 0
         self.reset()
+
+    @property
+    def abs_src_path(self) -> str:
+        return self._abs_src_path
+
+    @abs_src_path.setter
+    def abs_src_path(self, abs_src_path: str) -> None:
+        self._abs_src_path = abs_src_path
+        if not self.active:
+            return
+        path = cache_path(abs_src_path)
+        if os.path.exists(path):
+            with open(path, "rb") as f:
+                cache, meta = pickle.load(f)
+
+            self.cache[abs_src_path] = cache
+            if meta:
+                self.meta[abs_src_path] = meta
+
+    def dump(self):
+        for abs_src_path, cache in self.cache.items():
+            if not cache:
+                continue
+            meta = self.meta.get(abs_src_path)
+            path = cache_path(abs_src_path)
+            directory = os.path.dirname(path)
+            if not os.path.exists(directory):
+                os.mkdir(directory)
+            with open(path, "wb") as f:
+                pickle.dump((cache, meta), f)
 
     def render_fenced_code(self, context, splitter, parser) -> Iterator[str]:
         if not context["language"]:
@@ -283,7 +315,7 @@ def progress_bar(jupyter, report):
     time = f"{report['cell']:>8} {report['page']:>8} {report['total']:>8}"
 
     count = colored(count, "cyan", attrs=["bold"])
-    color = 'green' if current >= length else 'yellow'
+    color = "green" if current >= length else "yellow"
     progress = colored(progress, color)
     time = colored(time, color)
 
@@ -291,3 +323,9 @@ def progress_bar(jupyter, report):
     print("\r" + line, end="")
     if jupyter.cursor == jupyter.total:
         print()
+
+
+def cache_path(abs_src_path):
+    directory, path = os.path.split(abs_src_path)
+    directory = os.path.join(directory, ".pheasant_cache")
+    return os.path.join(directory, path + ".cache")

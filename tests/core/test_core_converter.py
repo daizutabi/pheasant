@@ -13,9 +13,6 @@ def test_converter_init(jupyter):
     converter.register("markdown", [jupyter, Header()])
     assert len(converter.parsers) == 1
 
-    converter.abs_src_path = "abc"
-    assert jupyter.abs_src_path == "abc"
-
 
 def test_converter(jupyter):
     converter = Converter()
