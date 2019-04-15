@@ -1,6 +1,7 @@
 import io
 import logging
 import os
+import pickle
 import re
 from typing import List
 
@@ -119,8 +120,10 @@ class PheasantPlugin(BasePlugin):
         path = os.path.join(self.cache_dir, page.file.src_path + ".cached")
         if page.file.abs_src_path not in self.converter.pages:
             if os.path.exists(path):
-                with io.open(path, "r", encoding="utf-8-sig", errors="strict") as f:
-                    content = f.read()
+                with open(path, "rb") as f:
+                    page_cached = pickle.load(f)
+                content = page_cached.content
+                page.toc = page_cached.toc
                 logger.debug(f"[Pheasant] Cached content used for {page.file.src_path}")
             return content
 
@@ -130,8 +133,9 @@ class PheasantPlugin(BasePlugin):
         directory = os.path.dirname(path)
         if not os.path.exists(directory):
             os.makedirs(directory)
-        with io.open(path, "w", encoding="utf-8-sig", errors="strict") as f:
-            f.write(content)
+        page.content = content
+        with open(path, "wb") as f:
+            pickle.dump(page, f)
         return content
 
     def on_post_page(self, output, **kwargs):  # This is needed for holoviews.
