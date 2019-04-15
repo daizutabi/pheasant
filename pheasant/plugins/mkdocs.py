@@ -134,8 +134,8 @@ def build_nav(nav: List, docs_dir: str, parent: str = "") -> List:
                 if os.path.isdir(path):
                     nav_ = []
                     for path in os.listdir(path):
-                        # if path == "index.md":
-                        #     continue
+                        if path == ".pheasant_cache":
+                            continue
                         abs_path = os.path.join(docs_dir, value, path)
                         title = get_title(abs_path)
                         nav_.append({title: os.path.join(value, path)})
