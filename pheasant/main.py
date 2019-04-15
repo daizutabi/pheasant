@@ -18,7 +18,7 @@ version_msg = f"{__version__} from {pgk_dir} (Python {sys.version[:3]})."
 
 @click.group(
     invoke_without_command=True,
-    help="If any commands are given, prompt will be invoked.",
+    help="If any commands are given, an interactive prompt will be invoked.",
 )
 @click.pass_context
 @click.version_option(version_msg, "-V", "--version")
@@ -27,16 +27,16 @@ def cli(ctx):
         prompt()
 
 
-@cli.command(help="Delete cache under the current directory recursively.")
+@cli.command(help="Delete caches under the current directory recursively.")
 @click.confirmation_option(prompt="Are you sure you want to delete the cache?")
-def clear():
+def clean():
     for dirpath, dirnames, filenames in os.walk("."):
         if dirpath.endswith(".pheasant_cache"):
             shutil.rmtree(dirpath)
             click.echo(f"'{dirpath}' deleted. {len(filenames)} files.")
 
 
-@cli.command(help="Run source files and save the cache.")
+@cli.command(help="Run source files and save the caches.")
 @click.option(
     "-e",
     "--ext",

@@ -68,6 +68,8 @@ b
 c = 3
 # Output: `c` is equal to {{c}}.
 
+# Other Pheasant features also work. For example, go to Fig. {#cat#}
+
 # ## Fenced code block in Python source
 # You can write a fenced code block in a Python source as comment.
 
