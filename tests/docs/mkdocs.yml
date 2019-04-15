@@ -13,5 +13,6 @@ plugins:
 
 nav:
   - Home: index.md
+  - Test: test.md
   - Script: conftest.py
   - Section: section

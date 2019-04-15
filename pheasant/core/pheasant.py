@@ -1,4 +1,5 @@
 import logging
+import os
 from dataclasses import field
 from typing import Dict, Iterable, List
 
@@ -39,7 +40,7 @@ class Pheasant(Converter):
         self.reset()
         logger.info("Done. Start conversion of each page.")
         for path in paths:
-            logger.info(f"Converting: {path}")
+            logger.info(f"Converting: {os.path.relpath(path)}")
             if path.endswith(".py"):
                 self.convert_from_file(path, "script", copy=True)
             self.jupyter.deactivate()

@@ -94,8 +94,8 @@ class PheasantPlugin(BasePlugin):
             extra = self.converter.pages[page.file.abs_src_path].meta["extra_html"]
             return "\n".join([extra, content])
 
-    # def on_post_page(self, output, **kwargs):  # This is needed for holoviews.
-    #     return output.replace('.js" defer></script>', '.js"></script>')
+    def on_post_page(self, output, **kwargs):  # This is needed for holoviews.
+        return output.replace('.js" defer></script>', '.js"></script>')
 
     def on_serve(self, server, **kwargs):  # pragma: no cover
         watcher = server.watcher
