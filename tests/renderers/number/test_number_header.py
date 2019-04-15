@@ -96,6 +96,11 @@ def test_header_with_number(header):
     assert '<span class="number">1.2.3</span>' in output
 
 
+def test_header_with_link(header):
+    output = header.parse("# title (https://example.com)\n")
+    assert '<span class="link"><a href="https://example.com"' in output
+
+
 def test_header_equation(header):
     output = header.parse("#eq 1\n")
     assert '<div class="equation"><p>\n\\begin{equation}\n1' in output

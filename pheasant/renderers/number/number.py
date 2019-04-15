@@ -39,7 +39,7 @@ class Header(Renderer):
             self.number_list[kind] = [0] * 6
 
     def render_header(self, context, splitter, parser) -> Iterator[str]:
-        if context["kind"] == '!':
+        if context["kind"] == "!":
             self.reset()
             return
         context = self.resolve(context)
@@ -123,6 +123,7 @@ class Header(Renderer):
         prefix = self.config["kind_prefix"].get(kind, "")
         title, tag = split_tag(title)
         title, inline_pattern = split_inline_pattern(title)
+        title, link = split_link(title)
         context = {
             "kind": kind,
             "header": header,
@@ -132,6 +133,7 @@ class Header(Renderer):
             "number_list": number_list,
             "number_string": number_string,
             "inline_pattern": inline_pattern,
+            "link": link,
         }
 
         if tag:
@@ -282,3 +284,17 @@ def split_number(title: str) -> Tuple[str, List[int]]:
     else:
         number_list = []
     return title, number_list
+
+
+RE_LINK_PATTERN = re.compile(r"\(https?://.*?\)")
+
+
+def split_link(title: str) -> Tuple[str, str]:
+    """Split a link from `title`. Return (title, link)."""
+    match = RE_LINK_PATTERN.search(title)
+    if match:
+        link = match.group()
+        title = title.replace(link, "").strip()
+        return title, link[1:-1]
+    else:
+        return title, ""
