@@ -295,6 +295,6 @@ def split_link(title: str) -> Tuple[str, str]:
     if match:
         link = match.group()
         title = title.replace(link, "").strip()
-        return title, link[1:-1]
+        return title, link[1:-1].replace("/ ", "/")
     else:
         return title, ""
