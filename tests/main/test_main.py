@@ -17,10 +17,8 @@ def test_main_convert():
         with open("example.md", "w") as f:
             f.write("# Title\n## Section\n")
 
-        result = runner.invoke(cli, ["example.md"])
+        result = runner.invoke(cli, ["run", "example.md"])
         assert result.exit_code == 0
-        assert '<span class="number">1</span>' in result.output
-        assert '<span class="number">1.1</span>' in result.output
 
 
 def test_main_prompt():
@@ -28,7 +26,7 @@ def test_main_prompt():
     with runner.isolated_filesystem():
         result = runner.invoke(cli, input="```python\n2*3\n```\n\n")
         assert result.exit_code == 0
-        assert "[Markdown]" in result.output
-        assert "[HTML]" in result.output
+        assert "[markdown]" in result.output
+        assert "[html]" in result.output
         assert '<code class="python">2*3</code>' in result.output
         assert '<code class="plaintext">6</code>' in result.output

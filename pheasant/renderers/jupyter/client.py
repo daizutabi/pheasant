@@ -8,7 +8,7 @@ from typing import Any, Dict, Iterator, List, Optional
 import jupyter_client
 from jupyter_client.manager import KernelManager
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("pheasant")
 
 kernel_names: Dict[str, list] = {}
 kernel_managers: Dict[str, Any] = {}

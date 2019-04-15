@@ -1,3 +1,4 @@
+import logging
 from dataclasses import field
 from typing import Dict, Iterable, List
 
@@ -8,6 +9,8 @@ from pheasant.renderers.embed.embed import Embed
 from pheasant.renderers.jupyter.jupyter import Jupyter
 from pheasant.renderers.number.number import Anchor, Header
 from pheasant.renderers.script.script import Script
+
+logger = logging.getLogger("pheasant")
 
 
 class Pheasant(Converter):
@@ -30,16 +33,13 @@ class Pheasant(Converter):
         self.decorator.register("surround", [self.header, self.jupyter, self.embed])
 
     @monitor(format=True)
-    def convert_from_files(self, paths: Iterable[str], message=None) -> List[str]:
+    def convert_from_files(self, paths: Iterable[str]) -> List[str]:
         paths = list(paths)
-        if message:
-            message("Converter resetting...")
+        logger.info("Pheasant converter resetting...")
         self.reset()
-        if message:
-            message("Done. Start conversion of each page.")
+        logger.info("Done. Start conversion of each page.")
         for path in paths:
-            if message:
-                message(f"Converting: {path}")
+            logger.info(f"Converting: {path}")
             if path.endswith(".py"):
                 self.convert_from_file(path, "script", copy=True)
             self.jupyter.deactivate()
