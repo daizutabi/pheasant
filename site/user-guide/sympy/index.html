@@ -9,7 +9,7 @@
   <meta name="author" content="daizutabi">
   <link rel="shortcut icon" href="../../img/favicon.ico">
   <title>SymPy &mdash; 
-    Pheasant 2.2.12 documentation</title>
+    Pheasant 2.2.13 documentation</title>
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   <link rel="stylesheet" href="../../css/theme.css" type="text/css" />
@@ -44,7 +44,7 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
       <div class="wy-side-nav-search">
   <a href="../.." class="icon icon-home"> Pheasant</a>
-  <div class="version">2.2.12</div>
+  <div class="version">2.2.13</div>
         
       </div>
 
@@ -153,24 +153,24 @@ TeX: { equationNumbers: { autoNumber: "AMS" } } });</script>
 
 <h1 id="4-sympy"><span class="pheasant-header"><span class="header"><span class="number">4</span> <span class="title">SymPy</span></span></span></h1>
 <p>First, import the SymPy package.</p>
-<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">import sympy</code></pre></div>
+<div class="pheasant-fenced-code"><div class="cell jupyter input"><div class="code"><pre><code class="python">import sympy</code></pre></div>
 <div class="report"><p><span class="cell-count">[1]</span>
-<span class="start">2019-04-15 15:26:49</span> (<span class="cell-time">370ms</span>)
+<span class="start">2019-04-15 16:17:52</span> (<span class="cell-time">392ms</span>)
 <span class="right"><span class="total-count">[47]</span> <span class="kernel">python3</span>
-(<span class="page-time">374ms</span>|<span class="total-time">4.49s</span>)
-</span></p></div></div></div></div>
+(<span class="page-time">396ms</span>|<span class="total-time">4.55s</span>)
+</span></p></div></div></div>
 
 <h2 id="41-basic-usage"><span class="pheasant-header"><span class="header"><span class="number">4.1</span> <span class="title">Basic usage</span></span></span></h2>
 <p>SymPy symbols or expressions in a fenced code block are automatically rendered in display mode:</p>
-<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">x = sympy.Symbol(&#39;x&#39;)
+<div class="pheasant-fenced-code"><div class="cell jupyter input"><div class="code"><pre><code class="python">x = sympy.Symbol(&#39;x&#39;)
 x**3</code></pre></div>
 <div class="report"><p><span class="cell-count">[2]</span>
-<span class="start">2019-04-15 15:26:50</span> (<span class="cell-time">9.03ms</span>)
+<span class="start">2019-04-15 16:17:53</span> (<span class="cell-time">9.00ms</span>)
 <span class="right"><span class="total-count">[48]</span> <span class="kernel">python3</span>
-(<span class="page-time">383ms</span>|<span class="total-time">4.50s</span>)
+(<span class="page-time">405ms</span>|<span class="total-time">4.56s</span>)
 </span></p></div></div>
 
-<div class="cell jupyter display"><div class="content">$$x^{3}$$</div></div></div></div>
+<div class="cell jupyter display"><div class="content">$$x^{3}$$</div></div></div>
 
 <p>On the other hand, in an inline code, a SymPy object just returns a latex string like this <code>{{x**2}}</code> = x^{2}. This is intentional behavior. You can choose inline mode or display mode. Furthermore, you can form an expression you want.</p>
 <div class="pheasant-fenced-code"><div class="cell embed source"><div class="code"><pre><code class="markdown">* This is an inline code example: ${{x**2+x+1}}$</code></pre></div></div></div>
@@ -238,18 +238,18 @@ f(x) = x^{2}
 </p></div></div>
 
 <h2 id="43-matrix"><span class="pheasant-header"><span class="header"><span class="number">4.3</span> <span class="title">Matrix</span></span></span></h2>
-<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">import numpy as np
+<div class="pheasant-fenced-code"><div class="cell jupyter input"><div class="code"><pre><code class="python">import numpy as np
 
 xw = np.array([[11, 12, 13, 14], [21, 22, 23, 24], [31, 32, 33, 34]])
 b = np.array([1000, 2000, 3000, 4000])
 sympy.Matrix(xw + np.ones((3, 1), int) @ b.reshape((1, -1)))</code></pre></div>
 <div class="report"><p><span class="cell-count">[13]</span>
-<span class="start">2019-04-15 15:26:50</span> (<span class="cell-time">9.94ms</span>)
+<span class="start">2019-04-15 16:17:53</span> (<span class="cell-time">13.0ms</span>)
 <span class="right"><span class="total-count">[59]</span> <span class="kernel">python3</span>
-(<span class="page-time">478ms</span>|<span class="total-time">4.60s</span>)
+(<span class="page-time">507ms</span>|<span class="total-time">4.66s</span>)
 </span></p></div></div>
 
-<div class="cell jupyter display"><div class="content">$$\left[\begin{matrix}1011 & 2012 & 3013 & 4014\\1021 & 2022 & 3023 & 4024\\1031 & 2032 & 3033 & 4034\end{matrix}\right]$$</div></div></div></div>
+<div class="cell jupyter display"><div class="content">$$\left[\begin{matrix}1011 & 2012 & 3013 & 4014\\1021 & 2022 & 3023 & 4024\\1031 & 2032 & 3033 & 4034\end{matrix}\right]$$</div></div></div>
               
             </div>
           </div>

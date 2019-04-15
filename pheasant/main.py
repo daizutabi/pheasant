@@ -1,4 +1,5 @@
 import os
+import shutil
 import sys
 
 import click
@@ -13,8 +14,14 @@ version_msg = f"{__version__} from {pgk_dir} (Python {sys.version[:3]})."
 
 @click.command()
 @click.version_option(version_msg, "-V", "--version")
+@click.option("--clear", is_flag=True, help="Delete cache under the current directory.")
+@click.option("-y", "--yes", is_flag=True, help="Do not ask for confirmation.")
 @click.argument("path", nargs=-1, type=click.Path(exists=True))
-def cli(path):
+def cli(path, clear, yes):
+    if clear:
+        clear_cache(yes)
+        return
+
     if not path:
         prompt()
     else:
@@ -52,3 +59,12 @@ def prompt():
     html = markdown.convert(output).strip()
     click.echo(html)
     click.echo("----------------")
+
+
+def clear_cache(yes):
+    for dirpath, dirnames, filenames in os.walk("."):
+        if dirpath.endswith(".pheasant_cache"):
+            confirm = f"Delete {len(filenames)} cache files in '{dirpath}'?"
+            if yes or click.confirm(confirm):
+                shutil.rmtree(dirpath)
+                click.echo(f"'{dirpath}' deleted")
