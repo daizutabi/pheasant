@@ -77,7 +77,7 @@ class Jupyter(Renderer):
     @abs_src_path.setter
     def abs_src_path(self, abs_src_path: str) -> None:
         self._abs_src_path = abs_src_path
-        if not self.active:
+        if not self.active or abs_src_path == ".":
             return
         path = cache_path(abs_src_path)
         if os.path.exists(path):
@@ -131,7 +131,7 @@ class Jupyter(Renderer):
         if context["code"].strip() == "!restart":
             kernel_name = self.config["kernel_name"][self.language]
             restart_kernel(kernel_name)
-            self.cache = {}
+            self.abs_src_path = "."
             self.reset()
             return
 
