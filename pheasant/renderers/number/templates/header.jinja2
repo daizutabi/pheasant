@@ -1,7 +1,7 @@
 {%- extends 'base.jinja2' -%}
 
 {%- block header -%}
-{% if number_string %}<span class="number">{{ number_string }}</span> {% endif %}<span class="title">{% autoescape false %}{{ title }}{% endautoescape %}</span>
+{% if number_string %}<span class="number">{{ number_string }}</span> {% endif %}<span class="title">{% autoescape false %}{{ title }}{% endautoescape %}</span>{% if link %}<span class="link"><a href="{{ link }}" target="_blank" title="{{ link }}"></a></span>{% endif %}
 {%- endblock -%}
 
 {%- block figure -%}

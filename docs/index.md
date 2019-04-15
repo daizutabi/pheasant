@@ -262,3 +262,11 @@ For example, go to Fig. {##cat#}
 ~~~
 
 For example, go to Fig. {#cat#}
+
+### Link from a header
+
+You can add external link from section headers.
+
+~~~copy
+#### MkDocs (https://www.mkdocs.org/)
+~~~

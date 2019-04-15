@@ -76,6 +76,18 @@ h2, h3, h4, h5 {
 .pheasant-header .table .title,
 .pheasant-header .other .title {}
 
+.pheasant-header .link a {
+  color: #777;
+  font-size: 80%;
+}
+
+.pheasant-header .link a::after {
+  margin-left: 10px;
+  content: "\f35d";
+  font-family: "Font Awesome 5 Free";
+  font-weight: bold;
+}
+
 /**************************************************
  Fenced code style
 **************************************************/
