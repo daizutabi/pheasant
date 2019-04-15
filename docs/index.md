@@ -1,4 +1,4 @@
-```python hide
+```python hide run
 from pheasant import __version__
 ```
 
