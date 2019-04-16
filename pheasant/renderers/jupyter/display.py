@@ -4,13 +4,10 @@ IMPORTANT: `display` function is called from jupyter kernel.
 """
 import base64
 import io
-import logging
 import re
 from typing import Any, Callable, Dict, Iterable, List
 
 from IPython.display import HTML, Latex
-
-logger = logging.getLogger("pheasant")
 
 
 # The result of repr() is written in output['data']['text/plain']

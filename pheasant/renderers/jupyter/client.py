@@ -1,7 +1,6 @@
 """A module provides jupyter client interface."""
 import atexit
 import datetime
-import logging
 import re
 from typing import Any, Dict, Iterator, List, Optional
 
@@ -10,8 +9,6 @@ from jupyter_client.manager import KernelManager
 
 from pheasant.core.base import format_timedelta
 from pheasant.core.progress import ProgressBar
-
-logger = logging.getLogger("pheasant")
 
 kernel_names: Dict[str, list] = {}
 kernel_clients: Dict[str, Any] = {}
@@ -67,12 +64,7 @@ def start_kernel(
             kernel_client.shutdown()
             return False
         else:
-
-            def shutdown():  # pragma: no cover
-                logger.info(f'Shutting down kernel: "{kernel_name}".')
-                kernel_client.shutdown()
-
-            atexit.register(shutdown)
+            atexit.register(kernel_client.shutdown)
             kernel_clients[kernel_name] = kernel_client
             return kernel_client
 
