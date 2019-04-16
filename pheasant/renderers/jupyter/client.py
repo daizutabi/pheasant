@@ -61,10 +61,11 @@ def start_kernel(
         try:
             kernel_client.execute_interactive(init_code, timeout=timeout)
         except TimeoutError:
-            kernel_client.shutdown()
+            kernel_client.parent.shutdown_kernel()
             return False
         else:
-            atexit.register(kernel_client.shutdown)
+            # INFO: kernel_client.shutdown is NG.
+            atexit.register(kernel_client.parent.shutdown_kernel)
             kernel_clients[kernel_name] = kernel_client
             return kernel_client
 

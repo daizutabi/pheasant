@@ -149,7 +149,7 @@ class Jupyter(Renderer):
         if len(cache) >= self.count and "run" not in context["option"]:
             cached = cache[self.count - 1]
             if cell == cached:
-                if self.progress_bar.total and self.count % 5 == 0:
+                if self.progress_bar.total and (self.count - 1) % 5 == 0:
                     self.progress_bar.progress(self.relpath, count=self.count)
                 return surround(cached.output, "cached")
 

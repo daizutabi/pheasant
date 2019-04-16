@@ -16,10 +16,7 @@ pgk_dir = os.path.dirname(os.path.abspath(__file__))
 version_msg = f"{__version__} from {pgk_dir} (Python {sys.version[:3]})."
 
 
-@click.group(
-    invoke_without_command=True,
-    help="If any commands are given, an interactive prompt will be invoked.",
-)
+@click.group(invoke_without_command=True)
 @click.pass_context
 @click.version_option(version_msg, "-V", "--version")
 def cli(ctx):
@@ -27,13 +24,13 @@ def cli(ctx):
         prompt()
 
 
-@cli.command(help="Delete caches under the current directory recursively.")
-@click.confirmation_option(prompt="Are you sure you want to delete the cache?")
+@cli.command(help="Delete caches at the current directory recursively.")
+@click.confirmation_option(prompt="Are you sure you want to delete caches?")
 def clean():
     for dirpath, dirnames, filenames in os.walk("."):
         if dirpath.endswith(".pheasant_cache"):
             shutil.rmtree(dirpath)
-            click.echo(f"'{dirpath}' deleted. {len(filenames)} files.")
+            click.echo(f"'{dirpath}' deleted {len(filenames)} files.")
 
 
 @cli.command(help="Run source files and save the caches.")
@@ -45,13 +42,14 @@ def clean():
     help="File extension(s) separated by commas.",
 )
 @click.option("--max", default=100, show_default=True, help="Maximum number of files.")
+@click.option("--list", is_flag=True, help="Only list the files.")
 @click.argument("paths", nargs=-1, type=click.Path(exists=True))
-def run(paths, ext, max):
-    ext = "." + ext.replace(",", ".")
+def run(paths, ext, max, list):
+    exts = ext.split(",")
     src_paths = []
 
     def collect(path):
-        if os.path.splitext(path)[-1] in ext:
+        if os.path.splitext(path)[-1][1:] in exts:
             src_paths.append(path)
 
     if not paths:
@@ -66,13 +64,19 @@ def run(paths, ext, max):
     length = len(src_paths)
     click.secho(f"collected {length} files.", bold=True)
     if length > max:
-        click.echo(f"Too many files. Aborted.")
+        click.secho(f"Too many files. Aborted.", fg="yellow")
+
+    if list:
+        for path in src_paths:
+            click.echo(path)
+        return
 
     pheasant = Pheasant()
     pheasant.convert_from_files(src_paths)
 
 
 def prompt():
+    click.echo("Enter double blank lines to exit.")
     lines = []
     while True:
         line = click.prompt("", type=str, default="", show_default=False)
@@ -83,12 +87,11 @@ def prompt():
 
     pheasant = Pheasant()
     output = pheasant.convert(source, ["main", "link"])
-    click.echo("---[source]---")
+    click.echo("[source]")
     click.echo(source.strip())
-    click.echo("---[markdown]---")
+    click.echo("[markdown]")
     click.echo(output.strip())
-    click.echo("---[html]-------")
+    click.echo("[html]")
     markdown = Markdown()
     html = markdown.convert(output)
     click.echo(html.strip())
-    click.echo("----------------")

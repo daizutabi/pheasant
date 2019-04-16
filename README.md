@@ -6,7 +6,6 @@
 [![AppVeyor][appveyor-image]][appveyor-link]
 [![Coverage Status][coveralls-image]][coveralls-link]
 [![Code style: black][black-image]][black-link]
-[![Netlify Status](https://api.netlify.com/api/v1/badges/8e7a3a0f-625e-42a9-9573-76918c850e5d/deploy-status)](https://app.netlify.com/sites/hungry-stonebraker-636d77/deploys)
 
 [pypi-image]: https://badge.fury.io/py/pheasant.svg
 [pypi-link]: https://pypi.org/project/pheasant
