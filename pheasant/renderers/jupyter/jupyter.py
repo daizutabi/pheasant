@@ -139,7 +139,7 @@ class Jupyter(Renderer):
 
     def progress_format(self, result):
         report = result[1]
-        return f"{self.relpath} Page {report['page']} Total {report['total']}"
+        return f"Page {report['page']} Total {report['total']} {self.relpath}"
 
     def execute_and_render(self, code, context, template) -> str:
         self.count += 1
@@ -150,7 +150,8 @@ class Jupyter(Renderer):
             cached = cache[self.count - 1]
             if cell == cached:
                 if self.progress_bar.total and (self.count - 1) % 5 == 0:
-                    self.progress_bar.progress(self.relpath, count=self.count)
+                    func = "-" * 32 + " " + self.relpath
+                    self.progress_bar.progress(func, count=self.count)
                 return surround(cached.output, "cached")
 
         language = context["language"]

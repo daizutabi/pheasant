@@ -1,16 +1,10 @@
-import logging
 import os
 import shutil
 import sys
 
 import click
-from markdown import Markdown
 
 from pheasant import __version__
-from pheasant.core.pheasant import Pheasant
-
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger("pheasant")
 
 pgk_dir = os.path.dirname(os.path.abspath(__file__))
 version_msg = f"{__version__} from {pgk_dir} (Python {sys.version[:3]})."
@@ -25,12 +19,29 @@ def cli(ctx):
 
 
 @cli.command(help="Delete caches at the current directory recursively.")
-@click.confirmation_option(prompt="Are you sure you want to delete caches?")
-def clean():
+@click.option("-y", "--yes", is_flag=True, help="Do not ask for confirmation.")
+def clean(yes):
+    dirs = []
     for dirpath, dirnames, filenames in os.walk("."):
         if dirpath.endswith(".pheasant_cache"):
-            shutil.rmtree(dirpath)
-            click.echo(f"'{dirpath}' deleted {len(filenames)} files.")
+            num = len(filenames)
+            files = f"{num} file"
+            if num > 1:
+                files += "s"
+            dirs.append(dirpath)
+            click.echo(f"Directory: {dirpath} ({files})")
+
+    if not dirs:
+        click.echo("No caches to delete.")
+        return
+
+    if not yes and dirs:
+        click.confirm("Are you sure you want to delete the caches?", abort=True)
+
+    for dirpath in dirs:
+        shutil.rmtree(dirpath)
+
+    click.echo("Deleted.")
 
 
 @cli.command(help="Run source files and save the caches.")
@@ -71,11 +82,14 @@ def run(paths, ext, max, list):
             click.echo(path)
         return
 
+    from pheasant.core.pheasant import Pheasant
+
     pheasant = Pheasant()
     pheasant.convert_from_files(src_paths)
 
 
 def prompt():
+
     click.echo("Enter double blank lines to exit.")
     lines = []
     while True:
@@ -84,6 +98,9 @@ def prompt():
             break
         lines.append(line)
     source = "\n".join(lines).strip() + "\n"
+
+    from markdown import Markdown
+    from pheasant.core.pheasant import Pheasant
 
     pheasant = Pheasant()
     output = pheasant.convert(source, ["main", "link"])
