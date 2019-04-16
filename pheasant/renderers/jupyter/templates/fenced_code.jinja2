@@ -2,10 +2,10 @@
 
 {%- if 'hide' not in option -%}
 <div class="cell jupyter input"><div class="code"><pre><code class="{{ language }}">{{ code }}</code></pre></div>
-<div class="report"><p><span class="cell-count">[{{ report.cursor }}]</span>
+<div class="report"><p><span class="cell-count">[{{ report.count }}]</span>
 <span class="start">{{ report.start }}</span> (<span class="cell-time">{{ report.cell }}</span>)
 <span class="right">{%- if option -%}<span class="option">({{ option }})</span> {% endif -%}
-<span class="total-count">[{{ report.count }}]</span> <span class="kernel">{{ config.kernel_name[language] }}</span>
+<span class="total-count">[{{ report.total_count }}]</span> <span class="kernel">{{ config.kernel_name[language] }}</span>
 (<span class="page-time">{{ report.page }}</span>|<span class="total-time">{{ report.total }}</span>)
 </span></p></div></div>
   {%- for output in outputs if output.type != 'display_data' -%}

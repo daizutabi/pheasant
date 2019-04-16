@@ -1,17 +1,12 @@
-import logging
-import os
 from dataclasses import field
 from typing import Dict, Iterable, List
 
-from pheasant.core.converter import Converter
+from pheasant.core.converter import Converter, Page
 from pheasant.core.decorator import Decorator, monitor
-from pheasant.core.page import Page
 from pheasant.renderers.embed.embed import Embed
 from pheasant.renderers.jupyter.jupyter import Jupyter
 from pheasant.renderers.number.number import Anchor, Header
 from pheasant.renderers.script.script import Script
-
-logger = logging.getLogger("pheasant")
 
 
 class Pheasant(Converter):
@@ -34,23 +29,17 @@ class Pheasant(Converter):
 
     @monitor(format=True)
     def convert_from_files(self, paths: Iterable[str]) -> List[str]:
-        paths = list(paths)
-        logger.info("Pheasant converter resetting...")
         self.reset()
-        logger.info("Done. Start conversion of each page.")
         for path in paths:
-            logger.info(f"Converting: {os.path.relpath(path)}")
             if path.endswith(".py"):
-                self.convert_from_file(path, "script", copy=True)
-            self.convert_from_file(
-                path, "main", copy=True, preprocess=self.jupyter.reset_source
-            )
-            self.jupyter.progress_bar.finish()
-            self.pages[path].meta["extra_html"] = self.jupyter.extra_html
+                self.convert_from_file(path, "script")
+            self.apply(path, self.jupyter.set_page)
+            self.convert_from_file(path, "main")
+            self.apply(path, self.jupyter.finish_page)
 
         self.jupyter.dump()
 
         for path in paths:
             self.convert_from_file(path, "link")
 
-        return [self.pages[path].output for path in paths]
+        return [self.pages[path].markdown for path in paths]

@@ -19,8 +19,8 @@ class ProgressBar:
         self.spinner = spinner
         self.init = init
         self.count = 0
-        self.bar_length = 50
-        self.zfill = 4
+        self.bar_length = 30
+        self.zfill = 3
         self.write = sys.stdout.write
         self.flush = sys.stdout.flush
         self.bar = ""
@@ -83,22 +83,26 @@ class ProgressBar:
         self.bar = bar
         self.show = True
 
-    def progress(self, func, format=None, init=None):
+    def progress(self, func, format=None, init=None, count=None):
         if self.count == 0:
             cursor.hide()
             self.update(init or self.init)
 
-        if self.spinner:
+        if isinstance(func, str):
+            result = func
+        elif self.spinner:
             result = self.supervisor(func)
         else:
             result = func()
 
-        self.count += 1
+        self.count = count or self.count + 1
         self.update(result if not format else format(result))
 
         return result
 
-    def finish(self):
+    def finish(self, count=None):
+        if count:
+            self.count = count
         if self.show:
             self.update(self.result, finish=True)
             self.write("\n")

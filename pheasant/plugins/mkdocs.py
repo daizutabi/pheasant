@@ -76,14 +76,13 @@ class PheasantPlugin(BasePlugin):
         self.converter.convert_from_files(paths)
         func_time = self.converter.convert_from_files.func_time
         kernel_time = self.converter.convert_from_files.kernel_time
-        time = f"total: {func_time}, kernel: {kernel_time}"
-        msg = "Conversion finished:" + " " * 26 + f"{time} "
-        logger.info(f"[Pheasant] {msg}")
+        time = f"Total {func_time} Kernel {kernel_time}"
+        logger.info(f"[Pheasant] Conversion finished: {time}")
         return nav
 
     def on_page_read_source(self, source, page, **kwargs):
         try:
-            return self.converter.pages[page.file.abs_src_path].output
+            return self.converter.pages[page.file.abs_src_path].markdown
         except KeyError:
             return "Skipped."
 
@@ -91,7 +90,7 @@ class PheasantPlugin(BasePlugin):
         if page.file.abs_src_path not in self.converter.pages:
             return content
         else:
-            extra = self.converter.pages[page.file.abs_src_path].meta["extra_html"]
+            extra = self.converter.pages[page.file.abs_src_path].extra_html
             return "\n".join([extra, content])
 
     def on_post_page(self, output, **kwargs):  # This is needed for holoviews.

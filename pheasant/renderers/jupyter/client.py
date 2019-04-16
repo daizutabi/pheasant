@@ -9,7 +9,7 @@ from jupyter_client.kernelspec import find_kernel_specs, get_kernel_spec
 from jupyter_client.manager import KernelManager
 
 from pheasant.core.base import format_timedelta
-from pheasant.renderers.jupyter.progress import ProgressBar
+from pheasant.core.progress import ProgressBar
 
 logger = logging.getLogger("pheasant")
 
@@ -76,13 +76,13 @@ def start_kernel(
             kernel_clients[kernel_name] = kernel_client
             return kernel_client
 
-    progress_bar = ProgressBar(retry, init=f"Starting kernel: '{kernel_name}'")
+    progress_bar = ProgressBar(retry, init=f"Starting kernel: {kernel_name}")
 
     now = datetime.datetime.now()
 
     def message(result):
         dt = format_timedelta(datetime.datetime.now() - now)
-        return f"Kernel Started ({dt})" if result else "Retrying"
+        return f"Kernel Started {dt}" if result else "Retrying ..."
 
     for k in range(retry):
         if progress_bar.progress(start, message):

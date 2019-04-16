@@ -9,6 +9,7 @@ from typing import Dict, Iterator, List, Optional
 
 from pheasant.core.base import format_timedelta
 from pheasant.core.decorator import comment, surround
+from pheasant.core.progress import ProgressBar
 from pheasant.core.renderer import Renderer
 from pheasant.renderers.jupyter.client import (execute, execution_report,
                                                find_kernel_names,
@@ -16,7 +17,6 @@ from pheasant.renderers.jupyter.client import (execute, execution_report,
 from pheasant.renderers.jupyter.display import (EXTRA_MODULES, extra_html,
                                                 extra_resources,
                                                 select_display_data)
-from pheasant.renderers.jupyter.progress import ProgressBar
 
 
 @dataclass
@@ -31,9 +31,10 @@ class Cell:
 class Jupyter(Renderer):
     language: str = "python"
     option: str = field(default="", init=False)
-    cursor: int = field(default=0, init=False)
+    count: int = field(default=0, init=False)
     cache: Dict[str, List[Cell]] = field(default_factory=dict, init=False)
     progress_bar: ProgressBar = field(default_factory=ProgressBar, init=False)
+    relpath: str = ""
 
     FENCED_CODE_PATTERN = (
         r"^(?P<mark>`{3,})(?P<language>\w*) ?(?P<option>.*?)\n"
@@ -50,15 +51,15 @@ class Jupyter(Renderer):
             key: values[0] for key, values in find_kernel_names().items()
         }
 
-    def reset(self):
-        self.cursor = 0
+    def set_page(self, page):
+        self.count = 0
         self.progress_bar.count = 0
-        self.progress_bar.total = 0
+        self.progress_bar.total = self.bare_execute_count(page.markdown)
         execution_report["page"] = datetime.timedelta(0)
 
-    def reset_source(self, source):
-        self.reset()
-        self.progress_bar.total = self.bare_execute_count(source)
+    def finish_page(self, page):
+        self.progress_bar.finish(self.count)
+        page.extra_html = self.extra_html
 
     @property
     def src_path(self) -> str:
@@ -68,7 +69,9 @@ class Jupyter(Renderer):
     def src_path(self, src_path: str) -> None:
         self._src_path = src_path
         if not src_path:
+            self.relpath = ""
             return
+        self.relpath = os.path.relpath(src_path)
         path = cache_path(src_path)
         if os.path.exists(path):
             with open(path, "rb") as f:
@@ -134,15 +137,20 @@ class Jupyter(Renderer):
             code = replace_for_display(code)
         yield self.execute_and_render(code, context, "inline_code")
 
+    def progress_format(self, result):
+        report = result[1]
+        return f"{self.relpath} Page {report['page']} Total {report['total']}"
+
     def execute_and_render(self, code, context, template) -> str:
-        self.cursor += 1
+        self.count += 1
+
         cell = Cell(code, context, template)
         cache = self.cache.setdefault(self.src_path, [])
-        if len(cache) >= self.cursor and "run" not in context["option"]:
-            cached = cache[self.cursor - 1]
+        if len(cache) >= self.count and "run" not in context["option"]:
+            cached = cache[self.count - 1]
             if cell == cached:
-                if self.progress_bar.total:
-                    self.progress_bar.count += 1
+                if self.progress_bar.total and self.count % 5 == 0:
+                    self.progress_bar.progress(self.relpath, count=self.count)
                 return surround(cached.output, "cached")
 
         language = context["language"]
@@ -157,15 +165,13 @@ class Jupyter(Renderer):
         def execute():
             outputs = self.execute(code, kernel_name)
             report = format_report()
-            report["cursor"] = self.cursor
+            report["count"] = self.count
             return outputs, report
 
-        def format(result):
-            report = result[1]
-            return f"page: {report['page']:>8}, total: {report['total']:>8}"
-
         if self.progress_bar.total:
-            outputs, report = self.progress_bar.progress(execute, format)
+            outputs, report = self.progress_bar.progress(
+                execute, self.progress_format, count=self.count
+            )
         else:
             outputs, report = execute()
 
@@ -182,12 +188,12 @@ class Jupyter(Renderer):
         outputs = list(takewhile(not_system_exit, outputs))
 
         cell.output = self.render(template, context, outputs=outputs, report=report)
-        if len(cache) == self.cursor - 1:
+        if len(cache) == self.count - 1:
             cache.append(cell)
         else:
-            cache[self.cursor - 1] = cell
-            if len(cache) > self.cursor:
-                cache[self.cursor].valid = False
+            cache[self.count - 1] = cell
+            if len(cache) > self.count:
+                cache[self.count].valid = False
         return cell.output
 
     def execute(
@@ -217,6 +223,12 @@ class Jupyter(Renderer):
                 if module in EXTRA_MODULES:
                     extra["extra_module"].add(module)
 
+    @classmethod
+    def bare_execute_count(cls, source):
+        fenced = re.findall(cls.FENCED_CODE_PATTERN, source, re.MULTILINE | re.DOTALL)
+        inline = re.findall(cls.INLINE_CODE_PATTERN, source)
+        return len(fenced) + len(inline)
+
     @property
     def extra_html(self) -> str:
         extra = self.meta.get(self.src_path, None)
@@ -225,12 +237,6 @@ class Jupyter(Renderer):
 
         extra = extra_resources(extra["extra_module"])
         return extra_html(extra)
-
-    @classmethod
-    def bare_execute_count(cls, source):
-        fenced = re.findall(cls.FENCED_CODE_PATTERN, source, re.MULTILINE | re.DOTALL)
-        inline = re.findall(cls.INLINE_CODE_PATTERN, source)
-        return len(fenced) + len(inline)
 
 
 def replace_for_display(code: str) -> str:
@@ -305,7 +311,7 @@ def format_report():
     report["cell"] = format_timedelta(report["cell"])
     report["page"] = format_timedelta(report["page"])
     report["total"] = format_timedelta(report["total"])
-    report["count"] = report["execution_count"]
+    report["total_count"] = report["execution_count"]
     return report
 
 

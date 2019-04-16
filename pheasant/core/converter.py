@@ -1,15 +1,21 @@
 import io
 import re
 from collections import OrderedDict
-from dataclasses import field
+from dataclasses import dataclass, field
 from typing import (Any, Callable, Dict, Iterable, Iterator, List, Optional,
                     Union)
 
 from pheasant.core.base import Base
 from pheasant.core.decorator import monitor
-from pheasant.core.page import Page
 from pheasant.core.parser import Parser
 from pheasant.core.renderer import Renderer
+
+
+@dataclass
+class Page:
+    markdown: str
+    extra_html: str = ""
+
 
 COMMENT_PATTERN = re.compile("<!--.*?-->", re.DOTALL)
 
@@ -55,12 +61,7 @@ class Converter(Base):
             renderer.reset()
         self.pages = {}
 
-    def register(
-        self,
-        name: str,
-        renderers: Union[Renderer, Iterable[Renderer]],
-        # decorator: Optional[Decorator] = None,
-    ):
+    def register(self, name: str, renderers: Union[Renderer, Iterable[Renderer]]):
         """Register renderer's processes
 
         Parameters
@@ -80,7 +81,9 @@ class Converter(Base):
         self.parsers[name] = parser
         self.renderers[name] = list(renderers)
 
-    def convert(self, source: str, names: Union[str, Iterable[str]] = "") -> str:
+    def convert(
+        self, source: str, names: Union[str, Iterable[str], None] = None
+    ) -> str:
         """Convert source text.
 
         Parameters
@@ -95,20 +98,29 @@ class Converter(Base):
         -------
         Converted output text.
         """
-        if names and isinstance(names, str):
+        if isinstance(names, str):
             names = [names]
         for name in names or self.parsers:
             source = self.parsers[name].parse(source)
 
         return source
 
+    def get_page(self, path: str) -> Page:
+        if path not in self.pages:
+            with io.open(path, "r", encoding="utf-8-sig", errors="strict") as f:
+                source = f.read()
+            source = COMMENT_PATTERN.sub("", source)
+            self.pages[path] = Page(source)
+
+        return self.pages[path]
+
+    def apply(self, path: str, func: Callable[[Page], None]):
+        page = self.get_page(path)
+        func(page)
+
     @monitor(format=True)
     def convert_from_file(
-        self,
-        path: str,
-        names: Union[str, Iterable[str]] = "",
-        copy: bool = False,
-        preprocess: Optional[Callable[[str], Optional[str]]] = None,
+        self, path: str, names: Union[str, Iterable[str], None] = None
     ) -> str:
         """Convert source text from file.
 
@@ -122,43 +134,17 @@ class Converter(Base):
         copy
             If True, the page source is copied from the converted output after
             conversion.
-        preprocess
-            Preprocess callable
 
         Returns
         -------
         Converted output text.
         """
-
-        if names and isinstance(names, str):
+        if isinstance(names, str):
             names = [names]
         for name in names or self.renderers:
             for renderer in self.renderers[name]:
                 renderer.src_path = path
 
-        if path in self.pages:
-            page = self.pages[path]
-            if preprocess:
-                page.source = preprocess(page.source) or page.source
-            page.output = self.convert(page.source, names)
-            if copy:
-                page.source = page.output
-            return page.output
-
-        with io.open(path, "r", encoding="utf-8-sig", errors="strict") as f:
-            source = f.read()
-
-        break_str = "<!--break-->"
-        if break_str in source:
-            source = source.split(break_str)[0]
-        source = COMMENT_PATTERN.sub("", source)
-
-        if preprocess:
-            source = preprocess(source) or source
-
-        page = Page(path, source=source)  # type: ignore
-        self.pages[path] = page
-        page.output = self.convert(source, names)
-        if copy:
-            page.source = page.output
-        return page.output
+        page = self.get_page(path)
+        page.markdown = self.convert(page.markdown, names)
+        return page.markdown
