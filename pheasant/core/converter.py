@@ -2,7 +2,8 @@ import io
 import re
 from collections import OrderedDict
 from dataclasses import field
-from typing import Any, Dict, Iterable, Iterator, List, Union
+from typing import (Any, Callable, Dict, Iterable, Iterator, List, Optional,
+                    Union)
 
 from pheasant.core.base import Base
 from pheasant.core.decorator import monitor
@@ -103,7 +104,11 @@ class Converter(Base):
 
     @monitor(format=True)
     def convert_from_file(
-        self, path: str, names: Union[str, Iterable[str]] = "", copy: bool = False
+        self,
+        path: str,
+        names: Union[str, Iterable[str]] = "",
+        copy: bool = False,
+        preprocess: Optional[Callable[[str], Optional[str]]] = None,
     ) -> str:
         """Convert source text from file.
 
@@ -117,6 +122,8 @@ class Converter(Base):
         copy
             If True, the page source is copied from the converted output after
             conversion.
+        preprocess
+            Preprocess callable
 
         Returns
         -------
@@ -131,6 +138,8 @@ class Converter(Base):
 
         if path in self.pages:
             page = self.pages[path]
+            if preprocess:
+                page.source = preprocess(page.source) or page.source
             page.output = self.convert(page.source, names)
             if copy:
                 page.source = page.output
@@ -143,6 +152,9 @@ class Converter(Base):
         if break_str in source:
             source = source.split(break_str)[0]
         source = COMMENT_PATTERN.sub("", source)
+
+        if preprocess:
+            source = preprocess(source) or source
 
         page = Page(path, source=source)  # type: ignore
         self.pages[path] = page

@@ -1,8 +1,5 @@
 # test
 
-```python hide run
-from pheasant import __version__
-```
 
 ```python
 import holoviews as hv

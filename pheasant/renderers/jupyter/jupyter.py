@@ -5,22 +5,18 @@ import pickle
 import re
 from dataclasses import dataclass, field
 from itertools import takewhile
-from typing import Dict, Iterator, List
-
-import colorama
-from termcolor import colored
+from typing import Dict, Iterator, List, Optional
 
 from pheasant.core.base import format_timedelta
 from pheasant.core.decorator import comment, surround
 from pheasant.core.renderer import Renderer
 from pheasant.renderers.jupyter.client import (execute, execution_report,
                                                find_kernel_names,
-                                               restart_kernel)
+                                               restart_kernel, start_kernel)
 from pheasant.renderers.jupyter.display import (EXTRA_MODULES, extra_html,
                                                 extra_resources,
                                                 select_display_data)
-
-colorama.init()
+from pheasant.renderers.jupyter.progress import ProgressBar
 
 
 @dataclass
@@ -35,11 +31,9 @@ class Cell:
 class Jupyter(Renderer):
     language: str = "python"
     option: str = field(default="", init=False)
-    active: bool = field(default=True, init=False)
-    death: bool = field(default=False, init=False)
     cursor: int = field(default=0, init=False)
-    total: int = field(default=0, init=False)
     cache: Dict[str, List[Cell]] = field(default_factory=dict, init=False)
+    progress_bar: ProgressBar = field(default_factory=ProgressBar, init=False)
 
     FENCED_CODE_PATTERN = (
         r"^(?P<mark>`{3,})(?P<language>\w*) ?(?P<option>.*?)\n"
@@ -58,17 +52,13 @@ class Jupyter(Renderer):
 
     def reset(self):
         self.cursor = 0
+        self.progress_bar.count = 0
+        self.progress_bar.total = 0
         execution_report["page"] = datetime.timedelta(0)
 
-    def activate(self):
-        self.active = True
-        self.total = self.cursor
+    def reset_source(self, source):
         self.reset()
-
-    def deactivate(self):
-        self.active = False
-        self.total = 0
-        self.reset()
+        self.progress_bar.total = self.bare_execute_count(source)
 
     @property
     def src_path(self) -> str:
@@ -77,7 +67,7 @@ class Jupyter(Renderer):
     @src_path.setter
     def src_path(self, src_path: str) -> None:
         self._src_path = src_path
-        if not self.active or not src_path:
+        if not src_path:
             return
         path = cache_path(src_path)
         if os.path.exists(path):
@@ -146,20 +136,38 @@ class Jupyter(Renderer):
 
     def execute_and_render(self, code, context, template) -> str:
         self.cursor += 1
-        if not self.active:
-            return "XXX"
         cell = Cell(code, context, template)
         cache = self.cache.setdefault(self.src_path, [])
         if len(cache) >= self.cursor and "run" not in context["option"]:
             cached = cache[self.cursor - 1]
             if cell == cached:
+                if self.progress_bar.total:
+                    self.progress_bar.count += 1
                 return surround(cached.output, "cached")
 
-        outputs = self.execute(code, context["language"])
-        report = format_report() if not self.death else {}
-        report["cursor"] = self.cursor
-        if self.total and not self.death:
-            progress_bar(self, report)
+        language = context["language"]
+        kernel_name = self.config["kernel_name"].get(language)
+        if kernel_name:
+            if language == "python":
+                init_code = "import pheasant.renderers.jupyter.display"
+            else:
+                init_code = ""
+            start_kernel(kernel_name, init_code)
+
+        def execute():
+            outputs = self.execute(code, kernel_name)
+            report = format_report()
+            report["cursor"] = self.cursor
+            return outputs, report
+
+        def format(result):
+            report = result[1]
+            return f"page: {report['page']:>8}, total: {report['total']:>8}"
+
+        if self.progress_bar.total:
+            outputs, report = self.progress_bar.progress(execute, format)
+        else:
+            outputs, report = execute()
 
         if "debug" in context["option"]:
             outputs = [{"type": "execute_result", "data": {"text/plain": outputs}}]
@@ -182,13 +190,13 @@ class Jupyter(Renderer):
                 cache[self.cursor].valid = False
         return cell.output
 
-    def execute(self, code: str, language: str = "python") -> List:
-        if self.death or language not in self.config["kernel_name"]:
+    def execute(
+        self, code: str, kernel_name: Optional[str] = None, language: str = "python"
+    ) -> List:
+        try:
+            outputs = execute(code, kernel_name, language)
+        except ValueError:
             return []
-        kernel_name = self.config["kernel_name"][language]
-        if self.cursor == 1 and language == "python":
-            execute("import pheasant.renderers.jupyter.display", kernel_name)
-        outputs = execute(code, kernel_name)
         self.update_extra_module(outputs)
         select_display_data(outputs)
         return outputs
@@ -217,6 +225,12 @@ class Jupyter(Renderer):
 
         extra = extra_resources(extra["extra_module"])
         return extra_html(extra)
+
+    @classmethod
+    def bare_execute_count(cls, source):
+        fenced = re.findall(cls.FENCED_CODE_PATTERN, source, re.MULTILINE | re.DOTALL)
+        inline = re.findall(cls.INLINE_CODE_PATTERN, source)
+        return len(fenced) + len(inline)
 
 
 def replace_for_display(code: str) -> str:
@@ -282,6 +296,9 @@ def latex_display_format(outputs: List) -> None:
 
 def format_report():
     report = dict(execution_report)
+    if "start" not in report:
+        return {}
+
     datetime_format = r"%Y-%m-%d %H:%M:%S"
     report["start"] = report["start"].strftime(datetime_format)
     report["end"] = report["end"].strftime(datetime_format)
@@ -290,39 +307,6 @@ def format_report():
     report["total"] = format_timedelta(report["total"])
     report["count"] = report["execution_count"]
     return report
-
-
-def progress_bar(jupyter, report):
-    if jupyter.cursor > jupyter.total:
-        return
-    length = 50
-    current = int(length * min(jupyter.cursor / jupyter.total, 1))
-    count = str(report["count"]).zfill(4)
-    if current >= length:
-        bar = colored("[" + "=" * length + "=]", "green")
-    else:
-        bar = (
-            colored("[", "green")
-            + colored("=" * current, "green")
-            + colored(">", "green", attrs=["bold"])
-            + colored("-" * (length - current), "yellow")
-            + colored("]", "yellow")
-        )
-    cursor = str(jupyter.cursor).zfill(3)
-    total = str(jupyter.total).zfill(3)
-    count = f"[{count}]"
-    progress = f"{cursor}/{total}"
-    time = f"{report['cell']:>8} {report['page']:>8} {report['total']:>8}"
-
-    count = colored(count, "cyan", attrs=["bold"])
-    color = "green" if current >= length else "yellow"
-    progress = colored(progress, color)
-    time = colored(time, color)
-
-    line = " ".join([count, bar, progress, time])
-    print("\r" + line, end="")
-    if jupyter.cursor == jupyter.total:
-        print()
 
 
 def cache_path(src_path):

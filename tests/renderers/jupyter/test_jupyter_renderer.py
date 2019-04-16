@@ -84,7 +84,7 @@ def test_render_without_language(jupyter):
 
 def test_render_debug_option(jupyter):
     output = jupyter.parse("```python debug\n2*3\n```\n")
-    assert 'pheasant.renderers.jupyter.display.display(__pheasant_dummy__' in output
+    assert "pheasant.renderers.jupyter.display.display(__pheasant_dummy__" in output
     assert "[{&#39;type&#39;: &#39;execute_result&#39;, &#39;data&#39;" in output
 
 
@@ -96,16 +96,16 @@ def test_render_latex(jupyter):
 
 def test_render_fenced_code_with_option():
     from pheasant.renderers.jupyter.jupyter import Jupyter
+
     jupyter = Jupyter()
     output = jupyter.parse("```python abc\n# option: def ghi\nprint(1)\n```\n")
     assert 'class="python">print(1)' in output
-    assert '(abc def ghi)' in output
+    assert "(abc def ghi)" in output
 
     output = jupyter.parse("```python\n# option: def ghi\nprint(1)\n```\n")
-    assert '(def ghi)' in output
+    assert "(def ghi)" in output
 
 
-def test_render_inactive(jupyter):
-    jupyter.active = False
-    output = jupyter.parse("```python\nprint(1)\n```\n")
-    assert "XXX" in output
+def test_render_bare_execute_count(jupyter):
+    source = "{{2*3}}\n```python\n1\n```\n{{2}}\n```python\n1\n```\n"
+    assert jupyter.bare_execute_count(source) == 4
