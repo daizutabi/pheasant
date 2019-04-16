@@ -19,6 +19,11 @@ pheasant, version 2.2.12 from /path/to/pheasant (Python 3.7)
 
 ## Change log
 
+### Version 2.2.14 (2019-04-16)
+
+* `pheasant --clear` -> `pheasant clean`.
+* New progress bar
+
 ### Version 2.2.13 (2019-04-15)
 
 * Delete cache: `pheasant --clear`.
