@@ -71,29 +71,29 @@ class Jupyter(Renderer):
         self.reset()
 
     @property
-    def abs_src_path(self) -> str:
-        return self._abs_src_path
+    def src_path(self) -> str:
+        return self._src_path
 
-    @abs_src_path.setter
-    def abs_src_path(self, abs_src_path: str) -> None:
-        self._abs_src_path = abs_src_path
-        if not self.active or abs_src_path == ".":
+    @src_path.setter
+    def src_path(self, src_path: str) -> None:
+        self._src_path = src_path
+        if not self.active or not src_path:
             return
-        path = cache_path(abs_src_path)
+        path = cache_path(src_path)
         if os.path.exists(path):
             with open(path, "rb") as f:
                 cache, meta = pickle.load(f)
 
-            self.cache[abs_src_path] = cache
+            self.cache[src_path] = cache
             if meta:
-                self.meta[abs_src_path] = meta
+                self.meta[src_path] = meta
 
     def dump(self):
-        for abs_src_path, cache in self.cache.items():
-            if not cache:
+        for src_path, cache in self.cache.items():
+            if not src_path or not cache:
                 continue
-            meta = self.meta.get(abs_src_path)
-            path = cache_path(abs_src_path)
+            meta = self.meta.get(src_path)
+            path = cache_path(src_path)
             directory = os.path.dirname(path)
             if not os.path.exists(directory):
                 os.mkdir(directory)
@@ -131,7 +131,7 @@ class Jupyter(Renderer):
         if context["code"].strip() == "!restart":
             kernel_name = self.config["kernel_name"][self.language]
             restart_kernel(kernel_name)
-            self.abs_src_path = "."
+            self.src_path = ""
             self.reset()
             return
 
@@ -149,7 +149,7 @@ class Jupyter(Renderer):
         if not self.active:
             return "XXX"
         cell = Cell(code, context, template)
-        cache = self.cache.setdefault(self.abs_src_path, [])
+        cache = self.cache.setdefault(self.src_path, [])
         if len(cache) >= self.cursor and "run" not in context["option"]:
             cached = cache[self.cursor - 1]
             if cell == cached:
@@ -194,7 +194,7 @@ class Jupyter(Renderer):
         return outputs
 
     def update_extra_module(self, outputs: List[dict]) -> None:
-        extra = self.meta.setdefault(self.abs_src_path, {"extra_module": set()})
+        extra = self.meta.setdefault(self.src_path, {"extra_module": set()})
 
         if len(extra["extra_module"]) == len(EXTRA_MODULES):
             return
@@ -211,7 +211,7 @@ class Jupyter(Renderer):
 
     @property
     def extra_html(self) -> str:
-        extra = self.meta.get(self.abs_src_path, None)
+        extra = self.meta.get(self.src_path, None)
         if extra is None:
             return ""
 
@@ -325,7 +325,7 @@ def progress_bar(jupyter, report):
         print()
 
 
-def cache_path(abs_src_path):
-    directory, path = os.path.split(abs_src_path)
+def cache_path(src_path):
+    directory, path = os.path.split(src_path)
     directory = os.path.join(directory, ".pheasant_cache")
     return os.path.join(directory, path + ".cache")

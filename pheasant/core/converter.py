@@ -17,7 +17,6 @@ class Converter(Base):
     parsers: Dict[str, Parser] = field(default_factory=OrderedDict)
     renderers: Dict[str, List[Renderer]] = field(default_factory=dict)
     pages: Dict[str, Page] = field(default_factory=dict)
-    _abs_src_path: str = "."
 
     def __post_init__(self):
         super().__post_init__()
@@ -128,7 +127,7 @@ class Converter(Base):
             names = [names]
         for name in names or self.renderers:
             for renderer in self.renderers[name]:
-                renderer.abs_src_path = path
+                renderer.src_path = path
 
         if path in self.pages:
             page = self.pages[path]

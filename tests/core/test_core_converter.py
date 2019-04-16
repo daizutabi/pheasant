@@ -51,7 +51,7 @@ def test_multiple_parser(converter):
     output = converter.convert(source, ["preprocess", "postprocess"])
     output = re.sub(r"(\<.*?\>)|\n", "", output)
     answer = (
-        "# 1 titletext [1](.#a)## 1.1 " "section1/0ZeroDivisionError: division by zero"
+        "# 1 titletext [1](#a)## 1.1 " "section1/0ZeroDivisionError: division by zero"
     )
     assert output == answer
     header.reset()

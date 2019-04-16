@@ -49,12 +49,10 @@ def clean():
 def run(paths, ext, max):
     ext = "." + ext.replace(",", ".")
     src_paths = []
-    abs_src_paths = []
 
     def collect(path):
         if os.path.splitext(path)[-1] in ext:
             src_paths.append(path)
-            abs_src_paths.append(os.path.abspath(path))
 
     if not paths:
         paths = ["."]
@@ -71,7 +69,7 @@ def run(paths, ext, max):
         click.echo(f"Too many files. Aborted.")
 
     pheasant = Pheasant()
-    pheasant.convert_from_files(abs_src_paths)
+    pheasant.convert_from_files(src_paths)
 
 
 def prompt():

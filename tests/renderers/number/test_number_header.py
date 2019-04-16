@@ -80,7 +80,7 @@ def test_ignore(header):
     output = header.parse("## ##section\n")
     assert "number" not in output
     assert header.number_list["header"] == [1, 2, 0, 0, 0, 0]
-    assert header.meta["ignored_path"] == set(["."])
+    assert header.meta["ignored_path"] == set([""])
 
     output = header.parse("# title\n")
     assert "number" not in output
