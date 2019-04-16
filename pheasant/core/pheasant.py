@@ -1,4 +1,5 @@
 import logging
+import os
 from dataclasses import field
 from typing import Dict, Iterable, List
 
@@ -25,7 +26,6 @@ class Pheasant(Converter):
     def init(self):
         self.anchor.header = self.header
         self.register("script", [self.script])
-        self.register("preprocess", [self.jupyter, self.embed])
         self.register("main", [self.header, self.jupyter, self.embed])
         self.register("link", [self.anchor])
 
@@ -39,13 +39,13 @@ class Pheasant(Converter):
         self.reset()
         logger.info("Done. Start conversion of each page.")
         for path in paths:
-            logger.info(f"Converting: {path}")
+            logger.info(f"Converting: {os.path.relpath(path)}")
             if path.endswith(".py"):
                 self.convert_from_file(path, "script", copy=True)
-            self.jupyter.deactivate()
-            self.convert_from_file(path, "preprocess")
-            self.jupyter.activate()
-            self.convert_from_file(path, "main", copy=True)
+            self.convert_from_file(
+                path, "main", copy=True, preprocess=self.jupyter.reset_source
+            )
+            self.jupyter.progress_bar.finish()
             self.pages[path].meta["extra_html"] = self.jupyter.extra_html
 
         self.jupyter.dump()

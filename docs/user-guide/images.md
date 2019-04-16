@@ -15,7 +15,7 @@ matplotlib.rcParams['figure.figsize'] = [2, 1.6]
 A call of `plt.plot` generates a standard plain text output (a list of `Line` object in this example) and a PNG image as display data:
 
 ```python
-plt.plot([1, 3, 5], marker='o')
+plt.plot([1, 2, 5], marker='o')
 ```
 
 If you want to hide the input source and the plain text output, you can use a `inline` option to show just the display data such as an image or HTML:
@@ -135,7 +135,7 @@ First, a normal HoloViews object.
 
 ```python
 import holoviews as hv
-hv.Curve(([1, 2, 3], [2, 3, 1]))
+hv.Curve(([1, 2, 4], [2, 3, 3]))
 ```
 
 Showing a HoloMap is straightforward. From HoloViews's official documents,

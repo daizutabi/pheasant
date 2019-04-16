@@ -8,7 +8,7 @@ import sympy
 
 ```python
 x = sympy.Symbol('x')
-x**3
+x**4
 ```
 
 ```python
@@ -29,7 +29,7 @@ sys.stdout.flush()
 ```
 
 ```python
-11/0
+1/0
 ```
 
 ~~~

@@ -18,7 +18,7 @@ version_msg = f"{__version__} from {pgk_dir} (Python {sys.version[:3]})."
 
 @click.group(
     invoke_without_command=True,
-    help="If any commands are given, prompt will be invoked.",
+    help="If any commands are given, an interactive prompt will be invoked.",
 )
 @click.pass_context
 @click.version_option(version_msg, "-V", "--version")
@@ -27,16 +27,16 @@ def cli(ctx):
         prompt()
 
 
-@cli.command(help="Delete cache under the current directory recursively.")
+@cli.command(help="Delete caches under the current directory recursively.")
 @click.confirmation_option(prompt="Are you sure you want to delete the cache?")
-def clear():
+def clean():
     for dirpath, dirnames, filenames in os.walk("."):
         if dirpath.endswith(".pheasant_cache"):
             shutil.rmtree(dirpath)
             click.echo(f"'{dirpath}' deleted. {len(filenames)} files.")
 
 
-@cli.command(help="Run source files and save the cache.")
+@cli.command(help="Run source files and save the caches.")
 @click.option(
     "-e",
     "--ext",
@@ -49,12 +49,10 @@ def clear():
 def run(paths, ext, max):
     ext = "." + ext.replace(",", ".")
     src_paths = []
-    abs_src_paths = []
 
     def collect(path):
         if os.path.splitext(path)[-1] in ext:
             src_paths.append(path)
-            abs_src_paths.append(os.path.abspath(path))
 
     if not paths:
         paths = ["."]
@@ -71,7 +69,7 @@ def run(paths, ext, max):
         click.echo(f"Too many files. Aborted.")
 
     pheasant = Pheasant()
-    pheasant.convert_from_files(abs_src_paths)
+    pheasant.convert_from_files(src_paths)
 
 
 def prompt():

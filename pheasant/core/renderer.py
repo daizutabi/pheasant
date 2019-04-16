@@ -13,7 +13,7 @@ class Renderer(Base):
     patterns: Dict[str, str] = field(default_factory=dict, init=False)
     renders: Dict[str, Render] = field(default_factory=dict, init=False)
     _parser: Optional[Parser] = field(default=None, init=False)
-    _abs_src_path: str = "."
+    _src_path: str = ""
 
     def __post_init__(self):
         super().__post_init__()
@@ -50,12 +50,12 @@ class Renderer(Base):
         self._parser = parser
 
     @property
-    def abs_src_path(self) -> str:
-        return self._abs_src_path
+    def src_path(self) -> str:
+        return self._src_path
 
-    @abs_src_path.setter
-    def abs_src_path(self, abs_src_path: str) -> None:
-        self._abs_src_path = abs_src_path
+    @src_path.setter
+    def src_path(self, src_path: str) -> None:
+        self._src_path = src_path
 
     def set_template(self, names: Union[str, List[str]], directory: str = ".") -> None:
         module = importlib.import_module(self.__module__)

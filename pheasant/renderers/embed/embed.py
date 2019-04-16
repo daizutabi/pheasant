@@ -41,7 +41,7 @@ class Embed(Renderer):
 
     @comment("source")
     def render_inline_code(self, context, splitter, parser) -> Iterator[str]:
-        context.update(resolve_path(context["source"].strip(), self.abs_src_path))
+        context.update(resolve_path(context["source"].strip(), self.src_path))
         language = context["language"]
         if context["mode"] in ["file", "include"]:
             path = context["abs_src_path"]

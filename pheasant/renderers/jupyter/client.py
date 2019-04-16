@@ -5,15 +5,16 @@ import logging
 import re
 from typing import Any, Dict, Iterator, List, Optional
 
-import jupyter_client
+from jupyter_client.kernelspec import find_kernel_specs, get_kernel_spec
 from jupyter_client.manager import KernelManager
+
+from pheasant.core.base import format_timedelta
+from pheasant.renderers.jupyter.progress import ProgressBar
 
 logger = logging.getLogger("pheasant")
 
 kernel_names: Dict[str, list] = {}
-kernel_managers: Dict[str, Any] = {}
 kernel_clients: Dict[str, Any] = {}
-shutdown_functions: Dict[str, Any] = {}
 execution_report = {"page": datetime.timedelta(0), "total": datetime.timedelta(0)}
 
 
@@ -28,9 +29,9 @@ def find_kernel_names() -> Dict[str, list]:
     if kernel_names:
         return kernel_names
 
-    kernel_specs = jupyter_client.kernelspec.find_kernel_specs()
+    kernel_specs = find_kernel_specs()
     for kernel_name in kernel_specs:
-        kernel_spec = jupyter_client.kernelspec.get_kernel_spec(kernel_name)
+        kernel_spec = get_kernel_spec(kernel_name)
         language = kernel_spec.language
         if language not in kernel_names:
             kernel_names[language] = [kernel_name]
@@ -49,66 +50,61 @@ def get_kernel_name(language: str, index: int = 0) -> Optional[str]:
         return kernel_names[language][index]
 
 
-def get_kernel_manager(kernel_name: str) -> KernelManager:
-    if kernel_name in kernel_managers:
-        kernel_manager = kernel_managers[kernel_name]
-
-        if not kernel_manager.is_alive():
-            if kernel_manager.has_kernel:
-                kernel_manager.restart_kernel()
-                logger.info(f'Restarting kernel: "{kernel_name}".')
-            else:  # pragma: no cover
-                kernel_manager.start_kernel()
-                logger.info(f'Starting kernel: "{kernel_name}".')
-    else:
-        logger.info(f'Creating kernel manager: "{kernel_name}".')
-        kernel_manager = KernelManager(kernel_name=kernel_name)
-        logger.info(f'Starting kernel: "{kernel_name}".')
-        kernel_manager.start_kernel()
-
-        def shutdown_kernel():  # pragma: no cover
-            logger.info(f'Shutting down kernel: "{kernel_name}".')
-            kernel_manager.shutdown_kernel()
-
-        atexit.register(shutdown_kernel)
-        kernel_managers[kernel_name] = kernel_manager
-        shutdown_functions[kernel_name] = shutdown_kernel
-
-    if not kernel_manager.is_alive():  # pragma: no cover
-        raise ValueError(f'Kernel could not start: "{kernel_name}".')
-    else:
-        return kernel_manager
-
-
-def get_kernel_client(kernel_name: str, retry=0):
+def start_kernel(
+    kernel_name: str, init_code: str = "", timeout: int = 3, retry: int = 10
+) -> None:
     if kernel_name in kernel_clients:
-        return kernel_clients[kernel_name]
+        return
 
-    kernel_manager = get_kernel_manager(kernel_name)
-    logger.info(f'Creating kernel client for "{kernel_name}".')
-    kernel_client = kernel_manager.blocking_client()
-    kernel_client.start_channels()
-    try:
-        kernel_client.execute_interactive("", timeout=3)
-    except TimeoutError:
-        if retry == 10:
-            raise TimeoutError
-        logger.error(f'Timeout. Retry...: "{kernel_name}".')
-        del kernel_managers[kernel_name]
-        kernel_manager.shutdown_kernel()
-        atexit.unregister(shutdown_functions[kernel_name])
-        return get_kernel_client(kernel_name, retry + 1)
+    def start():
+        kernel_manager = KernelManager(kernel_name=kernel_name)
+        kernel_manager.start_kernel()
+        kernel_client = kernel_manager.blocking_client()
+        kernel_client.start_channels()
+        try:
+            kernel_client.execute_interactive(init_code, timeout=timeout)
+        except TimeoutError:
+            kernel_client.shutdown()
+            return False
+        else:
 
-    logger.info(f'Kernel client for "{kernel_name}" ready.')
-    kernel_clients[kernel_name] = kernel_client
-    return kernel_client
+            def shutdown():  # pragma: no cover
+                logger.info(f'Shutting down kernel: "{kernel_name}".')
+                kernel_client.shutdown()
+
+            atexit.register(shutdown)
+            kernel_clients[kernel_name] = kernel_client
+            return kernel_client
+
+    progress_bar = ProgressBar(retry, init=f"Starting kernel: '{kernel_name}'")
+
+    now = datetime.datetime.now()
+
+    def message(result):
+        dt = format_timedelta(datetime.datetime.now() - now)
+        return f"Kernel Started ({dt})" if result else "Retrying"
+
+    for k in range(retry):
+        if progress_bar.progress(start, message):
+            progress_bar.finish()
+            break
+    else:
+        raise TimeoutError
 
 
 def restart_kernel(kernel_name: str):
     if kernel_name in kernel_clients:
         del kernel_clients[kernel_name]
-    kernel_manager = get_kernel_manager(kernel_name)
+    kernel_manager = kernel_clients[kernel_name]
     kernel_manager.restart_kernel()
+
+
+def get_kernel_client(kernel_name: str):
+    if kernel_name in kernel_clients:
+        return kernel_clients[kernel_name]
+
+    start_kernel(kernel_name)
+    return kernel_clients[kernel_name]
 
 
 def execute(

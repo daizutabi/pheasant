@@ -22,13 +22,13 @@ def test_tag_context(anchor, source_simple):
             "kind": "header",
             "number_list": [1],
             "number_string": "1",
-            "abs_src_path": ".",
+            "src_path": "",
         },
         "tag-b": {
             "kind": "figure",
             "number_list": [1],
             "number_string": "1",
-            "abs_src_path": ".",
+            "src_path": "",
         },
     }
     assert anchor.header.tag_context == tag_context
@@ -58,10 +58,10 @@ def test_parse_anchor(anchor, source_parsed):
     answer = "\n".join([
         '# <S C"header" id="tag-a"><S C"number">1</S> <S C"title">Title</S></S>\n',
         '## <S C"header"><S C"number">1.1</S> <S C"title">Section A</S></S>\n',
-        'Text [1](.#tag-b)',
+        'Text [1](#tag-b)',
         '## <S C"header"><S C"number">1.2</S> <S C"title">Section B</S></S>\n',
         '## <S C"header"><S C"number">1.3</S> <S C"title">Subsection C</S></S>\n',
-        'Text [1](.#tag-a)',
+        'Text [1](#tag-a)',
         '<D C"figure" id="tag-b"><D C"content"><D>Content A</D></D>',
         '<p C"caption"><S C"prefix">Figure</S> <S C"number">1</S>',
         '<S C"title">Figure A</S></p></D>\n\n'
@@ -71,6 +71,6 @@ def test_parse_anchor(anchor, source_parsed):
 
 
 def test_parse_anchor_misc(anchor):
-    assert anchor.parse("{#tag-a#}") == '[1](.#tag-a)'
+    assert anchor.parse("{#tag-a#}") == '[1](#tag-a)'
     assert anchor.parse("{##tag-a#}") == '{#tag-a#}'
     assert 'Unknown tag' in anchor.parse("{#tag-A#}")

@@ -38,7 +38,7 @@ def test_jupyter_parse_html(parse):
 
 
 def test_jupyter_parse_png(jupyter, parse):
-    jupyter.execute("import matplotlib.pyplot as plt", "python")
+    jupyter.execute("import matplotlib.pyplot as plt")
     output = parse("plt.plot([1,2])")
     assert (
         '[\n\n<div class="cell jupyter display"><div class="content"><p>'
