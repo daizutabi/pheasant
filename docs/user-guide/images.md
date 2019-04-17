@@ -15,7 +15,7 @@ matplotlib.rcParams['figure.figsize'] = [2, 1.6]
 A call of `plt.plot` generates a standard plain text output (a list of `Line` object in this example) and a PNG image as display data:
 
 ```python
-plt.plot([1, 2, 4], marker='o')
+plt.plot([1, 2, 3], marker='o')
 ```
 
 If you want to hide the input source and the plain text output, you can use a `inline` option to show just the display data such as an image or HTML:

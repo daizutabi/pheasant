@@ -19,7 +19,7 @@ class ProgressBar:
     ):
         self.total = total
         self.multi = multi
-        self.phase = 1
+        self.step = 1
         self.spinner = spinner
         self.init = init
         self.count = 0
@@ -62,9 +62,9 @@ class ProgressBar:
         prefix = colored(prefix, "cyan")
 
         if self.multi:
-            phase = str(self.phase).zfill(self.zfill)
+            step = str(self.step).zfill(self.zfill)
             multi = str(self.multi).zfill(self.zfill)
-            prefix = f"({phase}/{multi}) " + prefix
+            prefix = f"({step}/{multi}) " + prefix
 
         if self.count == self.total:
             color = "green"
@@ -121,7 +121,7 @@ class ProgressBar:
         if reset:
             self.count = 0
         if self.multi:
-            self.phase += 1
+            self.step += 1
 
 
 def main():

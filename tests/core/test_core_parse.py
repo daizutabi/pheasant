@@ -1,5 +1,3 @@
-import pytest
-
 from pheasant.core.base import Base
 from pheasant.core.parser import Parser
 

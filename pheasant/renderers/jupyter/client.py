@@ -73,13 +73,13 @@ def start_kernel(
             kernel_clients[kernel_name] = kernel_client
             return kernel_client
 
-    progress_bar = ProgressBar(retry, init=f"Starting kernel [{kernel_name}]")
+    progress_bar = ProgressBar(retry, init=f"Starting kernel [{kernel_name}]", multi=1)
 
     now = datetime.datetime.now()
 
     def message(result):
         dt = format_timedelta_human(datetime.datetime.now() - now)
-        return f"Kernel [{kernel_name}] started ({dt})" if result else "Retrying ..."
+        return f"Kernel [{kernel_name}] started ({dt})" if result else "Retrying..."
 
     for k in range(retry):
         if progress_bar.progress(start, message):

@@ -206,7 +206,7 @@ def extra_resources(modules: Iterable[str]) -> Dict[str, List[str]]:
     return extra
 
 
-def extra_html(extra: Dict[str, List[str]]) -> str:
+def _extra_html(extra: Dict[str, List[str]]) -> str:
     return "\n".join(
         [
             f'<link href="{css}" rel="stylesheet"/>'
@@ -217,6 +217,10 @@ def extra_html(extra: Dict[str, List[str]]) -> str:
         + [f'<script src="{js}"></script>' for js in extra["extra_javascript"]]
         + extra["extra_raw_javascript"]
     )
+
+
+def extra_html(modules: Iterable[str]) -> str:
+    return _extra_html(extra_resources(modules))
 
 
 CONVERTERS: Dict[str, Callable] = {

@@ -4,7 +4,7 @@ import pickle
 import re
 from dataclasses import dataclass, field
 from itertools import takewhile
-from typing import Dict, Iterator, List, Optional, Set
+from typing import Dict, Iterator, List, Optional
 
 from pheasant.core.decorator import comment, surround
 from pheasant.core.renderer import Renderer
@@ -12,8 +12,7 @@ from pheasant.renderers.jupyter.client import (execute, find_kernel_names,
                                                format_execution_report,
                                                reset_execution_time,
                                                start_kernel)
-from pheasant.renderers.jupyter.display import (extra_html, extra_resources,
-                                                get_extra_module,
+from pheasant.renderers.jupyter.display import (extra_html, get_extra_module,
                                                 latex_display_format,
                                                 select_display_data,
                                                 select_outputs)
@@ -56,10 +55,10 @@ class Jupyter(Renderer):
 
     def enter(self):
         self.count = 0
-        self.progress_bar.total = len(self.findall())
         self.cache = []
-        self.extra_modules = set()
         self.extra_html = ""
+        self.progress_bar.total = len(self.findall())
+
         reset_execution_time()
         path = cache_path(self.page.path)
         if os.path.exists(path):
@@ -68,8 +67,9 @@ class Jupyter(Renderer):
 
     def exit(self):
         self.progress_bar.finish(self.count)
-        self.extra_modules = self.get_extra_modules()
-        self.extra_html = extra_html(extra_resources(self.extra_modules))
+        extra_modules = set(self.get_extra_modules())
+        if extra_modules:
+            self.extra_html = extra_html(extra_modules)
         self.page.meta["extra_html"] = self.extra_html
 
         if self.page.path and self.cache:
@@ -82,12 +82,13 @@ class Jupyter(Renderer):
             with open(path, "wb") as f:
                 pickle.dump((self.cache, self.extra_html), f)
 
-    def get_extra_modules(self) -> Set[str]:
-        extra_modules = set()
+    def get_extra_modules(self) -> Iterator[str]:
         for cell in self.cache:
-            if cell.extra_module:
-                extra_modules.add(cell.extra_module)
-        return extra_modules
+            if cell.extra_module and not cell.cached:  # New extra module.
+                for cell in self.cache:
+                    if cell.extra_module:
+                        yield cell.extra_module
+                break
 
     def render_fenced_code(self, context, splitter, parser) -> Iterator[str]:
         if not context["language"]:

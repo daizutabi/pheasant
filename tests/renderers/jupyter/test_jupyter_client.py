@@ -35,7 +35,7 @@ def test_execution_report():
     assert "end" in execution_report
     assert "time" in execution_report
     assert "page" in execution_report
-    assert "total" in execution_report
+    assert "life" in execution_report
 
 
 def test_no_kernel():

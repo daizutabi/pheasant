@@ -1,6 +1,6 @@
 from datetime import timedelta
 
-from pheasant.utils import format_timedelta_human
+from pheasant.utils.time import format_timedelta_human
 
 
 def test_format_timedelta():

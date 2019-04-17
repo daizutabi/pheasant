@@ -1,4 +1,5 @@
 from pheasant.renderers.jupyter.jupyter import replace_for_display
+from pheasant.renderers.jupyter.display import extra_html
 
 
 def test_render_inline_option(jupyter):
@@ -36,8 +37,13 @@ def test_render_inline_option(jupyter):
     _ = jupyter.parse("```python inline\nplot\n```\n")
 
 
-def test_render_extra_html(jupyter):
-    extra = jupyter.extra_html
+def test_render_extra_modules_and_html(jupyter):
+    extra_modules = set(jupyter.get_extra_modules())
+    assert "bokeh" in extra_modules
+    assert "holoviews" in extra_modules
+    assert "altair" in extra_modules
+
+    extra = extra_html(extra_modules)
     assert "bokeh" in extra
     assert "HoloView" in extra
     assert "vega" in extra
@@ -89,4 +95,4 @@ def test_render_fenced_code_with_option():
 
 def test_render_bare_execute_count(jupyter):
     source = "{{2*3}}\n```python\n1\n```\n{{2}}\n```python\n1\n```\n"
-    assert jupyter.bare_execute_count(source) == 4
+    assert len(jupyter.findall(source)) == 4

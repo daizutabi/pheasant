@@ -29,8 +29,11 @@ class Pheasant(Converter):
 
     @monitor(format=True)
     def convert_from_files(self, paths: Iterable[str]) -> List[str]:
+        paths = list(paths)
         self.start()
-        for path in paths:
+        self.jupyter.progress_bar.multi = len(paths)
+        for k, path in enumerate(paths):
+            self.jupyter.progress_bar.step = k + 1
             if path.endswith(".py"):
                 self.convert(path, "script")
             self.convert(path, "main")
