@@ -4,7 +4,7 @@ from ast import literal_eval
 from dataclasses import field
 from typing import Any, Dict, Iterator
 
-from pheasant.core.decorator import comment
+from pheasant.core.decorator import commentable
 from pheasant.core.renderer import Renderer
 from pheasant.renderers.jupyter.client import execute, get_kernel_name
 from pheasant.renderers.script.script import Script
@@ -39,7 +39,7 @@ class Embed(Renderer):
         if copy:
             splitter.send(context["source"] + "\n")
 
-    @comment("source")
+    @commentable("source")
     def render_inline_code(self, context, splitter, parser) -> Iterator[str]:
         context.update(resolve_path(context["source"].strip(), self.page.path))
         language = context["language"]

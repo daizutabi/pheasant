@@ -6,7 +6,7 @@ from dataclasses import dataclass, field
 from itertools import takewhile
 from typing import Dict, Iterator, List, Optional
 
-from pheasant.core.decorator import comment, surround
+from pheasant.core.decorator import commentable, surround
 from pheasant.core.renderer import Renderer
 from pheasant.renderers.jupyter.client import (execute, find_kernel_names,
                                                format_execution_report,
@@ -116,7 +116,7 @@ class Jupyter(Renderer):
             context["code"] = code
         yield "\n" + self.execute_and_render(code, context, "fenced_code") + "\n\n"
 
-    @comment("code")
+    @commentable("code")
     def render_inline_code(self, context, splitter, parser) -> Iterator[str]:
         context["option"] = self.option
         context["language"] = self.language

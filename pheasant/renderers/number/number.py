@@ -6,7 +6,7 @@ from typing import Any, Dict, Iterator, List, Optional, Tuple
 
 from markdown import Markdown
 
-from pheasant.core.decorator import comment
+from pheasant.core.decorator import commentable
 from pheasant.core.renderer import Renderer
 
 
@@ -178,7 +178,7 @@ class Anchor(Renderer):
         self.register(Header.TAG_PATTERN, self.render_tag)
         self.set_template("anchor")
 
-    @comment("tag")
+    @commentable("tag")
     def render_tag(self, context, splitter, parser) -> Iterator[str]:
         tag = context["tag"]
         context = self.resolve(tag)

@@ -49,7 +49,7 @@ def surround(source, class_name):
     return SURROUND_TAG.sub(replace, source)
 
 
-def comment(name):
+def commentable(name):
     def deco(render):
         @functools.wraps(render)
         def render_(self, context, splitter, parser):
