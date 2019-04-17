@@ -9,7 +9,7 @@
   <meta name="author" content="daizutabi">
   <link rel="shortcut icon" href="../../img/favicon.ico">
   <title>SymPy &mdash; 
-    Pheasant 2.2.14 documentation</title>
+    Pheasant 2.2.15 documentation</title>
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   <link rel="stylesheet" href="../../css/theme.css" type="text/css" />
@@ -44,7 +44,7 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
       <div class="wy-side-nav-search">
   <a href="../.." class="icon icon-home"> Pheasant</a>
-  <div class="version">2.2.14</div>
+  <div class="version">2.2.15</div>
         
       </div>
 
@@ -155,16 +155,16 @@ TeX: { equationNumbers: { autoNumber: "AMS" } } });</script>
 <p>First, import the SymPy package.</p>
 <div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">import sympy</code></pre></div>
 <div class="report"><p><span class="cell-count">[1]</span>
-<span class="start">2019-04-17 18:19:52</span> (<span class="cell-time">401ms</span>)
-<span class="right"><span class="kernel">python3</span> (<span class="page-time">401ms</span>)</span></p></div></div></div></div>
+<span class="start">2019-04-17 22:48:02</span> (<span class="cell-time">387ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="page-time">387ms</span>)</span></p></div></div></div></div>
 
 <h2 id="41-basic-usage"><span class="pheasant-header"><span class="header"><span class="number">4.1</span> <span class="title">Basic usage</span></span></span></h2>
 <p>SymPy symbols or expressions in a fenced code block are automatically rendered in display mode:</p>
 <div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">x = sympy.Symbol(&#39;x&#39;)
 x**3</code></pre></div>
 <div class="report"><p><span class="cell-count">[2]</span>
-<span class="start">2019-04-17 18:19:52</span> (<span class="cell-time">9.10ms</span>)
-<span class="right"><span class="kernel">python3</span> (<span class="page-time">410ms</span>)</span></p></div></div>
+<span class="start">2019-04-17 22:48:02</span> (<span class="cell-time">15.6ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="page-time">403ms</span>)</span></p></div></div>
 
 <div class="cell jupyter display"><div class="content">$$x^{3}$$</div></div></div></div>
 
@@ -240,8 +240,8 @@ xw = np.array([[11, 12, 13, 14], [21, 22, 23, 24], [31, 32, 33, 34]])
 b = np.array([1000, 2000, 3000, 4000])
 sympy.Matrix(xw + np.ones((3, 1), int) @ b.reshape((1, -1)))</code></pre></div>
 <div class="report"><p><span class="cell-count">[13]</span>
-<span class="start">2019-04-17 18:19:53</span> (<span class="cell-time">13.0ms</span>)
-<span class="right"><span class="kernel">python3</span> (<span class="page-time">519ms</span>)</span></p></div></div>
+<span class="start">2019-04-17 22:48:02</span> (<span class="cell-time">14.0ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="page-time">504ms</span>)</span></p></div></div>
 
 <div class="cell jupyter display"><div class="content">$$\left[\begin{matrix}1011 & 2012 & 3013 & 4014\\1021 & 2022 & 3023 & 4024\\1031 & 2032 & 3033 & 4034\end{matrix}\right]$$</div></div></div></div>
               
