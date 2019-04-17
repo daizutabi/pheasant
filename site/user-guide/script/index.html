@@ -86,7 +86,7 @@
         
             <li><a class="toctree-l4" href="#52-fenced-code-block-in-python-source">5.2 Fenced code block in Python source</a></li>
         
-            <li><a class="toctree-l4" href="#53-comment-writing-package">5.3 Comment writing package</a></li>
+            <li><a class="toctree-l4" href="#53-a-package-for-comment-formatting">5.3 A package for comment formatting</a></li>
         
         </ul>
     
@@ -149,10 +149,10 @@
               
                 
 <h1 id="5-standalone-script"><span class="pheasant-header"><span class="header"><span class="number">5</span> <span class="title">Standalone Script</span></span></span></h1>
-<p>Using Atom's <a href="https://nteract.gitbooks.io/hydrogen/">Hydorgen</a> package, you can execute any Python script codes in a Markdown source. So you can edit your Markdown verifying its execution and outputs. But unfortunately (as long as I know), the entire Markdown source cannot be executed all at once as a standalone script and cannot be ran by Python interpreter. Pheasant connects between a pure Python script and a Markdown source for MkDocs. Actually, this page is written by a pure Python code.</p>
+<p>Using Atom's <a href="https://nteract.gitbooks.io/hydrogen/">Hydorgen</a> package, you can execute any Python script codes within a fenced code block in a Markdown source. So you can edit your code verifying its execution results. But unfortunately (as long as I know), the entire Markdown source cannot be executed all at once as a standalone script and cannot be ran by Python interpreter. Pheasant connects between a pure Python script and a Markdown source. Actually, this page is written by a pure Python code.</p>
 <h2 id="51-how-to"><span class="pheasant-header"><span class="header"><span class="number">5.1</span> <span class="title">How to</span></span></span></h2>
-<p>A basic idea is that Markdown cells and code cells generally appear alternately. We can write a Markdown cell with a successive comment lines. In order to be recognized as a Markdown cell, <code>#</code> must be at the begining of lines. But we can insert a blank line in a Markdown cell without <code>#</code> to make a paragraph.</p>
-<p>Python code block is treated as a code cell as you expect. Code cells can contain any comments as long as the comments don't start at the begining of line.</p>
+<p>A basic idea is that Markdown cells and Python code cells generally appear alternately. We can write a Markdown cell with a successive comment lines. In order to be recognized as a Markdown cell, <code>#</code> must be at the begining of lines. But we can insert a blank line to make a paragraph.</p>
+<p>Normal Python code is treated as a code cell as you expect. A code cell can contain any comments as long as the comments don't start at the begining of line.</p>
 <div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">def add(x: int, y: int) -&gt; int:
     &#34;&#34;&#34;Add `x` and `y`.&#34;&#34;&#34;
     return x + y  # a comment in a code cell.
@@ -164,8 +164,8 @@ def sub(x: int, y: int) -&gt; int:
 <span class="start">2019-04-17 22:48:02</span> (<span class="cell-time">9.01ms</span>)
 <span class="right"><span class="kernel">python3</span> (<span class="page-time">9.01ms</span>)</span></p></div></div></div></div>
 
-<p>When a comment starts at the begining of line after a code block, it divides the source into a code cell and a Markdown cell. This Markdown cell will continue until next Python code appears.</p>
-<p>Despite of a Markdown cell, you may want to devide successive codes into separate cells. This can be done by putting a special marker between codes to tell Pheasant your intention. The marker is <code># -</code> [sharp-space-minus] at the begining of line. For example,</p>
+<p>When a comment starts at the begining of line after a code block, it divides the source into a code cell and a Markdown cell. This new Markdown cell will continue until next Python code appears.</p>
+<p>Despite of a Markdown cell, you may want to devide successive codes into separate cells. This can be done by putting a special marker. The marker is <code># -</code> [sharp-space-minus] at the begining of line. For example,</p>
 <div class="pheasant-fenced-code"><div class="cell embed source"><div class="code"><pre><code class="python">a, b = 1, 2
 a
 # -
@@ -220,8 +220,8 @@ Output: `c` is equal to {{c}}.</code></pre></div></div></div>
 print(1)
 ```</code></pre></div></div></div>
 
-<h2 id="53-comment-writing-package"><span class="pheasant-header"><span class="header"><span class="number">5.3</span> <span class="title">Comment writing package</span></span></span></h2>
-<p>In this scheme, we have to write many comments for Markdown cells. But a linter such as pycodestyle doesn't allow us to write a very long comment in one line longer than (for example) 79 characters. This means that we have to write 'Markdown source' with several 'New Line' characters even we are writing 'one' paragraph. In order to overcome this incovenient situation, a comment wrapping pakage <a href="https://github.com/daizutabi/pyls-cwrap"><code>pyls-cwrap</code></a> has been prepared. You can install this package as <code>pip install pyls-cwrap</code>. In Atom, if you use <a href="https://atom.io/packages/ide-python"><code>ide-python</code></a>, just press [Ctrl]+[Shift]+[C] (Windows, default setting), sequential comments are automatically formatted.</p>
+<h2 id="53-a-package-for-comment-formatting"><span class="pheasant-header"><span class="header"><span class="number">5.3</span> <span class="title">A package for comment formatting</span></span></span></h2>
+<p>In this scheme, we have to write many comments for Markdown cells. But a linter such as pycodestyle doesn't allow us to write a very long comment in one line longer than (for example) 79 characters. This means that we have to write Markdown source with several new line characters even we are writing one paragraph. In order to overcome this incovenient situation, a comment formatting pakage <a href="https://github.com/daizutabi/pyls-cwrap"><code>pyls-cwrap</code></a> has been prepared. You can install this package as <code>pip install pyls-cwrap</code>. In Atom, if you use <a href="https://atom.io/packages/ide-python"><code>ide-python</code></a>, just press [Ctrl]+[Shift]+[C] (Windows, default setting), sequential comments are automatically formatted nicely.</p>
               
             </div>
           </div>

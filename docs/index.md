@@ -4,11 +4,9 @@ from pheasant import __version__
 
 # Pheasant {{__version__}}
 
-Welcome to Pheasant! In this section, overview and some interesting features of Pheasant are presented.
-
 ## Overview
 
-Pheasant is a Markdown converter which is designed to work with [MkDocs](http://www.mkdocs.org/) as a plugin.
+Welcome to Pheasant. Pheasant is a Markdown converter which is designed to work with [MkDocs](http://www.mkdocs.org/) as a plugin.
 
 Highlights include:
 
@@ -71,7 +69,7 @@ console.log("Hello Javascript")
 
 You can check the kernel name and its total execution count during the conversion process at the right side of input cells.
 
-Mapping a language to kernel names can be obtained as a  dictionary by `find_kernel_names` function :
+Mapping a language to kernel names can be obtained as a dictionary by `find_kernel_names` function :
 
 ```python
 from pheasant.renderers.jupyter.client import find_kernel_names
@@ -84,7 +82,7 @@ find_kernel_names()
 
 ### Visualization
 
-Pheasant supports various output formats other than standard stream (`sys.stdout`/`sys.stderr`) or plain text output. For example, you can create a PNG image using Matplotlib. First, import Matplotlib plotting library.
+Pheasant supports various output formats other than the standard stream (`sys.stdout`/`sys.stderr`) or a plain text output. For example, you can create a PNG image using Matplotlib. First, import Matplotlib plotting library.
 
 ~~~copy
 ```python
@@ -100,7 +98,7 @@ plt.plot([1, 3])
 ```
 ~~~
 
-Executin of the above Markdown source on a Jupyter kernel creates a plain text output as an execute result and a PNG image as display data. You may want to display only the image. You can set `inline` option to a fenced code after language description:
+Execution of the above Markdown source on a Jupyter client creates a plain text output as an execute result and a PNG image as display data. You may want to display only the image. You can set `inline` option to a fenced code after a language identifier:
 
 ~~~copy
 ```python inline
@@ -117,10 +115,7 @@ plot.circle([1, 2, 3, 4, 5], [1, 2, 3, 4, 5], size=10)
 plot
 ```
 
-As well as a fenced code style, we can choose inline code style: `{{#plot}}`
-
-{{plot}}
-
+As well as a fenced code style, we can choose inline code style: `{{#plot}}` {{plot}}
 
 Furthermore, Pheasant supports HoloViews objects as well as interactive HoloMap.
 

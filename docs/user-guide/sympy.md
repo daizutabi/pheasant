@@ -18,11 +18,11 @@ x**3
 On the other hand, in an inline code, a SymPy object just returns a latex string like this `{{#x**2}}` = {{x**2}}. This is intentional behavior. You can choose inline mode or display mode. Furthermore, you can form an expression you want.
 
 ~~~copy
-* This is an inline code example: ${{x**2+x+1}}$
+* This is an inline mode example: ${{x**2+x+1}}$
 ~~~
 
 ~~~copy
-* This is a display code example:
+* This is a display mode example:
 
 $${{x**2+x+1}}$$
 ~~~
@@ -37,7 +37,7 @@ Here, $-{{x}}+{{x}}$ does not cancel out automatically.
 
 ## Numbering
 
-Pheasant uses MathJax's [Automatic Equation Numbering](http://docs.mathjax.org/en/latest/tex.html#automatic-equation-numbering). Use the custom header syntax like the figure and table. You can add a tag for link.
+Pheasant uses MathJax's [Automatic Equation Numbering](http://docs.mathjax.org/en/latest/tex.html#automatic-equation-numbering). Use the custom header syntax like the figure and table. Also, you can add a tag for link.
 
 ~~~
 #Eq f(x) = {{x**2}} {##eq-a#}
@@ -45,7 +45,7 @@ Pheasant uses MathJax's [Automatic Equation Numbering](http://docs.mathjax.org/e
 
 #Eq f(x) = {{x**2}} {#eq-a#}
 
-Using starred form, the equation won’t be numbered.
+Using starred form, the equation won’t be numbered like original LaTeX.
 
 ~~~copy
 #Eq* f(x) = {{x**2}}

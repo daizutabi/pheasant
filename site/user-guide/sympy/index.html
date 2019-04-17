@@ -169,17 +169,17 @@ x**3</code></pre></div>
 <div class="cell jupyter display"><div class="content">$$x^{3}$$</div></div></div></div>
 
 <p>On the other hand, in an inline code, a SymPy object just returns a latex string like this <code>{{x**2}}</code> = x^{2}. This is intentional behavior. You can choose inline mode or display mode. Furthermore, you can form an expression you want.</p>
-<div class="pheasant-fenced-code"><div class="cell embed source"><div class="code"><pre><code class="markdown">* This is an inline code example: ${{x**2+x+1}}$</code></pre></div></div></div>
+<div class="pheasant-fenced-code"><div class="cell embed source"><div class="code"><pre><code class="markdown">* This is an inline mode example: ${{x**2+x+1}}$</code></pre></div></div></div>
 
 <ul>
-<li>This is an inline code example: <span><span class="MathJax_Preview">x^{2} + x + 1</span><script type="math/tex">x^{2} + x + 1</script></span></li>
+<li>This is an inline mode example: <span><span class="MathJax_Preview">x^{2} + x + 1</span><script type="math/tex">x^{2} + x + 1</script></span></li>
 </ul>
-<div class="pheasant-fenced-code"><div class="cell embed source"><div class="code"><pre><code class="markdown">* This is a display code example:
+<div class="pheasant-fenced-code"><div class="cell embed source"><div class="code"><pre><code class="markdown">* This is a display mode example:
 
 $${{x**2+x+1}}$$</code></pre></div></div></div>
 
 <ul>
-<li>This is a display code example:</li>
+<li>This is a display mode example:</li>
 </ul>
 <div>
 <div class="MathJax_Preview">x^{2} + x + 1</div>
@@ -196,7 +196,7 @@ $${{x**2+x+1}}$$</code></pre></div></div></div>
 </div>
 <p>Here, <span><span class="MathJax_Preview">-x+x</span><script type="math/tex">-x+x</script></span> does not cancel out automatically.</p>
 <h2 id="42-numbering"><span class="pheasant-header"><span class="header"><span class="number">4.2</span> <span class="title">Numbering</span></span></span></h2>
-<p>Pheasant uses MathJax's <a href="http://docs.mathjax.org/en/latest/tex.html#automatic-equation-numbering">Automatic Equation Numbering</a>. Use the custom header syntax like the figure and table. You can add a tag for link.</p>
+<p>Pheasant uses MathJax's <a href="http://docs.mathjax.org/en/latest/tex.html#automatic-equation-numbering">Automatic Equation Numbering</a>. Use the custom header syntax like the figure and table. Also, you can add a tag for link.</p>
 <div class="pheasant-fenced-code"><div class="cell embed source"><div class="code"><pre><code class="markdown">#Eq f(x) = {{x**2}} {#eq-a#}</code></pre></div></div></div>
 
 <div class="pheasant-header"><div class="equation" id="eq-a"><p>
@@ -207,7 +207,7 @@ f(x) = x^{2}
 
 </p></div></div>
 
-<p>Using starred form, the equation won’t be numbered.</p>
+<p>Using starred form, the equation won’t be numbered like original LaTeX.</p>
 <div class="pheasant-fenced-code"><div class="cell embed source"><div class="code"><pre><code class="markdown">#Eq* f(x) = {{x**2}}</code></pre></div></div></div>
 
 <div class="pheasant-header"><div class="equation"><p>
