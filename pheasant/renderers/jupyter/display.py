@@ -2,6 +2,7 @@
 
 IMPORTANT: `display` function is called from jupyter kernel.
 """
+import ast
 import base64
 import io
 import re
@@ -169,6 +170,19 @@ def altair_extra_resources() -> Dict[str, List[str]]:
 EXTRA_MODULES = ["altair", "bokeh", "holoviews", "sympy"]  # order is important
 
 
+def get_extra_module(outputs: List[dict]) -> str:
+    for output in outputs:
+        if (
+            "data" in output
+            and ("text/html" in output["data"] or "text/latex" in output["data"])
+            and "text/plain" in output["data"]
+        ):
+            module = output["data"]["text/plain"]
+            if module in EXTRA_MODULES:
+                return module
+    return ""
+
+
 def _extra_resources(module: str) -> Dict[str, List[str]]:
     module_dict = {
         "bokeh": bokeh_extra_resources,
@@ -192,7 +206,7 @@ def extra_resources(modules: Iterable[str]) -> Dict[str, List[str]]:
     return extra
 
 
-def extra_html(extra: Dict[str, List[str]]) -> str:
+def _extra_html(extra: Dict[str, List[str]]) -> str:
     return "\n".join(
         [
             f'<link href="{css}" rel="stylesheet"/>'
@@ -203,6 +217,10 @@ def extra_html(extra: Dict[str, List[str]]) -> str:
         + [f'<script src="{js}"></script>' for js in extra["extra_javascript"]]
         + extra["extra_raw_javascript"]
     )
+
+
+def extra_html(modules: Iterable[str]) -> str:
+    return _extra_html(extra_resources(modules))
 
 
 CONVERTERS: Dict[str, Callable] = {
@@ -261,3 +279,25 @@ PANDAS_PATTERN = re.compile(
 def delete_style(html: str) -> str:
     """Delete style from Pandas DataFrame html."""
     return PANDAS_PATTERN.sub("", html)
+
+
+def select_outputs(outputs: List):
+    for output in outputs:
+        if "data" in output and "text/plain" in output["data"]:
+            text = output["data"]["text/plain"]
+            if (text.startswith('"') and text.endswith('"')) or (
+                text.startswith("'") and text.endswith("'")
+            ):
+                output["data"]["text/plain"] = ast.literal_eval(text)
+    for output in outputs:
+        if output["type"] == "display_data":
+            outputs = [output for output in outputs if output["type"] == "display_data"]
+            break
+    return outputs
+
+
+def latex_display_format(outputs: List) -> None:
+    for output in outputs:
+        if "data" in output and "text/latex" in output["data"]:
+            text = output["data"]["text/latex"]
+            output["data"]["text/latex"] = f"$${text}$$"

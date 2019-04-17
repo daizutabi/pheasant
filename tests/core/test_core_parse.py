@@ -1,5 +1,3 @@
-import pytest
-
 from pheasant.core.base import Base
 from pheasant.core.parser import Parser
 
@@ -75,9 +73,3 @@ def test_core_parse_with_decorate():
 
     source = "a12aa345"
     assert parser.parse(source) == "{B}<12>[{B}<345>]"
-
-
-def test_core_parse_without_pattern():
-    parser = Parser()
-    with pytest.raises(ValueError):
-        parser.parse("abc")

@@ -7,12 +7,16 @@ from typing import Any, Dict, Iterator, List, Optional
 from jupyter_client.kernelspec import find_kernel_specs, get_kernel_spec
 from jupyter_client.manager import KernelManager
 
-from pheasant.core.base import format_timedelta
-from pheasant.core.progress import ProgressBar
+from pheasant.utils.time import format_timedelta_human
+from pheasant.utils.progress import ProgressBar
 
 kernel_names: Dict[str, list] = {}
 kernel_clients: Dict[str, Any] = {}
-execution_report = {"page": datetime.timedelta(0), "total": datetime.timedelta(0)}
+execution_report = {"page": datetime.timedelta(0), "life": datetime.timedelta(0)}
+
+
+def reset_execution_time():
+    execution_report["page"] = datetime.timedelta(0)
 
 
 def find_kernel_names() -> Dict[str, list]:
@@ -69,13 +73,13 @@ def start_kernel(
             kernel_clients[kernel_name] = kernel_client
             return kernel_client
 
-    progress_bar = ProgressBar(retry, init=f"Starting kernel: {kernel_name}")
+    progress_bar = ProgressBar(retry, init=f"Starting kernel [{kernel_name}]", multi=1)
 
     now = datetime.datetime.now()
 
     def message(result):
-        dt = format_timedelta(datetime.datetime.now() - now)
-        return f"Kernel Started {dt}" if result else "Retrying ..."
+        dt = format_timedelta_human(datetime.datetime.now() - now)
+        return f"Kernel [{kernel_name}] started ({dt})" if result else "Retrying..."
 
     for k in range(retry):
         if progress_bar.progress(start, message):
@@ -126,17 +130,27 @@ def execute(
 
 
 def create_execution_report(msg) -> None:
-    start_time = msg["parent_header"]["date"].astimezone()
-    end_time = msg["header"]["date"].astimezone()
-    msg["parent_header"]["date"] = start_time
-    msg["header"]["date"] = end_time
-    execution_report["start"] = start_time
-    execution_report["end"] = end_time
-    execution_report["cell"] = end_time - start_time
-    execution_report["page"] += execution_report["cell"]
-    execution_report["total"] += execution_report["cell"]
-    execution_report["execution_count"] = msg["content"]["execution_count"]
-    execution_report["message"] = msg
+    start = msg["parent_header"]["date"].astimezone()
+    end = msg["header"]["date"].astimezone()
+    execution_report["start"] = start
+    execution_report["end"] = end
+    execution_report["time"] = end - start
+    for key in ["page", "life"]:
+        execution_report[key] += execution_report["time"]
+
+
+def format_execution_report():
+    report = dict(execution_report)
+    if "start" not in report:
+        return {}
+
+    datetime_format = r"%Y-%m-%d %H:%M:%S"
+    report["start"] = report["start"].strftime(datetime_format)
+    report["end"] = report["end"].strftime(datetime_format)
+    report["time"] = format_timedelta_human(report["time"])
+    report["page"] = format_timedelta_human(report["page"])
+    report["life"] = format_timedelta_human(report["life"])
+    return report
 
 
 def output_from_msg(msg) -> Optional[dict]:

@@ -22,13 +22,13 @@ def test_tag_context(anchor, source_simple):
             "kind": "header",
             "number_list": [1],
             "number_string": "1",
-            "src_path": "",
+            "path": "",
         },
         "tag-b": {
             "kind": "figure",
             "number_list": [1],
             "number_string": "1",
-            "src_path": "",
+            "path": "",
         },
     }
     assert anchor.header.tag_context == tag_context
@@ -36,7 +36,7 @@ def test_tag_context(anchor, source_simple):
 
 @pytest.fixture()
 def source_parsed(anchor, header, source_simple):
-    anchor.header.reset()
+    anchor.header.start()
     return header.parse(source_simple)
 
 

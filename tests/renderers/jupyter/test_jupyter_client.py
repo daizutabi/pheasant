@@ -33,11 +33,9 @@ def test_execution_report():
     execute("2*3")
     assert "start" in execution_report
     assert "end" in execution_report
-    assert "cell" in execution_report
+    assert "time" in execution_report
     assert "page" in execution_report
-    assert "total" in execution_report
-    assert "execution_count" in execution_report
-    assert "message" in execution_report
+    assert "life" in execution_report
 
 
 def test_no_kernel():

@@ -2,10 +2,11 @@ import datetime
 import functools
 import re
 from dataclasses import field
-from typing import Callable, Dict, Union
+from typing import Callable, Dict, Iterable, Union
 
-from pheasant.core.base import Base, format_timedelta
+from pheasant.core.base import Base
 from pheasant.renderers.jupyter.client import execution_report
+from pheasant.utils.time import format_timedelta_human
 
 SURROUND_TAG = re.compile(
     r"^([^<]*)<(?P<tag>(span|div))(.*)</(?P=tag)>([^>]*)$", re.DOTALL
@@ -16,14 +17,12 @@ class Decorator(Base):
     decorates: Dict[str, Callable[..., None]] = field(default_factory=dict)
     class_names: Dict[str, str] = field(default_factory=dict)
 
-    def register(self, decorate: Union[Callable, str], renderers):
+    def register(self, renderers: Iterable, decorate: Union[Callable, str]):
         if isinstance(decorate, str):
             decorate = getattr(self, decorate)
-        if not isinstance(renderers, list):
-            renderers = [renderers]
         for renderer in renderers:
             if renderer.parser:
-                renderer.parser.decorator = self
+                renderer.parser.decorator = self  # type: ignore
             for render_name, render in renderer.renders.items():
                 self.decorates[render_name] = decorate  # type: ignore
                 self.class_names[render_name] = self.class_name(render_name)
@@ -68,20 +67,20 @@ def monitor(format=True):
     def deco(func):
         @functools.wraps(func)
         def func_(*args, **kwargs):
-            start_kernel = execution_report["total"]
+            start_kernel = execution_report["life"]
             start_func = datetime.datetime.now()
             output = func(*args, **kwargs)
             end_func = datetime.datetime.now()
-            end_kernel = execution_report["total"]
+            end_kernel = execution_report["life"]
 
             timedelta = end_func - start_func
             if format:
-                timedelta = format_timedelta(timedelta)
+                timedelta = format_timedelta_human(timedelta)
             func_.func_time = timedelta
 
             timedelta = end_kernel - start_kernel
             if format:
-                timedelta = format_timedelta(timedelta)
+                timedelta = format_timedelta_human(timedelta)
             func_.kernel_time = timedelta
             return output
 

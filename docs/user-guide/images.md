@@ -15,7 +15,7 @@ matplotlib.rcParams['figure.figsize'] = [2, 1.6]
 A call of `plt.plot` generates a standard plain text output (a list of `Line` object in this example) and a PNG image as display data:
 
 ```python
-plt.plot([1, 2, 5], marker='o')
+plt.plot([1, 2, 3], marker='o')
 ```
 
 If you want to hide the input source and the plain text output, you can use a `inline` option to show just the display data such as an image or HTML:
@@ -117,7 +117,7 @@ from bokeh.plotting import figure
 from bokeh.embed import components
 
 plot = figure(plot_width=250, plot_height=250)
-plot.circle([1, 2, 3, 4, 5], [1, 3, 0, 2, 4], size=10)
+plot.circle([1, 2, 3, 4, 5], [1, 3, 3, 2, 4], size=10)
 script, div = components(plot)
 print('[script]:', script[:140].strip(), '...')
 print('[div]:', div[:40].strip(), '...')
@@ -135,7 +135,7 @@ First, a normal HoloViews object.
 
 ```python
 import holoviews as hv
-hv.Curve(([1, 2, 4], [2, 3, 3]))
+hv.Curve(([1, 2, 4], [2, 3, 4]))
 ```
 
 Showing a HoloMap is straightforward. From HoloViews's official documents,

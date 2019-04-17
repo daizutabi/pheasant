@@ -8,14 +8,18 @@ import colorama
 import cursor
 from termcolor import colored
 
-from pheasant.core.base import format_timedelta
+from pheasant.utils.time import format_timedelta_human
 
 colorama.init()
 
 
 class ProgressBar:
-    def __init__(self, total: int = 0, spinner: bool = True, init: str = ""):
+    def __init__(
+        self, total: int = 0, multi: int = 0, spinner: bool = True, init: str = ""
+    ):
         self.total = total
+        self.multi = multi
+        self.step = 1
         self.spinner = spinner
         self.init = init
         self.count = 0
@@ -34,7 +38,7 @@ class ProgressBar:
         for char in itertools.cycle("|/-\\"):
             dt = datetime.datetime.now() - start
             if dt > limit:
-                status = " " + char + " " + format_timedelta(dt)
+                status = " " + char + " " + format_timedelta_human(dt)
                 self.write(status)
                 self.flush()
                 self.write("\x08" * len(status))
@@ -55,7 +59,12 @@ class ProgressBar:
         count = str(self.count).zfill(self.zfill)
         total = str(self.total).zfill(self.zfill)
         prefix = f"[{count}/{total}]"
-        prefix = colored(prefix, "cyan", attrs=["bold"])
+        prefix = colored(prefix, "cyan")
+
+        if self.multi:
+            step = str(self.step).zfill(self.zfill)
+            multi = str(self.multi).zfill(self.zfill)
+            prefix = f"({step}/{multi}) " + prefix
 
         if self.count == self.total:
             color = "green"
@@ -100,27 +109,31 @@ class ProgressBar:
 
         return result
 
-    def finish(self, count=None):
+    def finish(self, count=None, reset=True):
         if count:
             self.count = count
         if self.show:
             self.update(self.result, finish=True)
             self.write("\n")
             self.flush()
-            cursor.show()
             self.show = False
+            cursor.show()
+        if reset:
+            self.count = 0
+        if self.multi:
+            self.step += 1
 
 
 def main():
     def run():
-        time.sleep(2)
+        time.sleep(1.5)
         return "hello"
 
-    progress_bar = ProgressBar(3)
+    bar = ProgressBar(3, multi=3)
     for k in range(3):
-        for k in range(progress_bar.total):
-            progress_bar.progress(run, init="start..........")
-        progress_bar.finish()
+        for k in range(bar.total):
+            bar.progress(run, init="start..........")
+        bar.finish()
 
 
 if __name__ == "__main__":

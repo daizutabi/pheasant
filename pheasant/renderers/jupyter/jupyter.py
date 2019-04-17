@@ -1,5 +1,4 @@
 import ast
-import datetime
 import os
 import pickle
 import re
@@ -7,16 +6,17 @@ from dataclasses import dataclass, field
 from itertools import takewhile
 from typing import Dict, Iterator, List, Optional
 
-from pheasant.core.base import format_timedelta
 from pheasant.core.decorator import comment, surround
-from pheasant.core.progress import ProgressBar
 from pheasant.core.renderer import Renderer
-from pheasant.renderers.jupyter.client import (execute, execution_report,
-                                               find_kernel_names,
-                                               restart_kernel, start_kernel)
-from pheasant.renderers.jupyter.display import (EXTRA_MODULES, extra_html,
-                                                extra_resources,
-                                                select_display_data)
+from pheasant.renderers.jupyter.client import (execute, find_kernel_names,
+                                               format_execution_report,
+                                               reset_execution_time,
+                                               start_kernel)
+from pheasant.renderers.jupyter.display import (extra_html, get_extra_module,
+                                                latex_display_format,
+                                                select_display_data,
+                                                select_outputs)
+from pheasant.utils.progress import ProgressBar
 
 
 @dataclass
@@ -25,16 +25,18 @@ class Cell:
     context: Dict[str, str]
     template: str
     valid: bool = field(default=True, init=False)
+    cached: bool = field(default=False, compare=False)
     output: str = field(default="", compare=False)
+    extra_module: str = field(default="", compare=False)
 
 
 class Jupyter(Renderer):
     language: str = "python"
     option: str = field(default="", init=False)
     count: int = field(default=0, init=False)
-    cache: Dict[str, List[Cell]] = field(default_factory=dict, init=False)
+    cache: List[Cell] = field(default_factory=list, init=False)
+    extra_html: str = field(default="", init=False)
     progress_bar: ProgressBar = field(default_factory=ProgressBar, init=False)
-    relpath: str = ""
 
     FENCED_CODE_PATTERN = (
         r"^(?P<mark>`{3,})(?P<language>\w*) ?(?P<option>.*?)\n"
@@ -51,47 +53,42 @@ class Jupyter(Renderer):
             key: values[0] for key, values in find_kernel_names().items()
         }
 
-    def set_page(self, page):
+    def enter(self):
         self.count = 0
-        self.progress_bar.count = 0
-        self.progress_bar.total = self.bare_execute_count(page.markdown)
-        execution_report["page"] = datetime.timedelta(0)
+        self.cache = []
+        self.extra_html = ""
+        self.progress_bar.total = len(self.findall())
 
-    def finish_page(self, page):
-        self.progress_bar.finish(self.count)
-        page.extra_html = self.extra_html
-
-    @property
-    def src_path(self) -> str:
-        return self._src_path
-
-    @src_path.setter
-    def src_path(self, src_path: str) -> None:
-        self._src_path = src_path
-        if not src_path:
-            self.relpath = ""
-            return
-        self.relpath = os.path.relpath(src_path)
-        path = cache_path(src_path)
+        reset_execution_time()
+        path = cache_path(self.page.path)
         if os.path.exists(path):
             with open(path, "rb") as f:
-                cache, meta = pickle.load(f)
+                self.cache, self.extra_html = pickle.load(f)
 
-            self.cache[src_path] = cache
-            if meta:
-                self.meta[src_path] = meta
+    def exit(self):
+        self.progress_bar.finish(self.count)
+        extra_modules = set(self.get_extra_modules())
+        if extra_modules:
+            self.extra_html = extra_html(extra_modules)
+        self.page.meta["extra_html"] = self.extra_html
 
-    def dump(self):
-        for src_path, cache in self.cache.items():
-            if not src_path or not cache:
-                continue
-            meta = self.meta.get(src_path)
-            path = cache_path(src_path)
+        if self.page.path and self.cache:
+            for cell in self.cache:
+                cell.cached = True
+            path = cache_path(self.page.path)
             directory = os.path.dirname(path)
             if not os.path.exists(directory):
                 os.mkdir(directory)
             with open(path, "wb") as f:
-                pickle.dump((cache, meta), f)
+                pickle.dump((self.cache, self.extra_html), f)
+
+    def get_extra_modules(self) -> Iterator[str]:
+        for cell in self.cache:
+            if cell.extra_module and not cell.cached:  # New extra module.
+                for cell in self.cache:
+                    if cell.extra_module:
+                        yield cell.extra_module
+                break
 
     def render_fenced_code(self, context, splitter, parser) -> Iterator[str]:
         if not context["language"]:
@@ -121,13 +118,6 @@ class Jupyter(Renderer):
 
     @comment("code")
     def render_inline_code(self, context, splitter, parser) -> Iterator[str]:
-        if context["code"].strip() == "!restart":
-            kernel_name = self.config["kernel_name"][self.language]
-            restart_kernel(kernel_name)
-            self.src_path = ""
-            self.reset()
-            return
-
         context["option"] = self.option
         context["language"] = self.language
         code = context["code"]
@@ -139,19 +129,20 @@ class Jupyter(Renderer):
 
     def progress_format(self, result):
         report = result[1]
-        return f"Page {report['page']} Total {report['total']} {self.relpath}"
+        relpath = os.path.relpath(self.page.path)
+        return f"{relpath} ({report['page']})"
+        # return f"{self.relpath}: Page {report['page']} Total {report['total']}"
 
     def execute_and_render(self, code, context, template) -> str:
         self.count += 1
 
         cell = Cell(code, context, template)
-        cache = self.cache.setdefault(self.src_path, [])
-        if len(cache) >= self.count and "run" not in context["option"]:
-            cached = cache[self.count - 1]
+        if len(self.cache) >= self.count and "run" not in context["option"]:
+            cached = self.cache[self.count - 1]
             if cell == cached:
                 if self.progress_bar.total and (self.count - 1) % 5 == 0:
-                    func = "-" * 32 + " " + self.relpath
-                    self.progress_bar.progress(func, count=self.count)
+                    relpath = os.path.relpath(self.page.path)
+                    self.progress_bar.progress(relpath, count=self.count)
                 return surround(cached.output, "cached")
 
         language = context["language"]
@@ -163,9 +154,12 @@ class Jupyter(Renderer):
                 init_code = ""
             start_kernel(kernel_name, init_code)
 
+        if self.progress_bar.total and self.count == 1:
+            self.progress_bar.progress("Start", count=self.count)
+
         def execute():
             outputs = self.execute(code, kernel_name)
-            report = format_report()
+            report = format_execution_report()
             report["count"] = self.count
             return outputs, report
 
@@ -175,6 +169,9 @@ class Jupyter(Renderer):
             )
         else:
             outputs, report = execute()
+
+        cell.extra_module = get_extra_module(outputs)
+        select_display_data(outputs)
 
         if "debug" in context["option"]:
             outputs = [{"type": "execute_result", "data": {"text/plain": outputs}}]
@@ -187,14 +184,14 @@ class Jupyter(Renderer):
             return output["type"] != "error" or output["ename"] != "SystemExit"
 
         outputs = list(takewhile(not_system_exit, outputs))
-
         cell.output = self.render(template, context, outputs=outputs, report=report)
-        if len(cache) == self.count - 1:
-            cache.append(cell)
+
+        if len(self.cache) == self.count - 1:
+            self.cache.append(cell)
         else:
-            cache[self.count - 1] = cell
-            if len(cache) > self.count:
-                cache[self.count].valid = False
+            self.cache[self.count - 1] = cell
+            if len(self.cache) > self.count:
+                self.cache[self.count].valid = False
         return cell.output
 
     def execute(
@@ -204,40 +201,7 @@ class Jupyter(Renderer):
             outputs = execute(code, kernel_name, language)
         except ValueError:
             return []
-        self.update_extra_module(outputs)
-        select_display_data(outputs)
         return outputs
-
-    def update_extra_module(self, outputs: List[dict]) -> None:
-        extra = self.meta.setdefault(self.src_path, {"extra_module": set()})
-
-        if len(extra["extra_module"]) == len(EXTRA_MODULES):
-            return
-
-        for output in outputs:
-            if (
-                "data" in output
-                and ("text/html" in output["data"] or "text/latex" in output["data"])
-                and "text/plain" in output["data"]
-            ):
-                module = output["data"]["text/plain"]
-                if module in EXTRA_MODULES:
-                    extra["extra_module"].add(module)
-
-    @classmethod
-    def bare_execute_count(cls, source):
-        fenced = re.findall(cls.FENCED_CODE_PATTERN, source, re.MULTILINE | re.DOTALL)
-        inline = re.findall(cls.INLINE_CODE_PATTERN, source)
-        return len(fenced) + len(inline)
-
-    @property
-    def extra_html(self) -> str:
-        extra = self.meta.get(self.src_path, None)
-        if extra is None:
-            return ""
-
-        extra = extra_resources(extra["extra_module"])
-        return extra_html(extra)
 
 
 def replace_for_display(code: str) -> str:
@@ -279,44 +243,6 @@ def replace_for_display(code: str) -> str:
     return f'{precode}{code}{display}(__pheasant_dummy__, output="{output}")'
 
 
-def select_outputs(outputs: List):
-    for output in outputs:
-        if "data" in output and "text/plain" in output["data"]:
-            text = output["data"]["text/plain"]
-            if (text.startswith('"') and text.endswith('"')) or (
-                text.startswith("'") and text.endswith("'")
-            ):
-                output["data"]["text/plain"] = ast.literal_eval(text)
-    for output in outputs:
-        if output["type"] == "display_data":
-            outputs = [output for output in outputs if output["type"] == "display_data"]
-            break
-    return outputs
-
-
-def latex_display_format(outputs: List) -> None:
-    for output in outputs:
-        if "data" in output and "text/latex" in output["data"]:
-            text = output["data"]["text/latex"]
-            output["data"]["text/latex"] = f"$${text}$$"
-
-
-def format_report():
-    report = dict(execution_report)
-    if "start" not in report:
-        return {}
-
-    datetime_format = r"%Y-%m-%d %H:%M:%S"
-    report["start"] = report["start"].strftime(datetime_format)
-    report["end"] = report["end"].strftime(datetime_format)
-    report["cell"] = format_timedelta(report["cell"])
-    report["page"] = format_timedelta(report["page"])
-    report["total"] = format_timedelta(report["total"])
-    report["total_count"] = report["execution_count"]
-    return report
-
-
-def cache_path(src_path):
-    directory, path = os.path.split(src_path)
-    directory = os.path.join(directory, ".pheasant_cache")
-    return os.path.join(directory, path + ".cache")
+def cache_path(path):
+    directory, path = os.path.split(path)
+    return os.path.join(directory, ".pheasant_cache", path + ".cache")

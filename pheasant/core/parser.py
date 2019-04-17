@@ -1,7 +1,7 @@
 import re
 from collections import OrderedDict
 from dataclasses import field
-from typing import Any, Callable, Dict, Match, Optional, Pattern, Union
+from typing import Any, Callable, Dict, List, Match, Optional, Pattern, Union
 
 from pheasant.core.base import (Base, Cell, Render, Splitter, get_render_name,
                                 make_cell_class, rename_pattern)
@@ -67,18 +67,19 @@ class Parser(Base):
             self.decorator.decorate(cell)
         return cell.output
 
+    def compile(self):
+        self.pattern = re.compile(
+            "|".join(self.patterns.values()), re.MULTILINE | re.DOTALL
+        )
+
     def split(self, source: str) -> Splitter:
         """Split the source into a cell and yield it.
 
         This function returns a Splitter generator. This generator can receive a
         source through `send` method to return the source you get from generator.
         """
-        if not self.patterns:
-            raise ValueError("No pattern registered")
-        elif self.pattern is None:
-            self.pattern = re.compile(
-                "|".join(self.patterns.values()), re.MULTILINE | re.DOTALL
-            )
+        if not self.pattern:
+            self.compile()
 
         def resplit(rework: Optional[str]) -> Splitter:
             if rework is not None:
@@ -86,7 +87,7 @@ class Parser(Base):
                 yield from self.split(rework)  # Then, yields the same source again.
 
         cursor = 0
-        for match in self.pattern.finditer(source):
+        for match in self.pattern.finditer(source):  # type: ignore
             start, end = match.start(), match.end()
             if cursor < start:
                 rework = yield Cell(source[cursor:start], None, "")
@@ -132,3 +133,9 @@ class Parser(Base):
         }
         source = context["_source"]
         return self.cell_classes[render_name](source, match, "", context)
+
+    def findall(self, source: str) -> List:
+        if not self.pattern:
+            self.compile()
+
+        return self.pattern.findall(source)  # type: ignore

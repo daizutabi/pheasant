@@ -103,7 +103,8 @@ def prompt():
     from pheasant.core.pheasant import Pheasant
 
     pheasant = Pheasant()
-    output = pheasant.convert(source, ["main", "link"])
+    output = pheasant.parse(source, "main")
+    output = pheasant.parse(output, "link")
     click.echo("[source]")
     click.echo(source.strip())
     click.echo("[markdown]")
