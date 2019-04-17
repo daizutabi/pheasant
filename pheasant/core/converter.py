@@ -64,6 +64,7 @@ class Converter(Base):
         parser = Parser(name)  # type: ignore
         for renderer in renderers:
             renderer.parser = parser
+
         self.parsers[name] = parser
         self.renderers[name] = list(renderers)
 

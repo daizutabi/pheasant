@@ -15,6 +15,8 @@ class Renderer(Base):
     page: Page = field(default_factory=Page, init=False)
     _parser: Optional[Parser] = field(default=None, init=False)
 
+    class_parser = None
+
     def __post_init__(self):
         super().__post_init__()
         self.init()
@@ -49,10 +51,13 @@ class Renderer(Base):
 
     @parser.setter
     def parser(self, parser: Parser) -> None:
+        self._parser = self.configure_parser(parser)
+
+    def configure_parser(self, parser: Parser) -> Parser:
         for render_name, pattern in self.patterns.items():
             render = self.renders[render_name]
             parser.register(pattern, render, render_name)
-        self._parser = parser
+        return parser
 
     def set_template(self, names: Union[str, List[str]], directory: str = ".") -> None:
         module = importlib.import_module(self.__module__)
@@ -82,4 +87,8 @@ class Renderer(Base):
         pass
 
     def findall(self, source: str = "") -> List:
-        return self.parser.findall(source or self.page.source)
+        if self.class_parser is None:
+            self.class_parser = Parser()
+            self.configure_parser(self.class_parser)
+
+        return self.class_parser.findall(source or self.page.source)

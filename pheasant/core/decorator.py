@@ -4,7 +4,7 @@ import re
 from dataclasses import field
 from typing import Callable, Dict, Iterable, Union
 
-from pheasant.core.base import Base, format_timedelta
+from pheasant.core.base import Base, format_timedelta_human
 from pheasant.renderers.jupyter.client import execution_report
 
 SURROUND_TAG = re.compile(
@@ -74,12 +74,12 @@ def monitor(format=True):
 
             timedelta = end_func - start_func
             if format:
-                timedelta = format_timedelta(timedelta)
+                timedelta = format_timedelta_human(timedelta)
             func_.func_time = timedelta
 
             timedelta = end_kernel - start_kernel
             if format:
-                timedelta = format_timedelta(timedelta)
+                timedelta = format_timedelta_human(timedelta)
             func_.kernel_time = timedelta
             return output
 

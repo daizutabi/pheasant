@@ -7,7 +7,7 @@ from dataclasses import dataclass, field
 from itertools import takewhile
 from typing import Dict, Iterator, List, Optional, Set
 
-from pheasant.core.base import format_timedelta
+from pheasant.core.base import format_timedelta, format_timedelta_human
 from pheasant.core.decorator import comment, surround
 from pheasant.core.progress import ProgressBar
 from pheasant.core.renderer import Renderer
@@ -60,7 +60,7 @@ class Jupyter(Renderer):
         self.cache = []
         self.extra_modules = set()
         self.extra_html = ""
-        execution_report["page"] = datetime.timedelta(0)
+        execution_report["acc"] = datetime.timedelta(0)
 
         if not self.page.path:
             self.relpath = ""
@@ -76,7 +76,6 @@ class Jupyter(Renderer):
     def exit(self):
         self.progress_bar.finish(self.count)
         self.extra_modules = self.get_extra_modules()
-        print(self.extra_modules)
         self.extra_html = extra_html(extra_resources(self.extra_modules))
         self.page.meta["extra_html"] = self.extra_html
 
@@ -136,7 +135,7 @@ class Jupyter(Renderer):
 
     def progress_format(self, result):
         report = result[1]
-        return f"Page {report['page']} Total {report['total']} {self.relpath}"
+        return f"{self.relpath}: Page {report['acc']} Total {report['total']}"
 
     def execute_and_render(self, code, context, template) -> str:
         self.count += 1
@@ -146,8 +145,7 @@ class Jupyter(Renderer):
             cached = self.cache[self.count - 1]
             if cell == cached:
                 if self.progress_bar.total and (self.count - 1) % 5 == 0:
-                    func = "-" * 32 + " " + self.relpath
-                    self.progress_bar.progress(func, count=self.count)
+                    self.progress_bar.progress(self.relpath, count=self.count)
                 return surround(cached.output, "cached")
 
         language = context["language"]
@@ -274,10 +272,9 @@ def format_report():
     datetime_format = r"%Y-%m-%d %H:%M:%S"
     report["start"] = report["start"].strftime(datetime_format)
     report["end"] = report["end"].strftime(datetime_format)
-    report["cell"] = format_timedelta(report["cell"])
-    report["page"] = format_timedelta(report["page"])
-    report["total"] = format_timedelta(report["total"])
-    report["total_count"] = report["execution_count"]
+    report["time"] = format_timedelta_human(report["time"])
+    report["acc"] = format_timedelta_human(report["acc"])
+    report["total"] = format_timedelta_human(report["total"])
     return report
 
 

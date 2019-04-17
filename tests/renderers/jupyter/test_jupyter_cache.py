@@ -3,16 +3,14 @@ from pheasant.renderers.jupyter.jupyter import Jupyter
 
 def test_cache():
     jupyter = Jupyter()
-    assert jupyter.cache == {}
+    assert jupyter.cache == []
     assert jupyter.count == 0
 
-    jupyter.src_path = "test"
     context = {"a": "a", "b": "b", "language": "python", "option": ""}
     template = "fenced_code"
     output = jupyter.execute_and_render("1", context, template)
     assert jupyter.count == 1
-    assert 'test' in jupyter.cache
-    cache = jupyter.cache['test']
+    cache = jupyter.cache
     assert len(cache) == 1
     cell = cache[jupyter.count - 1]
     assert cell.output == output

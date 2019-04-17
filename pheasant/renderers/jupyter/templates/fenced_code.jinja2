@@ -3,20 +3,18 @@
 {%- if 'hide' not in option -%}
 <div class="cell jupyter input"><div class="code"><pre><code class="{{ language }}">{{ code }}</code></pre></div>
 <div class="report"><p><span class="cell-count">[{{ report.count }}]</span>
-<span class="start">{{ report.start }}</span> (<span class="cell-time">{{ report.cell }}</span>)
+<span class="start">{{ report.start }}</span> (<span class="cell-time">{{ report.time }}</span>)
 <span class="right">{%- if option -%}<span class="option">({{ option }})</span> {% endif -%}
-<span class="total-count">[{{ report.total_count }}]</span> <span class="kernel">{{ config.kernel_name[language] }}</span>
-(<span class="page-time">{{ report.page }}</span>|<span class="total-time">{{ report.total }}</span>)
-</span></p></div></div>
-  {%- for output in outputs if output.type != 'display_data' -%}
-    {%- if output.type == 'error' -%}
-        <div class="cell jupyter error"><div class="code"><pre><code class="nohighlight">{{ output.ename }}: {{ output.evalue }}</code></pre></div>
-        <div class="report"><pre><code class="nohighlight">{{ output.traceback }}</code></pre></div></div>
-    {%- elif output.type == 'stream' and 'nostd' not in option -%}
-        <div class="cell jupyter {{ output.name }}"><div class="code"><pre><code class="text">{{ output.text }}</code></pre></div></div>
-    {%- elif 'text/plain' in output.data -%}
-        <div class="cell jupyter output"><div class="code"><pre><code class="plaintext">{{ output.data['text/plain'] }}</code></pre></div></div>
-    {%- endif -%}
-  {%- endfor -%}
-  {%- for output in outputs -%}{{ output_display(output, false) }}{%- endfor -%}
+<span class="kernel">{{ config.kernel_name[language] }}</span> (<span class="page-time">{{ report.acc }}</span>)</span></p></div></div>
+{%- for output in outputs if output.type != 'display_data' -%}
+  {%- if output.type == 'error' -%}
+      <div class="cell jupyter error"><div class="code"><pre><code class="nohighlight">{{ output.ename }}: {{ output.evalue }}</code></pre></div>
+      <div class="report"><pre><code class="nohighlight">{{ output.traceback }}</code></pre></div></div>
+  {%- elif output.type == 'stream' and 'nostd' not in option -%}
+      <div class="cell jupyter {{ output.name }}"><div class="code"><pre><code class="text">{{ output.text }}</code></pre></div></div>
+  {%- elif 'text/plain' in output.data -%}
+      <div class="cell jupyter output"><div class="code"><pre><code class="plaintext">{{ output.data['text/plain'] }}</code></pre></div></div>
+  {%- endif -%}
+{%- endfor -%}
+{%- for output in outputs -%}{{ output_display(output, false) }}{%- endfor -%}
 {%- endif -%}

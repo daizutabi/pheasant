@@ -12,7 +12,7 @@ from pheasant.core.progress import ProgressBar
 
 kernel_names: Dict[str, list] = {}
 kernel_clients: Dict[str, Any] = {}
-execution_report = {"page": datetime.timedelta(0), "total": datetime.timedelta(0)}
+execution_report = {"acc": datetime.timedelta(0), "total": datetime.timedelta(0)}
 
 
 def find_kernel_names() -> Dict[str, list]:
@@ -126,17 +126,13 @@ def execute(
 
 
 def create_execution_report(msg) -> None:
-    start_time = msg["parent_header"]["date"].astimezone()
-    end_time = msg["header"]["date"].astimezone()
-    msg["parent_header"]["date"] = start_time
-    msg["header"]["date"] = end_time
-    execution_report["start"] = start_time
-    execution_report["end"] = end_time
-    execution_report["cell"] = end_time - start_time
-    execution_report["page"] += execution_report["cell"]
-    execution_report["total"] += execution_report["cell"]
-    execution_report["execution_count"] = msg["content"]["execution_count"]
-    execution_report["message"] = msg
+    start = msg["parent_header"]["date"].astimezone()
+    end = msg["header"]["date"].astimezone()
+    execution_report["start"] = start
+    execution_report["end"] = end
+    execution_report["time"] = end - start
+    for key in ["acc", "total"]:
+        execution_report[key] += execution_report["time"]
 
 
 def output_from_msg(msg) -> Optional[dict]:
