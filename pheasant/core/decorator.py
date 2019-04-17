@@ -2,7 +2,7 @@ import datetime
 import functools
 import re
 from dataclasses import field
-from typing import Callable, Dict, Union
+from typing import Callable, Dict, Iterable, Union
 
 from pheasant.core.base import Base, format_timedelta
 from pheasant.renderers.jupyter.client import execution_report
@@ -16,14 +16,12 @@ class Decorator(Base):
     decorates: Dict[str, Callable[..., None]] = field(default_factory=dict)
     class_names: Dict[str, str] = field(default_factory=dict)
 
-    def register(self, decorate: Union[Callable, str], renderers):
+    def register(self, renderers: Iterable, decorate: Union[Callable, str]):
         if isinstance(decorate, str):
             decorate = getattr(self, decorate)
-        if not isinstance(renderers, list):
-            renderers = [renderers]
         for renderer in renderers:
             if renderer.parser:
-                renderer.parser.decorator = self
+                renderer.parser.decorator = self  # type: ignore
             for render_name, render in renderer.renders.items():
                 self.decorates[render_name] = decorate  # type: ignore
                 self.class_names[render_name] = self.class_name(render_name)

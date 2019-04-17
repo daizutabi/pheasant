@@ -88,11 +88,11 @@ class Header(Renderer):
         numbered = False
         if title.startswith("##"):
             title = title[2:]
-            self.meta["ignored_path"].add(self.src_path)
+            self.meta["ignored_path"].add(self.page.path)
         elif title.startswith("#"):
             title = title[1:]
             self.meta["ignored_depth"] = depth
-        elif self.src_path in self.meta["ignored_path"]:
+        elif self.page.path in self.meta["ignored_path"]:
             pass
         elif depth > self.meta["ignored_depth"]:
             pass
@@ -141,7 +141,7 @@ class Header(Renderer):
                 "kind": kind,
                 "number_list": number_list,
                 "number_string": number_string,
-                "src_path": self.src_path,
+                "path": self.page.path,
             }
             context.update(tag=tag)
         return context
@@ -194,7 +194,7 @@ class Anchor(Renderer):
             context.update(tag_context[tag])
             try:
                 relpath = os.path.relpath(  # type: ignore
-                    context["src_path"], os.path.dirname(self.src_path)
+                    context["path"], os.path.dirname(self.page.path)
                 )
             except ValueError:
                 relpath = ""

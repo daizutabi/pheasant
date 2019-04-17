@@ -20,6 +20,6 @@ def jupyter():
 @pytest.fixture(scope="module")
 def converter(jupyter):
     converter = Converter()
-    converter.register("preprocess", [jupyter, Header()])
-    converter.register("postprocess", Anchor())
+    converter.register([jupyter, Header()], "preprocess")
+    converter.register([Anchor()], "postprocess")
     return converter

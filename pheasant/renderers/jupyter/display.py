@@ -169,6 +169,19 @@ def altair_extra_resources() -> Dict[str, List[str]]:
 EXTRA_MODULES = ["altair", "bokeh", "holoviews", "sympy"]  # order is important
 
 
+def get_extra_module(outputs: List[dict]) -> str:
+    for output in outputs:
+        if (
+            "data" in output
+            and ("text/html" in output["data"] or "text/latex" in output["data"])
+            and "text/plain" in output["data"]
+        ):
+            module = output["data"]["text/plain"]
+            if module in EXTRA_MODULES:
+                return module
+    return ""
+
+
 def _extra_resources(module: str) -> Dict[str, List[str]]:
     module_dict = {
         "bokeh": bokeh_extra_resources,

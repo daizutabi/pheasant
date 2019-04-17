@@ -20,26 +20,26 @@ class Pheasant(Converter):
 
     def init(self):
         self.anchor.header = self.header
-        self.register("script", [self.script])
-        self.register("main", [self.header, self.jupyter, self.embed])
-        self.register("link", [self.anchor])
+        self.register([self.script], "script")
+        self.register([self.header, self.jupyter, self.embed], "main")
+        self.register([self.anchor], "link")
 
         self.decorator.name = "pheasant"
-        self.decorator.register("surround", [self.header, self.jupyter, self.embed])
+        self.decorator.register([self.header, self.jupyter, self.embed], "surround")
 
     @monitor(format=True)
     def convert_from_files(self, paths: Iterable[str]) -> List[str]:
         self.reset()
         for path in paths:
             if path.endswith(".py"):
-                self.convert_from_file(path, "script")
-            self.apply(path, self.jupyter.set_page)
-            self.convert_from_file(path, "main")
-            self.apply(path, self.jupyter.finish_page)
+                self.convert(path, "script")
+            # self.apply(path, self.jupyter.set_page)
+            self.convert(path, "main")
+            # self.apply(path, self.jupyter.finish_page)
 
-        self.jupyter.dump()
+        # self.jupyter.dump()
 
         for path in paths:
-            self.convert_from_file(path, "link")
+            self.convert(path, "link")
 
-        return [self.pages[path].markdown for path in paths]
+        return [self.pages[path].source for path in paths]

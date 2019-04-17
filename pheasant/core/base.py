@@ -1,6 +1,8 @@
+import io
 import re
 from dataclasses import dataclass, field, make_dataclass
-from typing import Any, Callable, Dict, Generator, Iterator, Match, Optional
+from typing import (Any, Callable, Dict, Generator, Iterator, Match, Optional,
+                    Set)
 
 Splitter = Generator[Any, Optional[str], None]
 Render = Callable[..., Iterator[str]]
@@ -39,6 +41,21 @@ class Base(metaclass=MetaClass):
                 arg[key].update(value)
             else:
                 arg[key] = value
+
+
+@dataclass
+class Page:
+    path: str = ""
+    source: str = ""
+    meta: Dict[str, Any] = field(default_factory=dict, init=False)
+
+    def read(self, path: str = "") -> "Page":
+        if path:
+            self.path = path
+        if self.path:
+            with io.open(self.path, "r", encoding="utf-8-sig", errors="strict") as f:
+                self.source = f.read()
+        return self
 
 
 def get_render_name(render: Render) -> str:

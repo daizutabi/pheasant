@@ -82,7 +82,7 @@ class PheasantPlugin(BasePlugin):
 
     def on_page_read_source(self, source, page, **kwargs):
         try:
-            return self.converter.pages[page.file.abs_src_path].markdown
+            return self.converter.pages[page.file.abs_src_path].source
         except KeyError:
             return "Skipped."
 
@@ -90,7 +90,7 @@ class PheasantPlugin(BasePlugin):
         if page.file.abs_src_path not in self.converter.pages:
             return content
         else:
-            extra = self.converter.pages[page.file.abs_src_path].extra_html
+            extra = self.converter.pages[page.file.abs_src_path].meta["extra_html"]
             return "\n".join([extra, content])
 
     def on_post_page(self, output, **kwargs):  # This is needed for holoviews.
@@ -101,7 +101,7 @@ class PheasantPlugin(BasePlugin):
         builder = list(watcher._tasks.values())[0]["func"]
         root = os.path.join(os.path.dirname(pheasant.__file__), "theme")
         server.watch(root, builder)
-        watcher.ignore_dirs('.pheasant_cache')
+        watcher.ignore_dirs(".pheasant_cache")
 
         return server
 

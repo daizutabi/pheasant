@@ -1,23 +1,11 @@
-import io
-import re
 from collections import OrderedDict
-from dataclasses import dataclass, field
-from typing import (Any, Callable, Dict, Iterable, Iterator, List, Optional,
-                    Union)
+from dataclasses import field
+from typing import Any, Callable, Dict, Iterable, Iterator, List
 
-from pheasant.core.base import Base
+from pheasant.core.base import Base, Page
 from pheasant.core.decorator import monitor
 from pheasant.core.parser import Parser
 from pheasant.core.renderer import Renderer
-
-
-@dataclass
-class Page:
-    markdown: str
-    extra_html: str = ""
-
-
-COMMENT_PATTERN = re.compile("<!--.*?-->", re.DOTALL)
 
 
 class Converter(Base):
@@ -61,56 +49,43 @@ class Converter(Base):
             renderer.reset()
         self.pages = {}
 
-    def register(self, name: str, renderers: Union[Renderer, Iterable[Renderer]]):
+    def register(self, renderers: Iterable[Renderer], name: str = "default"):
         """Register renderer's processes
 
         Parameters
         ----------
+        renderers
+            List of Renderer
         name
             The name of Parser
-        renderers
-            List of Renderer's instance or name of Renderer
         """
         if name in self.parsers:
             raise ValueError(f"Duplicated parser name '{name}'")
         parser = Parser(name)  # type: ignore
-        if isinstance(renderers, Renderer):
-            renderers = [renderers]
         for renderer in renderers:
             renderer.parser = parser
         self.parsers[name] = parser
         self.renderers[name] = list(renderers)
 
-    def convert(
-        self, source: str, names: Union[str, Iterable[str], None] = None
-    ) -> str:
-        """Convert source text.
+    def parse(self, source: str, name: str = "default") -> str:
+        """Parse source text.
 
         Parameters
         ----------
         source
-            The source text to be converted.
-        names
-            Parser names to be used. If not specified. all of the registered
-            parsers will be used.
+            The source text to be parsed.
+        name
+            Parser name to be used.
 
         Returns
         -------
-        Converted output text.
+        Parsed output text.
         """
-        if isinstance(names, str):
-            names = [names]
-        for name in names or self.parsers:
-            source = self.parsers[name].parse(source)
-
-        return source
+        return self.parsers[name].parse(source)
 
     def get_page(self, path: str) -> Page:
         if path not in self.pages:
-            with io.open(path, "r", encoding="utf-8-sig", errors="strict") as f:
-                source = f.read()
-            source = COMMENT_PATTERN.sub("", source)
-            self.pages[path] = Page(source)
+            self.pages[path] = Page(path).read()
 
         return self.pages[path]
 
@@ -118,33 +93,38 @@ class Converter(Base):
         page = self.get_page(path)
         func(page)
 
+    def __enter__(self):
+        for renderer in self.renderers:
+            renderer.enter()
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        for renderer in self.renderers:
+            renderer.exit()
+
     @monitor(format=True)
-    def convert_from_file(
-        self, path: str, names: Union[str, Iterable[str], None] = None
-    ) -> str:
-        """Convert source text from file.
+    def convert(self, path: str, name: str = "default") -> str:
+        """Convert source file.
 
         Parameters
         ----------
         path
             The source path to be converted.
-        names
-            Parser names to be used. If not specified. all of the registered
-            parsers will be used.
-        copy
-            If True, the page source is copied from the converted output after
-            conversion.
+        name
+            Parser name to be used.
 
         Returns
         -------
         Converted output text.
         """
-        if isinstance(names, str):
-            names = [names]
-        for name in names or self.renderers:
-            for renderer in self.renderers[name]:
-                renderer.src_path = path
-
         page = self.get_page(path)
-        page.markdown = self.convert(page.markdown, names)
-        return page.markdown
+
+        for renderer in self.renderers[name]:
+            renderer.page = page
+            renderer.enter()
+
+        page.source = self.parse(page.source, name)
+
+        for renderer in self.renderers[name]:
+            renderer.exit()
+
+        return page.source
