@@ -29,15 +29,11 @@ class Pheasant(Converter):
 
     @monitor(format=True)
     def convert_from_files(self, paths: Iterable[str]) -> List[str]:
-        self.reset()
+        self.start()
         for path in paths:
             if path.endswith(".py"):
                 self.convert(path, "script")
-            # self.apply(path, self.jupyter.set_page)
             self.convert(path, "main")
-            # self.apply(path, self.jupyter.finish_page)
-
-        # self.jupyter.dump()
 
         for path in paths:
             self.convert(path, "link")

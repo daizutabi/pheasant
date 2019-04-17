@@ -2,6 +2,7 @@
 
 IMPORTANT: `display` function is called from jupyter kernel.
 """
+import ast
 import base64
 import io
 import re
@@ -274,3 +275,25 @@ PANDAS_PATTERN = re.compile(
 def delete_style(html: str) -> str:
     """Delete style from Pandas DataFrame html."""
     return PANDAS_PATTERN.sub("", html)
+
+
+def select_outputs(outputs: List):
+    for output in outputs:
+        if "data" in output and "text/plain" in output["data"]:
+            text = output["data"]["text/plain"]
+            if (text.startswith('"') and text.endswith('"')) or (
+                text.startswith("'") and text.endswith("'")
+            ):
+                output["data"]["text/plain"] = ast.literal_eval(text)
+    for output in outputs:
+        if output["type"] == "display_data":
+            outputs = [output for output in outputs if output["type"] == "display_data"]
+            break
+    return outputs
+
+
+def latex_display_format(outputs: List) -> None:
+    for output in outputs:
+        if "data" in output and "text/latex" in output["data"]:
+            text = output["data"]["text/latex"]
+            output["data"]["text/latex"] = f"$${text}$$"

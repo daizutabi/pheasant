@@ -1,5 +1,4 @@
 import ast
-import datetime
 import os
 import pickle
 import re
@@ -7,15 +6,18 @@ from dataclasses import dataclass, field
 from itertools import takewhile
 from typing import Dict, Iterator, List, Optional, Set
 
-from pheasant.core.base import format_timedelta, format_timedelta_human
 from pheasant.core.decorator import comment, surround
-from pheasant.core.progress import ProgressBar
 from pheasant.core.renderer import Renderer
-from pheasant.renderers.jupyter.client import (execute, execution_report,
-                                               find_kernel_names, start_kernel)
+from pheasant.renderers.jupyter.client import (execute, find_kernel_names,
+                                               format_execution_report,
+                                               reset_execution_time,
+                                               start_kernel)
 from pheasant.renderers.jupyter.display import (extra_html, extra_resources,
                                                 get_extra_module,
-                                                select_display_data)
+                                                latex_display_format,
+                                                select_display_data,
+                                                select_outputs)
+from pheasant.utils.progress import ProgressBar
 
 
 @dataclass
@@ -24,9 +26,9 @@ class Cell:
     context: Dict[str, str]
     template: str
     valid: bool = field(default=True, init=False)
+    cached: bool = field(default=False, compare=False)
     output: str = field(default="", compare=False)
     extra_module: str = field(default="", compare=False)
-    cached: bool = field(default=False, compare=False)
 
 
 class Jupyter(Renderer):
@@ -36,7 +38,6 @@ class Jupyter(Renderer):
     cache: List[Cell] = field(default_factory=list, init=False)
     extra_html: str = field(default="", init=False)
     progress_bar: ProgressBar = field(default_factory=ProgressBar, init=False)
-    relpath: str = ""
 
     FENCED_CODE_PATTERN = (
         r"^(?P<mark>`{3,})(?P<language>\w*) ?(?P<option>.*?)\n"
@@ -56,22 +57,14 @@ class Jupyter(Renderer):
     def enter(self):
         self.count = 0
         self.progress_bar.total = len(self.findall())
-        # self.progress_bar.progress("Start", count=self.count)
         self.cache = []
         self.extra_modules = set()
         self.extra_html = ""
-        execution_report["acc"] = datetime.timedelta(0)
-
-        if not self.page.path:
-            self.relpath = ""
-            return
-
-        self.relpath = os.path.relpath(self.page.path)
+        reset_execution_time()
         path = cache_path(self.page.path)
         if os.path.exists(path):
             with open(path, "rb") as f:
                 self.cache, self.extra_html = pickle.load(f)
-            # self.extra_modules = self.get_extra_modules()
 
     def exit(self):
         self.progress_bar.finish(self.count)
@@ -135,7 +128,9 @@ class Jupyter(Renderer):
 
     def progress_format(self, result):
         report = result[1]
-        return f"{self.relpath}: Page {report['acc']} Total {report['total']}"
+        relpath = os.path.relpath(self.page.path)
+        return f"{relpath} ({report['page']})"
+        # return f"{self.relpath}: Page {report['page']} Total {report['total']}"
 
     def execute_and_render(self, code, context, template) -> str:
         self.count += 1
@@ -145,7 +140,8 @@ class Jupyter(Renderer):
             cached = self.cache[self.count - 1]
             if cell == cached:
                 if self.progress_bar.total and (self.count - 1) % 5 == 0:
-                    self.progress_bar.progress(self.relpath, count=self.count)
+                    relpath = os.path.relpath(self.page.path)
+                    self.progress_bar.progress(relpath, count=self.count)
                 return surround(cached.output, "cached")
 
         language = context["language"]
@@ -157,9 +153,12 @@ class Jupyter(Renderer):
                 init_code = ""
             start_kernel(kernel_name, init_code)
 
+        if self.progress_bar.total and self.count == 1:
+            self.progress_bar.progress("Start", count=self.count)
+
         def execute():
             outputs = self.execute(code, kernel_name)
-            report = format_report()
+            report = format_execution_report()
             report["count"] = self.count
             return outputs, report
 
@@ -169,6 +168,9 @@ class Jupyter(Renderer):
             )
         else:
             outputs, report = execute()
+
+        cell.extra_module = get_extra_module(outputs)
+        select_display_data(outputs)
 
         if "debug" in context["option"]:
             outputs = [{"type": "execute_result", "data": {"text/plain": outputs}}]
@@ -181,8 +183,6 @@ class Jupyter(Renderer):
             return output["type"] != "error" or output["ename"] != "SystemExit"
 
         outputs = list(takewhile(not_system_exit, outputs))
-        cell.extra_module = get_extra_module(outputs)
-        select_display_data(outputs)
         cell.output = self.render(template, context, outputs=outputs, report=report)
 
         if len(self.cache) == self.count - 1:
@@ -240,42 +240,6 @@ def replace_for_display(code: str) -> str:
 
     display = "pheasant.renderers.jupyter.display.display"
     return f'{precode}{code}{display}(__pheasant_dummy__, output="{output}")'
-
-
-def select_outputs(outputs: List):
-    for output in outputs:
-        if "data" in output and "text/plain" in output["data"]:
-            text = output["data"]["text/plain"]
-            if (text.startswith('"') and text.endswith('"')) or (
-                text.startswith("'") and text.endswith("'")
-            ):
-                output["data"]["text/plain"] = ast.literal_eval(text)
-    for output in outputs:
-        if output["type"] == "display_data":
-            outputs = [output for output in outputs if output["type"] == "display_data"]
-            break
-    return outputs
-
-
-def latex_display_format(outputs: List) -> None:
-    for output in outputs:
-        if "data" in output and "text/latex" in output["data"]:
-            text = output["data"]["text/latex"]
-            output["data"]["text/latex"] = f"$${text}$$"
-
-
-def format_report():
-    report = dict(execution_report)
-    if "start" not in report:
-        return {}
-
-    datetime_format = r"%Y-%m-%d %H:%M:%S"
-    report["start"] = report["start"].strftime(datetime_format)
-    report["end"] = report["end"].strftime(datetime_format)
-    report["time"] = format_timedelta_human(report["time"])
-    report["acc"] = format_timedelta_human(report["acc"])
-    report["total"] = format_timedelta_human(report["total"])
-    return report
 
 
 def cache_path(path):

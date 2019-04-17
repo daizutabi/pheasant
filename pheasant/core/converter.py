@@ -1,9 +1,10 @@
 from collections import OrderedDict
 from dataclasses import field
-from typing import Any, Callable, Dict, Iterable, Iterator, List
+from typing import Any, Dict, Iterable, Iterator, List
 
-from pheasant.core.base import Base, Page
+from pheasant.core.base import Base
 from pheasant.core.decorator import monitor
+from pheasant.core.page import Page
 from pheasant.core.parser import Parser
 from pheasant.core.renderer import Renderer
 
@@ -32,6 +33,7 @@ class Converter(Base):
                 raise KeyError
 
     def renderer_iter(self) -> Iterator[Renderer]:
+        """Yield registered renderers."""
         for renderers in self.renderers.values():
             yield from renderers
 
@@ -44,13 +46,13 @@ class Converter(Base):
         """Called from __post_init__."""
         pass
 
-    def reset(self):
+    def start(self):
         for renderer in self.renderer_iter():
-            renderer.reset()
+            renderer.start()
         self.pages = {}
 
     def register(self, renderers: Iterable[Renderer], name: str = "default"):
-        """Register renderer's processes
+        """Register renderer's processes to a parser.
 
         Parameters
         ----------
@@ -64,12 +66,11 @@ class Converter(Base):
         parser = Parser(name)  # type: ignore
         for renderer in renderers:
             renderer.parser = parser
-
         self.parsers[name] = parser
         self.renderers[name] = list(renderers)
 
     def parse(self, source: str, name: str = "default") -> str:
-        """Parse source text.
+        """Parse a source text.
 
         Parameters
         ----------
@@ -84,27 +85,9 @@ class Converter(Base):
         """
         return self.parsers[name].parse(source)
 
-    def get_page(self, path: str) -> Page:
-        if path not in self.pages:
-            self.pages[path] = Page(path).read()
-
-        return self.pages[path]
-
-    def apply(self, path: str, func: Callable[[Page], None]):
-        page = self.get_page(path)
-        func(page)
-
-    def __enter__(self):
-        for renderer in self.renderers:
-            renderer.enter()
-
-    def __exit__(self, exc_type, exc_value, traceback):
-        for renderer in self.renderers:
-            renderer.exit()
-
     @monitor(format=True)
     def convert(self, path: str, name: str = "default") -> str:
-        """Convert source file.
+        """Convert a source file.
 
         Parameters
         ----------
@@ -117,7 +100,10 @@ class Converter(Base):
         -------
         Converted output text.
         """
-        page = self.get_page(path)
+        if path not in self.pages:
+            self.pages[path] = Page(path).read()
+
+        page = self.pages[path]
 
         for renderer in self.renderers[name]:
             renderer.page = page

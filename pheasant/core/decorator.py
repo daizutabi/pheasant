@@ -4,8 +4,9 @@ import re
 from dataclasses import field
 from typing import Callable, Dict, Iterable, Union
 
-from pheasant.core.base import Base, format_timedelta_human
+from pheasant.core.base import Base
 from pheasant.renderers.jupyter.client import execution_report
+from pheasant.utils.time import format_timedelta_human
 
 SURROUND_TAG = re.compile(
     r"^([^<]*)<(?P<tag>(span|div))(.*)</(?P=tag)>([^>]*)$", re.DOTALL
@@ -66,11 +67,11 @@ def monitor(format=True):
     def deco(func):
         @functools.wraps(func)
         def func_(*args, **kwargs):
-            start_kernel = execution_report["total"]
+            start_kernel = execution_report["life"]
             start_func = datetime.datetime.now()
             output = func(*args, **kwargs)
             end_func = datetime.datetime.now()
-            end_kernel = execution_report["total"]
+            end_kernel = execution_report["life"]
 
             timedelta = end_func - start_func
             if format:

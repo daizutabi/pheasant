@@ -5,7 +5,8 @@ from typing import Any, Dict, List, Optional, Union
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
-from pheasant.core.base import Base, Page, get_render_name
+from pheasant.core.base import Base, get_render_name
+from pheasant.core.page import Page
 from pheasant.core.parser import Parser, Render  # Render is type, not class
 
 
@@ -28,13 +29,16 @@ class Renderer(Base):
         """Called from __post_init__."""
         pass
 
-    def reset(self) -> None:
+    def start(self) -> None:
+        """Called at conversion start"""
         pass
 
     def enter(self) -> None:
+        """Called at page enter event"""
         pass
 
     def exit(self) -> None:
+        """Called at page exit event"""
         pass
 
     def register(self, pattern: str, render: Render, render_name: str = "") -> None:

@@ -30,9 +30,9 @@ class Header(Renderer):
             self.config["kind_prefix"][kind] = kind[0].upper() + kind[1:]
         self.header_kind["eq"] = "equation"
         self.config["kind"] = list(self.header_kind.values())
-        self.reset()
+        self.start()
 
-    def reset(self) -> None:
+    def start(self) -> None:
         self.meta["ignored_path"] = set()
         self.meta["ignored_depth"] = 100
         for kind in self.config["kind"]:
@@ -40,7 +40,7 @@ class Header(Renderer):
 
     def render_header(self, context, splitter, parser) -> Iterator[str]:
         if context["kind"] == "!":
-            self.reset()
+            self.start()
             return
         context = self.resolve(context)
         kind = context["kind"]

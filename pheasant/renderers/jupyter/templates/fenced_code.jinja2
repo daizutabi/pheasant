@@ -5,7 +5,7 @@
 <div class="report"><p><span class="cell-count">[{{ report.count }}]</span>
 <span class="start">{{ report.start }}</span> (<span class="cell-time">{{ report.time }}</span>)
 <span class="right">{%- if option -%}<span class="option">({{ option }})</span> {% endif -%}
-<span class="kernel">{{ config.kernel_name[language] }}</span> (<span class="page-time">{{ report.acc }}</span>)</span></p></div></div>
+<span class="kernel">{{ config.kernel_name[language] }}</span> (<span class="page-time">{{ report.page }}</span>)</span></p></div></div>
 {%- for output in outputs if output.type != 'display_data' -%}
   {%- if output.type == 'error' -%}
       <div class="cell jupyter error"><div class="code"><pre><code class="nohighlight">{{ output.ename }}: {{ output.evalue }}</code></pre></div>

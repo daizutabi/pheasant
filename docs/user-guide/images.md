@@ -117,7 +117,7 @@ from bokeh.plotting import figure
 from bokeh.embed import components
 
 plot = figure(plot_width=250, plot_height=250)
-plot.circle([1, 2, 3, 4, 5], [1, 3, 0, 2, 4], size=10)
+plot.circle([1, 2, 3, 4, 5], [1, 3, 3, 2, 4], size=10)
 script, div = components(plot)
 print('[script]:', script[:140].strip(), '...')
 print('[div]:', div[:40].strip(), '...')
@@ -135,7 +135,7 @@ First, a normal HoloViews object.
 
 ```python
 import holoviews as hv
-hv.Curve(([1, 2, 4], [2, 3, 3]))
+hv.Curve(([1, 2, 4], [2, 3, 4]))
 ```
 
 Showing a HoloMap is straightforward. From HoloViews's official documents,
