@@ -152,7 +152,7 @@ class Jupyter(Renderer):
                 init_code = "import pheasant.renderers.jupyter.display"
             else:
                 init_code = ""
-            start_kernel(kernel_name, init_code)
+            start_kernel(kernel_name, init_code, silent=self.page.path == "")
 
         if self.progress_bar.total and self.count == 1:
             self.progress_bar.progress("Start", count=self.count)
