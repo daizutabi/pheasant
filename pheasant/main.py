@@ -28,6 +28,7 @@ def clean(yes):
             files = f"{num} file"
             if num > 1:
                 files += "s"
+            dirpath = os.path.normpath(dirpath)
             dirs.append(dirpath)
             click.echo(f"Directory: {dirpath} ({files})")
 
