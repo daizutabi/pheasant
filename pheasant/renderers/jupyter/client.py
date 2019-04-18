@@ -7,8 +7,8 @@ from typing import Any, Dict, Iterator, List, Optional
 from jupyter_client.kernelspec import find_kernel_specs, get_kernel_spec
 from jupyter_client.manager import KernelManager
 
-from pheasant.utils.time import format_timedelta_human
 from pheasant.utils.progress import ProgressBar
+from pheasant.utils.time import format_timedelta_human
 
 kernel_names: Dict[str, list] = {}
 kernel_clients: Dict[str, Any] = {}
@@ -52,7 +52,11 @@ def get_kernel_name(language: str, index: int = 0) -> Optional[str]:
 
 
 def start_kernel(
-    kernel_name: str, init_code: str = "", timeout: int = 3, retry: int = 10
+    kernel_name: str,
+    init_code: str = "",
+    timeout: int = 3,
+    retry: int = 10,
+    silent=False,
 ) -> None:
     if kernel_name in kernel_clients:
         return
@@ -82,7 +86,10 @@ def start_kernel(
         return f"Kernel [{kernel_name}] started ({dt})" if result else "Retrying..."
 
     for k in range(retry):
-        if progress_bar.progress(start, message):
+        if silent:
+            if start():
+                break
+        elif progress_bar.progress(start, message):
             progress_bar.finish()
             break
     else:
