@@ -1,12 +1,9 @@
-import datetime
 import functools
 import re
 from dataclasses import field
 from typing import Callable, Dict, Iterable, Union
 
 from pheasant.core.base import Base
-from pheasant.renderers.jupyter.client import execution_report
-from pheasant.utils.time import format_timedelta_human
 
 SURROUND_TAG = re.compile(
     r"^([^<]*)<(?P<tag>(span|div))(.*)</(?P=tag)>([^>]*)$", re.DOTALL
