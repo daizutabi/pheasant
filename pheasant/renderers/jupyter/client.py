@@ -1,5 +1,6 @@
 """A module provides jupyter client interface."""
 import atexit
+import sys
 import datetime
 import re
 from typing import Any, Dict, Iterator, List, Optional
@@ -56,10 +57,17 @@ def start_kernel(
     init_code: str = "",
     timeout: int = 3,
     retry: int = 10,
-    silent=False,
+    silent=True,
 ) -> None:
     if kernel_name in kernel_clients:
-        return
+        kernel_client = kernel_clients[kernel_name]
+        kernel_manager = kernel_client.parent
+        if kernel_manager.is_alive():
+            return
+        sys.stderr.write("\nKernel is not alive. Shutdown kernel now.\n")
+        sys.stderr.flush()
+        kernel_manager.shutdown_kernel()
+        sys.exit()
 
     def start():
         kernel_manager = KernelManager(kernel_name=kernel_name)
@@ -86,9 +94,10 @@ def start_kernel(
         return f"Kernel [{kernel_name}] started ({dt})" if result else "Retrying..."
 
     for k in range(retry):
-        if silent:
-            if start():
-                break
+        if silent and start():
+            break
+        elif silent:
+            continue
         elif progress_bar.progress(start, message):
             progress_bar.finish()
             break

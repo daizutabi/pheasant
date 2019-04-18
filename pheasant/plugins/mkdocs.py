@@ -27,8 +27,8 @@ class PheasantPlugin(BasePlugin):
     def on_config(self, config, **kwargs):
         if self.config:
             self.converter.update_config(self.config)
-        if not self.config["jupyter"]:
-            self.converter.jupyter.death = True
+
+        self.converter.jupyter.enabled = self.config["jupyter"]
 
         self.config["extra_css"] = config["extra_css"]
         self.config["extra_javascript"] = config["extra_javascript"]
@@ -104,48 +104,56 @@ class PheasantPlugin(BasePlugin):
 
 
 def build_nav(nav: List, docs_dir: str, parent: str = "") -> List:
+    del_entries = []
     for index, entry in enumerate(nav):
         if not isinstance(entry, dict):
             entry = {entry: entry}
             nav[index] = entry
         for key, value in entry.items():
-            if isinstance(value, str):
-                path = os.path.join(docs_dir, value)
-                if os.path.isdir(path):
-                    nav_ = []
-                    for path in os.listdir(path):
-                        if path == ".pheasant_cache":
-                            continue
-                        abs_path = os.path.join(docs_dir, value, path)
-                        title = get_title(abs_path)
-                        nav_.append({title: os.path.join(value, path)})
-                    entry[key] = build_nav(nav_, docs_dir, os.path.join(parent, value))
+            if not isinstance(value, str):
+                continue
+            path = os.path.join(docs_dir, value)
+            if not os.path.isdir(path):
+                continue
+            nav_ = []
+            for path in os.listdir(path):
+                if path == ".pheasant_cache":
+                    continue
+                abs_path = os.path.join(docs_dir, value, path)
+                if os.path.isdir(abs_path):
+                    title = get_title_from_dir(abs_path)
+                else:
+                    ext = os.path.splitext(path)[1]
+                    if ext not in markdown_extensions:
+                        continue
+                    title = get_title_from_file(abs_path)
+                nav_.append({title: os.path.join(value, path)})
+            if nav_:
+                entry[key] = build_nav(nav_, docs_dir, os.path.join(parent, value))
+            else:
+                del_entries.append(entry)
+    for entry in del_entries:
+        nav.remove(entry)
     return nav
-
-
-def get_title(path):
-    if os.path.isdir(path):
-        return _get_title(os.path.join(path, "index.md"))
-    else:
-        return _get_title(path)
 
 
 TITLE_PATTERN = re.compile(r"^# +#?!? ?(.*)")
 
 
-def _get_title(path):
-    if os.path.exists(path):
-        content = read_file(path).strip()
-        match = TITLE_PATTERN.match(content)
-        if match:
-            return match.group(1)
+def get_title_from_file(path):
+    content = read_file(path).strip()
+    match = TITLE_PATTERN.match(content)
+    if match:
+        return match.group(1)
+
+
+def get_title_from_dir(path):
+    title = os.path.basename(path).replace("_", " ")
+    match = re.match(r"\w*[0-9]+[. ](.*)", title)
+    if match:
+        return match.group(1)
     else:
-        title = os.path.basename(os.path.dirname(path))
-        match = re.match(r"\w*[0-9]+[._ ](.*)", title)
-        if match:
-            return match.group(1)
-        else:
-            return title
+        return title
 
 
 def read_file(path):

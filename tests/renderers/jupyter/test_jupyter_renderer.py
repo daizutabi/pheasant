@@ -81,7 +81,7 @@ def test_render_latex(jupyter):
     assert "$$x^{2}$$" in output
 
 
-def test_render_fenced_code_with_option():
+def test_render_fenced_code_with_option(jupyter):
     from pheasant.renderers.jupyter.jupyter import Jupyter
 
     jupyter = Jupyter()
@@ -93,21 +93,6 @@ def test_render_fenced_code_with_option():
     assert "(def ghi)" in output
 
 
-def test_render_bare_execute_count(jupyter):
+def test_render_find_all(jupyter):
     source = "{{2*3}}\n```python\n1\n```\n{{2}}\n```python\n1\n```\n"
     assert len(jupyter.findall(source)) == 4
-
-
-
-
-from pheasant.renderers.jupyter.jupyter import Jupyter
-jupyter = Jupyter()
-jupyter.execute("from tensorflow import keras")
-
-model = keras.Sequential(
-    [
-        keras.layers.Flatten(input_shape=(28, 28)),
-        keras.layers.Dense(128, activation="relu"),
-        keras.layers.Dense(10, activation="softmax"),
-    ]
-)

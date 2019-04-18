@@ -37,6 +37,7 @@ class Jupyter(Renderer):
     cache: List[Cell] = field(default_factory=list, init=False)
     extra_html: str = field(default="", init=False)
     progress_bar: ProgressBar = field(default_factory=ProgressBar, init=False)
+    enabled: bool = field(default=True, init=False)
 
     FENCED_CODE_PATTERN = (
         r"^(?P<mark>`{3,})(?P<language>\w*) ?(?P<option>.*?)\n"
@@ -72,7 +73,7 @@ class Jupyter(Renderer):
             self.extra_html = extra_html(extra_modules)
         self.page.meta["extra_html"] = self.extra_html
 
-        if self.page.path and self.cache:
+        if self.enabled and self.page.path and self.cache:
             for cell in self.cache:
                 cell.cached = True
             path = cache_path(self.page.path)
@@ -131,7 +132,6 @@ class Jupyter(Renderer):
         report = result[1]
         relpath = os.path.relpath(self.page.path)
         return f"{relpath} ({report['page']})"
-        # return f"{self.relpath}: Page {report['page']} Total {report['total']}"
 
     def execute_and_render(self, code, context, template) -> str:
         self.count += 1
@@ -144,6 +144,11 @@ class Jupyter(Renderer):
                     relpath = os.path.relpath(self.page.path)
                     self.progress_bar.progress(relpath, count=self.count)
                 return surround(cached.output, "cached")
+
+        if not self.enabled:
+            return self.render(
+                template, context, outputs=[], report={"count": self.count}
+            )
 
         language = context["language"]
         kernel_name = self.config["kernel_name"].get(language)
