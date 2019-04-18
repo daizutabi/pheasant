@@ -1,12 +1,20 @@
+import datetime
+from contextlib import contextmanager
 from dataclasses import field
 from typing import Dict, Iterable, List
 
 from pheasant.core.converter import Converter, Page
-from pheasant.core.decorator import Decorator, monitor
+from pheasant.core.decorator import Decorator
 from pheasant.renderers.embed.embed import Embed
+from pheasant.renderers.jupyter.client import execution_report
 from pheasant.renderers.jupyter.jupyter import Jupyter
 from pheasant.renderers.number.number import Anchor, Header
 from pheasant.renderers.script.script import Script
+from pheasant.utils.time import format_timedelta_human
+
+
+class Log:
+    pass
 
 
 class Pheasant(Converter):
@@ -17,6 +25,7 @@ class Pheasant(Converter):
     anchor: Anchor = field(default_factory=Anchor, init=False)
     decorator: Decorator = field(default_factory=Decorator, init=False)
     pages: Dict[str, Page] = field(default_factory=dict, init=False)
+    log: Log = field(default_factory=Log, init=False)
 
     def init(self):
         self.anchor.header = self.header
@@ -27,8 +36,7 @@ class Pheasant(Converter):
         self.decorator.name = "pheasant"
         self.decorator.register([self.header, self.jupyter, self.embed], "surround")
 
-    @monitor(format=True)
-    def convert_from_files(self, paths: Iterable[str]) -> List[str]:
+    def _convert_from_files(self, paths: Iterable[str]) -> List[str]:
         paths = list(paths)
         self.start()
         self.jupyter.progress_bar.multi = len(paths)
@@ -42,3 +50,23 @@ class Pheasant(Converter):
             self.convert(path, "link")
 
         return [self.pages[path].source for path in paths]
+
+    def convert_from_files(self, paths: Iterable[str]) -> List[str]:
+        with elapsed_time(self.log):
+            return self._convert_from_files(paths)
+
+
+@contextmanager
+def elapsed_time(log):
+    log.start = datetime.datetime.now()
+    start_kernel = execution_report["life"]
+    try:
+        yield
+    finally:
+        end_kernel = execution_report["life"]
+        log.end = datetime.datetime.now()
+        log.elapsed = log.end - log.start
+        log.elapsed_kernel = end_kernel - start_kernel
+        time = format_timedelta_human(log.elapsed)
+        time_kernel = format_timedelta_human(log.elapsed_kernel)
+        log.info = f"Elapsed time: {time} (kernel {time_kernel})"

@@ -74,10 +74,7 @@ class PheasantPlugin(BasePlugin):
         paths = [page.file.abs_src_path for page in nav.pages]
         logger.info(f"[Pheasant] Converting {len(paths)} pages.")
         self.converter.convert_from_files(paths)
-        func_time = self.converter.convert_from_files.func_time
-        kernel_time = self.converter.convert_from_files.kernel_time
-        time = f"Total {func_time} Kernel {kernel_time}"
-        logger.info(f"[Pheasant] Conversion finished: {time}")
+        logger.info(f"[Pheasant] Conversion finished. {self.converter.log.info}")
         return nav
 
     def on_page_read_source(self, source, page, **kwargs):

@@ -44,24 +44,32 @@ def clean(yes):
     click.echo("Deleted.")
 
 
-@cli.command(help="Run source files and save the caches.")
-@click.option(
+ext_option = click.option(
     "-e",
     "--ext",
     default="md,py",
     show_default=True,
     help="File extension(s) separated by commas.",
 )
-@click.option("--max", default=100, show_default=True, help="Maximum number of files.")
-@click.option("--list", is_flag=True, help="Only list the files.")
-@click.argument("paths", nargs=-1, type=click.Path(exists=True))
-def run(paths, ext, max, list):
+max_option = click.option(
+    "--max", default=100, show_default=True, help="Maximum number of files."
+)
+paths_argument = click.argument("paths", nargs=-1, type=click.Path(exists=True))
+
+
+def collect(paths, ext):
     exts = ext.split(",")
     src_paths = []
 
+    def has_cache(path):
+        directory, path = os.path.split(path)
+        path = os.path.join(directory, ".pheasant_cache", path + ".cache")
+        return os.path.exists(path)
+
     def collect(path):
         if os.path.splitext(path)[-1][1:] in exts:
-            src_paths.append(path)
+            cache = has_cache(path)
+            src_paths.append((os.path.normpath(path), cache))
 
     if not paths:
         paths = ["."]
@@ -72,24 +80,48 @@ def run(paths, ext, max, list):
                     collect(os.path.join(dirpath, file))
         else:
             collect(path)
-    length = len(src_paths)
-    click.secho(f"collected {length} files.", bold=True)
-    if length > max:
-        click.secho(f"Too many files. Aborted.", fg="yellow")
+    return src_paths
 
-    if list:
-        for path in src_paths:
-            click.echo(path)
-        return
+
+@cli.command(help="Run source files and save the caches.")
+@ext_option
+@max_option
+@paths_argument
+def run(paths, ext, max):
+    paths = collect(paths, ext)
+
+    length = len(paths)
+    click.secho(f"collected {length} files.", bold=True)
+
+    if len(paths) > max:
+        click.secho(f"Too many files. Aborted.", fg="yellow")
+        sys.exit()
 
     from pheasant.core.pheasant import Pheasant
 
     pheasant = Pheasant()
-    pheasant.convert_from_files(src_paths)
+    pheasant.convert_from_files(path for path, _ in paths)
+    click.secho(f"{pheasant.log.info}", bold=True)
+
+
+@cli.command(help="List source files.")
+@ext_option
+@paths_argument
+def list(paths, ext):
+    paths = collect(paths, ext)
+
+    for path, cache in paths:
+        path = path + ("" if cache else "*")
+        if cache:
+            click.echo(path)
+        else:
+            click.secho(path, fg="green")
+
+    length = len(paths)
+    click.secho(f"collected {length} files.", bold=True)
 
 
 def prompt():
-
     click.echo("Enter double blank lines to exit.")
     lines = []
     while True:

@@ -3,7 +3,6 @@ from dataclasses import field
 from typing import Any, Dict, Iterable, Iterator, List
 
 from pheasant.core.base import Base
-from pheasant.core.decorator import monitor
 from pheasant.core.page import Page
 from pheasant.core.parser import Parser
 from pheasant.core.renderer import Renderer
@@ -85,7 +84,6 @@ class Converter(Base):
         """
         return self.parsers[name].parse(source)
 
-    @monitor(format=True)
     def convert(self, path: str, name: str = "default") -> str:
         """Convert a source file.
 

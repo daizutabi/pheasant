@@ -86,9 +86,11 @@ class ProgressBar:
             self.result = result
         back = "\x08" * len(self.bar)
         self.write(back + bar)
+        self.flush()
         diff = len(self.bar) - len(bar)
         if diff > 0:
             self.write(" " * diff + "\x08" * diff)
+            self.flush()
         self.bar = bar
         self.show = True
 
@@ -126,7 +128,10 @@ class ProgressBar:
 
 def main():
     def run():
-        time.sleep(1.5)
+        time.sleep(0.5)
+        sys.stderr.write("ERROR\n")
+        sys.stderr.flush()
+        time.sleep(1)
         return "hello"
 
     bar = ProgressBar(3, multi=3)

@@ -61,29 +61,3 @@ def commentable(name):
         return render_
 
     return deco
-
-
-def monitor(format=True):
-    def deco(func):
-        @functools.wraps(func)
-        def func_(*args, **kwargs):
-            start_kernel = execution_report["life"]
-            start_func = datetime.datetime.now()
-            output = func(*args, **kwargs)
-            end_func = datetime.datetime.now()
-            end_kernel = execution_report["life"]
-
-            timedelta = end_func - start_func
-            if format:
-                timedelta = format_timedelta_human(timedelta)
-            func_.func_time = timedelta
-
-            timedelta = end_kernel - start_kernel
-            if format:
-                timedelta = format_timedelta_human(timedelta)
-            func_.kernel_time = timedelta
-            return output
-
-        return func_
-
-    return deco
