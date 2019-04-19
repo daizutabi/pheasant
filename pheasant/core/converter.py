@@ -107,7 +107,12 @@ class Converter(Base):
             renderer.page = page
             renderer.enter()
 
-        page.source = self.parse(page.source, name)
+        try:
+            source = self.parse(page.source, name)
+        except Exception:
+            raise
+        else:
+            page.source = source
 
         for renderer in self.renderers[name]:
             renderer.exit()

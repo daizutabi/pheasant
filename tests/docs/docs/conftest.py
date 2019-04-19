@@ -12,3 +12,8 @@ chart = (
     .encode(x="t", y=alt.Y("x", scale=alt.Scale(domain=(0, 5))))
 )
 chart
+
+# -
+x = 1
+# -
+x * 6

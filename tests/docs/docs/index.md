@@ -59,6 +59,13 @@ a = 4
 a = 4
 ~~~
 
-<!--break-->
 
 abc
+
+```python
+x = 2
+```
+
+```pytnon
+4 * x
+```

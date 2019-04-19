@@ -111,18 +111,18 @@ class ProgressBar:
 
         return result
 
-    def finish(self, count=None, reset=True):
+    def finish(self, count=None, reset=True, finish=True):
         if count:
             self.count = count
         if self.show:
-            self.update(self.result, finish=True)
+            self.update(self.result, finish=finish)
             self.write("\n")
             self.flush()
             self.show = False
             cursor.show()
         if reset:
             self.count = 0
-        if self.multi:
+        if self.multi and finish:
             self.step += 1
 
 

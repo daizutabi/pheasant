@@ -30,6 +30,10 @@ class Cell:
     extra_module: str = field(default="", compare=False)
 
 
+class CacheMismatchError(BaseException):
+    """Raised if the cache doesn't match input code in safe mode."""
+
+
 class Jupyter(Renderer):
     language: str = "python"
     option: str = field(default="", init=False)
@@ -38,6 +42,7 @@ class Jupyter(Renderer):
     extra_html: str = field(default="", init=False)
     progress_bar: ProgressBar = field(default_factory=ProgressBar, init=False)
     enabled: bool = field(default=True, init=False)
+    safe: bool = field(default=False, init=False)  # If True, code must match cache.
 
     FENCED_CODE_PATTERN = (
         r"^(?P<mark>`{3,})(?P<language>\w*) ?(?P<option>.*?)\n"
@@ -144,6 +149,9 @@ class Jupyter(Renderer):
                     relpath = os.path.relpath(self.page.path)
                     self.progress_bar.progress(relpath, count=self.count)
                 return surround(cached.output, "cached")
+            elif not self.safe and self.page.path:
+                os.remove(cache_path(self.page.path))
+                raise CacheMismatchError
 
         if not self.enabled:
             return self.render(

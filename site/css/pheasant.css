@@ -178,11 +178,13 @@ h2, h3, h4, h5 {
 }
 
 .pheasant-fenced-code code {
+  display: block;
   color: black;
   line-height: 18px;
   font-size: 80%;
   background: transparent;
   padding: 0px;
+  overflow-x: auto;
 }
 
 .pheasant-fenced-code .input .code {

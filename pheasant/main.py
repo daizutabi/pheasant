@@ -112,11 +112,12 @@ def list(paths, ext):
     paths = collect(paths, ext)
 
     for path, cache in paths:
-        path = path + ("" if cache else "*")
         if cache:
-            click.echo(path)
+            path = "  " + path + " (cached)"
         else:
-            click.secho(path, fg="green")
+            path = "* " + path
+
+        click.echo(path)
 
     length = len(paths)
     click.secho(f"collected {length} files.", bold=True)
@@ -136,6 +137,7 @@ def prompt():
     from pheasant.core.pheasant import Pheasant
 
     pheasant = Pheasant()
+    pheasant.jupyter.safe = True
     output = pheasant.parse(source, "main")
     output = pheasant.parse(output, "link")
     click.echo("[source]")

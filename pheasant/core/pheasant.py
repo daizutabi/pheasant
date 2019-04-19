@@ -7,7 +7,7 @@ from pheasant.core.converter import Converter, Page
 from pheasant.core.decorator import Decorator
 from pheasant.renderers.embed.embed import Embed
 from pheasant.renderers.jupyter.client import execution_report
-from pheasant.renderers.jupyter.jupyter import Jupyter
+from pheasant.renderers.jupyter.jupyter import Jupyter, CacheMismatchError
 from pheasant.renderers.number.number import Anchor, Header
 from pheasant.renderers.script.script import Script
 from pheasant.utils.time import format_timedelta_human
@@ -41,10 +41,13 @@ class Pheasant(Converter):
         self.start()
         self.jupyter.progress_bar.multi = len(paths)
         for k, path in enumerate(paths):
-            self.jupyter.progress_bar.step = k + 1
             if path.endswith(".py"):
                 self.convert(path, "script")
-            self.convert(path, "main")
+            try:
+                self.convert(path, "main")
+            except CacheMismatchError:
+                self.jupyter.progress_bar.finish(finish=False)
+                self.convert(path, "main")
 
         for path in paths:
             self.convert(path, "link")
