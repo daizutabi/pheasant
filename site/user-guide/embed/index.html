@@ -70,15 +70,15 @@
     <a class="current" href="./">Embed</a>
     <ul class="subnav">
             
-    <li class="toctree-l3"><a href="#4-embeded-objects">4 Embeded objects</a></li>
+    <li class="toctree-l3"><a href="#3-embeded-objects">3 Embeded objects</a></li>
     
         <ul>
         
-            <li><a class="toctree-l4" href="#41-file-system">4.1 File system</a></li>
+            <li><a class="toctree-l4" href="#31-file-system">3.1 File system</a></li>
         
-            <li><a class="toctree-l4" href="#42-python-module-source">4.2 Python module source</a></li>
+            <li><a class="toctree-l4" href="#32-python-module-source">3.2 Python module source</a></li>
         
-            <li><a class="toctree-l4" href="#43-include-other-file-as-markdown-source">4.3 Include other file as Markdown source.</a></li>
+            <li><a class="toctree-l4" href="#33-include-other-file-as-markdown-source">3.3 Include other file as Markdown source.</a></li>
         
         </ul>
     
@@ -148,9 +148,9 @@
             <div class="section">
               
                 
-<h1 id="4-embeded-objects"><span class="pheasant-header"><span class="header"><span class="number">4</span> <span class="title">Embeded objects</span></span></span></h1>
+<h1 id="3-embeded-objects"><span class="pheasant-header"><span class="header"><span class="number">3</span> <span class="title">Embeded objects</span></span></span></h1>
 <p>Pheasant can embed codes from a file system or Python module.</p>
-<h2 id="41-file-system"><span class="pheasant-header"><span class="header"><span class="number">4.1</span> <span class="title">File system</span></span></span></h2>
+<h2 id="31-file-system"><span class="pheasant-header"><span class="header"><span class="number">3.1</span> <span class="title">File system</span></span></span></h2>
 <p>Extenal resources are read from file system by Pheasant syntax: <code>{%=object%}</code>. For example,</p>
 <div class="pheasant-fenced-code"><div class="cell embed source"><div class="code"><pre><code class="markdown">{%=/mkdocs.yml%}</code></pre></div></div></div>
 
@@ -221,7 +221,7 @@ edit_uri: &#34;&#34;
 
 </div></div></div>
 
-<h2 id="42-python-module-source"><span class="pheasant-header"><span class="header"><span class="number">4.2</span> <span class="title">Python module source</span></span></span></h2>
+<h2 id="32-python-module-source"><span class="pheasant-header"><span class="header"><span class="number">3.2</span> <span class="title">Python module source</span></span></span></h2>
 <p>Python module sources that the current Jupyter kernel can find are also inspected. Now Pheasant imported its own package <code>pheasant</code>, so you can read the source from this document by Pheasant syntax: <code>{%?object%}</code>.</p>
 <p>You can write to inspect the whole module content:</p>
 <div class="pheasant-fenced-code"><div class="cell embed source"><div class="code"><pre><code class="markdown">{%?pheasant%}</code></pre></div></div></div>
@@ -240,7 +240,7 @@ edit_uri: &#34;&#34;
 <div class="pheasant-fenced-code"><div class="cell embed file"><div class="code"><pre><code class="python">inspect error</code></pre></div></div></div>
 
 <p>With this functionality, you can guarantee the reproducible relation between your source code and results easily.</p>
-<h2 id="43-include-other-file-as-markdown-source"><span class="pheasant-header"><span class="header"><span class="number">4.3</span> <span class="title">Include other file as Markdown source.</span></span></span></h2>
+<h2 id="33-include-other-file-as-markdown-source"><span class="pheasant-header"><span class="header"><span class="number">3.3</span> <span class="title">Include other file as Markdown source.</span></span></span></h2>
 <p>Assume that there is a directory named <code>link</code> under the same directory of this file and there are some files under the <code>link</code> directory. You can include the content of a file like below:</p>
 <div class="pheasant-fenced-code"><div class="cell embed source"><div class="code"><pre><code class="markdown">{% link/included.md %}</code></pre></div></div></div>
 

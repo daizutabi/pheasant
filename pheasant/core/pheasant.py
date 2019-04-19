@@ -46,7 +46,6 @@ class Pheasant(Converter):
             try:
                 self.convert(path, "main")
             except CacheMismatchError:
-                self.jupyter.progress_bar.finish(finish=False)
                 self.convert(path, "main")
 
         for path in paths:

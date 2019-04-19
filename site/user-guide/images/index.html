@@ -66,15 +66,15 @@
     <a class="current" href="./">Images</a>
     <ul class="subnav">
             
-    <li class="toctree-l3"><a href="#3-image-processing">3 Image Processing</a></li>
+    <li class="toctree-l3"><a href="#2-image-processing">2 Image Processing</a></li>
     
         <ul>
         
-            <li><a class="toctree-l4" href="#31-matplotlib">3.1 Matplotlib</a></li>
+            <li><a class="toctree-l4" href="#21-matplotlib">2.1 Matplotlib</a></li>
         
-            <li><a class="toctree-l4" href="#32-bokeh">3.2 Bokeh</a></li>
+            <li><a class="toctree-l4" href="#22-bokeh">2.2 Bokeh</a></li>
         
-            <li><a class="toctree-l4" href="#33-holoviews">3.3 HoloViews</a></li>
+            <li><a class="toctree-l4" href="#23-holoviews">2.3 HoloViews</a></li>
         
         </ul>
     
@@ -914,9 +914,9 @@ window.HoloViews.BokehScrubberWidget = BokehScrubberWidget
 
     window.PyViz.comm_manager = CommManager()
     </script>
-<h1 id="3-image-processing"><span class="pheasant-header"><span class="header"><span class="number">3</span> <span class="title">Image Processing</span></span></span></h1>
+<h1 id="2-image-processing"><span class="pheasant-header"><span class="header"><span class="number">2</span> <span class="title">Image Processing</span></span></span></h1>
 <p>In this section, we study how to embed images created by <a href="https://matplotlib.org/">Matplotlib</a>, <a href="https://bokeh.pydata.org/en/latest/">Bokeh</a>, and <a href="https://holoviews.org/">HoloViews</a> libraries.</p>
-<h2 id="31-matplotlib"><span class="pheasant-header"><span class="header"><span class="number">3.1</span> <span class="title">Matplotlib</span></span></span></h2>
+<h2 id="21-matplotlib"><span class="pheasant-header"><span class="header"><span class="number">2.1</span> <span class="title">Matplotlib</span></span></span></h2>
 <p>First, <code>figsize</code> of <code>figure</code> is set to <code>[2, 1.6]</code> to show small figures for saving space.</p>
 <div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">import matplotlib
 import matplotlib.pyplot as plt
@@ -1050,7 +1050,7 @@ pd.DataFrame([axes], columns=[&#39;Red&#39;, &#39;Blue&#39;])
 
 </div></div></div>
 
-<h2 id="32-bokeh"><span class="pheasant-header"><span class="header"><span class="number">3.2</span> <span class="title">Bokeh</span></span></span></h2>
+<h2 id="22-bokeh"><span class="pheasant-header"><span class="header"><span class="number">2.2</span> <span class="title">Bokeh</span></span></span></h2>
 <p>You can embed <a href="https://bokeh.pydata.org/en/latest/">Bokeh</a>'s plots into MkDocs HTML documents. Following <a href="https://bokeh.pydata.org/en/latest/docs/user_guide/embed.html">User Guide "Embedding Plots and Apps"</a> from the official Bokeh documents, Pheasant automatically adds extra stylesheet and javascript in HTML source. You don't need to configure <code>extra_css</code> and <code>extra_javascript</code> in your <code>mkdocs.yml</code> manually.</p>
 <p>In order to embed plots in your document, <code>bokeh.embed.components</code> function can be used. This function returns <code>&lt;script&gt;</code>  and <code>&lt;div&gt;</code> tags in HTML format. For example:</p>
 <div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">from bokeh.plotting import figure
@@ -1109,7 +1109,7 @@ print(&#39;[div]:&#39;, div[:40].strip(), &#39;...&#39;)</code></pre></div>
 </script>
 <div class="bk-root" id="500af3e1-8df2-4e6a-9960-b9b92e828847" data-root-id="1891"></div></div></div></div></div>
 
-<h2 id="33-holoviews"><span class="pheasant-header"><span class="header"><span class="number">3.3</span> <span class="title">HoloViews</span></span></span></h2>
+<h2 id="23-holoviews"><span class="pheasant-header"><span class="header"><span class="number">2.3</span> <span class="title">HoloViews</span></span></span></h2>
 <p>HoloViews provides an explorable multi-dimensional dictionary of HoloViews objects called <a href="https://holoviews.org/reference/containers/bokeh/HoloMap.html">HoloMap</a>. Pheasant can also embed this interactive object in your MkDocs Documents as well as other HoloViews objects.</p>
 <p>First, a normal HoloViews object.</p>
 <div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">import holoviews as hv

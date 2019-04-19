@@ -78,15 +78,15 @@
     <a class="current" href="./">Script</a>
     <ul class="subnav">
             
-    <li class="toctree-l3"><a href="#6-standalone-script">6 Standalone Script</a></li>
+    <li class="toctree-l3"><a href="#5-standalone-script">5 Standalone Script</a></li>
     
         <ul>
         
-            <li><a class="toctree-l4" href="#61-how-to">6.1 How to</a></li>
+            <li><a class="toctree-l4" href="#51-how-to">5.1 How to</a></li>
         
-            <li><a class="toctree-l4" href="#62-fenced-code-block-in-python-source">6.2 Fenced code block in Python source</a></li>
+            <li><a class="toctree-l4" href="#52-fenced-code-block-in-python-source">5.2 Fenced code block in Python source</a></li>
         
-            <li><a class="toctree-l4" href="#63-a-package-for-comment-formatting">6.3 A package for comment formatting</a></li>
+            <li><a class="toctree-l4" href="#53-a-package-for-comment-formatting">5.3 A package for comment formatting</a></li>
         
         </ul>
     
@@ -148,9 +148,9 @@
             <div class="section">
               
                 
-<h1 id="6-standalone-script"><span class="pheasant-header"><span class="header"><span class="number">6</span> <span class="title">Standalone Script</span></span></span></h1>
+<h1 id="5-standalone-script"><span class="pheasant-header"><span class="header"><span class="number">5</span> <span class="title">Standalone Script</span></span></span></h1>
 <p>Using Atom's <a href="https://nteract.gitbooks.io/hydrogen/">Hydorgen</a> package, you can execute any Python script codes within a fenced code block in a Markdown source. So you can edit your code verifying its execution results. But unfortunately (as long as I know), the entire Markdown source cannot be executed all at once as a standalone script and cannot be ran by Python interpreter. Pheasant connects between a pure Python script and a Markdown source. Actually, this page is written by a pure Python code.</p>
-<h2 id="61-how-to"><span class="pheasant-header"><span class="header"><span class="number">6.1</span> <span class="title">How to</span></span></span></h2>
+<h2 id="51-how-to"><span class="pheasant-header"><span class="header"><span class="number">5.1</span> <span class="title">How to</span></span></span></h2>
 <p>A basic idea is that Markdown cells and Python code cells generally appear alternately. We can write a Markdown cell with a successive comment lines. In order to be recognized as a Markdown cell, <code>#</code> must be at the begining of lines. But we can insert a blank line to make a paragraph.</p>
 <p>Normal Python code is treated as a code cell as you expect. A code cell can contain any comments as long as the comments don't start at the begining of line.</p>
 <div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">def add(x: int, y: int) -&gt; int:
@@ -196,7 +196,7 @@ Output: `c` is equal to {{c}}.</code></pre></div></div></div>
 
 <p>Output: <code>c</code> is equal to <span class="pheasant-inline-code"><span class="cached"><span class="output">3</span></span></span>.</p>
 <p>Other Pheasant features also work. For example, go to Fig. <a href="../..#cat">1</a></p>
-<h2 id="62-fenced-code-block-in-python-source"><span class="pheasant-header"><span class="header"><span class="number">6.2</span> <span class="title">Fenced code block in Python source</span></span></span></h2>
+<h2 id="52-fenced-code-block-in-python-source"><span class="pheasant-header"><span class="header"><span class="number">5.2</span> <span class="title">Fenced code block in Python source</span></span></span></h2>
 <p>You can write a fenced code block in a Python source as comment.</p>
 <div class="pheasant-fenced-code"><div class="cell embed source"><div class="code"><pre><code class="python"># ```python
 # print(1)
@@ -220,7 +220,7 @@ Output: `c` is equal to {{c}}.</code></pre></div></div></div>
 print(1)
 ```</code></pre></div></div></div>
 
-<h2 id="63-a-package-for-comment-formatting"><span class="pheasant-header"><span class="header"><span class="number">6.3</span> <span class="title">A package for comment formatting</span></span></span></h2>
+<h2 id="53-a-package-for-comment-formatting"><span class="pheasant-header"><span class="header"><span class="number">5.3</span> <span class="title">A package for comment formatting</span></span></span></h2>
 <p>In this scheme, we have to write many comments for Markdown cells. But a linter such as pycodestyle doesn't allow us to write a very long comment in one line longer than (for example) 79 characters. This means that we have to write Markdown source with several new line characters even we are writing one paragraph. In order to overcome this incovenient situation, a comment formatting pakage <a href="https://github.com/daizutabi/pyls-cwrap"><code>pyls-cwrap</code></a> has been prepared. You can install this package as <code>pip install pyls-cwrap</code>. In Atom, if you use <a href="https://atom.io/packages/ide-python"><code>ide-python</code></a>, just press [Ctrl]+[Shift]+[C] (Windows, default setting), sequential comments are automatically formatted nicely.</p>
               
             </div>

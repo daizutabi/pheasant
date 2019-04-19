@@ -61,10 +61,12 @@ class ProgressBar:
         prefix = f"[{count}/{total}]"
         prefix = colored(prefix, "cyan")
 
-        if self.multi:
+        if self.multi > 1:
             step = str(self.step).zfill(self.zfill)
             multi = str(self.multi).zfill(self.zfill)
             prefix = f"({step}/{multi}) " + prefix
+        elif self.multi == 1:
+            prefix = " " * 10 + prefix
 
         if self.count == self.total:
             color = "green"
@@ -95,6 +97,12 @@ class ProgressBar:
         self.show = True
 
     def progress(self, func, format=None, init=None, count=None):
+        if not self.total:
+            if callable(func):
+                return func()
+            else:
+                return func
+
         if self.count == 0:
             cursor.hide()
             self.update(init or self.init)

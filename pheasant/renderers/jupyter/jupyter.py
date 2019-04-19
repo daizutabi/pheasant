@@ -145,12 +145,13 @@ class Jupyter(Renderer):
         if len(self.cache) >= self.count and "run" not in context["option"]:
             cached = self.cache[self.count - 1]
             if cell == cached:
-                if self.progress_bar.total and (self.count - 1) % 5 == 0:
+                if (self.count - 1) % 5 == 0 and self.page.path:
                     relpath = os.path.relpath(self.page.path)
                     self.progress_bar.progress(relpath, count=self.count)
                 return surround(cached.output, "cached")
-            elif not self.safe and self.page.path:
+            elif self.safe and self.page.path:
                 os.remove(cache_path(self.page.path))
+                self.progress_bar.finish(finish=False)
                 raise CacheMismatchError
 
         if not self.enabled:
@@ -167,7 +168,7 @@ class Jupyter(Renderer):
                 init_code = ""
             start_kernel(kernel_name, init_code, silent=self.page.path == "")
 
-        if self.progress_bar.total and self.count == 1:
+        if self.count == 1:
             self.progress_bar.progress("Start", count=self.count)
 
         def execute():
@@ -176,12 +177,9 @@ class Jupyter(Renderer):
             report["count"] = self.count
             return outputs, report
 
-        if self.progress_bar.total:
-            outputs, report = self.progress_bar.progress(
-                execute, self.progress_format, count=self.count
-            )
-        else:
-            outputs, report = execute()
+        outputs, report = self.progress_bar.progress(
+            execute, self.progress_format, count=self.count
+        )
 
         cell.extra_module = get_extra_module(outputs)
         select_display_data(outputs)

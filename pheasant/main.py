@@ -101,6 +101,7 @@ def run(paths, ext, max):
     from pheasant.core.pheasant import Pheasant
 
     pheasant = Pheasant()
+    pheasant.jupyter.safe = True
     pheasant.convert_from_files(path for path, _ in paths)
     click.secho(f"{pheasant.log.info}", bold=True)
 
@@ -137,7 +138,6 @@ def prompt():
     from pheasant.core.pheasant import Pheasant
 
     pheasant = Pheasant()
-    pheasant.jupyter.safe = True
     output = pheasant.parse(source, "main")
     output = pheasant.parse(output, "link")
     click.echo("[source]")
