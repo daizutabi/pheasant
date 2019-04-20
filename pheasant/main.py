@@ -124,7 +124,12 @@ def list(paths, ext):
     click.secho(f"collected {length} files.", bold=True)
 
 
-def prompt():
+@cli.command(help="Python script prompt.")
+def python():
+    prompt(script=True)
+
+
+def prompt(script=False):
     click.echo("Enter double blank lines to exit.")
     lines = []
     while True:
@@ -138,6 +143,8 @@ def prompt():
     from pheasant.core.pheasant import Pheasant
 
     pheasant = Pheasant()
+    if script:
+        source = pheasant.parse(source, "script")
     output = pheasant.parse(source, "main")
     output = pheasant.parse(output, "link")
     click.echo("[source]")
