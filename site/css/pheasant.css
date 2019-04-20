@@ -3,7 +3,7 @@
 **************************************************/
 code {
   font-family: "Fira Code", "Courier New", Consolas, monospace;
-  color: #03E;
+  color: #004;
   border: none;
   font-size: 14px;
   margin: 0px;
@@ -260,7 +260,7 @@ h2, h3, h4, h5 {
 .pheasant-fenced-code .report .cell-time,
 .pheasant-fenced-code .report .page-time,
 .pheasant-fenced-code .report .total-time {
-  color: #88f;
+  color: #889;
   font-weight: bold;
 }
 

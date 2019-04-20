@@ -1,6 +1,9 @@
 # # Script abc de
 # ## Test def
 
+import logging
+import sys
+
 import altair as alt
 import pandas as pd
 
@@ -15,5 +18,7 @@ chart
 
 # -
 x = 1
+sys.stderr.write("abc\n")
 # -
 x * 4
+logging.error("error")
