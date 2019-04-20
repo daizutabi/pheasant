@@ -84,7 +84,8 @@ class Script(Renderer):
                 yield output
             elif kind == "Code":
                 if self.comment.max_line_length == 0:
-                    yield f"```python{self.comment.option}\n{source}```\n"
+                    source = f"```python{self.comment.option}\n{source}```\n"
+                    yield source.replace("\n# !", "\n# ")
                     self.comment.option = ""
                 else:
                     yield source

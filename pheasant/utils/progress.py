@@ -78,7 +78,7 @@ class ProgressBar:
                 colored("[", "green")
                 + colored("=" * current, "green")
                 + colored(">", "green", attrs=["bold"])
-                + colored("-" * (self.bar_length - current), color)
+                + colored("." * (self.bar_length - current), color)
                 + colored("]", color)
             )
 

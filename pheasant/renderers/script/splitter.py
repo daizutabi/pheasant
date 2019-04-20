@@ -58,9 +58,12 @@ def split_line(source: str) -> Iterator[Tuple[str, str]]:
     def commentiter(lines):
         for line in lines:
             if line.startswith("# !"):
-                yield "Code", "# " + line[3:]
+                kind = "Code"
+            elif line:
+                kind = "Comment"
             else:
-                yield ("Comment" if line else "Blank", line)
+                kind = "Blank"
+            yield kind, line
 
     if not names:  # Comment only.
         yield from commentiter(lines)
