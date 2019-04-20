@@ -109,6 +109,9 @@ class Header(Renderer):
             if number_list:
                 self.number_list[kind] = [0] * 6
                 self.number_list[kind][depth : depth + len(number_list)] = number_list
+                if kind == 'header':
+                    depth += len(number_list) - 1
+                    context["prefix"] = "#" * (depth + 1)
             else:
                 self.number_list[kind][depth] += 1
                 reset = [0] * (5 - depth)
@@ -215,7 +218,8 @@ def normalize_number_list(
 
 
 def number_list_format(number_list: List[int]) -> str:
-    return ".".join([str(x) for x in number_list if x])
+    return ".".join([str(x) for x in number_list])
+    # return ".".join([str(x) for x in number_list if x])
 
 
 RE_TAG_PATTERN = re.compile(Header.TAG_PATTERN)
