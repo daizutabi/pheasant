@@ -24,10 +24,10 @@ h2, h3, h4, h5 {
 **************************************************/
 .pheasant-header .header .number {
   opacity: 0.5;
+  margin-right: 5px;
 }
 
 .pheasant-header .header .title {
-  margin-left: 6px;
 }
 
 .pheasant-header div.figure {
@@ -188,14 +188,14 @@ h2, h3, h4, h5 {
 }
 
 .pheasant-fenced-code .input .code {
-  border-color: #bdd;
-  background: #dff;
+  border-color: #ccc;
+  background: #f3f3f3;
 }
 
 .pheasant-fenced-code .stdout .code,
 .pheasant-fenced-code .output .code {
-  border-color: #ddb;
-  background: #ffd;
+  border-color: #ddd;
+  background: #fffff9;
 }
 
 .pheasant-fenced-code .stderr .code,
@@ -208,8 +208,8 @@ h2, h3, h4, h5 {
 .pheasant-fenced-code .file .code,
 .pheasant-fenced-code .terminal .code,
 .pheasant-fenced-code .docstring .code {
-  border-color: #cec;
-  background: #efe;
+  border-color: #ddd;
+  background: #fefefe;
 }
 
 .pheasant-fenced-code .input .code,
@@ -228,8 +228,8 @@ h2, h3, h4, h5 {
 }
 
 .pheasant-fenced-code .input .report {
-  border-color: #bdd;
-  background: #eff;
+  border-color: #ccc;
+  background: #fbfbfb;
 }
 
 .pheasant-fenced-code .cached .input .report {

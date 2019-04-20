@@ -195,7 +195,7 @@ h2, h3, h4, h5 {
 .pheasant-fenced-code .stdout .code,
 .pheasant-fenced-code .output .code {
   border-color: #ddd;
-  background: #f7f7f7;
+  background: #fffff9;
 }
 
 .pheasant-fenced-code .stderr .code,
