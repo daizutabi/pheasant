@@ -24,10 +24,10 @@ h2, h3, h4, h5 {
 **************************************************/
 .pheasant-header .header .number {
   opacity: 0.5;
+  margin-right: 5px;
 }
 
 .pheasant-header .header .title {
-  margin-left: 6px;
 }
 
 .pheasant-header div.figure {
