@@ -30,6 +30,18 @@ def sub(x: int, y: int) -> int:
 # source into a code cell and a Markdown cell. This new Markdown cell will continue
 # until next Python code appears.
 
+# If you want to include a comment at the begining of line, you can write like this:
+
+# ~~~python
+# # !First comment in a code cell.
+# a = 1
+# ~~~
+
+# becomes
+
+# !First comment in a code cell.
+a = 1
+
 # Despite of a Markdown cell, you may want to devide successive codes into separate
 # cells. This can be done by putting a special marker. The marker is `# -`
 # [sharp-space-minus] at the begining of line. For example,
@@ -41,7 +53,7 @@ def sub(x: int, y: int) -> int:
 # b
 # ~~~
 
-# becomes:
+# becomes
 
 a, b = 1, 2
 a

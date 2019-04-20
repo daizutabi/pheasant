@@ -55,12 +55,15 @@ def split_line(source: str) -> Iterator[Tuple[str, str]]:
     node = ast.parse(source)
     names = [ast_name(obj) for obj in node.body]  # type: ignore
 
-    def iterator(kind, lines):
+    def commentiter(lines):
         for line in lines:
-            yield (kind if line else "Blank", line)
+            if line.startswith("# !"):
+                yield "Code", "# " + line[3:]
+            else:
+                yield ("Comment" if line else "Blank", line)
 
     if not names:  # Comment only.
-        yield from iterator("Comment", lines)
+        yield from commentiter(lines)
         return
 
     begin_linenos = [obj.lineno - 1 for obj in node.body]  # type: ignore
@@ -69,15 +72,15 @@ def split_line(source: str) -> Iterator[Tuple[str, str]]:
 
     cursor = begin_linenos[0]
     if cursor != 0:
-        yield from iterator("Comment", lines[:cursor])
+        yield from commentiter(lines[:cursor])
 
     for name, begin, end in zip(names, begin_linenos, end_linenos):
         if cursor < begin:
-            yield from iterator("Comment", lines[cursor:begin])
+            yield from commentiter(lines[cursor:begin])
         yield "Code", "\n".join(lines[begin:end])
         cursor = end
     if cursor < len(lines):
-        yield from iterator("Comment", lines[cursor:])
+        yield from commentiter(lines[cursor:])
 
 
 def ast_name(node: ast.AST) -> str:
