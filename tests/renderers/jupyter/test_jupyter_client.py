@@ -58,4 +58,5 @@ def test_stream_joinner():
 
 def test_error_traceback():
     outputs = execute("1/0")
+    print(outputs)
     assert "ZeroDivisionError" in outputs[0]["traceback"]
