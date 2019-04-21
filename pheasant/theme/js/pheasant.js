@@ -46,17 +46,17 @@ function ready() {
     });
   });
 
-  $('.pheasant-fenced-code .report .cell-count').attr('title', 'Page Execution Count').css("cursor", "pointer");
-  $('.pheasant-fenced-code .report .start').attr('title', 'Evaluated at').css("cursor", "pointer");
-  $('.pheasant-fenced-code .report .cell-time').attr('title', 'Cell Execution Time').css("cursor", "pointer");
-  $('.pheasant-fenced-code .report .page-time').attr('title', 'Page Execution Time').css("cursor", "pointer");
-  $('.pheasant-fenced-code .report .total-time').attr('title', 'Total Execution Time').css("cursor", "pointer");
-  $('.pheasant-fenced-code .report .total-count').attr('title', 'Total Execution Count').css("cursor", "pointer");
-  $('.pheasant-fenced-code .report .kernel').attr('title', 'Kernel Name').css("cursor", "pointer");
+  $('.pheasant-fenced-code .report .cell-count').attr('title', 'Page Execution Count');
+  $('.pheasant-fenced-code .report .start').attr('title', 'Evaluated at');
+  $('.pheasant-fenced-code .report .cell-time').attr('title', 'Cell Execution Time');
+  $('.pheasant-fenced-code .report .page-time').attr('title', 'Page Execution Time');
+  $('.pheasant-fenced-code .report .total-time').attr('title', 'Total Execution Time');
+  $('.pheasant-fenced-code .report .total-count').attr('title', 'Total Execution Count');
+  $('.pheasant-fenced-code .report .kernel').attr('title', 'Kernel Name');
 
-  $('.source .pheasant-button-container .embed').attr('title', 'Source Code').css("cursor", "pointer");
-  $('.file .pheasant-button-container .embed').attr('title', 'Got from File').css("cursor", "pointer");
-  $('.terminal .pheasant-button-container .embed').attr('title', 'Terminal Command').css("cursor", "pointer");
+  $('.source .pheasant-button-container .embed').attr('title', 'Source Code');
+  $('.file .pheasant-button-container .embed').attr('title', 'Got from File');
+  $('.terminal .pheasant-button-container .embed').attr('title', 'Terminal Command');
 }
 
 $(ready);
