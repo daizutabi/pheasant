@@ -54,8 +54,3 @@ def test_stream_joinner():
     outputs = execute(source)
     assert outputs[0]["text"] == "12"
     assert outputs[1]["text"] == "3"
-
-
-def test_error_traceback():
-    outputs = execute("1/0")
-    assert "ZeroDivisionError" in outputs[0]["traceback"]
