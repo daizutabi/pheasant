@@ -1,7 +1,6 @@
 # # Script abc de
 # ## Test def
 
-import logging
 import sys
 
 import altair as alt
@@ -21,4 +20,3 @@ x = 1
 sys.stderr.write("abc\n")
 # -
 x * 4
-logging.error("error")

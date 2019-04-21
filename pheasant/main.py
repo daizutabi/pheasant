@@ -1,5 +1,4 @@
 import os
-import shutil
 import sys
 
 import click
@@ -18,33 +17,6 @@ def cli(ctx):
         prompt()
 
 
-@cli.command(help="Delete caches at the current directory recursively.")
-@click.option("-y", "--yes", is_flag=True, help="Do not ask for confirmation.")
-def clean(yes):
-    dirs = []
-    for dirpath, dirnames, filenames in os.walk("."):
-        if dirpath.endswith(".pheasant_cache"):
-            num = len(filenames)
-            files = f"{num} file"
-            if num > 1:
-                files += "s"
-            dirpath = os.path.normpath(dirpath)
-            dirs.append(dirpath)
-            click.echo(f"Directory: {dirpath} ({files})")
-
-    if not dirs:
-        click.echo("No caches to delete.")
-        return
-
-    if not yes and dirs:
-        click.confirm("Are you sure you want to delete the caches?", abort=True)
-
-    for dirpath in dirs:
-        shutil.rmtree(dirpath)
-
-    click.echo("Deleted.")
-
-
 ext_option = click.option(
     "-e",
     "--ext",
@@ -58,14 +30,18 @@ max_option = click.option(
 paths_argument = click.argument("paths", nargs=-1, type=click.Path(exists=True))
 
 
+def cache_path(path):
+    directory, path = os.path.split(path)
+    return os.path.join(directory, ".pheasant_cache", path + ".cache")
+
+
+def has_cache(path):
+    return os.path.exists(cache_path(path))
+
+
 def collect(paths, ext):
     exts = ext.split(",")
     src_paths = []
-
-    def has_cache(path):
-        directory, path = os.path.split(path)
-        path = os.path.join(directory, ".pheasant_cache", path + ".cache")
-        return os.path.exists(path)
 
     def collect(path):
         if os.path.splitext(path)[-1][1:] in exts:
@@ -122,6 +98,34 @@ def list(paths, ext):
 
     length = len(paths)
     click.secho(f"collected {length} files.", bold=True)
+
+
+@cli.command(help="Delete caches for source files.")
+@click.option("-y", "--yes", is_flag=True, help="Do not ask for confirmation.")
+@ext_option
+@paths_argument
+def clean(paths, ext, yes):
+    paths = [path for path, cache in collect(paths, ext) if cache]
+
+    for path in paths:
+        click.echo(path)
+
+    length = len(paths)
+    if length == 0:
+        click.secho(f"No cache found. Aborted.", bold=True)
+        sys.exit()
+
+    click.secho(f"collected {length} files.", bold=True)
+
+    if not yes:
+        click.confirm(
+            "Are you sure you want to delete the caches for these files?", abort=True
+        )
+
+    for path in paths:
+        path_ = cache_path(path)
+        os.remove(path_)
+        click.echo(path_ + " was deleted.")
 
 
 @cli.command(help="Python script prompt.")
