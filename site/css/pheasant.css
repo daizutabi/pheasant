@@ -3,9 +3,9 @@
 **************************************************/
 code {
   font-family: "Fira Code", "Courier New", Consolas, monospace;
-  color: #004;
+  color: #069;
   border: none;
-  font-size: 14px;
+  font-size: 90%;
   margin: 0px;
   padding: 0px;
 }
@@ -292,6 +292,10 @@ h2, h3, h4, h5 {
   padding: 0px;
   line-height: normal;
   font-size: 12px;
+}
+
+.pheasant-button-container .button.embed {
+  cursor: default;
 }
 
 .pheasant-button-container .button::before {

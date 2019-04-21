@@ -1,8 +1,8 @@
 """A module provides jupyter client interface."""
 import atexit
-import sys
 import datetime
 import re
+import sys
 from typing import Any, Dict, Iterator, List, Optional
 
 from jupyter_client.kernelspec import find_kernel_specs, get_kernel_spec
@@ -105,11 +105,24 @@ def start_kernel(
         raise TimeoutError
 
 
-def restart_kernel(kernel_name: str):
-    if kernel_name in kernel_clients:
-        del kernel_clients[kernel_name]
-    kernel_manager = kernel_clients[kernel_name]
-    kernel_manager.restart_kernel()
+def shutdown_kernel(kernel_name: Optional[str] = None):
+    if kernel_name is None:
+        kernel_names = list(kernel_clients.keys())
+        for kernel_name in kernel_names:
+            shutdown_kernel(kernel_name)
+        return
+
+    if kernel_name not in kernel_clients:
+        return
+
+    kernel_client = kernel_clients[kernel_name]
+    kernel_manager = kernel_client.parent
+    atexit.unregister(kernel_manager.shutdown_kernel)
+    kernel_manager.shutdown_kernel()
+
+    del kernel_clients[kernel_name]
+    del kernel_client
+    del kernel_manager
 
 
 def get_kernel_client(kernel_name: str):

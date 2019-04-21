@@ -61,10 +61,12 @@ def collect(paths, ext):
 
 
 @cli.command(help="Run source files and save the caches.")
+@click.option("-r", "--restart", is_flag=True, help="Restart kernel after run.")
+@click.option("-f", "--force", is_flag=True, help="Delete cache and run.")
 @ext_option
 @max_option
 @paths_argument
-def run(paths, ext, max):
+def run(paths, ext, max, restart, force):
     paths = collect(paths, ext)
 
     length = len(paths)
@@ -74,9 +76,16 @@ def run(paths, ext, max):
         click.secho(f"Too many files. Aborted.", fg="yellow")
         sys.exit()
 
+    if force:
+        for path, cache in paths:
+            if cache:
+                path_ = cache_path(path)
+                os.remove(path_)
+                click.echo(path_ + " was deleted.")
+
     from pheasant.core.pheasant import Pheasant
 
-    pheasant = Pheasant()
+    pheasant = Pheasant(shutdown=restart)
     pheasant.jupyter.safe = True
     pheasant.convert_from_files(path for path, _ in paths)
     click.secho(f"{pheasant.log.info}", bold=True)

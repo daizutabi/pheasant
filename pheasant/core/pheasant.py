@@ -6,8 +6,8 @@ from typing import Dict, Iterable, List
 from pheasant.core.converter import Converter, Page
 from pheasant.core.decorator import Decorator
 from pheasant.renderers.embed.embed import Embed
-from pheasant.renderers.jupyter.client import execution_report
-from pheasant.renderers.jupyter.jupyter import Jupyter, CacheMismatchError
+from pheasant.renderers.jupyter.client import execution_report, shutdown_kernel
+from pheasant.renderers.jupyter.jupyter import CacheMismatchError, Jupyter
 from pheasant.renderers.number.number import Anchor, Header
 from pheasant.renderers.script.script import Script
 from pheasant.utils.time import format_timedelta_human
@@ -26,6 +26,7 @@ class Pheasant(Converter):
     decorator: Decorator = field(default_factory=Decorator, init=False)
     pages: Dict[str, Page] = field(default_factory=dict, init=False)
     log: Log = field(default_factory=Log, init=False)
+    shutdown: bool = False
 
     def init(self):
         self.anchor.header = self.header
@@ -47,6 +48,8 @@ class Pheasant(Converter):
                 self.convert(path, "main")
             except CacheMismatchError:
                 self.convert(path, "main")
+            if self.shutdown:
+                shutdown_kernel()
 
         for path in paths:
             self.convert(path, "link")
