@@ -50,8 +50,10 @@ class ProgressBar:
         done = threading.Event()
         spinner = threading.Thread(target=self.spin, args=(done,))
         spinner.start()
-        result = func()
-        done.set()
+        try:
+            result = func()
+        finally:
+            done.set()
         spinner.join()
         return result
 
