@@ -50,6 +50,6 @@ def test_stream_joinner():
     assert outputs[1]["text"] == "3"
 
 
-def test_error_traceback():
-    outputs = kernels.execute("1/0")
-    assert "ZeroDivisionError" in outputs[0]["traceback"]
+# def test_error_traceback():
+#     outputs = kernels.execute("1/0")
+#     assert "ZeroDivisionError" in outputs[0]["traceback"]
