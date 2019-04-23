@@ -1,3 +1,4 @@
+"""Jupyter Kernel"""
 import atexit
 import datetime
 import re
@@ -18,11 +19,18 @@ class Kernel:
     manager: Optional[KernelManager] = field(default=None, init=False)
     client: Optional[KernelClient] = field(default=None, init=False)
     report: Dict[str, Any] = field(default_factory=dict)
+    init_code: str = ""
 
     def __post_init__(self):
         self.report["total"] = datetime.timedelta(0)
+        kernel_spec = get_kernel_spec(self.name)
+        if kernel_spec.language == "python":
+            self.init_code = (
+                "from pheasant.renderers.jupyter.ipython import register_formatters\n"
+                "register_formatters()\n"
+            )
 
-    def start(self, init_code="", timeout=3, retry=10, silent=True) -> KernelClient:
+    def start(self, timeout=3, retry=10, silent=True) -> KernelClient:
         if self.manager:
             if self.manager.is_alive():
                 return self.client
@@ -35,11 +43,12 @@ class Kernel:
             self.client = self.manager.blocking_client()
             self.client.start_channels()
             try:
-                self.client.execute_interactive(init_code, timeout=timeout)
+                self.client.execute_interactive("", timeout=timeout)
             except TimeoutError:
                 self.manager.shutdown_kernel()
                 return False
             else:
+                self.client.execute_interactive(self.init_code)
                 atexit.register(self.manager.shutdown_kernel)
                 return self.client
 
@@ -77,7 +86,6 @@ class Kernel:
         outputs = []
 
         def output_hook(msg):
-            # print(msg)
             output = output_from_msg(msg)
             if output:
                 outputs.append(output)
@@ -132,6 +140,11 @@ class Kernels:
         self.report = kernel.report
         return outputs
 
+    def shutdown(self):
+        for kernel_name in list(self.kernels.keys()):
+            kernel = self.kernels.pop(kernel_name)
+            kernel.shutdown()
+
 
 kernels = Kernels()
 
@@ -168,9 +181,9 @@ def output_from_msg(msg: Dict[str, Any]) -> Optional[dict]:
     content = msg["content"]
 
     if msg_type == "execute_result":
-        return dict(type=msg_type, data=content["data"])
+        return dict(type=msg_type, data=content["data"], metadata=content["metadata"])
     elif msg_type == "display_data":
-        return dict(type=msg_type, data=content["data"])
+        return dict(type=msg_type, data=content["data"], metadata=content["metadata"])
     elif msg_type == "stream":
         return dict(type=msg_type, name=content["name"], text=content["text"])
     elif msg_type == "error":

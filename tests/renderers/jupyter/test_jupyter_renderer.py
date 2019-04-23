@@ -1,14 +1,14 @@
-from pheasant.renderers.jupyter.jupyter import replace_for_display
-from pheasant.renderers.jupyter.display import extra_html
+from pheasant.renderers.jupyter.ipython import extra_html
+from pheasant.renderers.jupyter.kernel import kernels
 
 
 def test_render_inline_option(jupyter):
-    jupyter.execute("import holoviews as hv")
-    jupyter.execute("from bokeh.plotting import figure")
-    jupyter.execute("import altair as alt")
-    jupyter.execute("import pandas as pd")
+    kernels.execute("import holoviews as hv")
+    kernels.execute("from bokeh.plotting import figure")
+    kernels.execute("import altair as alt")
+    kernels.execute("import pandas as pd")
 
-    jupyter.execute("plot = figure(plot_width=250, plot_height=250)")
+    kernels.execute("plot = figure(plot_width=250, plot_height=250)")
     output = jupyter.parse("```python inline\nplot\n```\n")
     assert '<div class="cell jupyter display"' in output
     assert jupyter.cache[-1].extra_module == "bokeh"
@@ -17,7 +17,7 @@ def test_render_inline_option(jupyter):
     assert '<div class="cell jupyter display"' in output
     assert jupyter.cache[-1].extra_module == "holoviews"
 
-    jupyter.execute(
+    kernels.execute(
         (
             "source = pd.DataFrame({"
             "'a': ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'],"
@@ -49,34 +49,13 @@ def test_render_extra_modules_and_html(jupyter):
     assert "vega" in extra
 
 
-def test_replace_for_display():
-    def replace(output):
-        output = output.replace("pheasant.renderers.jupyter.display.", "")
-        return output.replace("__pheasant_dummy__", "D")
-
-    assert replace_for_display("a=1") == "a=1"
-    assert replace(replace_for_display("a")) == 'D = a\ndisplay(D, output="markdown")'
-    assert replace(replace_for_display("^a")) == 'D = a\ndisplay(D, output="html")'
-    assert replace_for_display("for k:\n  a") == "for k:\n  a"
-
-
-def test_render_no_kernel(jupyter):
-    assert jupyter.execute("a", language="abc") == []
-
-
-def test_render_without_language(jupyter):
-    output = jupyter.parse("```\n2*3\n```\n")
-    assert '<code class="python">6</code></pre></div>' in output
-
-
 def test_render_debug_option(jupyter):
     output = jupyter.parse("```python debug\n2*3\n```\n")
-    assert "pheasant.renderers.jupyter.display.display(__pheasant_dummy__" in output
     assert "[{&#39;type&#39;: &#39;execute_result&#39;, &#39;data&#39;" in output
 
 
 def test_render_latex(jupyter):
-    jupyter.execute("import sympy")
+    kernels.execute("import sympy")
     output = jupyter.parse("```python\nx=sympy.symbols('x')\nx**2\n```\n")
     assert "$$x^{2}$$" in output
 

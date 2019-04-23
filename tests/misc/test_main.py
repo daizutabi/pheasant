@@ -2,7 +2,7 @@ from click.testing import CliRunner
 
 from pheasant import __version__
 from pheasant.main import cli
-from pheasant.renderers.jupyter.client import kernel_clients
+from pheasant.renderers.jupyter.kernel import kernels
 
 
 def test_main_version():
@@ -20,10 +20,10 @@ def test_main_convert():
 
         result = runner.invoke(cli, ["run", "example.md"])
         assert result.exit_code == 0
-        assert len(kernel_clients) == 1
+        assert len(kernels.kernels) == 1
         result = runner.invoke(cli, ["run", "example.md", "--restart"])
         assert result.exit_code == 0
-        assert len(kernel_clients) == 0
+        assert len(kernels.kernels) == 0
 
 
 def test_main_prompt():

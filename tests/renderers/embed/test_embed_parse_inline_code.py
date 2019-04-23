@@ -2,7 +2,7 @@ import os
 
 import pytest
 
-from pheasant.renderers.jupyter.client import execute
+from pheasant.renderers.jupyter.kernel import kernels
 
 
 @pytest.fixture()
@@ -47,8 +47,10 @@ def test_embed_parse_file_not_founed(parse):
 
 
 def test_embed_parse_inspect(parse):
-    execute("import pheasant")
+    kernels.execute("import pheasant", language="python")
     output = parse("?pheasant")
-    answer = ('\n\n<div class="cell embed file"><div class="code">'
-              '<pre><code class="python">__version__ =')
+    answer = (
+        '\n\n<div class="cell embed file"><div class="code">'
+        '<pre><code class="python">__version__ ='
+    )
     assert output.startswith(answer)

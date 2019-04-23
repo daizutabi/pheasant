@@ -6,7 +6,7 @@ from typing import Any, Dict, Iterator
 
 from pheasant.core.decorator import commentable
 from pheasant.core.renderer import Renderer
-from pheasant.renderers.jupyter.client import execute, get_kernel_name
+from pheasant.renderers.jupyter.kernel import kernels
 from pheasant.renderers.script.script import Script
 
 
@@ -55,7 +55,7 @@ class Embed(Renderer):
                 source = shift_header(source, context.get("shift", 0))
         else:
             language = "python"
-            kernel_name = get_kernel_name(language)
+            kernel_name = kernels.get_kernel_name(language)
             if kernel_name is None:  # pragma: no cover
                 yield f'<p style="font-color:red">Kernel not found for {language}</p>\n'
                 return
@@ -118,7 +118,7 @@ def read_file(path):
 def inspect(obj: str, kernel_name: str) -> str:
     """Inspect source code."""
     code = f"import inspect\ninspect.getsourcelines({obj})"
-    outputs = execute(code, kernel_name=kernel_name)
+    outputs = kernels.execute(code, kernel_name=kernel_name)
     try:
         lines, lineno = literal_eval(outputs[0]["data"]["text/plain"])
     except Exception:

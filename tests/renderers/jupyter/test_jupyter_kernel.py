@@ -28,8 +28,7 @@ def test_report():
     assert "start" in kernels.report
     assert "end" in kernels.report
     assert "time" in kernels.report
-    assert "page" in kernels.report
-    assert "life" in kernels.report
+    assert "total" in kernels.report
 
 
 def test_no_kernel():

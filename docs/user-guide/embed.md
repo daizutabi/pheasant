@@ -34,6 +34,11 @@ Python module sources that the current Jupyter kernel can find are also inspecte
 
 You can write to inspect the whole module content:
 
+
+```python run
+import pheasant
+```
+
 ~~~copy
 {%?pheasant%}
 ~~~

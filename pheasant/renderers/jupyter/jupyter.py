@@ -1,21 +1,15 @@
-import ast
 import os
-import pickle
 import re
 from dataclasses import dataclass, field
 from itertools import takewhile
-from typing import Dict, Iterator, List, Optional
+from typing import Dict, Iterator, List
 
 from pheasant.core.decorator import commentable, surround
 from pheasant.core.renderer import Renderer
-from pheasant.renderers.jupyter.display import (extra_html, get_extra_module,
+from pheasant.renderers.jupyter.ipython import (extra_html, get_extra_module,
                                                 latex_display_format,
                                                 select_display_data,
                                                 select_outputs)
-# from pheasant.renderers.jupyter.client import (execute, find_kernel_names,
-#                                                format_execution_report,
-#                                                reset_execution_time,
-#                                                start_kernel)
 from pheasant.renderers.jupyter.kernel import format_report, kernels
 from pheasant.utils.cache import delete_cache, load_cache, save_cache
 from pheasant.utils.progress import ProgressBar
@@ -37,7 +31,6 @@ class CacheMismatchError(BaseException):
 
 
 class Jupyter(Renderer):
-    # language: str = "python"
     option: str = field(default="", init=False)
     count: int = field(default=0, init=False)
     cache: List[Cell] = field(default_factory=list, init=False)
@@ -57,9 +50,6 @@ class Jupyter(Renderer):
         self.register(Jupyter.FENCED_CODE_PATTERN, self.render_fenced_code)
         self.register(Jupyter.INLINE_CODE_PATTERN, self.render_inline_code)
         self.set_template(["fenced_code", "inline_code"])
-        # self.config["kernel_name"] = {
-        #     key: values[0] for key, values in find_kernel_names().items()
-        # }
 
     def enter(self):
         self.count = 0
@@ -87,10 +77,6 @@ class Jupyter(Renderer):
                 break
 
     def render_fenced_code(self, context, splitter, parser) -> Iterator[str]:
-        # if not context["language"]:
-        #     context["language"] = self.language
-        # else:
-        #     self.language = context["language"]
         code = context["code"]
         if code.startswith("# option:"):
             index = code.index("\n")
@@ -106,8 +92,6 @@ class Jupyter(Renderer):
             splitter.send("{{" + code + "}}")
             self.option = ""
             return
-        # if self.language == "python" and "text" not in context["option"]:
-        #     code = replace_for_display(code)
         if "debug" in context["option"]:
             context["code"] = code
         yield "\n" + self.execute_and_render(code, context, "fenced_code") + "\n\n"
@@ -115,12 +99,9 @@ class Jupyter(Renderer):
     @commentable("code")
     def render_inline_code(self, context, splitter, parser) -> Iterator[str]:
         context["option"] = self.option
-        # context["language"] = self.language
         code = context["code"]
         if "fenced-code" not in self.option:
             code = code.replace(";", "\n")
-        # if self.language == "python":
-        #     code = replace_for_display(code)
         yield self.execute_and_render(code, context, "inline_code")
 
     def execute_and_render(self, code, context, template) -> str:
@@ -176,7 +157,7 @@ class Jupyter(Renderer):
         if "debug" in context["option"]:
             outputs = [{"type": "execute_result", "data": {"text/plain": outputs}}]
         elif template == "inline_code":
-            outputs = select_outputs(outputs)
+            select_outputs(outputs)
         else:
             latex_display_format(outputs)
 
@@ -195,52 +176,3 @@ class Jupyter(Renderer):
             if len(self.cache) > self.count:
                 self.cache[self.count].valid = False
         return cell.output
-
-    def execute(
-        self, code: str, kernel_name: str = "", language: str = "python"
-    ) -> List:
-        try:
-            outputs = kernels.execute(code, kernel_name, language)
-        except ValueError:
-            return []
-        return outputs
-
-
-def replace_for_display(code: str) -> str:
-    """Replace a match object with `display` function.
-
-    Parameters
-    ----------
-    code
-        The code to be executed in the inline mode.
-
-    Returns
-    -------
-    codes, replaced
-        Replaced python code list.
-    """
-    return code
-    if code.startswith("^"):
-        code = code[1:]
-        output = "html"
-    else:
-        output = "markdown"
-
-    try:
-        node = ast.parse(code).body[-1]  # type: ignore
-    except SyntaxError:
-        return code
-
-    if not isinstance(node, ast.Expr):
-        return code
-
-    lines = code.split("\n")
-    precode = "\n".join(lines[: node.lineno - 1])
-    if precode:
-        precode += "\n"
-    code_gen = (line for line in lines[node.lineno - 1 :] if not line.startswith("#"))
-    code = "\n".join(code_gen)
-    code = f"__pheasant_dummy__ = {code}\n"
-
-    display = "pheasant.renderers.jupyter.display.display"
-    return f'{precode}{code}{display}(__pheasant_dummy__, output="{output}")'
