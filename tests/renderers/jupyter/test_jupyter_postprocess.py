@@ -26,11 +26,11 @@ def test_select_display_data_text():
     select_display_data(outputs)
     assert outputs == [{"type": "stream", "name": "stdout", "text": "1"}]
 
-    outputs = kernel.execute("1/0")
-    select_display_data(outputs)
-    assert outputs[0]["type"] == "error"
-    assert outputs[0]["ename"] == "ZeroDivisionError"
-    assert outputs[0]["evalue"] == "division by zero"
+    # outputs = kernel.execute("1/0")
+    # select_display_data(outputs)
+    # assert outputs[0]["type"] == "error"
+    # assert outputs[0]["ename"] == "ZeroDivisionError"
+    # assert outputs[0]["evalue"] == "division by zero"
 
 
 def test_select_display_data_dataframe():
