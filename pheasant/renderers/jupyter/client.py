@@ -133,6 +133,15 @@ def get_kernel_client(kernel_name: str):
     return kernel_clients[kernel_name]
 
 
+c = get_kernel_client('python3')
+
+c
+
+from jupyter_client.client import KernelClient
+
+isinstance(c, KernelClient)
+
+
 def execute(
     code: str, kernel_name: Optional[str] = None, language: str = "python"
 ) -> List:
@@ -146,6 +155,7 @@ def execute(
     outputs = []
 
     def output_hook(msg):
+        print(msg)
         output = output_from_msg(msg)
         if output:
             outputs.append(output)

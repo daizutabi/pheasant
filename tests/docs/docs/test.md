@@ -1,15 +1,25 @@
 # test
 
+```python run
+from IPython import get_ipython
+ip = get_ipython()
+ip.display_formatter.formatters
+```
 
 ```python
-import holoviews as hv
-import numpy as np
+from bokeh.plotting import figure
 
-def sine_curve(phase, freq):
-    xvals = [0.1* i for i in range(100)]
-    return hv.Curve((xvals, [np.sin(phase+freq*x) for x in xvals]))
+plot = figure(plot_width=250, plot_height=250)
+plot.circle([1, 2, 3, 4, 5], [1, 3, 3, 2, 4], size=10)
+plot.__class__
+```
 
-frequencies = [0.5, 0.75, 1.0]
-curve_dict = {f: sine_curve(0, f) for f in frequencies}
-hv.HoloMap(curve_dict, kdims='Frequency')
+```python
+def func(obj):
+  print(obj)
+  return "121", {"key": 124}
+
+html_formatter = ip.display_formatter.formatters['text/html']
+html_formatter.for_type(plot.__class__, func)
+plot
 ```
