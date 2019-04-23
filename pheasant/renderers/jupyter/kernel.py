@@ -2,15 +2,15 @@
 import atexit
 import datetime
 import re
+from dataclasses import dataclass, field
 from typing import Any, Dict, Iterator, List, Optional
 
+from jupyter_client.client import KernelClient
 from jupyter_client.kernelspec import find_kernel_specs, get_kernel_spec
 from jupyter_client.manager import KernelManager
-from jupyter_client.client import KernelClient
+
 from pheasant.utils.progress import ProgressBar
 from pheasant.utils.time import format_timedelta_human
-
-from dataclasses import dataclass, field
 
 
 @dataclass
@@ -30,7 +30,7 @@ class Kernel:
                 "register_formatters()\n"
             )
 
-    def start(self, timeout=3, retry=10, silent=True) -> KernelClient:
+    def start(self, timeout=6, retry=10, silent=True) -> KernelClient:
         if self.manager:
             if self.manager.is_alive():
                 return self.client
@@ -128,6 +128,12 @@ class Kernels:
         if kernel_name not in self.kernels:
             self.kernels[kernel_name] = Kernel(kernel_name)
         return self.kernels[kernel_name]
+
+    def __getitem__(self, language: str) -> Kernel:
+        kernel_name = self.get_kernel_name(language)
+        if not kernel_name:
+            raise KeyError(f"No kernel found for language {language}.")
+        return self.get_kernel(kernel_name)
 
     def execute(self, code: str, kernel_name: str = "", language: str = "") -> List:
         language = language or self.language

@@ -69,13 +69,6 @@ console.log("Hello Javascript")
 
 You can check the kernel name and its total execution count during the conversion process at the right side of input cells.
 
-Mapping a language to kernel names can be obtained as a dictionary by `kernels.kernel_names` property:
-
-```python
-from pheasant.renderers.jupyter.kernel import kernels
-kernels.kernel_names
-```
-
 ### Inline code embeded in a Markdown source
 
 **"Inline code"** is a powerful feature of Pheasant. Any python codes surrounded by `{{#` and `}}` are automatically executed and the result remains there. For example, `{{#3*5}}` becomes {{3*5}}. Variables can be assigned in an inline code like this: `{{#name='Pheasant'}}`{{name='Pheasant'}}. Then, `"I'm {{#name}}."` becomes "I'm {{name}}."

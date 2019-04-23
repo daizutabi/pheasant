@@ -1,6 +1,6 @@
 # Test
 
-```python
+```python run
 import holoviews as hv
 import numpy as np
 

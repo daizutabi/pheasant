@@ -26,6 +26,11 @@
      <changefreq>daily</changefreq>
     </url>
     <url>
+     <loc>https://pheasant.daizutabi.net/user-guide/kernel/</loc>
+     <lastmod>2019-04-23</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    <url>
      <loc>https://pheasant.daizutabi.net/about/release-notes/</loc>
      <lastmod>2019-04-23</lastmod>
      <changefreq>daily</changefreq>
