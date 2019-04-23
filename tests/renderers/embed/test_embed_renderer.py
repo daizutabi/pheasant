@@ -2,7 +2,7 @@ import os
 
 from pheasant.renderers.embed.embed import (get_language_from_path, inspect,
                                             resolve_path)
-from pheasant.renderers.jupyter.client import get_kernel_name
+from pheasant.renderers.jupyter.kernel import kernels
 
 
 def test_renderer(embed):
@@ -23,7 +23,7 @@ def test_get_languate_from_path():
 
 
 def test_inspect_error():
-    kernel_name = get_kernel_name("python")
+    kernel_name = kernels.get_kernel_name("python")
     assert inspect("ABC", kernel_name) == "inspect error"
 
 

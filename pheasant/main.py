@@ -4,6 +4,7 @@ import sys
 import click
 
 from pheasant import __version__
+from pheasant.utils.cache import cache_path, has_cache
 
 pgk_dir = os.path.dirname(os.path.abspath(__file__))
 version_msg = f"{__version__} from {pgk_dir} (Python {sys.version[:3]})."
@@ -28,15 +29,6 @@ max_option = click.option(
     "--max", default=100, show_default=True, help="Maximum number of files."
 )
 paths_argument = click.argument("paths", nargs=-1, type=click.Path(exists=True))
-
-
-def cache_path(path):
-    directory, path = os.path.split(path)
-    return os.path.join(directory, ".pheasant_cache", path + ".cache")
-
-
-def has_cache(path):
-    return os.path.exists(cache_path(path))
 
 
 def collect(paths, ext):

@@ -69,11 +69,11 @@ console.log("Hello Javascript")
 
 You can check the kernel name and its total execution count during the conversion process at the right side of input cells.
 
-Mapping a language to kernel names can be obtained as a dictionary by `find_kernel_names` function :
+Mapping a language to kernel names can be obtained as a dictionary by `kernels.kernel_names` property:
 
 ```python
-from pheasant.renderers.jupyter.client import find_kernel_names
-find_kernel_names()
+from pheasant.renderers.jupyter.kernel import kernels
+kernels.kernel_names
 ```
 
 ### Inline code embeded in a Markdown source

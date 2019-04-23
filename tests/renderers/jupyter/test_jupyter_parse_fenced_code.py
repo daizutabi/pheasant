@@ -63,6 +63,7 @@ def test_jupyter_parse_text(parse):
 
 def test_jupyter_parse_html(parse):
     output = parse("import pandas\npandas.DataFrame([[1,2]])")
+    print(output)
     assert '<div class="display"><table ' in output
 
 

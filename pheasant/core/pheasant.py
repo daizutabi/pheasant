@@ -6,7 +6,7 @@ from typing import Dict, Iterable, List
 from pheasant.core.converter import Converter, Page
 from pheasant.core.decorator import Decorator
 from pheasant.renderers.embed.embed import Embed
-from pheasant.renderers.jupyter.client import execution_report, shutdown_kernel
+from pheasant.renderers.jupyter.kernel import kernels
 from pheasant.renderers.jupyter.jupyter import CacheMismatchError, Jupyter
 from pheasant.renderers.number.number import Anchor, Header
 from pheasant.renderers.script.script import Script
@@ -49,7 +49,7 @@ class Pheasant(Converter):
             except CacheMismatchError:
                 self.convert(path, "main")
             if self.shutdown:
-                shutdown_kernel()
+                kernels.shutdown()
 
         for path in paths:
             self.convert(path, "link")
@@ -64,14 +64,10 @@ class Pheasant(Converter):
 @contextmanager
 def elapsed_time(log):
     log.start = datetime.datetime.now()
-    start_kernel = execution_report["life"]
     try:
         yield
     finally:
-        end_kernel = execution_report["life"]
         log.end = datetime.datetime.now()
         log.elapsed = log.end - log.start
-        log.elapsed_kernel = end_kernel - start_kernel
         time = format_timedelta_human(log.elapsed)
-        time_kernel = format_timedelta_human(log.elapsed_kernel)
-        log.info = f"Elapsed time: {time} (kernel {time_kernel})"
+        log.info = f"Elapsed time: {time}"

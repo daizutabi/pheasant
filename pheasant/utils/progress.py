@@ -98,7 +98,7 @@ class ProgressBar:
         self.bar = bar
         self.show = True
 
-    def progress(self, func, format=None, init=None, count=None):
+    def progress(self, func, format=None, count=None, init=None):
         if not self.total:
             if callable(func):
                 return func()
