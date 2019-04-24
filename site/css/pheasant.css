@@ -4,7 +4,7 @@
 code {
   color: #069;
   border: none;
-  font-size: 90%;
+  font-size: 0.9rem;
   margin: 0px;
   padding: 0px;
 }
@@ -48,7 +48,7 @@ h2, h3, h4, h5 {
 .pheasant-header .figure .caption,
 .pheasant-header .table .caption,
 .pheasant-header .other .caption {
-  font-size: 95%;
+  font-size: 0.95rem;
 }
 
 .pheasant-header .other .caption {
@@ -77,7 +77,7 @@ h2, h3, h4, h5 {
 
 .pheasant-header .link a {
   color: #777;
-  font-size: 80%;
+  font-size: 0.8rem;
 }
 
 .pheasant-header .link a::after {
@@ -110,23 +110,18 @@ h2, h3, h4, h5 {
 }
 
 .pheasant-fenced-code .cell.jupyter::before {
+  font-family: serif;
   content: "";
   position: absolute;
   left: -2.6em;
-  font-size: 14px;
+  font-size: 0.8rem;
   width: 2.3em;
   text-align: right;
-  margin-top: 5px;
-  font-size: 80%;
+  margin-top: 3px;
 }
 
 .pheasant-fenced-code .cell.input::before {
   content: "In";
-  color: var(--input-color);
-}
-
-.pheasant-fenced-code .cached .cell.input::before {
-  content: "#In";
   color: var(--input-color);
 }
 
@@ -141,6 +136,7 @@ h2, h3, h4, h5 {
 .pheasant-fenced-code .cell.display::before {
   font-family: "Font Awesome 5 Free";
   font-weight: bold;
+  margin-top: 6px;
 }
 
 .pheasant-fenced-code .cell.stdout::before {
@@ -180,7 +176,6 @@ h2, h3, h4, h5 {
   display: block;
   color: black;
   line-height: 18px;
-  font-size: 80%;
   background: transparent;
   padding: 0px;
   overflow-x: auto;
@@ -241,7 +236,7 @@ h2, h3, h4, h5 {
 }
 
 .pheasant-fenced-code .cell .report p {
-  font-size: 70%;
+  font-size: 0.65rem;
   margin: 0px;
   line-height: normal;
 }
@@ -290,7 +285,7 @@ h2, h3, h4, h5 {
   outline: none;
   padding: 0px;
   line-height: normal;
-  font-size: 12px;
+  font-size: 0.7rem;
 }
 
 .pheasant-button-container .button.embed {
@@ -369,7 +364,7 @@ h2, h3, h4, h5 {
 table.dataframe {
   border-collapse: collapse;
   border: none;
-  font-size: 90%;
+  font-size: 0.8rem;
 }
 
 table.dataframe thead tr,
