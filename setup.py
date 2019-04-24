@@ -97,7 +97,6 @@ setup(
         "matplotlib",
         "mkdocs",
         "pandas",
-        "pelican",
         "sympy",
     ],
     entry_points={

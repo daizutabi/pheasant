@@ -49,13 +49,11 @@ function ready() {
   $('.pheasant-fenced-code .report .cell-count').attr('title', 'Page Execution Count');
   $('.pheasant-fenced-code .report .start').attr('title', 'Evaluated at');
   $('.pheasant-fenced-code .report .cell-time').attr('title', 'Cell Execution Time');
-  $('.pheasant-fenced-code .report .page-time').attr('title', 'Page Execution Time');
   $('.pheasant-fenced-code .report .total-time').attr('title', 'Total Execution Time');
-  $('.pheasant-fenced-code .report .total-count').attr('title', 'Total Execution Count');
   $('.pheasant-fenced-code .report .kernel').attr('title', 'Kernel Name');
 
   $('.source .pheasant-button-container .embed').attr('title', 'Source Code');
-  $('.file .pheasant-button-container .embed').attr('title', 'Got from File');
+  $('.file .pheasant-button-container .embed').attr('title', 'Source File');
   $('.terminal .pheasant-button-container .embed').attr('title', 'Terminal Command');
 }
 

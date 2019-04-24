@@ -30,8 +30,8 @@ class PheasantPlugin(BasePlugin):
 
         self.converter.jupyter.enabled = self.config["jupyter"]
 
-        self.config["extra_css"] = config["extra_css"]
-        self.config["extra_javascript"] = config["extra_javascript"]
+        self.config["extra_css"] = list(config["extra_css"])
+        self.config["extra_javascript"] = list(config["extra_javascript"])
 
         logger.info(f"[Pheasant] Converter configured.")
 
@@ -61,9 +61,10 @@ class PheasantPlugin(BasePlugin):
                     data = yaml.safe_load(f)
                 css = data.get("extra_css", []) + css
                 js = data.get("extra_javascript", []) + js
-
-        config["extra_css"] = css + list(self.config["extra_css"])
-        config["extra_javascript"] = js + list(self.config["extra_javascript"])
+        css = [x for x in css if x not in self.config["extra_css"]]
+        js = [x for x in js if x not in self.config["extra_javascript"]]
+        config["extra_css"] = css + self.config["extra_css"]
+        config["extra_javascript"] = js + self.config["extra_javascript"]
 
         for file in files:
             normalize_file(file, config)
