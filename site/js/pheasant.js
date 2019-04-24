@@ -46,10 +46,10 @@ function ready() {
     });
   });
 
-  $('.pheasant-fenced-code .report .cell-count').attr('title', 'Page Execution Count');
+  $('.pheasant-fenced-code .report .count').attr('title', 'Cell Number');
   $('.pheasant-fenced-code .report .start').attr('title', 'Evaluated at');
-  $('.pheasant-fenced-code .report .cell-time').attr('title', 'Cell Execution Time');
-  $('.pheasant-fenced-code .report .total-time').attr('title', 'Total Execution Time');
+  $('.pheasant-fenced-code .report .time').attr('title', 'Cell Execution Time');
+  $('.pheasant-fenced-code .report .total').attr('title', 'Total Execution Time');
   $('.pheasant-fenced-code .report .kernel').attr('title', 'Kernel Name');
 
   $('.source .pheasant-button-container .embed').attr('title', 'Source Code');

@@ -1,19 +1,11 @@
 # # Script abc de
 # ## Test def
 
-import altair as alt
-import pandas as pd
+a = 3
+a = 4
 
-df = pd.DataFrame([[1, 2, 3], [2, 1, 4]], columns=list("txy"))
 
-chart = (
-    alt.Chart(df)
-    .mark_line(clip=True)
-    .encode(x="t", y=alt.Y("x", scale=alt.Scale(domain=(0, 5))))
-)
-chart
+a = 2
 
-# -
-x = 1
-# -
-x * 4
+
+a = 1

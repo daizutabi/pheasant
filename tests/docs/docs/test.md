@@ -1,6 +1,6 @@
 # Test
 
-```python run
+```python
 import holoviews as hv
 import numpy as np
 
@@ -11,4 +11,16 @@ def sine_curve(phase, freq):
 frequencies = [0.5, 0.75, 1.0]
 curve_dict = {f: sine_curve(0, f) for f in frequencies}
 hv.HoloMap(curve_dict, kdims='Frequency')
+```
+
+```python
+a = 1
+b = 1
+
+
+def func(x):
+    return x
+
+
+func(2)
 ```

@@ -224,6 +224,7 @@ h2, h3, h4, h5 {
 .pheasant-fenced-code .input .report {
   border-color: #ccc;
   background: #fbfbfb;
+  cursor: default;
 }
 
 .pheasant-fenced-code .cached .input .report {
@@ -241,27 +242,14 @@ h2, h3, h4, h5 {
   line-height: normal;
 }
 
-.pheasant-fenced-code .report .cell-count,
-.pheasant-fenced-code .report .total-count {
+.pheasant-fenced-code .report .count {
   color: #b88;
 }
 
-.pheasant-fenced-code .cached .report .cell-count,
-.pheasant-fenced-code .cached .report .total-count {
-  color: #999;
-}
-
-.pheasant-fenced-code .report .cell-time,
-.pheasant-fenced-code .report .page-time,
-.pheasant-fenced-code .report .total-time {
+.pheasant-fenced-code .report .time,
+.pheasant-fenced-code .report .total {
   color: #889;
   font-weight: bold;
-}
-
-.pheasant-fenced-code .cached .report .cell-time,
-.pheasant-fenced-code .cached .report .page-time,
-.pheasant-fenced-code .cached .report .total-time {
-  color: #777;
 }
 
 .pheasant-fenced-code .report .right {
@@ -285,7 +273,7 @@ h2, h3, h4, h5 {
   outline: none;
   padding: 0px;
   line-height: normal;
-  font-size: 0.7rem;
+  font-size: 0.75rem;
 }
 
 .pheasant-button-container .button.embed {
