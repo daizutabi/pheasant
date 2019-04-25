@@ -1,8 +1,4 @@
-```python hide run
-from pheasant import __version__
-```
-
-# Pheasant {{__version__}}
+# Home
 
 ## Overview
 

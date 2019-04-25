@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+
+{%- block home %}
+  <a href="{{ nav.homepage.url|url }}" class="site-name"> {{ config.site_name }}
+    <span class="home-version">{{ config.plugins.pheasant.version }}</span></a>
+{%- endblock %}
