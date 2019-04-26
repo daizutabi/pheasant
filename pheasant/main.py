@@ -54,11 +54,13 @@ def collect(paths, ext):
 
 @cli.command(help="Run source files and save the caches.")
 @click.option("-r", "--restart", is_flag=True, help="Restart kernel after run.")
+@click.option("-s", "--shutdown", is_flag=True, help="Shutdown kernel after run.")
 @click.option("-f", "--force", is_flag=True, help="Delete cache and run.")
+@click.option("-v", "--verbose", is_flag=True, help="Print outputs from kernel.")
 @ext_option
 @max_option
 @paths_argument
-def run(paths, ext, max, restart, force):
+def run(paths, ext, max, restart, shutdown, force, verbose):
     paths = collect(paths, ext)
 
     length = len(paths)
@@ -77,7 +79,7 @@ def run(paths, ext, max, restart, force):
 
     from pheasant.core.pheasant import Pheasant
 
-    pheasant = Pheasant(shutdown=restart)
+    pheasant = Pheasant(restart=restart, shutdown=shutdown, verbose=verbose)
     pheasant.jupyter.safe = True
     pheasant.convert_from_files(path for path, _ in paths)
     click.secho(f"{pheasant.log.info}", bold=True)

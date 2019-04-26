@@ -1,4 +1,5 @@
 import datetime
+import math
 import sys
 import time
 from contextlib import redirect_stderr, redirect_stdout
@@ -75,11 +76,13 @@ class Buffer:
     def __init__(self, stream):
         self.stream = stream
         self.on_bar = True
+        self.new_line = False
 
     def write(self, s):
         if self.on_bar and s:
             s = "\n" + s
             self.on_bar = False
+        self.new_line = s.endswith("\n")
         return self.stream.write(s)
 
     def flush(self):
@@ -111,10 +114,13 @@ class ProgressBarManager:
         if self.current:
             if self.current != progress_bar:
                 self.current.finish(done=False)
-            else:
+            elif self.stream.on_bar:
                 length = len(self.current.bar)
                 self.write("\r" + " " * length + "\r")
-                self.flush()
+            elif not self.stream.new_line:
+                self.write("\n")
+            else:
+                self.stream.new_line = False
 
         self.write(progress_bar.bar)
         self.flush()
@@ -123,7 +129,6 @@ class ProgressBarManager:
         if progress_bar.status == "done" or progress_bar.status == "skip":
             self.write("\n")
             self.flush()
-            self.stream.on_bar = False
 
         self.current = progress_bar
 
@@ -136,43 +141,49 @@ def progress_bar_factory(total: int = 0, multi: int = 0, init: str = ""):
 
 
 def prefix(step: int, multi: int, count: int, total: int, zfill: int = 3) -> str:
-    if multi > 1:
-        step_str = str(step).zfill(zfill)
-        multi_str = str(multi).zfill(zfill)
-        prefix = f"({step_str}/{multi_str}) "
-    elif multi == 1:
-        prefix = " " * (zfill * 2 + 4)
-    else:
-        prefix = ""
-
     count_str = str(count).zfill(zfill)
     total_str = str(total).zfill(zfill)
-    return prefix + colored(f"[{count_str}/{total_str}]", "cyan")
+    return colored(f"[{count_str}/{total_str}]", "cyan")
 
 
-def bar(
-    step: int,
-    multi: int,
-    count: int,
-    total: int,
-    status: str,
-    text: str = "",
-    zfill: int = 3,
-    bar_length: int = 30,
-) -> str:
+BAR_LENGTH = 24
+ZFILL = 2
+
+
+def bar(step: int, multi: int, count: int, total: int, status: str, text: str) -> str:
+
+    zfill = max(ZFILL, int(math.log10(total)))
+    count_str = str(count).zfill(zfill)
+    total_str = str(total).zfill(zfill)
+    prefix = colored(f"[{count_str}/{total_str}]", "cyan")
+
     if count == total:
         color = "green"
-        bar = colored("[" + "=" * (bar_length + 1) + "]", color)
+        bar = colored("[" + "=" * (BAR_LENGTH + 1) + "]", color)
     else:
         color = "green" if status == "done" else "yellow"
         ratio = min(count / total, 1)
-        current = int(bar_length * ratio)
+        current = int(BAR_LENGTH * ratio)
         left = colored("[" + "=" * current + ">", "green")
-        right = colored(" " * (bar_length - current) + "]", color)
+        right = colored(" " * (BAR_LENGTH - current) + "]", color)
         bar = left + right
+
+    if multi:
+        fill = int(math.log10(multi))
+        step_str = str(step).zfill(fill)
+        multi_str = str(multi).zfill(fill)
+        prefix_multi = f" [{step_str}/{multi_str}]"
+        prefix_multi = colored(prefix_multi, "green" if multi == step else "yellow")
+    else:
+        prefix_multi = " "
+
     if text:
-        bar += colored(" " + text, color)
-    return " ".join([prefix(step, multi, count, total, zfill), bar])
+        text = colored(text, color)
+
+    datetime_format = r" %H:%M:%S "
+    now = datetime.datetime.now().strftime(datetime_format)
+
+    return "".join([prefix, bar, prefix_multi, text, now])
 
 
 def main():

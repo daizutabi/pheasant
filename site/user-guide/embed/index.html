@@ -152,8 +152,8 @@ edit_uri: &#34;&#34;
 <p>You can write to inspect the whole module content:</p>
 <div class="pheasant-fenced-code"><div class="cell jupyter input"><div class="code"><pre><code class="python">import pheasant</code></pre></div>
 <div class="report"><p><span class="count">[1]</span>
-<span class="start">2019-04-27 00:16:41</span> (<span class="time">4.00ms</span>)
-<span class="right"><span class="option">(run)</span> <span class="kernel">python3</span> (<span class="total">1.22s</span>)</span></p></div></div></div>
+<span class="start">2019-04-27 08:02:02</span> (<span class="time">5.00ms</span>)
+<span class="right"><span class="option">(run)</span> <span class="kernel">python3</span> (<span class="total">5.00ms</span>)</span></p></div></div></div>
 
 <div class="pheasant-fenced-code"><div class="cell embed source"><div class="code"><pre><code class="markdown">{%?pheasant%}</code></pre></div></div></div>
 
@@ -163,8 +163,8 @@ edit_uri: &#34;&#34;
 <p>A part of the module can be specified as usual.</p>
 <div class="pheasant-fenced-code"><div class="cell jupyter input"><div class="code"><pre><code class="python">from pheasant.renderers.jupyter.jupyter import Jupyter</code></pre></div>
 <div class="report"><p><span class="count">[2]</span>
-<span class="start">2019-04-27 00:16:41</span> (<span class="time">26.0ms</span>)
-<span class="right"><span class="kernel">python3</span> (<span class="total">1.25s</span>)</span></p></div></div></div>
+<span class="start">2019-04-27 08:02:02</span> (<span class="time">26.0ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">41.0ms</span>)</span></p></div></div></div>
 
 <div class="pheasant-fenced-code"><div class="cell embed source"><div class="code"><pre><code class="markdown">{%?Jupyter[:21]%}</code></pre></div></div></div>
 
@@ -176,7 +176,7 @@ edit_uri: &#34;&#34;
     progress_bar: ProgressBar = field(default_factory=progress_bar_factory, init=False)
     enabled: bool = field(default=True, init=False)
     safe: bool = field(default=False, init=False)  # If True, code must match cache.
-    verbose: int = 1
+    verbose: int = 0
 
     FENCED_CODE_PATTERN = (
         r&#34;^(?P&lt;mark&gt;`{3,})(?P&lt;language&gt;\w*) ?(?P&lt;option&gt;.*?)\n&#34;
@@ -203,8 +203,8 @@ edit_uri: &#34;&#34;
 <div class="pheasant-fenced-code"><div class="cell jupyter input"><div class="code"><pre><code class="python">def func(x, y):
     return x + y</code></pre></div>
 <div class="report"><p><span class="count">[3]</span>
-<span class="start">2019-04-27 00:16:41</span> (<span class="time">5.00ms</span>)
-<span class="right"><span class="kernel">python3</span> (<span class="total">1.28s</span>)</span></p></div></div></div>
+<span class="start">2019-04-27 08:02:02</span> (<span class="time">6.00ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">66.0ms</span>)</span></p></div></div></div>
 
 <p>If the included file contains header statements, the document structure may be broken. For example, a file to be included contains:</p>
 <div class="pheasant-header"><div class="other"><p class="caption"><span class="prefix">File</span> <span class="number">2</span>

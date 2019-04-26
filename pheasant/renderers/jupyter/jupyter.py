@@ -1,5 +1,4 @@
 import os
-import datetime
 import re
 from dataclasses import dataclass, field
 from itertools import takewhile
@@ -40,7 +39,7 @@ class Jupyter(Renderer):
     progress_bar: ProgressBar = field(default_factory=progress_bar_factory, init=False)
     enabled: bool = field(default=True, init=False)
     safe: bool = field(default=False, init=False)  # If True, code must match cache.
-    verbose: int = 1
+    verbose: int = 0
 
     FENCED_CODE_PATTERN = (
         r"^(?P<mark>`{3,})(?P<language>\w*) ?(?P<option>.*?)\n"
@@ -152,9 +151,7 @@ class Jupyter(Renderer):
 
         def format(result):
             relpath = os.path.relpath(self.page.path)
-            datetime_format = r"%H:%M:%S"
-            now = datetime.datetime.now().strftime(datetime_format)
-            return f"{relpath} ({result[1]['total']}) {now}"
+            return f"{relpath}({result[1]['total']})"
 
         outputs, report = self.progress_bar.progress(execute, format, self.count)
 

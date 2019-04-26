@@ -21,6 +21,7 @@ class Kernel:
     client: Optional[KernelClient] = field(default=None, init=False)
     report: Dict[str, Any] = field(default_factory=dict)
     init_code: str = ""
+    shutdown_function: Optional[Any] = None
 
     def __post_init__(self):
         self.report["total"] = datetime.timedelta(0)
@@ -31,7 +32,7 @@ class Kernel:
                 "register_formatters()\n"
             )
 
-    def start(self, timeout=10, retry=10, silent=True) -> KernelClient:
+    def start(self, timeout=10, retry=3, silent=True) -> KernelClient:
         if self.manager:
             if self.manager.is_alive():
                 return self.client
@@ -44,18 +45,24 @@ class Kernel:
             self.client = self.manager.blocking_client()
             self.client.start_channels()
             try:
-                # self.client.execute_interactive("", timeout=timeout)
                 self.client.wait_for_ready(timeout=timeout)
             except TimeoutError:
                 self.manager.shutdown_kernel()
                 return False
             else:
                 self.client.execute_interactive(self.init_code)
-                atexit.register(self.manager.shutdown_kernel)
+
+                def shutdown():
+                    print(f"Shutting down kernel [{self.name}]...", end="")
+                    self.manager.shutdown_kernel()
+                    print("Done.")
+
+                atexit.register(shutdown)
+                self.shutdown_function = shutdown
                 return self.client
 
         init = f"Starting kernel [{self.name}]"
-        progress_bar = progress_bar_factory(total=retry, init=init, multi=1)
+        progress_bar = progress_bar_factory(total=retry, init=init)
         now = datetime.datetime.now()
 
         def message(result):
@@ -76,12 +83,16 @@ class Kernel:
 
     def shutdown(self) -> None:
         if self.manager:
-            atexit.unregister(self.manager.shutdown_kernel)
+            atexit.unregister(self.shutdown_function)  # type: ignore
             self.manager.shutdown_kernel()
             del self.client
             self.client = None
             del self.manager
             self.manager = None
+
+    def restart(self) -> None:
+        if self.manager:
+            self.manager.restart_kernel()
 
     def execute(self, code: str, output_hook=None) -> List:
         client = self.client or self.start()
@@ -154,6 +165,10 @@ class Kernels:
         for kernel_name in list(self.kernels.keys()):
             kernel = self.kernels.pop(kernel_name)
             kernel.shutdown()
+
+    def restart(self):
+        for kernel in self.kernels.values():
+            kernel.restart()
 
 
 kernels = Kernels()
