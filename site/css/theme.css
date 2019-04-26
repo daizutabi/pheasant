@@ -71,7 +71,9 @@ button {
   display: block;
   position: relative;
   font-size: 0.95rem;
-  line-height: 1.6em;
+  line-height: 1.1;
+  padding-top: 5px;
+  padding-bottom: 5px;
 }
 
 .nav-item.section {
@@ -243,7 +245,7 @@ a.nav-item:hover {
 
 .footer-buttons a {
   display: inline-block;
-  color: #888;
+  color: #444;
   background: #eee;
   padding: 4px 8px;
   border: 1px solid #ccc;
@@ -254,7 +256,6 @@ a.nav-item:hover {
 .footer-buttons span::before {
   font-family: "Font Awesome 5 Free";
   font-weight: bold;
-  color: #888;
 }
 
 .footer-buttons .previous span::before {

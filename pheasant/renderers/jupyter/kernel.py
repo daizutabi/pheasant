@@ -242,7 +242,7 @@ def stream_cell(name: str, text: str) -> Dict[str, str]:
                 index = len(text)
             else:
                 text += char
-    return {"type": "stream", "name": name, "text": text.strip()}
+    return {"type": "stream", "name": name, "text": text.rstrip()}
 
 
 # from nbconvert.filters.ansi
