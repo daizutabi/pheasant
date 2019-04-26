@@ -1,8 +1,5 @@
 import datetime
-import io
-import itertools
 import sys
-import threading
 import time
 from contextlib import redirect_stderr, redirect_stdout
 from dataclasses import dataclass, field
@@ -10,8 +7,6 @@ from typing import Any, Callable, List, Optional, Union
 
 import colorama
 from termcolor import colored
-
-from pheasant.utils.time import format_timedelta_human
 
 colorama.init()
 
