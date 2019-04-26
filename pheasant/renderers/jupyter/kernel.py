@@ -2,6 +2,7 @@
 import atexit
 import datetime
 import re
+import sys
 from dataclasses import dataclass, field
 from typing import Any, Dict, Iterator, List, Optional
 
@@ -9,7 +10,7 @@ from jupyter_client.client import KernelClient
 from jupyter_client.kernelspec import find_kernel_specs, get_kernel_spec
 from jupyter_client.manager import KernelManager
 
-from pheasant.utils.progress import ProgressBar
+from pheasant.utils.progress import progress_bar_factory
 from pheasant.utils.time import format_timedelta_human
 
 
@@ -30,7 +31,7 @@ class Kernel:
                 "register_formatters()\n"
             )
 
-    def start(self, timeout=6, retry=10, silent=True) -> KernelClient:
+    def start(self, timeout=10, retry=10, silent=True) -> KernelClient:
         if self.manager:
             if self.manager.is_alive():
                 return self.client
@@ -43,7 +44,8 @@ class Kernel:
             self.client = self.manager.blocking_client()
             self.client.start_channels()
             try:
-                self.client.execute_interactive("", timeout=timeout)
+                # self.client.execute_interactive("", timeout=timeout)
+                self.client.wait_for_ready(timeout=timeout)
             except TimeoutError:
                 self.manager.shutdown_kernel()
                 return False
@@ -53,7 +55,7 @@ class Kernel:
                 return self.client
 
         init = f"Starting kernel [{self.name}]"
-        progress_bar = ProgressBar(retry, init=init, multi=1)
+        progress_bar = progress_bar_factory(total=retry, init=init, multi=1)
         now = datetime.datetime.now()
 
         def message(result):
@@ -81,16 +83,18 @@ class Kernel:
             del self.manager
             self.manager = None
 
-    def execute(self, code: str) -> List:
+    def execute(self, code: str, output_hook=None) -> List:
         client = self.client or self.start()
         outputs = []
 
-        def output_hook(msg):
+        def _output_hook(msg):
+            if output_hook:
+                output_hook(msg)
             output = output_from_msg(msg)
             if output:
                 outputs.append(output)
 
-        msg = client.execute_interactive(code, output_hook=output_hook)
+        msg = client.execute_interactive(code, output_hook=_output_hook)
         update_report(self.report, msg)
         return list(stream_joiner(outputs))
 
@@ -255,3 +259,27 @@ def strip_ansi(source: str) -> str:
         Source to remove the ANSI from
     """
     return _ANSI_RE.sub("", source)
+
+
+def output_hook_factory(callback=None):
+    if callback is None:
+
+        def callback(stream, data):
+            sys.stdout.write(data)
+
+    def output_hook_default(msg):
+        msg_type = msg["header"]["msg_type"]
+        content = msg["content"]
+        if msg_type == "stream":
+            callback(content["name"], content["text"])
+        elif msg_type in ("display_data", "execute_result"):
+            data = content["data"].get("text/plain")
+            if data:
+                callback("stdout", data)
+        elif msg_type == "error":
+            callback("stderr", "\n".join(content["traceback"]))
+
+    return output_hook_default
+
+
+output_hook = output_hook_factory()

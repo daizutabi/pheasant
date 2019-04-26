@@ -84,7 +84,6 @@ setup(
         "jinja2",
         "termcolor",
         "colorama",
-        "cursor",
     ],
     python_requires=">=3.7",
     setup_requires=["pytest-runner"],

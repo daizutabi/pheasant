@@ -1,4 +1,5 @@
 import os
+import datetime
 import re
 from dataclasses import dataclass, field
 from itertools import takewhile
@@ -10,9 +11,10 @@ from pheasant.renderers.jupyter.ipython import (extra_html, get_extra_module,
                                                 latex_display_format,
                                                 select_display_data,
                                                 select_outputs)
-from pheasant.renderers.jupyter.kernel import format_report, kernels
+from pheasant.renderers.jupyter.kernel import (format_report, kernels,
+                                               output_hook)
 from pheasant.utils.cache import delete_cache, load_cache, save_cache
-from pheasant.utils.progress import ProgressBar
+from pheasant.utils.progress import ProgressBar, progress_bar_factory
 
 
 @dataclass
@@ -35,9 +37,10 @@ class Jupyter(Renderer):
     count: int = field(default=0, init=False)
     cache: List[Cell] = field(default_factory=list, init=False)
     extra_html: str = field(default="", init=False)
-    progress_bar: ProgressBar = field(default_factory=ProgressBar, init=False)
+    progress_bar: ProgressBar = field(default_factory=progress_bar_factory, init=False)
     enabled: bool = field(default=True, init=False)
     safe: bool = field(default=False, init=False)  # If True, code must match cache.
+    verbose: int = 1
 
     FENCED_CODE_PATTERN = (
         r"^(?P<mark>`{3,})(?P<language>\w*) ?(?P<option>.*?)\n"
@@ -57,7 +60,7 @@ class Jupyter(Renderer):
         self.cache, self.extra_html = load_cache(self.page.path) or ([], "")
 
     def exit(self):
-        self.progress_bar.finish(self.count)
+        self.progress_bar.finish(count=self.count)
         extra_modules = set(self.get_extra_modules())
         if extra_modules:
             self.extra_html = extra_html(extra_modules)
@@ -117,7 +120,7 @@ class Jupyter(Renderer):
                 return surround(cached.output, "cached")
             elif self.safe and self.page.path:
                 delete_cache(self.page.path)
-                self.progress_bar.finish(finish=False)
+                self.progress_bar.finish(done=False)
                 raise CacheMismatchError
 
         if not self.enabled:
@@ -140,14 +143,18 @@ class Jupyter(Renderer):
             self.progress_bar.progress("Start", count=self.count)
 
         def execute():
-            outputs = kernel.execute(code)
+            outputs = kernel.execute(
+                code, output_hook=output_hook if self.verbose else None
+            )
             report = format_report(kernel.report)
             report["count"] = self.count
             return outputs, report
 
         def format(result):
             relpath = os.path.relpath(self.page.path)
-            return f"{relpath} ({result[1]['total']})"
+            datetime_format = r"%H:%M:%S"
+            now = datetime.datetime.now().strftime(datetime_format)
+            return f"{relpath} ({result[1]['total']}) {now}"
 
         outputs, report = self.progress_bar.progress(execute, format, self.count)
 
