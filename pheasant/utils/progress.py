@@ -44,6 +44,12 @@ class ProgressBar:
         format: Optional[Callable[[Any], str]] = None,
         count: Optional[int] = None,
     ) -> Any:
+        if not self.total:
+            if callable(func):
+                return func()
+            else:
+                return func
+
         if not self.status:
             self.start(count=count)
 
@@ -76,11 +82,10 @@ class Buffer:
         self.on_bar = True
 
     def write(self, s):
-        if s:
-            if self.on_bar:
-                s = "\n" + s
-                self.on_bar = False
-            return self.stream.write(s)
+        if self.on_bar and s:
+            s = "\n" + s
+            self.on_bar = False
+        return self.stream.write(s)
 
     def flush(self):
         self.stream.flush()
@@ -94,8 +99,7 @@ class ProgressBarManager:
     def __post_init__(self):
         self.write = sys.stdout.write
         self.flush = sys.stdout.flush
-        self.stdout = Buffer(sys.stdout)
-        self.stderr = Buffer(sys.stderr)
+        self.stream = Buffer(sys.stdout)
 
     def get_progress_bar(self, total: int = 0, multi: int = 0, init: str = ""):
         progress_bar = ProgressBar(total=total, multi=multi, init=init, parent=self)
@@ -103,8 +107,8 @@ class ProgressBarManager:
         return progress_bar
 
     def supervisor(self, progress_bar, func):
-        with redirect_stdout(self.stdout):
-            with redirect_stderr(self.stderr):
+        with redirect_stdout(self.stream):
+            with redirect_stderr(self.stream):
                 result = func()
         return result
 
@@ -119,14 +123,13 @@ class ProgressBarManager:
 
         self.write(progress_bar.bar)
         self.flush()
+        self.stream.on_bar = True
+
         if progress_bar.status == "done" or progress_bar.status == "skip":
             self.write("\n")
             self.flush()
-            self.stdout.on_bar = False
-            self.stderr.on_bar = False
-        else:
-            self.stdout.on_bar = True
-            self.stderr.on_bar = True
+            self.stream.on_bar = False
+
         self.current = progress_bar
 
 
