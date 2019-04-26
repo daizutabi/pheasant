@@ -76,8 +76,8 @@ h2, h3, h4, h5 {
 .pheasant-header .other .title {}
 
 .pheasant-header .link a {
-  color: #777;
-  font-size: 0.8rem;
+  color: #77d;
+  font-size: 70%;
 }
 
 .pheasant-header .link a::after {
@@ -221,17 +221,11 @@ h2, h3, h4, h5 {
 
 .pheasant-fenced-code .input .report {
   border-color: #ccc;
-  background: #fbfbfb;
   cursor: default;
-}
-
-.pheasant-fenced-code .cached .input .report {
-  background: transparent;
 }
 
 .pheasant-fenced-code .error .report {
   border-color: #fcc;
-  background: transparent;
 }
 
 .pheasant-fenced-code .cell .report p {
@@ -270,7 +264,7 @@ h2, h3, h4, h5 {
   background: none;
   outline: none;
   padding: 0px;
-  font-size: 0.75rem;
+  font-size: 0.8rem;
 }
 
 .pheasant-button-container .button.embed {
