@@ -22,8 +22,24 @@ pre code {
   font-size: 0.8rem;
 }
 
+p {
+  line-height: 1.65;
+}
+
+pre {
+  line-height: 1.55;
+}
+
 a {
   text-decoration: none;
+}
+
+p a {
+  color: #39f;
+}
+
+p a:visited {
+  color: #99f;
 }
 
 button {

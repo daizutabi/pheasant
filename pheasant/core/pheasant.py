@@ -40,6 +40,7 @@ class Pheasant(Converter):
     def _convert_from_files(self, paths: Iterable[str]) -> List[str]:
         paths = list(paths)
         self.start()
+        self.jupyter.progress_bar.step = 0
         self.jupyter.progress_bar.multi = len(paths)
         for k, path in enumerate(paths):
             if path.endswith(".py"):

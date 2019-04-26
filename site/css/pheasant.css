@@ -106,7 +106,6 @@ h2, h3, h4, h5 {
   position: relative;
   margin: 2px 0px 2px 0px;
   padding: 0px;
-  line-height: normal;
 }
 
 .pheasant-fenced-code .cell.jupyter::before {
@@ -175,7 +174,6 @@ h2, h3, h4, h5 {
 .pheasant-fenced-code code {
   display: block;
   color: black;
-  line-height: 18px;
   background: transparent;
   padding: 0px;
   overflow-x: auto;
@@ -272,7 +270,6 @@ h2, h3, h4, h5 {
   background: none;
   outline: none;
   padding: 0px;
-  line-height: normal;
   font-size: 0.75rem;
 }
 
