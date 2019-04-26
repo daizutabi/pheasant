@@ -88,8 +88,8 @@ def sub(x: int, y: int) -&gt; int:
     &#34;&#34;&#34;Substract `y` from `x`.&#34;&#34;&#34;
     return x - y  # a comment in a code cell.</code></pre></div>
 <div class="report"><p><span class="count">[1]</span>
-<span class="start">2019-04-25 08:41:50</span> (<span class="time">7.00ms</span>)
-<span class="right"><span class="kernel">python3</span> (<span class="total">2.15s</span>)</span></p></div></div></div></div>
+<span class="start">2019-04-26 12:41:54</span> (<span class="time">9.00ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">2.36s</span>)</span></p></div></div></div></div>
 
 <p>When a comment starts at the begining of line after a code block, it divides the source into a code cell and a Markdown cell. This new Markdown cell will continue until next Python code appears.</p>
 <p>If you want to include a comment at the begining of line, you can write like this:</p>
@@ -100,8 +100,8 @@ a = 1</code></pre></div></div></div>
 <div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python"># First comment in a code cell.
 a = 1</code></pre></div>
 <div class="report"><p><span class="count">[2]</span>
-<span class="start">2019-04-25 08:41:50</span> (<span class="time">5.99ms</span>)
-<span class="right"><span class="kernel">python3</span> (<span class="total">2.16s</span>)</span></p></div></div></div></div>
+<span class="start">2019-04-26 12:41:54</span> (<span class="time">9.00ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">2.37s</span>)</span></p></div></div></div></div>
 
 <p>Despite of a Markdown cell, you may want to devide successive codes into separate cells. This can be done by putting a special marker. The marker is <code># -</code> [sharp-space-minus] at the begining of line. For example,</p>
 <div class="pheasant-fenced-code"><div class="cell embed source"><div class="code"><pre><code class="python">a, b = 1, 2
@@ -113,13 +113,13 @@ b</code></pre></div></div></div>
 <div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">a, b = 1, 2
 a</code></pre></div>
 <div class="report"><p><span class="count">[3]</span>
-<span class="start">2019-04-25 08:41:50</span> (<span class="time">7.00ms</span>)
-<span class="right"><span class="kernel">python3</span> (<span class="total">2.17s</span>)</span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="plaintext">1</code></pre></div></div></div></div>
+<span class="start">2019-04-26 12:41:54</span> (<span class="time">8.01ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">2.38s</span>)</span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="plaintext">1</code></pre></div></div></div></div>
 
 <div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">b</code></pre></div>
 <div class="report"><p><span class="count">[4]</span>
-<span class="start">2019-04-25 08:41:50</span> (<span class="time">7.00ms</span>)
-<span class="right"><span class="kernel">python3</span> (<span class="total">2.17s</span>)</span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="plaintext">2</code></pre></div></div></div></div>
+<span class="start">2019-04-26 12:41:54</span> (<span class="time">8.00ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">2.38s</span>)</span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="plaintext">2</code></pre></div></div></div></div>
 
 <p>You can add options to a code block by adding them after a block devider (<code># -</code>).</p>
 <div class="pheasant-fenced-code"><div class="cell embed source"><div class="code"><pre><code class="python"># -hide
@@ -143,8 +143,8 @@ Output: `c` is equal to {{c}}.</code></pre></div></div></div>
 <p>becomes:</p>
 <div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">print(1)</code></pre></div>
 <div class="report"><p><span class="count">[7]</span>
-<span class="start">2019-04-25 08:41:50</span> (<span class="time">7.98ms</span>)
-<span class="right"><span class="kernel">python3</span> (<span class="total">2.20s</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code"><pre><code class="text">1</code></pre></div></div></div></div>
+<span class="start">2019-04-26 12:41:54</span> (<span class="time">8.00ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">2.41s</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code"><pre><code class="text">1</code></pre></div></div></div></div>
 
 <p>And,</p>
 <div class="pheasant-fenced-code"><div class="cell embed source"><div class="code"><pre><code class="python"># ~~~

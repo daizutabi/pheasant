@@ -1,11 +1,14 @@
 import datetime
+import io
 import itertools
 import sys
 import threading
 import time
+from contextlib import redirect_stderr, redirect_stdout
+from dataclasses import dataclass, field
+from typing import Any, Callable, List, Optional, Union
 
 import colorama
-import cursor
 from termcolor import colored
 
 from pheasant.utils.time import format_timedelta_human
@@ -13,141 +16,198 @@ from pheasant.utils.time import format_timedelta_human
 colorama.init()
 
 
+@dataclass
 class ProgressBar:
-    def __init__(
-        self, total: int = 0, multi: int = 0, spinner: bool = True, init: str = ""
-    ):
-        self.total = total
-        self.multi = multi
-        self.step = 1
-        self.spinner = spinner
-        self.init = init
-        self.count = 0
-        self.bar_length = 30
-        self.zfill = 3
-        self.write = sys.stdout.write
-        self.flush = sys.stdout.flush
-        self.bar = ""
-        self.show = False
-        self.result = ""
+    multi: int = 0
+    step: int = 1
+    total: int = 0
+    count: int = 0
+    bar: str = ""
+    status: str = ""
+    init: str = ""
+    text: str = ""
+    parent: Any = None
 
-    def spin(self, done):
-        start = datetime.datetime.now()
-        limit = datetime.timedelta(seconds=1)
-        status = ""
-        for char in itertools.cycle("|/-\\"):
-            dt = datetime.datetime.now() - start
-            if dt > limit:
-                status = " " + char + " " + format_timedelta_human(dt)
-                self.write(status)
-                self.flush()
-                self.write("\x08" * len(status))
-            if done.wait(0.3):
-                break
-        self.write(" " * len(status) + "\x08" * len(status))
+    def update(self, text: str):
+        self.bar = bar(self.step, self.multi, self.count, self.total, self.status, text)
+        self.parent.update(self)
 
-    def supervisor(self, func):
-        done = threading.Event()
-        spinner = threading.Thread(target=self.spin, args=(done,))
-        spinner.start()
-        try:
-            result = func()
-        finally:
-            done.set()
-        spinner.join()
-        return result
+    def start(self, text: str = "", count: Optional[int] = 0) -> None:
+        self.status = "start"
+        if count is not None:
+            self.count = count
+        self.update(text or self.init)
 
-    def update(self, result=None, finish=False):
-        count = str(self.count).zfill(self.zfill)
-        total = str(self.total).zfill(self.zfill)
-        prefix = f"[{count}/{total}]"
-        prefix = colored(prefix, "cyan")
-
-        if self.multi > 1:
-            step = str(self.step).zfill(self.zfill)
-            multi = str(self.multi).zfill(self.zfill)
-            prefix = f"({step}/{multi}) " + prefix
-        elif self.multi == 1:
-            prefix = " " * 10 + prefix
-
-        if self.count == self.total:
-            color = "green"
-            bar = colored("[" + "=" * self.bar_length + "=]", color)
-        else:
-            color = "green" if finish else "yellow"
-            current = int(self.bar_length * min(self.count / self.total, 1))
-            bar = (
-                colored("[", "green")
-                + colored("=" * current, "green")
-                + colored(">", "green", attrs=["bold"])
-                + colored("." * (self.bar_length - current), color)
-                + colored("]", color)
-            )
-
-        bar = " ".join([prefix, bar])
-        if result:
-            bar = " ".join([bar, colored(result, color)])
-            self.result = result
-        back = "\x08" * len(self.bar)
-        self.write(back + bar)
-        self.flush()
-        diff = len(self.bar) - len(bar)
-        if diff > 0:
-            self.write(" " * diff + "\x08" * diff)
-            self.flush()
-        self.bar = bar
-        self.show = True
-
-    def progress(self, func, format=None, count=None, init=None):
-        if not self.total:
-            if callable(func):
-                return func()
-            else:
-                return func
-
-        if self.count == 0:
-            cursor.hide()
-            self.update(init or self.init)
+    def progress(
+        self,
+        func: Union[Callable[[], Any], str],
+        format: Optional[Callable[[Any], str]] = None,
+        count: Optional[int] = None,
+    ) -> Any:
+        if not self.status:
+            self.start(count=count)
 
         if isinstance(func, str):
             result = func
-        elif self.spinner:
-            result = self.supervisor(func)
         else:
-            result = func()
+            result = self.parent.supervisor(self, func)
 
         self.count = count or self.count + 1
-        self.update(result if not format else format(result))
-
+        self.text = format(result) if format else result
+        self.update(self.text)
         return result
 
-    def finish(self, count=None, reset=True, finish=True):
-        if count:
-            self.count = count
-        if self.show:
-            self.update(self.result, finish=finish)
-            self.write("\n")
-            self.flush()
-            self.show = False
-            cursor.show()
-        if reset:
+    def finish(
+        self, text: str = "", count: Optional[int] = None, done: bool = True
+    ) -> None:
+        if self.status == "start" or self.status == "skip":
+            self.count = count or self.count
+            self.status = "done" if done else "skip"
+            self.update(text or self.text)
+            self.status = ""
             self.count = 0
-        if self.multi and finish:
+        if self.multi and done:
             self.step += 1
 
 
-def main():
-    def run():
-        time.sleep(0.5)
-        sys.stderr.write("ERROR\n")
-        sys.stderr.flush()
-        time.sleep(1)
-        return "hello"
+class Buffer:
+    def __init__(self, stream):
+        self.stream = stream
+        self.on_bar = True
 
-    bar = ProgressBar(3, multi=3)
+    def write(self, s):
+        if s:
+            if self.on_bar:
+                s = "\n" + s
+                self.on_bar = False
+            return self.stream.write(s)
+
+    def flush(self):
+        self.stream.flush()
+
+
+@dataclass
+class ProgressBarManager:
+    progress_bars: List[ProgressBar] = field(default_factory=list)
+    current: Optional[ProgressBar] = None
+
+    def __post_init__(self):
+        self.write = sys.stdout.write
+        self.flush = sys.stdout.flush
+        self.stdout = Buffer(sys.stdout)
+        self.stderr = Buffer(sys.stderr)
+
+    def get_progress_bar(self, total: int = 0, multi: int = 0, init: str = ""):
+        progress_bar = ProgressBar(total=total, multi=multi, init=init, parent=self)
+        self.progress_bars.append(progress_bar)
+        return progress_bar
+
+    def supervisor(self, progress_bar, func):
+        with redirect_stdout(self.stdout):
+            with redirect_stderr(self.stderr):
+                result = func()
+        return result
+
+    def update(self, progress_bar):
+        if self.current:
+            if self.current != progress_bar:
+                self.current.finish(done=False)
+            else:
+                length = len(self.current.bar)
+                self.write("\r" + " " * length + "\r")
+                self.flush()
+
+        self.write(progress_bar.bar)
+        self.flush()
+        if progress_bar.status == "done" or progress_bar.status == "skip":
+            self.write("\n")
+            self.flush()
+            self.stdout.on_bar = False
+            self.stderr.on_bar = False
+        else:
+            self.stdout.on_bar = True
+            self.stderr.on_bar = True
+        self.current = progress_bar
+
+
+progress_bar_manager = ProgressBarManager()
+
+
+def progress_bar_factory(total: int = 0, multi: int = 0, init: str = ""):
+    return progress_bar_manager.get_progress_bar(total=total, multi=multi, init=init)
+
+
+def prefix(step: int, multi: int, count: int, total: int, zfill: int = 3) -> str:
+    if multi > 1:
+        step_str = str(step).zfill(zfill)
+        multi_str = str(multi).zfill(zfill)
+        prefix = f"({step_str}/{multi_str}) "
+    elif multi == 1:
+        prefix = " " * (zfill * 2 + 4)
+    else:
+        prefix = ""
+
+    count_str = str(count).zfill(zfill)
+    total_str = str(total).zfill(zfill)
+    return prefix + colored(f"[{count_str}/{total_str}]", "cyan")
+
+
+def bar(
+    step: int,
+    multi: int,
+    count: int,
+    total: int,
+    status: str,
+    text: str = "",
+    zfill: int = 3,
+    bar_length: int = 30,
+) -> str:
+    if count == total:
+        color = "green"
+        bar = colored("[" + "=" * (bar_length + 1) + "]", color)
+    else:
+        color = "green" if status == "done" else "yellow"
+        ratio = min(count / total, 1)
+        current = int(bar_length * ratio)
+        left = colored("[" + "=" * current + ">", "green")
+        right = colored(" " * (bar_length - current) + "]", color)
+        bar = left + right
+    if text:
+        bar += colored(" " + text, color)
+    return " ".join([prefix(step, multi, count, total, zfill), bar])
+
+
+def main():
+    from pheasant.renderers.jupyter.kernel import Kernel, output_hook_factory
+
+    kernel = Kernel("python3")
+    kernel.start(silent=False)
+    kernel.execute("import time")
+
+    def callback(stream, data):
+        sys.stdout.write(data)
+
+    output_hook = output_hook_factory(callback)
+
+    def run():
+        kernel.execute(
+            "time.sleep(1)\nprint(11)\ntime.sleep(1)\nprint(22)\ntime.sleep(1)",
+            output_hook=output_hook,
+        )
+        time.sleep(0.2)
+        print(1)
+        time.sleep(0.1)
+        print(2)
+        time.sleep(0.1)
+        print(3)
+        time.sleep(0.2)
+
+        return str(datetime.datetime.now())
+
+    bar = progress_bar_factory(total=3, multi=3, init="start...")
     for k in range(3):
         for k in range(bar.total):
-            bar.progress(run, init="start..........")
+            bar.progress(run)
         bar.finish()
 
 

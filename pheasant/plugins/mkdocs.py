@@ -21,6 +21,7 @@ markdown_extensions.append(".py")
 class PheasantPlugin(BasePlugin):
     config_scheme = (("jupyter", config_options.Type(bool, default=True)),)
     converter = Pheasant()
+    converter.jupyter.verbose = 0
     version = pheasant.__version__
     logger.info(f"[Pheasant] Converter created.")
 
