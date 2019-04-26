@@ -14,10 +14,14 @@ You can check your currently installed version using `pheasant --version`:
 
 ~~~bash terminal
 $ pheasant --version
-pheasant, version 2.2.19 from /path/to/pheasant (Python 3.7)
+pheasant, version 2.2.20 from /path/to/pheasant (Python 3.7)
 ~~~
 
 ## Change log
+
+### Version 2.2.20 (2019-04-26)
+
+* Print text output from Jupyter Kernel in verbose mode.
 
 ### Version 2.2.19 (2019-04-23)
 
