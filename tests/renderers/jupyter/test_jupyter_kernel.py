@@ -1,7 +1,6 @@
 import pytest
 
-from pheasant.renderers.jupyter.kernel import (Kernel, kernels,
-                                               output_hook_factory)
+from pheasant.renderers.jupyter.kernel import kernels, output_hook_factory
 
 
 def test_kernel_names():

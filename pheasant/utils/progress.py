@@ -1,7 +1,6 @@
 import datetime
 import math
 import sys
-import time
 from contextlib import redirect_stderr, redirect_stdout
 from dataclasses import dataclass, field
 from typing import Any, Callable, List, Optional, Union
