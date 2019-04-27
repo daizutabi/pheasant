@@ -165,8 +165,7 @@ def bar(step: int, multi: int, count: int, total: int, status: str, text: str) -
         fill = int(math.log10(multi))
         step_str = str(step).zfill(fill)
         multi_str = str(multi).zfill(fill)
-        prefix_multi = f" [{step_str}/{multi_str}]"
-        prefix_multi = colored(prefix_multi, "green" if multi == step else "yellow")
+        prefix_multi = colored(f" [{step_str}/{multi_str}]", color)
     else:
         prefix_multi = " "
 
