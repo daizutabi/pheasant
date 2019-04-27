@@ -21,7 +21,7 @@ def test_main_convert():
         result = runner.invoke(cli, ["run", "example.md"])
         assert result.exit_code == 0
         assert len(kernels.kernels) == 1
-        result = runner.invoke(cli, ["run", "example.md", "--restart"])
+        result = runner.invoke(cli, ["run", "example.md", "--shutdown"])
         assert result.exit_code == 0
         assert len(kernels.kernels) == 0
 
