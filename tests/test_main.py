@@ -16,7 +16,7 @@ def test_main_convert():
     runner = CliRunner()
     with runner.isolated_filesystem():
         with open("example.md", "w") as f:
-            f.write("# Title\n## Section\n")
+            f.write("# Title\n## Section\n```python\n1\n```\n")
 
         result = runner.invoke(cli, ["run", "example.md"])
         assert result.exit_code == 0
@@ -24,6 +24,9 @@ def test_main_convert():
         result = runner.invoke(cli, ["run", "example.md", "--shutdown"])
         assert result.exit_code == 0
         assert len(kernels.kernels) == 0
+        result = runner.invoke(cli, ["run", "example.md", "--force"])
+        assert result.exit_code == 0
+        assert len(kernels.kernels) == 1
 
 
 def test_main_prompt():

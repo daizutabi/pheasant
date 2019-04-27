@@ -16,3 +16,4 @@ nav:
   - Test: test.md
   - Script: conftest.py
   - Section: section
+  - section

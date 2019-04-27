@@ -140,12 +140,6 @@ def progress_bar_factory(total: int = 0, multi: int = 0, init: str = ""):
     return progress_bar_manager.get_progress_bar(total=total, multi=multi, init=init)
 
 
-def prefix(step: int, multi: int, count: int, total: int, zfill: int = 3) -> str:
-    count_str = str(count).zfill(zfill)
-    total_str = str(total).zfill(zfill)
-    return colored(f"[{count_str}/{total_str}]", "cyan")
-
-
 BAR_LENGTH = 24
 ZFILL = 2
 
@@ -184,41 +178,3 @@ def bar(step: int, multi: int, count: int, total: int, status: str, text: str) -
     now = datetime.datetime.now().strftime(datetime_format)
 
     return "".join([prefix, bar, prefix_multi, text, now])
-
-
-def main():
-    from pheasant.renderers.jupyter.kernel import Kernel, output_hook_factory
-
-    kernel = Kernel("python3")
-    kernel.start(silent=False)
-    kernel.execute("import time")
-
-    def callback(stream, data):
-        sys.stdout.write(data)
-
-    output_hook = output_hook_factory(callback)
-
-    def run():
-        kernel.execute(
-            "time.sleep(1)\nprint(11)\ntime.sleep(1)\nprint(22)\ntime.sleep(1)",
-            output_hook=output_hook,
-        )
-        time.sleep(0.2)
-        print(1)
-        time.sleep(0.1)
-        print(2)
-        time.sleep(0.1)
-        print(3)
-        time.sleep(0.2)
-
-        return str(datetime.datetime.now())
-
-    bar = progress_bar_factory(total=3, multi=3, init="start...")
-    for k in range(3):
-        for k in range(bar.total):
-            bar.progress(run)
-        bar.finish()
-
-
-if __name__ == "__main__":
-    main()

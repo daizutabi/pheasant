@@ -33,7 +33,7 @@ def pandas_series_to_html(obj) -> str:
 def register_pandas_formatter(formatters):
     try:
         import pandas as pd
-    except ImportError:
+    except ImportError:  # pragma: no cover
         pass
     else:
         pd.options.display.max_colwidth = 0
@@ -65,7 +65,7 @@ def register_sympy_formatter(formatters):
         from sympy.matrices.matrices import MatrixBase
         from sympy.physics.vector import Vector, Dyadic
         from sympy.tensor.array import NDimArray
-    except ImportError:
+    except ImportError:  # pragma: no cover
         pass
     else:
         types = [Basic, MatrixBase, Vector, Dyadic, NDimArray]
@@ -90,7 +90,7 @@ def bokeh_extra_resources() -> Dict[str, List[str]]:
 def register_bokeh_formatter(formatters):
     try:
         from bokeh.plotting.figure import Figure
-    except ImportError:
+    except ImportError:  # pragma: no cover
         pass
     else:
         formatters["text/html"].for_type(Figure, bokeh_to_html)
@@ -142,7 +142,7 @@ def holoviews_extra_resources() -> Dict[str, List[str]]:
 def register_holoviews_formatter(formatters):
     try:
         from holoviews import Element, HoloMap
-    except ImportError:
+    except ImportError:  # pragma: no cover
         pass
     else:
         for cls in [Element, HoloMap]:
@@ -202,7 +202,7 @@ def altair_extra_resources() -> Dict[str, List[str]]:
 def register_altair_formatter(formatters):
     try:
         import altair as alt
-    except ImportError:
+    except ImportError:  # pragma: no cover
         pass
     else:
         types = [
@@ -234,7 +234,7 @@ def get_extra_module(outputs: List[dict]) -> str:
     for output in outputs:
         if "metadata" in output:
             for key in ["text/html", "text/latex"]:
-                module = output["metadata"].get(key, {}).get('module')
+                module = output["metadata"].get(key, {}).get("module")
                 if module in EXTRA_MODULES:
                     return module
     return ""

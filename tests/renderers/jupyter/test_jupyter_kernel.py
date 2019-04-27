@@ -1,6 +1,7 @@
 import pytest
 
-from pheasant.renderers.jupyter.kernel import kernels
+from pheasant.renderers.jupyter.kernel import (Kernel, kernels,
+                                               output_hook_factory)
 
 
 def test_kernel_names():
@@ -53,3 +54,45 @@ def test_stream_joinner():
 # def test_error_traceback():
 #     outputs = kernels.execute("1/0")
 #     assert "ZeroDivisionError" in outputs[0]["traceback"]
+
+
+def test_kernel():
+    kernel_name = kernels.get_kernel_name("python")
+    kernel = kernels.get_kernel(kernel_name)
+    kernel.execute("a=1")
+    assert kernel.execute("a")[0]["data"]["text/plain"] == "1"
+    kernel.restart()
+    assert kernel.execute("a")[0]["type"] == "error"
+
+    assert kernel is kernels["python"]
+
+    kernel.execute("a=1")
+    assert kernel.execute("a")[0]["data"]["text/plain"] == "1"
+    kernels.restart()
+    assert kernel.execute("a")[0]["type"] == "error"
+
+
+def test_output_hook_factory():
+    def func_stream(stream, data):
+        assert stream == "stdout"
+        assert data == "1\n"
+
+    output_hook = output_hook_factory(func_stream)
+    kernel = kernels["python"]
+    kernel.execute("print(1)", output_hook=output_hook)
+
+    def func_execute_result(stream, data):
+        assert stream == "stdout"
+        assert data == "123"
+
+    output_hook = output_hook_factory(func_execute_result)
+    kernel = kernels["python"]
+    kernel.execute("123", output_hook=output_hook)
+
+    def func_error(stream, data):
+        assert stream == "stderr"
+        assert "IndexError" in data
+
+    output_hook = output_hook_factory(func_error)
+    kernel = kernels["python"]
+    kernel.execute("[][1]", output_hook=output_hook)

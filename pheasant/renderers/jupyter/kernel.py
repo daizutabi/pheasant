@@ -17,11 +17,10 @@ from pheasant.utils.time import format_timedelta_human
 @dataclass
 class Kernel:
     name: str
+    init_code: str = ""
     manager: Optional[KernelManager] = field(default=None, init=False)
     client: Optional[KernelClient] = field(default=None, init=False)
-    report: Dict[str, Any] = field(default_factory=dict)
-    init_code: str = ""
-    shutdown_function: Optional[Any] = None
+    report: Dict[str, Any] = field(default_factory=dict, init=False)
 
     def __post_init__(self):
         self.report["total"] = datetime.timedelta(0)
@@ -29,14 +28,22 @@ class Kernel:
         if kernel_spec.language == "python":
             self.init_code = (
                 "from pheasant.renderers.jupyter.ipython import register_formatters\n"
-                "register_formatters()\n"
+                "register_formatters()"
             )
 
-    def start(self, timeout=10, retry=3, silent=True) -> KernelClient:
+        def shutdown():  # pragma: no cover
+            if self.manager:
+                print(f"Shutting down kernel [{self.name}]...", end="")
+                self.manager.shutdown_kernel()
+                print("Done.")
+
+        atexit.register(shutdown)
+
+    def start(self, timeout=10, silent=True) -> KernelClient:
         if self.manager:
             if self.manager.is_alive():
                 return self.client
-            else:
+            else:  # pragma: no cover
                 raise RuntimeError(f"Kernel {self.name} is not alive.")
 
         def start():
@@ -46,30 +53,22 @@ class Kernel:
             self.client.start_channels()
             try:
                 self.client.wait_for_ready(timeout=timeout)
-            except TimeoutError:
+            except TimeoutError:  # pragma: no cover
                 self.manager.shutdown_kernel()
                 return False
             else:
                 self.client.execute_interactive(self.init_code)
-
-                def shutdown():
-                    print(f"Shutting down kernel [{self.name}]...", end="")
-                    self.manager.shutdown_kernel()
-                    print("Done.")
-
-                atexit.register(shutdown)
-                self.shutdown_function = shutdown
                 return self.client
 
         init = f"Starting kernel [{self.name}]"
-        progress_bar = progress_bar_factory(total=retry, init=init)
+        progress_bar = progress_bar_factory(total=3, init=init)
         now = datetime.datetime.now()
 
         def message(result):
             dt = format_timedelta_human(datetime.datetime.now() - now)
             return f"Kernel [{self.name}] started ({dt})" if result else "Retrying..."
 
-        for k in range(retry):
+        for k in range(progress_bar.total):
             if silent and start():
                 break
             elif silent:
@@ -78,12 +77,11 @@ class Kernel:
                 progress_bar.finish()
                 break
         else:
-            raise TimeoutError
+            raise TimeoutError  # pragma: no cover
         return self.client
 
     def shutdown(self) -> None:
         if self.manager:
-            atexit.unregister(self.shutdown_function)  # type: ignore
             self.manager.shutdown_kernel()
             del self.client
             self.client = None
@@ -93,6 +91,8 @@ class Kernel:
     def restart(self) -> None:
         if self.manager:
             self.manager.restart_kernel()
+            if self.client and self.init_code:
+                self.client.execute_interactive(self.init_code)
 
     def execute(self, code: str, output_hook=None) -> List:
         client = self.client or self.start()
