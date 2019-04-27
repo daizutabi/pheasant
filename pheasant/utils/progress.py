@@ -172,7 +172,7 @@ def bar(step: int, multi: int, count: int, total: int, status: str, text: str) -
     if text:
         text = colored(text, color)
 
-    datetime_format = r" %H:%M:%S "
-    now = datetime.datetime.now().strftime(datetime_format)
+    datetime_format = r" [%H:%M:%S] "
+    now = colored(datetime.datetime.now().strftime(datetime_format), "cyan")
 
     return "".join([prefix, bar, prefix_multi, text, now])

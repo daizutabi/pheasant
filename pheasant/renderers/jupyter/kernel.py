@@ -280,7 +280,10 @@ def output_hook_factory(callback=None):
     if callback is None:
 
         def callback(stream, data):
-            sys.stdout.write(data)
+            if stream == 'stdout':
+                sys.stdout.write(data)
+            else:
+                sys.stderr.write(data)
 
     def output_hook_default(msg):
         msg_type = msg["header"]["msg_type"]
