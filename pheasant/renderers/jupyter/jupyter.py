@@ -39,7 +39,7 @@ class Jupyter(Renderer):
     progress_bar: ProgressBar = field(default_factory=progress_bar_factory, init=False)
     enabled: bool = field(default=True, init=False)
     safe: bool = field(default=False, init=False)  # If True, code must match cache.
-    verbose: int = 0
+    verbose: int = 0  # 0: no info, 1: output, 2: code and output
 
     FENCED_CODE_PATTERN = (
         r"^(?P<mark>`{3,})(?P<language>\w*) ?(?P<option>.*?)\n"
@@ -142,6 +142,9 @@ class Jupyter(Renderer):
             self.progress_bar.progress("Start", count=self.count)
 
         def execute():
+            if self.verbose == 2:
+                code_ = "\n".join([language + "> " + line for line in code.split("\n")])
+                print(code_)
             outputs = kernel.execute(
                 code, output_hook=output_hook if self.verbose else None
             )

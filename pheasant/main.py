@@ -56,7 +56,9 @@ def collect(paths, ext):
 @click.option("-r", "--restart", is_flag=True, help="Restart kernel after run.")
 @click.option("-s", "--shutdown", is_flag=True, help="Shutdown kernel after run.")
 @click.option("-f", "--force", is_flag=True, help="Delete cache and run.")
-@click.option("-v", "--verbose", is_flag=True, help="Print outputs from kernel.")
+@click.option(
+    "-v", "--verbose", count=True, help="Print input codes and/or outputs from kernel."
+)
 @ext_option
 @max_option
 @paths_argument

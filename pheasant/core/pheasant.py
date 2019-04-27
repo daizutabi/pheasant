@@ -28,7 +28,7 @@ class Pheasant(Converter):
     log: Log = field(default_factory=Log, init=False)
     shutdown: bool = False
     restart: bool = False
-    verbose: bool = False
+    verbose: int = 0  # 0: no info, 1: output, 2: code and output
 
     def init(self):
         self.anchor.header = self.header
@@ -39,13 +39,12 @@ class Pheasant(Converter):
         self.decorator.name = "pheasant"
         self.decorator.register([self.header, self.jupyter, self.embed], "surround")
 
-        if self.verbose:
-            self.jupyter.verbose = 1
+        self.jupyter.verbose = self.verbose
 
     def _convert_from_files(self, paths: Iterable[str]) -> List[str]:
         paths = list(paths)
         self.start()
-        self.jupyter.progress_bar.step = 0
+        self.jupyter.progress_bar.step = 1
         self.jupyter.progress_bar.multi = len(paths)
         for k, path in enumerate(paths):
             if path.endswith(".py"):
