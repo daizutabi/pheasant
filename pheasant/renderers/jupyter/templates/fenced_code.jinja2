@@ -11,9 +11,9 @@
       <div class="cell jupyter error"><div class="code"><pre><code class="nohighlight">{{ output.ename }}: {{ output.evalue }}</code></pre></div>
       <div class="report"><pre><code class="nohighlight">{{ output.traceback }}</code></pre></div></div>
   {%- elif output.type == 'stream' and 'nostd' not in option -%}
-      <div class="cell jupyter {{ output.name }}"><div class="code"><pre><code class="text">{{ output.text }}</code></pre></div></div>
+      <div class="cell jupyter {{ output.name }}"><div class="code"><pre><code class="nohighlight">{{ output.text }}</code></pre></div></div>
   {%- elif 'text/plain' in output.data -%}
-      <div class="cell jupyter output"><div class="code"><pre><code class="plaintext">{{ output.data['text/plain'] }}</code></pre></div></div>
+      <div class="cell jupyter output"><div class="code"><pre><code class="nohighlight">{{ output.data['text/plain'] }}</code></pre></div></div>
   {%- endif -%}
 {%- endfor -%}
 {%- for output in outputs -%}{{ output_display(output, false) }}{%- endfor -%}
