@@ -177,11 +177,18 @@ def altair_to_html(obj) -> Tuple[str, Dict]:
 
 
 def altair_extra_resources() -> Dict[str, List[str]]:
-    from altair.vegalite.v2.display import (
-        VEGA_VERSION,
-        VEGAEMBED_VERSION,
-        VEGALITE_VERSION,
-    )
+    try:
+        from altair.vegalite.v3.display import (
+            VEGA_VERSION,
+            VEGAEMBED_VERSION,
+            VEGALITE_VERSION,
+        )
+    except ImportError:
+        from altair.vegalite.v2.display import (
+            VEGA_VERSION,
+            VEGAEMBED_VERSION,
+            VEGALITE_VERSION,
+        )
 
     BASE_URL = "https://cdn.jsdelivr.net/npm/"
 

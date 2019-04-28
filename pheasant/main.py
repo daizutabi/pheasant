@@ -107,7 +107,7 @@ def list(paths, ext):
 @ext_option
 @paths_argument
 def clean(paths, ext, yes):
-    paths = [path for path, cache in collect(paths, ext) if cache]
+    paths = [path for path, cache, _ in collect(paths, ext) if cache]
 
     for path in paths:
         click.echo(path)
