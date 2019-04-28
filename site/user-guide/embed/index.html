@@ -17,7 +17,6 @@
   <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/all.css">
   <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/v4-shims.css">
   <link rel="stylesheet" href="../../css/pheasant.css">
-  <link rel="stylesheet" href="../../css/extra.css">
   <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
   <script>hljs.initHighlightingOnLoad();</script> 
@@ -27,9 +26,17 @@
   <div id="container">
     <aside>
       <div class="home">
-        <button class="hamburger"></button>
-  <a href="../.." class="site-name"> Pheasant
-    <span class="home-version">2.2.20</span></a>
+        <div class="title">
+          <button class="hamburger"></button>
+          <a href="../.." class="site-name"> Pheasant</a>
+        </div><div class="version">stable</div>
+        <div class="search">
+          <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+        </div>
       </div>
       <nav class="nav">
         <ul class="root">
@@ -54,9 +61,9 @@
   </ul></li>
         </ul>
       </nav>
-      <div class="version">
-    <div class="repo">
-      <a href="https://github.com/daizutabi/pheasant/" class="fa fa-github"> GitHub</a>
+      <div class="repo">
+    <div class="link">
+        <a href="https://github.com/daizutabi/pheasant/" class="fa fa-github"> GitHub</a>
     </div>
     <div class="previous"><a href="../images/">&laquo; Previous</a></div>
     <div class="next"><a href="../sympy/">Next &raquo;</a></div>
@@ -92,15 +99,10 @@ edit_uri: &#34;&#34;
 
 theme:
     name: ivory
-    custom_dir: custom_theme
-
-extra_css:
-  - css/extra.css
-
-extra_javascript:
-  - js/extra.js
+    version: stable
 
 plugins:
+  - search:
   - pheasant:
 
 nav:
@@ -152,8 +154,8 @@ edit_uri: &#34;&#34;
 <p>You can write to inspect the whole module content:</p>
 <div class="pheasant-fenced-code"><div class="cell jupyter input"><div class="code"><pre><code class="python">import pheasant</code></pre></div>
 <div class="report"><p><span class="count">[1]</span>
-<span class="start">2019-04-28 06:24:23</span> (<span class="time">3.98ms</span>)
-<span class="right"><span class="option">(run)</span> <span class="kernel">python3</span> (<span class="total">3.98ms</span>)</span></p></div></div></div>
+<span class="start">2019-04-28 18:24:18</span> (<span class="time">4.04ms</span>)
+<span class="right"><span class="option">(run)</span> <span class="kernel">python3</span> (<span class="total">4.04ms</span>)</span></p></div></div></div>
 
 <div class="pheasant-fenced-code"><div class="cell embed source"><div class="code"><pre><code class="markdown">{%?pheasant%}</code></pre></div></div></div>
 
@@ -163,8 +165,8 @@ edit_uri: &#34;&#34;
 <p>A part of the module can be specified as usual.</p>
 <div class="pheasant-fenced-code"><div class="cell jupyter input"><div class="code"><pre><code class="python">from pheasant.renderers.jupyter.jupyter import Jupyter</code></pre></div>
 <div class="report"><p><span class="count">[2]</span>
-<span class="start">2019-04-28 06:24:23</span> (<span class="time">21.0ms</span>)
-<span class="right"><span class="kernel">python3</span> (<span class="total">40.7ms</span>)</span></p></div></div></div>
+<span class="start">2019-04-28 18:24:18</span> (<span class="time">24.0ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">37.1ms</span>)</span></p></div></div></div>
 
 <div class="pheasant-fenced-code"><div class="cell embed source"><div class="code"><pre><code class="markdown">{%?Jupyter[:21]%}</code></pre></div></div></div>
 
@@ -203,8 +205,8 @@ edit_uri: &#34;&#34;
 <div class="pheasant-fenced-code"><div class="cell jupyter input"><div class="code"><pre><code class="python">def func(x, y):
     return x + y</code></pre></div>
 <div class="report"><p><span class="count">[3]</span>
-<span class="start">2019-04-28 06:24:23</span> (<span class="time">6.00ms</span>)
-<span class="right"><span class="kernel">python3</span> (<span class="total">62.3ms</span>)</span></p></div></div></div>
+<span class="start">2019-04-28 18:24:18</span> (<span class="time">5.97ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">60.1ms</span>)</span></p></div></div></div>
 
 <p>If the included file contains header statements, the document structure may be broken. For example, a file to be included contains:</p>
 <div class="pheasant-header"><div class="other"><p class="caption"><span class="prefix">File</span> <span class="number">2</span>
@@ -238,6 +240,6 @@ Text.</code></pre></div></div></div>
   </div>
   <script src="../../js/theme.js"></script>
   <script src="../../js/pheasant.js"></script>
-  <script src="../../js/extra.js"></script>
+  <script src="../../search/main.js"></script>
 </body>
 </html>

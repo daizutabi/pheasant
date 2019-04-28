@@ -27,7 +27,7 @@ p {
 }
 
 pre {
-  line-height: 1.55;
+  line-height: 1.6;
 }
 
 a {
@@ -209,17 +209,17 @@ a.nav-item:hover {
   border: none;
 }
 
-.version div {
+.repo div {
   padding: 0 10px;
 }
 
-.version div:nth-child(1) {
+.repo div:first-child {
   margin-right: auto;
 }
 
-.version a {
+.repo a {
   color: #ddd;
-  font-size: 14px;
+  font-size: 0.9rem;
 }
 
 .breadcrumbs li {
@@ -304,6 +304,7 @@ aside>* {
 .home, .home-top {
   display: flex;
   background: #48c;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
 }
@@ -313,13 +314,22 @@ aside>* {
   top: 0;
 }
 
+.home .search input {
+  display: inline-block;
+  border-radius: 40px;
+  padding: 4px 10px;
+  outline: none;
+  width: 250px;
+  border: 1px solid #999;
+}
+
 .nav {
   position: fixed;
   overflow-y: auto;
   background: #333;
 }
 
-.version {
+.repo {
   display: flex;
   background: #222;
   position: fixed;
@@ -361,6 +371,11 @@ main {
 
   .home-top {
     position: relative;
+  }
+
+  .home .version,
+  .home .search {
+    display: none;
   }
 
   .hamburger {
@@ -428,12 +443,22 @@ main {
   }
 
   .home {
-    height: 80px;
+    height: 100px;
+  }
+
+  .home .title {
+    margin-top: 5px;
+    margin-bottom: 10px;
+  }
+
+  .home .version {
+    margin-bottom: 10px;
+    color: #aaa;
   }
 
   .nav {
-    top: 80px;
-    height: calc(100% - 120px);
+    top: 100px;
+    height: calc(100% - 140px);
   }
 
   #main {

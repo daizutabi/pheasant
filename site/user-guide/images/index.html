@@ -17,7 +17,6 @@
   <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/all.css">
   <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/v4-shims.css">
   <link rel="stylesheet" href="../../css/pheasant.css">
-  <link rel="stylesheet" href="../../css/extra.css">
   <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
   <script>hljs.initHighlightingOnLoad();</script> 
@@ -27,9 +26,17 @@
   <div id="container">
     <aside>
       <div class="home">
-        <button class="hamburger"></button>
-  <a href="../.." class="site-name"> Pheasant
-    <span class="home-version">2.2.20</span></a>
+        <div class="title">
+          <button class="hamburger"></button>
+          <a href="../.." class="site-name"> Pheasant</a>
+        </div><div class="version">stable</div>
+        <div class="search">
+          <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+        </div>
       </div>
       <nav class="nav">
         <ul class="root">
@@ -55,9 +62,9 @@
   </ul></li>
         </ul>
       </nav>
-      <div class="version">
-    <div class="repo">
-      <a href="https://github.com/daizutabi/pheasant/" class="fa fa-github"> GitHub</a>
+      <div class="repo">
+    <div class="link">
+        <a href="https://github.com/daizutabi/pheasant/" class="fa fa-github"> GitHub</a>
     </div>
     <div class="previous"><a href="../..">&laquo; Previous</a></div>
     <div class="next"><a href="../embed/">Next &raquo;</a></div>
@@ -1368,6 +1375,6 @@ alt.layer(line, selectors, points, rules, text,
   </div>
   <script src="../../js/theme.js"></script>
   <script src="../../js/pheasant.js"></script>
-  <script src="../../js/extra.js"></script>
+  <script src="../../search/main.js"></script>
 </body>
 </html>
