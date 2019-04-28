@@ -184,7 +184,7 @@ def altair_extra_resources() -> Dict[str, List[str]]:
             VEGALITE_VERSION,
         )
     except ImportError:
-        from altair.vegalite.v2.display import (
+        from altair.vegalite.v2.display import (  # type: ignore
             VEGA_VERSION,
             VEGAEMBED_VERSION,
             VEGALITE_VERSION,
