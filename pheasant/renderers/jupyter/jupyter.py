@@ -12,7 +12,7 @@ from pheasant.renderers.jupyter.ipython import (extra_html, get_extra_module,
                                                 select_outputs)
 from pheasant.renderers.jupyter.kernel import (format_report, kernels,
                                                output_hook)
-from pheasant.utils.cache import delete_cache, load_cache, save_cache
+from pheasant.utils import cache
 from pheasant.utils.progress import ProgressBar, progress_bar_factory
 
 
@@ -56,7 +56,7 @@ class Jupyter(Renderer):
     def enter(self):
         self.count = 0
         self.progress_bar.total = len(self.findall())
-        self.cache, self.extra_html = load_cache(self.page.path) or ([], "")
+        self.cache, self.extra_html = cache.load(self.page.path) or ([], "")
 
     def exit(self):
         self.progress_bar.finish(count=self.count)
@@ -68,7 +68,7 @@ class Jupyter(Renderer):
         if self.enabled and self.page.path and self.cache:
             for cell in self.cache:
                 cell.cached = True
-            save_cache(self.page.path, (self.cache, self.extra_html))
+            cache.save(self.page.path, (self.cache, self.extra_html))
 
     def get_extra_modules(self) -> Iterator[str]:
         for cell in self.cache:
@@ -118,7 +118,7 @@ class Jupyter(Renderer):
                     self.progress_bar.progress(relpath, count=self.count)
                 return surround(cached.output, "cached")
             elif self.safe and self.page.path:
-                delete_cache(self.page.path)
+                cache.delete(self.page.path)
                 self.progress_bar.finish(done=False)
                 raise CacheMismatchError
 

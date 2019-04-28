@@ -1,10 +1,11 @@
 import os
 import sys
+from typing import List
 
 import click
 
 from pheasant import __version__
-from pheasant.utils.cache import cache_path, has_cache
+from pheasant.utils.cache import cache_path, has_cache, modified
 
 pgk_dir = os.path.dirname(os.path.abspath(__file__))
 version_msg = f"{__version__} from {pgk_dir} (Python {sys.version[:3]})."
@@ -31,14 +32,14 @@ max_option = click.option(
 paths_argument = click.argument("paths", nargs=-1, type=click.Path(exists=True))
 
 
-def collect(paths, ext):
+def collect(paths: List[str], ext: str) -> List:
     exts = ext.split(",")
     src_paths = []
 
     def collect(path):
         if os.path.splitext(path)[-1][1:] in exts:
-            cache = has_cache(path)
-            src_paths.append((os.path.normpath(path), cache))
+            result = os.path.normpath(path), has_cache(path), modified(path)
+            src_paths.append(result)
 
     if not paths:
         paths = ["."]
@@ -73,8 +74,8 @@ def run(paths, ext, max, restart, shutdown, force, verbose):
         sys.exit()
 
     if force:
-        for path, cache in paths:
-            if cache:
+        for path, cached, _ in paths:
+            if cached:
                 path_ = cache_path(path)
                 os.remove(path_)
                 click.echo(path_ + " was deleted.")
@@ -83,7 +84,7 @@ def run(paths, ext, max, restart, shutdown, force, verbose):
 
     pheasant = Pheasant(restart=restart, shutdown=shutdown, verbose=verbose)
     pheasant.jupyter.safe = True
-    pheasant.convert_from_files(path for path, _ in paths)
+    pheasant.convert_from_files(path[0] for path in paths)
     click.secho(f"{pheasant.log.info}", bold=True)
 
 
@@ -93,12 +94,8 @@ def run(paths, ext, max, restart, shutdown, force, verbose):
 def list(paths, ext):
     paths = collect(paths, ext)
 
-    for path, cache in paths:
-        if cache:
-            path = "  " + path + " (cached)"
-        else:
-            path = "* " + path
-
+    for path, cached, modified_ in paths:
+        path = ("* " if modified_ else "  ") + path + (" (cached)" if cached else "")
         click.echo(path)
 
     length = len(paths)
