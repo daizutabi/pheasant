@@ -11,8 +11,8 @@ theme:
     version: stable
 
 plugins:
-  - search:
   - pheasant:
+  # - search:
 
 nav:
   - Home: index.md

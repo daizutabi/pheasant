@@ -30,13 +30,6 @@
           <button class="hamburger"></button>
           <a href="../.." class="site-name"> Pheasant</a>
         </div><div class="version">stable</div>
-        <div class="search">
-          <div role="search">
-  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
-  </form>
-</div>
-        </div>
       </div>
       <nav class="nav">
         <ul class="root">
@@ -102,8 +95,8 @@ theme:
     version: stable
 
 plugins:
-  - search:
   - pheasant:
+  # - search:
 
 nav:
   - Home: index.md
@@ -154,8 +147,8 @@ edit_uri: &#34;&#34;
 <p>You can write to inspect the whole module content:</p>
 <div class="pheasant-fenced-code"><div class="cell jupyter input"><div class="code"><pre><code class="python">import pheasant</code></pre></div>
 <div class="report"><p><span class="count">[1]</span>
-<span class="start">2019-04-28 18:24:18</span> (<span class="time">4.04ms</span>)
-<span class="right"><span class="option">(run)</span> <span class="kernel">python3</span> (<span class="total">4.04ms</span>)</span></p></div></div></div>
+<span class="start">2019-04-28 18:35:58</span> (<span class="time">5.03ms</span>)
+<span class="right"><span class="option">(run)</span> <span class="kernel">python3</span> (<span class="total">5.03ms</span>)</span></p></div></div></div>
 
 <div class="pheasant-fenced-code"><div class="cell embed source"><div class="code"><pre><code class="markdown">{%?pheasant%}</code></pre></div></div></div>
 
@@ -165,8 +158,8 @@ edit_uri: &#34;&#34;
 <p>A part of the module can be specified as usual.</p>
 <div class="pheasant-fenced-code"><div class="cell jupyter input"><div class="code"><pre><code class="python">from pheasant.renderers.jupyter.jupyter import Jupyter</code></pre></div>
 <div class="report"><p><span class="count">[2]</span>
-<span class="start">2019-04-28 18:24:18</span> (<span class="time">24.0ms</span>)
-<span class="right"><span class="kernel">python3</span> (<span class="total">37.1ms</span>)</span></p></div></div></div>
+<span class="start">2019-04-28 18:35:58</span> (<span class="time">22.1ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">36.1ms</span>)</span></p></div></div></div>
 
 <div class="pheasant-fenced-code"><div class="cell embed source"><div class="code"><pre><code class="markdown">{%?Jupyter[:21]%}</code></pre></div></div></div>
 
@@ -205,8 +198,8 @@ edit_uri: &#34;&#34;
 <div class="pheasant-fenced-code"><div class="cell jupyter input"><div class="code"><pre><code class="python">def func(x, y):
     return x + y</code></pre></div>
 <div class="report"><p><span class="count">[3]</span>
-<span class="start">2019-04-28 18:24:18</span> (<span class="time">5.97ms</span>)
-<span class="right"><span class="kernel">python3</span> (<span class="total">60.1ms</span>)</span></p></div></div></div>
+<span class="start">2019-04-28 18:35:58</span> (<span class="time">5.00ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">56.1ms</span>)</span></p></div></div></div>
 
 <p>If the included file contains header statements, the document structure may be broken. For example, a file to be included contains:</p>
 <div class="pheasant-header"><div class="other"><p class="caption"><span class="prefix">File</span> <span class="number">2</span>
@@ -240,6 +233,5 @@ Text.</code></pre></div></div></div>
   </div>
   <script src="../../js/theme.js"></script>
   <script src="../../js/pheasant.js"></script>
-  <script src="../../search/main.js"></script>
 </body>
 </html>
