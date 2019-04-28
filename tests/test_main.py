@@ -37,4 +37,4 @@ def test_main_prompt():
         assert "[markdown]" in result.output
         assert "[html]" in result.output
         assert '<code class="python">2*3</code>' in result.output
-        assert '<code class="plaintext">6</code>' in result.output
+        assert '<code class="nohighlight">6</code>' in result.output
