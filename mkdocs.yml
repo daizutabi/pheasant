@@ -8,11 +8,10 @@ edit_uri: ""
 
 theme:
     name: ivory
-    version: stable
 
 plugins:
   - pheasant:
-  # - search:
+      version: pheasant
 
 nav:
   - Home: index.md

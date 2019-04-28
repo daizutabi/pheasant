@@ -1,3 +1,4 @@
+import importlib
 import io
 import logging
 import os
@@ -8,7 +9,7 @@ import yaml
 from mkdocs.config import config_options
 from mkdocs.plugins import BasePlugin
 from mkdocs.structure.files import get_files
-from mkdocs.utils import markdown_extensions
+from mkdocs.utils import markdown_extensions, string_types
 
 import pheasant
 from pheasant.core.pheasant import Pheasant
@@ -19,16 +20,23 @@ markdown_extensions.append(".py")
 
 
 class PheasantPlugin(BasePlugin):
-    config_scheme = (("jupyter", config_options.Type(bool, default=True)),)
+    config_scheme = (
+        ("jupyter", config_options.Type(bool, default=True)),
+        ("version", config_options.Type(string_types, default="")),
+    )
     converter = Pheasant()
     version = pheasant.__version__
     logger.info(f"[Pheasant] Converter created.")
 
     def on_config(self, config, **kwargs):
-        if self.config:
-            self.converter.update_config(self.config)
-
         self.converter.jupyter.enabled = self.config["jupyter"]
+        if self.config["version"]:
+            try:
+                module = importlib.import_module(self.config["version"])
+                version = module.__version__
+            except Exception:
+                version = self.config["version"]
+            config["theme"].version = version
 
         self.config["extra_css"] = list(config["extra_css"])
         self.config["extra_javascript"] = list(config["extra_javascript"])
