@@ -14,10 +14,14 @@ You can check your currently installed version using `pheasant --version`:
 
 ~~~bash terminal
 $ pheasant --version
-pheasant, version 2.2.21 from /path/to/pheasant (Python 3.7)
+pheasant, version 2.2.22 from /path/to/pheasant (Python 3.7)
 ~~~
 
 ## Change log
+
+### Version 2.2.22 (2019-05-02)
+
+* Build documentation without `nav`.
 
 ### Version 2.2.21 (2019-04-29)
 

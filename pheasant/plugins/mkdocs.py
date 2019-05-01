@@ -43,7 +43,8 @@ class PheasantPlugin(BasePlugin):
 
         logger.info(f"[Pheasant] Converter configured.")
 
-        config["nav"] = build_nav(config["nav"], config["docs_dir"])
+        if config["nav"]:
+            config["nav"] = build_nav(config["nav"], config["docs_dir"])
         return config
 
     def on_files(self, files, config):
