@@ -46,7 +46,7 @@ a `print` function is executed via [Jupyter client](https://jupyter-client.readt
 
 ~~~html
 <div class="input"><pre><code class="python">print(1)</code></pre></div>
-<div class="stdout"><pre><code class="text">1</code></pre></div>
+<div class="stdout"><pre><code class="nohighlight">1</code></pre></div>
 ~~~
 
 Then, finally rendered as:
