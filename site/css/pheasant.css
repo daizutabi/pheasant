@@ -170,6 +170,8 @@ h2, h3, h4, h5 {
 .pheasant-fenced-code pre {
   margin: 0px;
   padding: 0px;
+  border: none;
+  background: transparent;
 }
 
 .pheasant-fenced-code code {
