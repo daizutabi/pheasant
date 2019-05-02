@@ -7,7 +7,7 @@ Welcome to Pheasant. Pheasant is a Markdown converter which is designed to work 
 Highlights include:
 
 + Auto generation of outputs for a fenced code block or inline code in Markdown source using [Jupyter client](https://jupyter-client.readthedocs.io/en/stable/). The code language is not restricted to Python.
-+ Auto numbering of headers, figures, and tables, and etc. Numbered objects can be linked from other Markdown sources.
++ Auto numbering of headers, figures, tables, and etc. Numbered objects can be linked from other Markdown sources.
 
 ## Installation
 
@@ -57,7 +57,7 @@ print(1)
 
 Other language code can be executed if a kernel for the language has been installed. For example,
 
-~~~
+~~~copy
 ```javascript
 console.log("Hello Javascript")
 ```
@@ -67,7 +67,7 @@ You can check the kernel name and its total execution count during the conversio
 
 ### Inline code embeded in a Markdown source
 
-**"Inline code"** is a powerful feature of Pheasant. Any python codes surrounded by `{{#` and `}}` are automatically executed and the result remains there. For example, `{{#3*5}}` becomes {{3*5}}. Variables can be assigned in an inline code like this: `{{#name='Pheasant'}}`{{name='Pheasant'}}. Then, `"I'm {{#name}}."` becomes "I'm {{name}}."
+**"Inline code"** is a powerful feature of Pheasant. Any executable codes surrounded by `{{#` and `}}` are automatically executed and the result remains there. For example, `{{#3*5}}` becomes {{3*5}}. Variables can be assigned in an inline code like this: `{{#name='Pheasant'}}`{{name='Pheasant'}}. Then, `"I'm {{#name}}."` becomes "I'm {{name}}."
 
 ### Visualization
 
@@ -210,7 +210,7 @@ a | b
 2 | 3
 ~~~
 
-Pandas's DataFarme is useful to create a table programmatically.
+[Pandas](http://pandas.pydata.org/)'s DataFarme is useful to create a table programmatically.
 
 ~~~copy
 #Table A Pandas's DataFrame
