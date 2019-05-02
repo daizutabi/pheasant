@@ -162,6 +162,10 @@ print(1)
 <h2 id="53-a-package-for-comment-formatting"><span class="pheasant-header"><span class="header"><span class="number">5.3</span> <span class="title">A package for comment formatting</span></span></span></h2>
 <p>In this scheme, we have to write many comments for Markdown cells. But a linter such as pycodestyle doesn't allow us to write a very long comment in one line longer than (for example) 79 characters. This means that we have to write Markdown source with several new line characters even we are writing one paragraph. In order to overcome this incovenient situation, a comment formatting pakage <a href="https://github.com/daizutabi/pyls-cwrap"><code>pyls-cwrap</code></a> has been prepared. You can install this package as <code>pip install pyls-cwrap</code>. In Atom, if you use <a href="https://atom.io/packages/ide-python"><code>ide-python</code></a>, just press [Ctrl]+[Shift]+[C] (Windows, default setting), sequential comments are automatically formatted nicely.</p>
 <h2 id="54-source-code"><span class="pheasant-header"><span class="header"><span class="number">5.4</span> <span class="title">Source code</span></span></span></h2>
+<div class="pheasant-header"><div class="other"><p class="caption"><span class="prefix">File</span> <span class="number">3</span>
+<span class="title">script.py</span></p>
+<div class="content">
+
 <div class="pheasant-fenced-code"><div class="cell embed file"><div class="code"><pre><code class="python"># # Standalone Script
 # Using Atom&#39;s [Hydorgen](https://nteract.gitbooks.io/hydrogen/) package, you can
 # execute any Python script codes within a fenced code block in a Markdown source. So
@@ -291,9 +295,10 @@ c = 3
 # [`ide-python`](https://atom.io/packages/ide-python), just press [Ctrl]+[Shift]+[C]
 # (Windows, default setting), sequential comments are automatically formatted nicely.
 
-
 # ## Source code
-# {%=script.py%}</code></pre></div></div></div></div>
+# #File script.py {%=script.py%}</code></pre></div></div></div>
+
+</div></div></div></div>
         <footer>
     <div class="footer-buttons">
         <div class="previous"><a href="../sympy/" title="SymPy"><span>Previous</span></a></div>

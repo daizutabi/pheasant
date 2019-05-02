@@ -127,6 +127,5 @@ c = 3
 # [`ide-python`](https://atom.io/packages/ide-python), just press [Ctrl]+[Shift]+[C]
 # (Windows, default setting), sequential comments are automatically formatted nicely.
 
-
 # ## Source code
-# {%=script.py%}
+# #File script.py {%=script.py%}
