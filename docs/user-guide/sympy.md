@@ -64,14 +64,3 @@ In equation \eqref{eq:sample}, we find the value of an interesting integral:
 
 #Eq \int_0^\infty \frac{x^3}{e^x-1}\,dx = \frac{\pi^4}{15} \label{eq:sample}
 ~~~
-
-
-## Matrix
-
-```python
-import numpy as np
-
-xw = np.array([[11, 12, 13, 14], [21, 22, 23, 24], [31, 32, 33, 34]])
-b = np.array([1000, 2000, 3000, 4000])
-sympy.Matrix(xw + np.ones((3, 1), int) @ b.reshape((1, -1)))
-```
