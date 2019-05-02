@@ -126,3 +126,7 @@ c = 3
 # install this package as `pip install pyls-cwrap`. In Atom, if you use
 # [`ide-python`](https://atom.io/packages/ide-python), just press [Ctrl]+[Shift]+[C]
 # (Windows, default setting), sequential comments are automatically formatted nicely.
+
+
+# ## Source code
+# {%=script.py%}
