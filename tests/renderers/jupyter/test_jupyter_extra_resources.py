@@ -1,8 +1,10 @@
 import pytest
 from bokeh.resources import CDN
 
-from pheasant.renderers.jupyter.ipython import (bokeh_extra_resources,
-                                                holoviews_extra_resources)
+from pheasant.renderers.jupyter.ipython import (altair_extra_resources,
+                                                bokeh_extra_resources,
+                                                holoviews_extra_resources,
+                                                sympy_extra_resources)
 
 
 @pytest.mark.parametrize(
@@ -56,3 +58,15 @@ def test_holoviews_extra_raw_javascript():
     extra = resources["extra_raw_javascript"]
     assert len(extra) == 2
     assert extra[0].startswith("<script")
+
+
+def test_altair_extra_resources():
+    resources = altair_extra_resources()
+    assert 'extra_raw_css' in resources
+    assert len(resources['extra_javascript']) == 3
+
+
+def test_sympy_extra_resources():
+    resources = sympy_extra_resources()
+    assert 'extra_raw_javascript' in resources
+    assert len(resources['extra_raw_javascript']) == 1
