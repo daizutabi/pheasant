@@ -4,7 +4,7 @@
   {%- if output.type == 'error' -%}
     <span class="error">{{ output.ename }}: {{ output.evalue }}</span>
   {%- elif 'text/plain' in output.data -%}
-    <span class="output">{{ output.data['text/plain'] }}</span>
+    {{ output.data['text/plain'] }}
   {%- elif 'text/latex' in output.data -%}
     {%- autoescape false -%}{{ output.data['text/latex'] }}{%- endautoescape -%}
   {%- endif -%}

@@ -18,11 +18,11 @@ def test_jupyter_parse_text(parse):
     assert output == "[]"
 
     output = parse("1")
-    assert output == '[<span class="output">1</span>]'
+    assert output == '[1]'
     output = parse("'abc'")
-    assert output == '[<span class="output">abc</span>]'
+    assert output == '[abc]'
     output = parse("a='abc';a")
-    assert output == '[<span class="output">abc</span>]'
+    assert output == '[abc]'
 
     # output = parse("1/0")
     # answer = '[<span class="error">ZeroDivisionError: division by zero</span>]'

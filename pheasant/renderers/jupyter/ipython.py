@@ -5,7 +5,7 @@ IMPORTANT: `display` function is called from jupyter kernel.
 import ast
 import json
 import re
-from typing import Dict, Iterable, List, Tuple
+from typing import Any, Dict, Iterable, List, Tuple
 
 import jinja2
 from IPython import get_ipython
@@ -14,6 +14,8 @@ PANDAS_PATTERN = re.compile(
     r'(<style scoped>.*?</style>)|( border="1")|( style="text-align: right;")',
     flags=re.DOTALL,
 )
+
+formatter_kwargs: Dict[str, Any] = {}
 
 
 def pandas_dataframe_to_html(obj) -> str:
@@ -45,7 +47,7 @@ def sympy_to_latex(obj) -> Tuple[str, Dict]:
     """Convert a Sympy's object into latex string."""
     import sympy
 
-    return sympy.latex(obj), {"module": "sympy"}
+    return sympy.latex(obj, **formatter_kwargs), {"module": "sympy"}
 
 
 def sympy_extra_resources() -> Dict[str, List[str]]:

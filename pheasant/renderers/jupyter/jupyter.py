@@ -2,7 +2,7 @@ import os
 import re
 from dataclasses import dataclass, field
 from itertools import takewhile
-from typing import Dict, Iterator, List
+from typing import Dict, Iterator, List, Tuple
 
 from pheasant.core.decorator import commentable, surround
 from pheasant.core.renderer import Renderer
@@ -32,7 +32,6 @@ class CacheMismatchError(BaseException):
 
 
 class Jupyter(Renderer):
-    option: str = field(default="", init=False)
     count: int = field(default=0, init=False)
     cache: List[Cell] = field(default_factory=list, init=False)
     extra_html: str = field(default="", init=False)
@@ -82,27 +81,19 @@ class Jupyter(Renderer):
         code = context["code"]
         if code.startswith("# option:"):
             index = code.index("\n")
-            option = code[9:index].strip()
-            if context["option"]:
-                context["option"] = " ".join([context["option"], option])
-            else:
-                context["option"] = option
-            code = code[index + 1 :]
+            option, code = code[9 : index], code[index + 1 :]
+            context["option"] = " ".join([option, context["option"]]).strip()
             context["code"] = code
         if "inline" in context["option"]:
-            self.option = context["option"] + " fenced-code"
-            splitter.send("{{" + code + "}}")
-            self.option = ""
+            option = context["option"] + " fenced-code"
+            splitter.send("{{" + code + "#" + option + "}}")
             return
-        if "debug" in context["option"]:
-            context["code"] = code
         yield "\n" + self.execute_and_render(code, context, "fenced_code") + "\n\n"
 
     @commentable("code")
     def render_inline_code(self, context, splitter, parser) -> Iterator[str]:
-        context["option"] = self.option
-        code = context["code"]
-        if "fenced-code" not in self.option:
+        code, context["option"] = split_option(context["code"])
+        if "fenced-code" not in context["option"]:
             code = code.replace(";", "\n")
         yield self.execute_and_render(code, context, "inline_code")
 
@@ -141,6 +132,15 @@ class Jupyter(Renderer):
         if self.count == 1:
             self.progress_bar.progress("Start", count=self.count)
 
+        kwargs = ""
+        if language == "python":
+            context["option"], kwargs = split_kwargs_from_option(context["option"])
+            if kwargs:
+                kernel.execute(
+                    "from pheasant.renderers.jupyter.ipython import formatter_kwargs\n"
+                    f"formatter_kwargs.update(dict({kwargs}))"
+                )
+
         def execute():
             if self.verbose == 2:
                 code_ = "\n".join([language + "> " + line for line in code.split("\n")])
@@ -157,6 +157,12 @@ class Jupyter(Renderer):
             return f"{relpath}({result[1]['total']})"
 
         outputs, report = self.progress_bar.progress(execute, format, self.count)
+
+        if kwargs:
+            kernel.execute(
+                "from pheasant.renderers.jupyter.ipython import formatter_kwargs\n"
+                "formatter_kwargs.clear()"
+            )
 
         cell.extra_module = get_extra_module(outputs)
         select_display_data(outputs)
@@ -183,3 +189,25 @@ class Jupyter(Renderer):
             if len(self.cache) > self.count:
                 self.cache[self.count].valid = False
         return cell.output
+
+
+def split_option(code: str) -> Tuple[str, str]:
+    if "#" not in code:
+        return code, ""
+    code, option = code.split("#")
+    return code.strip(), option.strip()
+
+
+def split_kwargs_from_option(option: str) -> Tuple[str, str]:
+    if "=" not in option:
+        return option, ""
+    options = option.split(" ")
+    option_list = []
+    kwargs_list = []
+    for x in options:
+        if "=" in x:
+            kwargs_list.append(x)
+        elif x:
+            option_list.append(x)
+
+    return " ".join(option_list), ",".join(kwargs_list)
