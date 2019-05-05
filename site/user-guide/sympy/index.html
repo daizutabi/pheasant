@@ -83,16 +83,16 @@ TeX: { equationNumbers: { autoNumber: "AMS" } } });</script>
 <p>First, import the SymPy package.</p>
 <div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">import sympy</code></pre></div>
 <div class="report"><p><span class="count">[1]</span>
-<span class="start">2019-05-05 10:15:18</span> (<span class="time">6.04ms</span>)
-<span class="right"><span class="kernel">python3</span> (<span class="total">2.19s</span>)</span></p></div></div></div></div>
+<span class="start">2019-05-06 05:17:42</span> (<span class="time">15.6ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">15.6ms</span>)</span></p></div></div></div></div>
 
 <h2 id="41-basic-usage"><span class="pheasant-header"><span class="header"><span class="number">4.1</span> <span class="title">Basic usage</span></span></span></h2>
 <p>SymPy symbols or expressions in a fenced code block are automatically rendered in display mode:</p>
 <div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">x = sympy.Symbol(&#39;x&#39;)
 x**3</code></pre></div>
 <div class="report"><p><span class="count">[2]</span>
-<span class="start">2019-05-05 10:15:18</span> (<span class="time">11.0ms</span>)
-<span class="right"><span class="kernel">python3</span> (<span class="total">2.20s</span>)</span></p></div></div>
+<span class="start">2019-05-06 05:17:42</span> (<span class="time">18.4ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">34.0ms</span>)</span></p></div></div>
 
 <div class="cell jupyter display"><div class="content">$$x^{3}$$</div></div></div></div>
 
@@ -124,19 +124,18 @@ $${{x**2+1/x+1}}$$</code></pre></div></div></div>
 Example: ${{1/x}}$ vs. ${{1/x # fold_short_frac=True}}$</code></pre></div></div></div>
 
 <p><code>fold_short_frac</code> option: Emit <code>p/q</code> instead of <code>\frac{p}{q}</code></p>
-<p>Example: <span><span class="MathJax_Preview">\frac{1}{x}</span><script type="math/tex">\frac{1}{x}</script></span> vs. <span><span class="MathJax_Preview">&lt;span class="pheasant-inline-code"&gt;&lt;span class="error"&gt;NameError: name &#39;x&#39; is not defined&lt;/span&gt;&lt;/span&gt;</span><script type="math/tex"><span class="pheasant-inline-code"><span class="error">NameError: name &#39;x&#39; is not defined</span></span></script></span></p>
+<p>Example: <span><span class="MathJax_Preview">\frac{1}{x}</span><script type="math/tex">\frac{1}{x}</script></span> vs. <span><span class="MathJax_Preview">1 / x</span><script type="math/tex">1 / x</script></span></p>
 <p>In a fenced code block, you can use normal option notation:</p>
 <div class="pheasant-fenced-code"><div class="cell embed source"><div class="code"><pre><code class="markdown">```python fold_frac_powers=True
 x**sympy.Rational(2, 3)
 ```</code></pre></div></div></div>
 
-<div class="pheasant-fenced-code"><div class="cell jupyter input"><div class="code"><pre><code class="python">x**sympy.Rational(2, 3)</code></pre></div>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">x**sympy.Rational(2, 3)</code></pre></div>
 <div class="report"><p><span class="count">[13]</span>
-<span class="start">2019-05-05 12:49:55</span> (<span class="time">16.0ms</span>)
-<span class="right"><span class="kernel">python3</span> (<span class="total">356ms</span>)</span></p></div></div><div class="cell jupyter error"><div class="code"><pre><code class="nohighlight">NameError: name &#39;x&#39; is not defined</code></pre></div>
-      <div class="report"><pre><code class="nohighlight">NameError                                 Traceback (most recent call last)
-&lt;ipython-input-11-e8ef2743478d&gt; in &lt;module&gt;
-----&gt; 1 x**sympy.Rational(2, 3)</code></pre></div></div></div>
+<span class="start">2019-05-06 05:17:42</span> (<span class="time">11.0ms</span>)
+<span class="right"><span class="option">(fold_frac_powers=True)</span> <span class="kernel">python3</span> (<span class="total">164ms</span>)</span></p></div></div>
+
+<div class="cell jupyter display"><div class="content">$$x^{2/3}$$</div></div></div></div>
 
 <h2 id="43-numbering"><span class="pheasant-header"><span class="header"><span class="number">4.3</span> <span class="title">Numbering</span></span></span></h2>
 <p>Pheasant uses MathJax's <a href="http://docs.mathjax.org/en/latest/tex.html#automatic-equation-numbering">Automatic Equation Numbering</a>. Use the custom header syntax like the figure and table. Also, you can add a tag for link.</p>
@@ -144,7 +143,7 @@ x**sympy.Rational(2, 3)
 
 <div class="pheasant-header"><div class="equation" id="eq-a"><p>
 \begin{equation}
-f(x) = <span class="error">NameError: name &#39;x&#39; is not defined</span>
+f(x) = x^{2}
 \label{eq-a}
 \end{equation}
 
@@ -155,7 +154,7 @@ f(x) = <span class="error">NameError: name &#39;x&#39; is not defined</span>
 
 <div class="pheasant-header"><div class="equation"><p>
 \begin{equation*}
-f(x) = <span class="error">NameError: name &#39;x&#39; is not defined</span>
+f(x) = x^{2}
 \end{equation*}
 
 </p></div></div>
@@ -179,198 +178,198 @@ f(x) = <span class="error">NameError: name &#39;x&#39; is not defined</span>
 <h2 id="44-latex-utility-function"><span class="pheasant-header"><span class="header"><span class="number">4.4</span> <span class="title">LaTeX utility function</span></span></span></h2>
 <p>For convenience, Pheasant prepares some utility functions.</p>
 <h3 id="subscript"><span class="pheasant-header"><span class="header"><span class="title">subscript</span></span></span></h3>
-<div class="pheasant-fenced-code"><div class="cell jupyter input"><div class="code"><pre><code class="python">from pheasant.utils import latex as L
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">from pheasant.utils import latex as L
 print(L.subscript(&#34;x&#34;, 1))
 print(L.subscript(&#34;y&#34;, &#34;i&#34;))</code></pre></div>
 <div class="report"><p><span class="count">[16]</span>
-<span class="start">2019-05-05 12:49:55</span> (<span class="time">113ms</span>)
-<span class="right"><span class="kernel">python3</span> (<span class="total">701ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code"><pre><code class="nohighlight">x_{1}
-y_{i}</code></pre></div></div></div>
+<span class="start">2019-05-06 05:17:43</span> (<span class="time">23.0ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">215ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code"><pre><code class="nohighlight">x_{1}
+y_{i}</code></pre></div></div></div></div>
 
 <h3 id="row"><span class="pheasant-header"><span class="header"><span class="title">row</span></span></span></h3>
-<div class="pheasant-fenced-code"><div class="cell jupyter input"><div class="code"><pre><code class="python">print(L.row(&#34;a&#34;, 3))
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">print(L.row(&#34;a&#34;, 3))
 print(L.row(&#34;b&#34;, 3, 4))
 print(L.row(&#34;c&#34;, 3, 4, transpose=True))</code></pre></div>
 <div class="report"><p><span class="count">[17]</span>
-<span class="start">2019-05-05 12:49:56</span> (<span class="time">10.0ms</span>)
-<span class="right"><span class="kernel">python3</span> (<span class="total">711ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code"><pre><code class="nohighlight">a_{1}&amp;a_{2}&amp;a_{3}
+<span class="start">2019-05-06 05:17:43</span> (<span class="time">8.00ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">223ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code"><pre><code class="nohighlight">a_{1}&amp;a_{2}&amp;a_{3}
 b_{31}&amp;b_{32}&amp;b_{33}&amp;b_{34}
-c_{13}&amp;c_{23}&amp;c_{33}&amp;c_{43}</code></pre></div></div></div>
+c_{13}&amp;c_{23}&amp;c_{33}&amp;c_{43}</code></pre></div></div></div></div>
 
 <h3 id="matrix"><span class="pheasant-header"><span class="header"><span class="title">matrix</span></span></span></h3>
-<div class="pheasant-fenced-code"><div class="cell jupyter input"><div class="code"><pre><code class="python">print(L.matrix(&#34;x&#34;, 2, 3))</code></pre></div>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">print(L.matrix(&#34;x&#34;, 2, 3))</code></pre></div>
 <div class="report"><p><span class="count">[18]</span>
-<span class="start">2019-05-05 12:49:56</span> (<span class="time">8.00ms</span>)
-<span class="right"><span class="kernel">python3</span> (<span class="total">719ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code"><pre><code class="nohighlight">\left[\begin{array}{ccc}
+<span class="start">2019-05-06 05:17:43</span> (<span class="time">7.00ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">230ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code"><pre><code class="nohighlight">\left[\begin{array}{ccc}
 x_{11}&amp;x_{12}&amp;x_{13}\\
 x_{21}&amp;x_{22}&amp;x_{23}
-\end{array}\right]</code></pre></div></div></div>
+\end{array}\right]</code></pre></div></div></div></div>
 
-<div class="pheasant-fenced-code"><div class="cell jupyter input"><div class="code"><pre><code class="python">print(L.matrix(&#34;x&#34;, 2, 3, mat_delim=&#34;(&#34;))</code></pre></div>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">print(L.matrix(&#34;x&#34;, 2, 3, mat_delim=&#34;(&#34;))</code></pre></div>
 <div class="report"><p><span class="count">[19]</span>
-<span class="start">2019-05-05 12:49:56</span> (<span class="time">8.03ms</span>)
-<span class="right"><span class="kernel">python3</span> (<span class="total">727ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code"><pre><code class="nohighlight">\left(\begin{array}{ccc}
+<span class="start">2019-05-06 05:17:43</span> (<span class="time">7.00ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">237ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code"><pre><code class="nohighlight">\left(\begin{array}{ccc}
 x_{11}&amp;x_{12}&amp;x_{13}\\
 x_{21}&amp;x_{22}&amp;x_{23}
-\end{array}\right)</code></pre></div></div></div>
+\end{array}\right)</code></pre></div></div></div></div>
 
-<div class="pheasant-fenced-code"><div class="cell jupyter input"><div class="code"><pre><code class="python">print(L.matrix(&#34;x&#34;, 2, 3, transpose=True))</code></pre></div>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">print(L.matrix(&#34;x&#34;, 2, 3, transpose=True))</code></pre></div>
 <div class="report"><p><span class="count">[20]</span>
-<span class="start">2019-05-05 12:49:56</span> (<span class="time">11.0ms</span>)
-<span class="right"><span class="kernel">python3</span> (<span class="total">738ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code"><pre><code class="nohighlight">\left[\begin{array}{ccc}
+<span class="start">2019-05-06 05:17:43</span> (<span class="time">7.00ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">244ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code"><pre><code class="nohighlight">\left[\begin{array}{ccc}
 x_{11}&amp;x_{21}&amp;x_{31}\\
 x_{12}&amp;x_{22}&amp;x_{32}
-\end{array}\right]</code></pre></div></div></div>
+\end{array}\right]</code></pre></div></div></div></div>
 
 <h3 id="sympy_matrix"><span class="pheasant-header"><span class="header"><span class="title">sympy_matrix</span></span></span></h3>
-<div class="pheasant-fenced-code"><div class="cell jupyter input"><div class="code"><pre><code class="python">L.sympy_matrix(&#34;x&#34;, 2, 3)</code></pre></div>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">L.sympy_matrix(&#34;x&#34;, 2, 3)</code></pre></div>
 <div class="report"><p><span class="count">[21]</span>
-<span class="start">2019-05-05 12:49:56</span> (<span class="time">10.0ms</span>)
-<span class="right"><span class="kernel">python3</span> (<span class="total">748ms</span>)</span></p></div></div>
+<span class="start">2019-05-06 05:17:43</span> (<span class="time">13.0ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">257ms</span>)</span></p></div></div>
 
-<div class="cell jupyter display"><div class="content">$$\left[\begin{matrix}x_{11} & x_{12} & x_{13}\\x_{21} & x_{22} & x_{23}\end{matrix}\right]$$</div></div></div>
+<div class="cell jupyter display"><div class="content">$$\left[\begin{matrix}x_{11} & x_{12} & x_{13}\\x_{21} & x_{22} & x_{23}\end{matrix}\right]$$</div></div></div></div>
 
 <h3 id="const-ones-zeros"><span class="pheasant-header"><span class="header"><span class="title">const, ones, zeros</span></span></span></h3>
-<div class="pheasant-fenced-code"><div class="cell jupyter input"><div class="code"><pre><code class="python">print(L.const(1, 2, 3))</code></pre></div>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">print(L.const(1, 2, 3))</code></pre></div>
 <div class="report"><p><span class="count">[22]</span>
-<span class="start">2019-05-05 12:49:56</span> (<span class="time">11.0ms</span>)
-<span class="right"><span class="kernel">python3</span> (<span class="total">759ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code"><pre><code class="nohighlight">\left[\begin{array}{ccc}
+<span class="start">2019-05-06 05:17:43</span> (<span class="time">6.01ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">263ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code"><pre><code class="nohighlight">\left[\begin{array}{ccc}
 1&amp;1&amp;1\\
 1&amp;1&amp;1
-\end{array}\right]</code></pre></div></div></div>
+\end{array}\right]</code></pre></div></div></div></div>
 
-<div class="pheasant-fenced-code"><div class="cell jupyter input"><div class="code"><pre><code class="python">print(L.ones(2, 3))</code></pre></div>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">print(L.ones(2, 3))</code></pre></div>
 <div class="report"><p><span class="count">[23]</span>
-<span class="start">2019-05-05 12:49:56</span> (<span class="time">9.01ms</span>)
-<span class="right"><span class="kernel">python3</span> (<span class="total">768ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code"><pre><code class="nohighlight">\left[\begin{array}{ccc}
+<span class="start">2019-05-06 05:17:43</span> (<span class="time">8.00ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">271ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code"><pre><code class="nohighlight">\left[\begin{array}{ccc}
 1&amp;1&amp;1\\
 1&amp;1&amp;1
-\end{array}\right]</code></pre></div></div></div>
+\end{array}\right]</code></pre></div></div></div></div>
 
-<div class="pheasant-fenced-code"><div class="cell jupyter input"><div class="code"><pre><code class="python">print(L.zeros(2, 3))</code></pre></div>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">print(L.zeros(2, 3))</code></pre></div>
 <div class="report"><p><span class="count">[24]</span>
-<span class="start">2019-05-05 12:49:56</span> (<span class="time">8.02ms</span>)
-<span class="right"><span class="kernel">python3</span> (<span class="total">776ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code"><pre><code class="nohighlight">\left[\begin{array}{ccc}
+<span class="start">2019-05-06 05:17:43</span> (<span class="time">10.00ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">281ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code"><pre><code class="nohighlight">\left[\begin{array}{ccc}
 0&amp;0&amp;0\\
 0&amp;0&amp;0
-\end{array}\right]</code></pre></div></div></div>
+\end{array}\right]</code></pre></div></div></div></div>
 
 <h3 id="vector"><span class="pheasant-header"><span class="header"><span class="title">vector</span></span></span></h3>
-<div class="pheasant-fenced-code"><div class="cell jupyter input"><div class="code"><pre><code class="python">print(L.vector(&#34;v&#34;, 4))</code></pre></div>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">print(L.vector(&#34;v&#34;, 4))</code></pre></div>
 <div class="report"><p><span class="count">[25]</span>
-<span class="start">2019-05-05 12:49:56</span> (<span class="time">7.04ms</span>)
-<span class="right"><span class="kernel">python3</span> (<span class="total">783ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code"><pre><code class="nohighlight">\left[\begin{array}{cccc}
+<span class="start">2019-05-06 05:17:43</span> (<span class="time">5.00ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">286ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code"><pre><code class="nohighlight">\left[\begin{array}{cccc}
 v_{1}&amp;v_{2}&amp;v_{3}&amp;v_{4}
-\end{array}\right]</code></pre></div></div></div>
+\end{array}\right]</code></pre></div></div></div></div>
 
-<div class="pheasant-fenced-code"><div class="cell jupyter input"><div class="code"><pre><code class="python">print(L.vector(&#34;u&#34;, 4, transpose=True, mat_delim=&#34;(&#34;))</code></pre></div>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">print(L.vector(&#34;u&#34;, 4, transpose=True, mat_delim=&#34;(&#34;))</code></pre></div>
 <div class="report"><p><span class="count">[26]</span>
-<span class="start">2019-05-05 12:49:56</span> (<span class="time">9.05ms</span>)
-<span class="right"><span class="kernel">python3</span> (<span class="total">792ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code"><pre><code class="nohighlight">\left(\begin{array}{c}
+<span class="start">2019-05-06 05:17:43</span> (<span class="time">10.0ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">296ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code"><pre><code class="nohighlight">\left(\begin{array}{c}
 u_{1}\\u_{2}\\u_{3}\\u_{4}
-\end{array}\right)</code></pre></div></div></div>
+\end{array}\right)</code></pre></div></div></div></div>
 
 <h3 id="partial"><span class="pheasant-header"><span class="header"><span class="title">partial</span></span></span></h3>
-<div class="pheasant-fenced-code"><div class="cell jupyter input"><div class="code"><pre><code class="python">print(L.partial(&#34;f&#34;, &#34;x&#34;))</code></pre></div>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">print(L.partial(&#34;f&#34;, &#34;x&#34;))</code></pre></div>
 <div class="report"><p><span class="count">[27]</span>
-<span class="start">2019-05-05 12:49:56</span> (<span class="time">10.0ms</span>)
-<span class="right"><span class="kernel">python3</span> (<span class="total">802ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code"><pre><code class="nohighlight">\partial f/\partial\mathbf{X}</code></pre></div></div></div>
+<span class="start">2019-05-06 05:17:43</span> (<span class="time">6.00ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">302ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code"><pre><code class="nohighlight">\partial f/\partial\mathbf{X}</code></pre></div></div></div></div>
 
-<div class="pheasant-fenced-code"><div class="cell jupyter input"><div class="code"><pre><code class="python">print(L.partial(&#34;f&#34;, &#34;x&#34;, frac=True))</code></pre></div>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">print(L.partial(&#34;f&#34;, &#34;x&#34;, frac=True))</code></pre></div>
 <div class="report"><p><span class="count">[28]</span>
-<span class="start">2019-05-05 12:49:56</span> (<span class="time">8.06ms</span>)
-<span class="right"><span class="kernel">python3</span> (<span class="total">811ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code"><pre><code class="nohighlight">\frac{\partial f}{\partial\mathbf{X}}</code></pre></div></div></div>
+<span class="start">2019-05-06 05:17:43</span> (<span class="time">7.99ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">310ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code"><pre><code class="nohighlight">\frac{\partial f}{\partial\mathbf{X}}</code></pre></div></div></div></div>
 
 <h3 id="matrix_1"><span class="pheasant-header"><span class="header"><span class="title">Matrix</span></span></span></h3>
-<div class="pheasant-fenced-code"><div class="cell jupyter input"><div class="code"><pre><code class="python">X = L.Matrix(&#34;x&#34;, 3, 2)
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">X = L.Matrix(&#34;x&#34;, 3, 2)
 print(X)</code></pre></div>
 <div class="report"><p><span class="count">[29]</span>
-<span class="start">2019-05-05 12:49:56</span> (<span class="time">8.02ms</span>)
-<span class="right"><span class="kernel">python3</span> (<span class="total">819ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code"><pre><code class="nohighlight">\left[\begin{array}{cc}
+<span class="start">2019-05-06 05:17:43</span> (<span class="time">7.02ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">317ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code"><pre><code class="nohighlight">\left[\begin{array}{cc}
 x_{11}&amp;x_{12}\\
 x_{21}&amp;x_{22}\\
 x_{31}&amp;x_{32}
-\end{array}\right]</code></pre></div></div></div>
+\end{array}\right]</code></pre></div></div></div></div>
 
-<div class="pheasant-fenced-code"><div class="cell jupyter input"><div class="code"><pre><code class="python">print(X.T)</code></pre></div>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">print(X.T)</code></pre></div>
 <div class="report"><p><span class="count">[30]</span>
-<span class="start">2019-05-05 12:49:56</span> (<span class="time">7.98ms</span>)
-<span class="right"><span class="kernel">python3</span> (<span class="total">827ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code"><pre><code class="nohighlight">\left[\begin{array}{ccc}
+<span class="start">2019-05-06 05:17:43</span> (<span class="time">7.00ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">324ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code"><pre><code class="nohighlight">\left[\begin{array}{ccc}
 x_{11}&amp;x_{21}&amp;x_{31}\\
 x_{12}&amp;x_{22}&amp;x_{32}
-\end{array}\right]</code></pre></div></div></div>
+\end{array}\right]</code></pre></div></div></div></div>
 
-<div class="pheasant-fenced-code"><div class="cell jupyter input"><div class="code"><pre><code class="python">X.S  # sympy.Matrix</code></pre></div>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">X.S  # sympy.Matrix</code></pre></div>
 <div class="report"><p><span class="count">[31]</span>
-<span class="start">2019-05-05 12:49:56</span> (<span class="time">10.0ms</span>)
-<span class="right"><span class="kernel">python3</span> (<span class="total">837ms</span>)</span></p></div></div>
+<span class="start">2019-05-06 05:17:43</span> (<span class="time">10.0ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">334ms</span>)</span></p></div></div>
 
-<div class="cell jupyter display"><div class="content">$$\left[\begin{matrix}x_{11} & x_{12}\\x_{21} & x_{22}\\x_{31} & x_{32}\end{matrix}\right]$$</div></div></div>
+<div class="cell jupyter display"><div class="content">$$\left[\begin{matrix}x_{11} & x_{12}\\x_{21} & x_{22}\\x_{31} & x_{32}\end{matrix}\right]$$</div></div></div></div>
 
-<div class="pheasant-fenced-code"><div class="cell jupyter input"><div class="code"><pre><code class="python">print(X.partial(&#34;f&#34;))</code></pre></div>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">print(X.partial(&#34;f&#34;))</code></pre></div>
 <div class="report"><p><span class="count">[32]</span>
-<span class="start">2019-05-05 12:49:56</span> (<span class="time">9.00ms</span>)
-<span class="right"><span class="kernel">python3</span> (<span class="total">846ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code"><pre><code class="nohighlight">\left[\begin{array}{cc}
+<span class="start">2019-05-06 05:17:43</span> (<span class="time">5.99ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">340ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code"><pre><code class="nohighlight">\left[\begin{array}{cc}
 \partial f/\partial x_{11}&amp;\partial f/\partial x_{12}\\
 \partial f/\partial x_{21}&amp;\partial f/\partial x_{22}\\
 \partial f/\partial x_{31}&amp;\partial f/\partial x_{32}
-\end{array}\right]</code></pre></div></div></div>
+\end{array}\right]</code></pre></div></div></div></div>
 
-<div class="pheasant-fenced-code"><div class="cell jupyter input"><div class="code"><pre><code class="python">print(X.partial(&#34;f&#34;, frac=True))</code></pre></div>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">print(X.partial(&#34;f&#34;, frac=True))</code></pre></div>
 <div class="report"><p><span class="count">[33]</span>
-<span class="start">2019-05-05 12:49:56</span> (<span class="time">8.00ms</span>)
-<span class="right"><span class="kernel">python3</span> (<span class="total">854ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code"><pre><code class="nohighlight">\left[\begin{array}{cc}
+<span class="start">2019-05-06 05:17:43</span> (<span class="time">6.98ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">347ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code"><pre><code class="nohighlight">\left[\begin{array}{cc}
 \frac{\partial f}{\partial x_{11}}&amp;\frac{\partial f}{\partial x_{12}}\\
 \frac{\partial f}{\partial x_{21}}&amp;\frac{\partial f}{\partial x_{22}}\\
 \frac{\partial f}{\partial x_{31}}&amp;\frac{\partial f}{\partial x_{32}}
-\end{array}\right]</code></pre></div></div></div>
+\end{array}\right]</code></pre></div></div></div></div>
 
-<div class="pheasant-fenced-code"><div class="cell jupyter input"><div class="code"><pre><code class="python">print(X.spartial(&#34;f&#34;))</code></pre></div>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">print(X.spartial(&#34;f&#34;))</code></pre></div>
 <div class="report"><p><span class="count">[34]</span>
-<span class="start">2019-05-05 12:49:56</span> (<span class="time">6.99ms</span>)
-<span class="right"><span class="kernel">python3</span> (<span class="total">861ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code"><pre><code class="nohighlight">\partial f/\partial\mathbf{X}</code></pre></div></div></div>
+<span class="start">2019-05-06 05:17:43</span> (<span class="time">7.01ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">354ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code"><pre><code class="nohighlight">\partial f/\partial\mathbf{X}</code></pre></div></div></div></div>
 
 <h3 id="vector_1"><span class="pheasant-header"><span class="header"><span class="title">Vector</span></span></span></h3>
-<div class="pheasant-fenced-code"><div class="cell jupyter input"><div class="code"><pre><code class="python">V = L.Vector(&#34;v&#34;, 2)
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">V = L.Vector(&#34;v&#34;, 2)
 print(V)</code></pre></div>
 <div class="report"><p><span class="count">[35]</span>
-<span class="start">2019-05-05 12:49:56</span> (<span class="time">7.98ms</span>)
-<span class="right"><span class="kernel">python3</span> (<span class="total">868ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code"><pre><code class="nohighlight">\left[\begin{array}{cc}
+<span class="start">2019-05-06 05:17:43</span> (<span class="time">6.00ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">360ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code"><pre><code class="nohighlight">\left[\begin{array}{cc}
 v_{1}&amp;v_{2}
-\end{array}\right]</code></pre></div></div></div>
+\end{array}\right]</code></pre></div></div></div></div>
 
-<div class="pheasant-fenced-code"><div class="cell jupyter input"><div class="code"><pre><code class="python">print(V.T)</code></pre></div>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">print(V.T)</code></pre></div>
 <div class="report"><p><span class="count">[36]</span>
-<span class="start">2019-05-05 12:49:56</span> (<span class="time">6.99ms</span>)
-<span class="right"><span class="kernel">python3</span> (<span class="total">875ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code"><pre><code class="nohighlight">\left[\begin{array}{c}
+<span class="start">2019-05-06 05:17:43</span> (<span class="time">5.00ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">365ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code"><pre><code class="nohighlight">\left[\begin{array}{c}
 v_{1}\\v_{2}
-\end{array}\right]</code></pre></div></div></div>
+\end{array}\right]</code></pre></div></div></div></div>
 
-<div class="pheasant-fenced-code"><div class="cell jupyter input"><div class="code"><pre><code class="python">V.S  # sympy.Matrix</code></pre></div>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">V.S  # sympy.Matrix</code></pre></div>
 <div class="report"><p><span class="count">[37]</span>
-<span class="start">2019-05-05 12:49:56</span> (<span class="time">9.01ms</span>)
-<span class="right"><span class="kernel">python3</span> (<span class="total">884ms</span>)</span></p></div></div>
+<span class="start">2019-05-06 05:17:43</span> (<span class="time">8.99ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">374ms</span>)</span></p></div></div>
 
-<div class="cell jupyter display"><div class="content">$$\left[\begin{matrix}v_{11} & v_{12}\end{matrix}\right]$$</div></div></div>
+<div class="cell jupyter display"><div class="content">$$\left[\begin{matrix}v_{11} & v_{12}\end{matrix}\right]$$</div></div></div></div>
 
-<div class="pheasant-fenced-code"><div class="cell jupyter input"><div class="code"><pre><code class="python">print(V.partial(&#34;f&#34;))</code></pre></div>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">print(V.partial(&#34;f&#34;))</code></pre></div>
 <div class="report"><p><span class="count">[38]</span>
-<span class="start">2019-05-05 12:49:56</span> (<span class="time">7.00ms</span>)
-<span class="right"><span class="kernel">python3</span> (<span class="total">892ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code"><pre><code class="nohighlight">\left[\begin{array}{cc}
+<span class="start">2019-05-06 05:17:43</span> (<span class="time">7.00ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">381ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code"><pre><code class="nohighlight">\left[\begin{array}{cc}
 \partial f/\partial v_{1}&amp;\partial f/\partial v_{2}
-\end{array}\right]</code></pre></div></div></div>
+\end{array}\right]</code></pre></div></div></div></div>
 
-<div class="pheasant-fenced-code"><div class="cell jupyter input"><div class="code"><pre><code class="python">print(V.partial(&#34;f&#34;, frac=True))</code></pre></div>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">print(V.partial(&#34;f&#34;, frac=True))</code></pre></div>
 <div class="report"><p><span class="count">[39]</span>
-<span class="start">2019-05-05 12:49:56</span> (<span class="time">7.01ms</span>)
-<span class="right"><span class="kernel">python3</span> (<span class="total">899ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code"><pre><code class="nohighlight">\left[\begin{array}{cc}
+<span class="start">2019-05-06 05:17:43</span> (<span class="time">6.00ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">387ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code"><pre><code class="nohighlight">\left[\begin{array}{cc}
 \frac{\partial f}{\partial v_{1}}&amp;\frac{\partial f}{\partial v_{2}}
-\end{array}\right]</code></pre></div></div></div>
+\end{array}\right]</code></pre></div></div></div></div>
 
-<div class="pheasant-fenced-code"><div class="cell jupyter input"><div class="code"><pre><code class="python">print(V.spartial(&#34;f&#34;))</code></pre></div>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">print(V.spartial(&#34;f&#34;))</code></pre></div>
 <div class="report"><p><span class="count">[40]</span>
-<span class="start">2019-05-05 12:49:56</span> (<span class="time">7.00ms</span>)
-<span class="right"><span class="kernel">python3</span> (<span class="total">906ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code"><pre><code class="nohighlight">\partial f/\partial\mathbf{V}</code></pre></div></div></div></div>
+<span class="start">2019-05-06 05:17:43</span> (<span class="time">7.99ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">395ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code"><pre><code class="nohighlight">\partial f/\partial\mathbf{V}</code></pre></div></div></div></div></div>
         <footer>
     <div class="footer-buttons">
         <div class="previous"><a href="../embed/" title="Embed"><span>Previous</span></a></div>

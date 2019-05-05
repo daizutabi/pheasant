@@ -31,7 +31,6 @@ import pandas as pd
 pd.Series([1,2,3])
 ```
 
-
 ```python
 import altair as alt
 import pandas as pd
@@ -42,4 +41,19 @@ source = pd.DataFrame({
 })
 
 alt.Chart(source).mark_bar().encode(x='a', y='b')
+```
+
+```python
+import matplotlib.pyplot as plt
+```
+
+```python
+def f():
+  plt.plot([1, 2])
+  plt.show()
+```
+
+```python
+for k in range(3):
+  f()
 ```

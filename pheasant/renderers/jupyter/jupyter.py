@@ -134,7 +134,8 @@ class Jupyter(Renderer):
 
         kwargs = ""
         if language == "python":
-            context["option"], kwargs = split_kwargs_from_option(context["option"])
+            # context["option"], kwargs = split_kwargs_from_option(context["option"])
+            _, kwargs = split_kwargs_from_option(context["option"])
             if kwargs:
                 kernel.execute(
                     "from pheasant.renderers.jupyter.ipython import formatter_kwargs\n"
