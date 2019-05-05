@@ -14,12 +14,12 @@ You can check your currently installed version using `pheasant --version`:
 
 ~~~bash terminal
 $ pheasant --version
-pheasant, version 2.2.23 from /path/to/pheasant (Python 3.7)
+pheasant, version 2.2.24 from /path/to/pheasant (Python 3.7)
 ~~~
 
 ## Change log
 
-### Version 2.2.23 (2019-05-05)
+### Version 2.2.24 (2019-05-05)
 
 * `pheasant.utils.latex` module to create LaTeX strings.
 

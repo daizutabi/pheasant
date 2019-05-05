@@ -147,9 +147,6 @@ print(L.partial("f", "x", frac=True))
 ### #Matrix
 ```python
 X = L.Matrix("x", 3, 2)
-X
-```
-```python
 print(X)
 ```
 ```python
@@ -171,9 +168,6 @@ print(X.spartial("f"))
 ### #Vector
 ```python
 V = L.Vector("v", 2)
-V
-```
-```python
 print(V)
 ```
 ```python

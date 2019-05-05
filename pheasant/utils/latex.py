@@ -88,9 +88,6 @@ class Matrix:
         self.ncols = ncols
 
     def __repr__(self) -> str:
-        return f"{self.__class__.__name__}('{self.var}', {self.nrows}, {self.ncols})"
-
-    def __str__(self) -> str:
         return matrix(self.var, self.nrows, self.ncols)
 
     @property
@@ -127,9 +124,6 @@ class Vector:
         self.length = length
 
     def __repr__(self) -> str:
-        return f"{self.__class__.__name__}('{self.var}', {self.length})"
-
-    def __str__(self) -> str:
         return vector(self.var, self.length)
 
     @property
