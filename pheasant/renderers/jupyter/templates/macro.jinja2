@@ -1,12 +1,12 @@
 {%- macro output_display(output, inline) -%}
-  {%- if output.type == 'display_data' or 'text/html' in output.data or 'text/latex' in output.data and not inline-%}
+  {%- if output.type == 'display_data' or 'text/html' in output.data or 'text/latex' in output.data and not inline or 'image/png' in output.data or 'image/jpeg' in output.data or 'image/gif' in output.data -%}
   {{ "\n\n" }}<div class="cell jupyter display"><div class="content">
     {%- for type in output.data -%}
       {%- if type == 'text/html' -%}
         {%- autoescape false -%}{{ output.data[type] }}{%- endautoescape -%}
       {%- elif type == 'text/latex'-%}
         {%- autoescape false -%}{{ output.data[type] }}{%- endautoescape -%}
-      {%- elif type == 'image/png' -%}
+      {%- elif type in ['image/png','image/jpeg', 'image/gif'] -%}
           <p><img alt="{{ type }}" src="data:{{ type }};base64,{{ output.data[type] }}"/></p>
       {%- else -%}
           <p><span style="color: red;">Unspported data type: '{{ type }}'</span></p>

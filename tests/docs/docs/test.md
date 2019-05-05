@@ -43,17 +43,30 @@ source = pd.DataFrame({
 alt.Chart(source).mark_bar().encode(x='a', y='b')
 ```
 
-```python
+```python run
 import matplotlib.pyplot as plt
 ```
 
 ```python
-def f():
-  plt.plot([1, 2])
+def f(k):
+  print(k)
+  plt.plot([1, k])
   plt.show()
 ```
 
-```python
+```python display-last
 for k in range(3):
-  f()
+  f(k)
+```
+
+![jpg](img/cat.jpg)
+
+```python
+from IPython.display import Image
+Image('docs/img/cat.jpg')
+```
+
+```python
+from IPython.display import Image
+Image('docs/img/cvae.gif')
 ```

@@ -299,6 +299,7 @@ DISPLAY_DATA_PRIORITY = [
     "text/latex",
     "image/png",
     "image/jpeg",
+    "image/gif",
     "text/plain",
 ]
 
@@ -310,6 +311,19 @@ def select_display_data(outputs: List[Dict]) -> None:
             if "data" in output and data_type in output["data"]:
                 output["data"] = {data_type: output["data"][data_type]}
                 break
+
+
+def select_last_display_data(outputs: List[Dict]) -> None:
+    last = -1
+    for k, output in enumerate(outputs):
+        if output["type"] == "display_data":
+            last = k
+    if last == -1:
+        return
+
+    outputs[:] = [
+        output for output in outputs[: k] if output["type"] != "display_data"
+    ] + outputs[k:]
 
 
 def select_outputs(outputs: List[Dict]) -> None:

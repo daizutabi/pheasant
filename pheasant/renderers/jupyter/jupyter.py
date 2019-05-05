@@ -9,6 +9,7 @@ from pheasant.core.renderer import Renderer
 from pheasant.renderers.jupyter.ipython import (extra_html, get_extra_module,
                                                 latex_display_format,
                                                 select_display_data,
+                                                select_last_display_data,
                                                 select_outputs)
 from pheasant.renderers.jupyter.kernel import (format_report, kernels,
                                                output_hook)
@@ -81,7 +82,7 @@ class Jupyter(Renderer):
         code = context["code"]
         if code.startswith("# option:"):
             index = code.index("\n")
-            option, code = code[9 : index], code[index + 1 :]
+            option, code = code[9:index], code[index + 1 :]
             context["option"] = " ".join([option, context["option"]]).strip()
             context["code"] = code
         if "inline" in context["option"]:
@@ -170,6 +171,8 @@ class Jupyter(Renderer):
 
         if "debug" in context["option"]:
             outputs = [{"type": "execute_result", "data": {"text/plain": outputs}}]
+        elif 'display-last' in context['option']:
+            select_last_display_data(outputs)
         elif template == "inline_code":
             select_outputs(outputs)
         else:
