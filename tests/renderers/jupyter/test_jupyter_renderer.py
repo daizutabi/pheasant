@@ -66,7 +66,7 @@ def test_render_fenced_code_with_option(jupyter):
     jupyter = Jupyter()
     output = jupyter.parse("```python abc\n# option: def ghi\nprint(1)\n```\n")
     assert 'class="python">print(1)' in output
-    assert "(abc def ghi)" in output
+    assert "(def ghi abc)" in output
 
     output = jupyter.parse("```python\n# option: def ghi\nprint(1)\n```\n")
     assert "(def ghi)" in output
