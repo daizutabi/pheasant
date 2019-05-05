@@ -78,7 +78,7 @@ def partial(f: str, x: str, frac: bool = False) -> str:
     if frac:
         return "\\frac{\\partial " + f + "}{\\partial\\mathbf{" + x.upper() + "}}"
     else:
-        return "\\partial " + f + "/\\partial\\mathbf{" + x.upper() + "} "
+        return "\\partial " + f + "/\\partial\\mathbf{" + x.upper() + "}"
 
 
 class Matrix:

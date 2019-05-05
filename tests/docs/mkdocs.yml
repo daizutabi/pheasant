@@ -10,9 +10,10 @@ theme: readthedocs
 
 plugins:
   - pheasant:
-
+      version: pheasant
 nav:
   - Home: index.md
+  - Main: main.md
   - Test: test.md
   - Script: conftest.py
   - Section: section

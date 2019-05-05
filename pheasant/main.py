@@ -69,7 +69,7 @@ def run(paths, ext, max, restart, shutdown, force, verbose):
     length = len(paths)
     click.secho(f"collected {length} files.", bold=True)
 
-    if len(paths) > max:
+    if len(paths) > max:  # pragma: no cover
         click.secho(f"Too many files. Aborted.", fg="yellow")
         sys.exit()
 

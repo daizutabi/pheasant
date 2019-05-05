@@ -12,7 +12,7 @@ def test_main_version():
     assert __version__ in result.output
 
 
-def test_main_convert():
+def test_main_command():
     runner = CliRunner()
     with runner.isolated_filesystem():
         with open("example.md", "w") as f:
@@ -24,9 +24,19 @@ def test_main_convert():
         result = runner.invoke(cli, ["run", "example.md", "--shutdown"])
         assert result.exit_code == 0
         assert len(kernels.kernels) == 0
-        result = runner.invoke(cli, ["run", "example.md", "--force"])
+        result = runner.invoke(cli, ["run", "example.md", "--force", "-vv"])
         assert result.exit_code == 0
         assert len(kernels.kernels) == 1
+
+        result = runner.invoke(cli, ["list"])
+        assert "example.md (cached)" in result.output
+        result = runner.invoke(cli, ["clean"], input="n\n")
+        assert "Aborted" in result.output
+        result = runner.invoke(cli, ["clean"], input="y\n")
+        assert ".pheasant_cache" in result.output
+        assert "example.md.cache was deleted." in result.output
+        result = runner.invoke(cli, ["clean", "--yes"])
+        assert "No cache found. Aborted." in result.output
 
 
 def test_main_prompt():

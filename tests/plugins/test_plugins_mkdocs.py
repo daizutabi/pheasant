@@ -66,7 +66,7 @@ def test_plugins_mkdocs_plugin(plugin):
 
 
 def test_plugins_mkdocs_files(files, plugin, nav):
-    assert len(files.documentation_pages()) == 8
+    assert len(files.documentation_pages()) == 9
 
 
 def test_plugins_mkdocs_page_render(files, plugin, config):

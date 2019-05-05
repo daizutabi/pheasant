@@ -81,7 +81,7 @@
 <h2 id="51-how-to"><span class="pheasant-header"><span class="header"><span class="number">5.1</span> <span class="title">How to</span></span></span></h2>
 <p>A basic idea is that Markdown cells and Python code cells generally appear alternately. We can write a Markdown cell with a successive comment lines. In order to be recognized as a Markdown cell, <code>#</code> must be at the begining of lines. But we can insert a blank line to make a paragraph.</p>
 <p>Normal Python code is treated as a code cell as you expect. A code cell can contain any comments as long as the comments don't start at the begining of line.</p>
-<div class="pheasant-fenced-code"><div class="cell jupyter input"><div class="code"><pre><code class="python">def add(x: int, y: int) -&gt; int:
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">def add(x: int, y: int) -&gt; int:
     &#34;&#34;&#34;Add `x` and `y`.&#34;&#34;&#34;
     return x + y  # a comment in a code cell.
 
@@ -90,7 +90,7 @@ def sub(x: int, y: int) -&gt; int:
     return x - y  # a comment in a code cell.</code></pre></div>
 <div class="report"><p><span class="count">[1]</span>
 <span class="start">2019-05-05 10:15:19</span> (<span class="time">6.98ms</span>)
-<span class="right"><span class="kernel">python3</span> (<span class="total">2.59s</span>)</span></p></div></div></div>
+<span class="right"><span class="kernel">python3</span> (<span class="total">2.59s</span>)</span></p></div></div></div></div>
 
 <p>When a comment starts at the begining of line after a code block, it divides the source into a code cell and a Markdown cell. This new Markdown cell will continue until next Python code appears.</p>
 <p>If you want to include a comment at the begining of line, you can write like this:</p>
@@ -98,11 +98,11 @@ def sub(x: int, y: int) -&gt; int:
 a = 1</code></pre></div></div></div>
 
 <p>becomes</p>
-<div class="pheasant-fenced-code"><div class="cell jupyter input"><div class="code"><pre><code class="python"># First comment in a code cell.
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python"># First comment in a code cell.
 a = 1</code></pre></div>
 <div class="report"><p><span class="count">[2]</span>
 <span class="start">2019-05-05 10:15:19</span> (<span class="time">6.00ms</span>)
-<span class="right"><span class="kernel">python3</span> (<span class="total">2.60s</span>)</span></p></div></div></div>
+<span class="right"><span class="kernel">python3</span> (<span class="total">2.60s</span>)</span></p></div></div></div></div>
 
 <p>Despite of a Markdown cell, you may want to devide successive codes into separate cells. This can be done by putting a special marker. The marker is <code># -</code> [sharp-space-minus] at the begining of line. For example,</p>
 <div class="pheasant-fenced-code"><div class="cell embed source"><div class="code"><pre><code class="python">a, b = 1, 2
@@ -111,16 +111,16 @@ a
 b</code></pre></div></div></div>
 
 <p>becomes</p>
-<div class="pheasant-fenced-code"><div class="cell jupyter input"><div class="code"><pre><code class="python">a, b = 1, 2
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">a, b = 1, 2
 a</code></pre></div>
 <div class="report"><p><span class="count">[3]</span>
 <span class="start">2019-05-05 10:15:19</span> (<span class="time">9.01ms</span>)
-<span class="right"><span class="kernel">python3</span> (<span class="total">2.61s</span>)</span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="nohighlight">1</code></pre></div></div></div>
+<span class="right"><span class="kernel">python3</span> (<span class="total">2.61s</span>)</span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="nohighlight">1</code></pre></div></div></div></div>
 
-<div class="pheasant-fenced-code"><div class="cell jupyter input"><div class="code"><pre><code class="python">b</code></pre></div>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">b</code></pre></div>
 <div class="report"><p><span class="count">[4]</span>
 <span class="start">2019-05-05 10:15:19</span> (<span class="time">8.00ms</span>)
-<span class="right"><span class="kernel">python3</span> (<span class="total">2.62s</span>)</span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="nohighlight">2</code></pre></div></div></div>
+<span class="right"><span class="kernel">python3</span> (<span class="total">2.62s</span>)</span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="nohighlight">2</code></pre></div></div></div></div>
 
 <p>You can add options to a code block by adding them after a block devider (<code># -</code>).</p>
 <div class="pheasant-fenced-code"><div class="cell embed source"><div class="code"><pre><code class="python"># -hide
@@ -142,10 +142,10 @@ Output: `c` is equal to {{c}}.</code></pre></div></div></div>
 # ```</code></pre></div></div></div>
 
 <p>becomes:</p>
-<div class="pheasant-fenced-code"><div class="cell jupyter input"><div class="code"><pre><code class="python">print(1)</code></pre></div>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">print(1)</code></pre></div>
 <div class="report"><p><span class="count">[7]</span>
 <span class="start">2019-05-05 10:15:19</span> (<span class="time">10.0ms</span>)
-<span class="right"><span class="kernel">python3</span> (<span class="total">2.64s</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code"><pre><code class="nohighlight">1</code></pre></div></div></div>
+<span class="right"><span class="kernel">python3</span> (<span class="total">2.64s</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code"><pre><code class="nohighlight">1</code></pre></div></div></div></div>
 
 <p>And,</p>
 <div class="pheasant-fenced-code"><div class="cell embed source"><div class="code"><pre><code class="python"># ~~~
