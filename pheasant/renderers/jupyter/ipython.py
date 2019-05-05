@@ -32,10 +32,10 @@ def pandas_series_to_html(obj) -> str:
     return pandas_dataframe_to_html(series.to_frame())
 
 
-def register_pandas_formatter(formatters):
+def register_pandas_formatter(formatters):  # pragma: no cover
     try:
         import pandas as pd
-    except ImportError:  # pragma: no cover
+    except ImportError:
         pass
     else:
         pd.options.display.max_colwidth = 0
@@ -61,13 +61,13 @@ def sympy_extra_resources() -> Dict[str, List[str]]:
     return {"extra_raw_javascript": [js]}
 
 
-def register_sympy_formatter(formatters):
+def register_sympy_formatter(formatters):  # pragma: no cover
     try:
         from sympy.core.basic import Basic
         from sympy.matrices.matrices import MatrixBase
         from sympy.physics.vector import Vector, Dyadic
         from sympy.tensor.array import NDimArray
-    except ImportError:  # pragma: no cover
+    except ImportError:
         pass
     else:
         types = [Basic, MatrixBase, Vector, Dyadic, NDimArray]
@@ -89,10 +89,10 @@ def bokeh_extra_resources() -> Dict[str, List[str]]:
     return {"extra_css": CDN.css_files, "extra_javascript": CDN.js_files}
 
 
-def register_bokeh_formatter(formatters):
+def register_bokeh_formatter(formatters):  # pragma: no cover
     try:
         from bokeh.plotting.figure import Figure
-    except ImportError:  # pragma: no cover
+    except ImportError:
         pass
     else:
         formatters["text/html"].for_type(Figure, bokeh_to_html)
@@ -141,10 +141,10 @@ def holoviews_extra_resources() -> Dict[str, List[str]]:
     return _split_html_assets(js_html, css_html)
 
 
-def register_holoviews_formatter(formatters):
+def register_holoviews_formatter(formatters):  # pragma: no cover
     try:
         from holoviews import Element, HoloMap
-    except ImportError:  # pragma: no cover
+    except ImportError:
         pass
     else:
         for cls in [Element, HoloMap]:
@@ -208,7 +208,7 @@ def altair_extra_resources() -> Dict[str, List[str]]:
     return {"extra_raw_css": extra_raw_css, "extra_javascript": extra_javascript}
 
 
-def register_altair_formatter(formatters):
+def register_altair_formatter(formatters):  # pragma: no cover
     try:
         import altair as alt
     except ImportError:  # pragma: no cover
@@ -226,7 +226,7 @@ def register_altair_formatter(formatters):
             formatters["text/html"].for_type(cls, altair_to_html)
 
 
-def register_formatters():
+def register_formatters():  # pragma: no cover
     ip = get_ipython()
     formatters = ip.display_formatter.formatters
     register_altair_formatter(formatters)

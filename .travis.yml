@@ -16,10 +16,8 @@ before_script:
   - mypy pheasant
   - pycodestyle tests
   - pyflakes tests
-  # - python -m ipykernel install --user --name travis
 
 script:
-  # - jupyter kernelspec list
   - python setup.py test
 
 after_success:

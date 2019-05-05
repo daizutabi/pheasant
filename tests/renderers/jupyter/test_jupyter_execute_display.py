@@ -19,41 +19,39 @@ def test_import():
 @pytest.mark.parametrize(
     "code,output", [("1", "1"), ("'a'", "'a'"), ("[1, 2, 3]", "[1, 2, 3]")]
 )
-def test_execute_display_text(code, output):
+def test_execute_text(code, output):
     outputs = kernel.execute(code)
     assert outputs == [
         {"type": "execute_result", "data": {"text/plain": output}, "metadata": {}}
     ]
 
 
-def test_execute_display_dataframe():
-    code = "df=pd.DataFrame([[1,2],[3,4]])\ndisplay(df)"
+def test_execute_dataframe():
+    code = "pd.DataFrame([[1,2],[3,4]])"
     outputs = kernel.execute(code)
     assert outputs[0]["data"]["text/html"].startswith("<table")
 
 
-def test_execute_display_bokeh():
+def test_execute_bokeh():
     code = (
         "plot=figure(plot_width=250,plot_height=250)\n"
-        "plot.circle([1,2],[3,4])\ndisplay(plot)"
+        "plot.circle([1,2],[3,4])\nplot"
     )
     outputs = kernel.execute(code)
     assert outputs[0]["data"]["text/html"].startswith("\n<script")
     assert outputs[0]["metadata"]["text/html"] == {"module": "bokeh"}
 
 
-def test_execute_display_holoviews():
-    code = "curve = hv.Curve(((1, 2), (3, 4)))\ndisplay(curve)"
+def test_execute_holoviews():
+    code = "hv.Curve(((1, 2), (3, 4)))"
     outputs = kernel.execute(code)
     assert outputs[0]["data"]["text/html"].startswith("<div style")
     assert outputs[0]["metadata"]["text/html"] == {"module": "holoviews"}
 
 
-def test_execute_display_sympy():
-    code = "x = sp.symbols('x')\ndisplay(3*x**2)"
-    outputs = kernel.execute(code)
-    assert outputs[0]["data"]["text/latex"] == "3 x^{2}"
+def test_execute_sympy():
     code = "x = sp.symbols('x')\n3*x**2"
     outputs = kernel.execute(code)
+    assert outputs[0]["data"]["text/latex"] == "3 x^{2}"
     assert outputs[0]["data"]["text/plain"] == "3*x**2"
     outputs
