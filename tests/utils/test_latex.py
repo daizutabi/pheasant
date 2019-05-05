@@ -31,6 +31,7 @@ def test_sympy_matrix():
 def test_const():
     assert L.ones(2, 1) == "\\left[\\begin{array}{c}\n1\\\\\n1\n\\end{array}\\right]"
     assert L.zeros(1, 2) == "\\left[\\begin{array}{cc}\n0&0\n\\end{array}\\right]"
+    assert L.ones(2) == "\\left[\\begin{array}{cc}\n1&1\n\\end{array}\\right]"
 
 
 def test_vector():
@@ -56,11 +57,19 @@ def test_matrix_class():
 
     assert m.shape == (2, 1)
 
+    answer = "\\left[\\begin{matrix}m_{11} + 1\\\\m_{21} + 1\\end{matrix}\\right]"
+    assert sympy.latex(m.apply(lambda x: x + 1)) == answer
+
     answer = (
         "\\left[\\begin{array}{c}\n\\partial f/\\partial m_{11}\\\\\n"
         "\\partial f/\\partial m_{21}\n\\end{array}\\right]"
     )
     assert m.partial("f") == answer
+    answer = (
+        "\\left[\\begin{array}{c}\n\\frac{\\partial g}{\\partial m_{11}}\\\\\n"
+        "\\frac{\\partial g}{\\partial m_{21}}\n\\end{array}\\right]"
+    )
+    assert m.partial("g", frac=True) == answer
     assert m.spartial("f") == "\\partial f/\\partial\\mathbf{M}"
 
 
@@ -76,4 +85,10 @@ def test_vector_class():
         "\\partial v_{2}\n\\end{array}\\right]"
     )
     assert v.partial("f") == answer
+    answer = (
+        "\\left[\\begin{array}{cc}\n\\frac{\\partial g}{\\partial v_{1}}&"
+        "\\frac{\\partial g}{\\partial v_{2}}\n\\end{array}\\right]"
+    )
+    assert v.partial("g", frac=True) == answer
+
     assert v.spartial("f") == "\\partial f/\\partial\\mathbf{V}"
