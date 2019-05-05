@@ -5,7 +5,7 @@ from typing import List
 import click
 
 from pheasant import __version__
-from pheasant.utils.cache import cache_path, has_cache, modified
+from pheasant.utils.cache import Cache
 
 pgk_dir = os.path.dirname(os.path.abspath(__file__))
 version_msg = f"{__version__} from {pgk_dir} (Python {sys.version[:3]})."
@@ -34,12 +34,11 @@ paths_argument = click.argument("paths", nargs=-1, type=click.Path(exists=True))
 
 def collect(paths: List[str], ext: str) -> List:
     exts = ext.split(",")
-    src_paths = []
+    caches = []
 
     def collect(path):
         if os.path.splitext(path)[-1][1:] in exts:
-            result = os.path.normpath(path), has_cache(path), modified(path)
-            src_paths.append(result)
+            caches.append(Cache(os.path.normpath(path)))
 
     if not paths:
         paths = ["."]
@@ -50,7 +49,7 @@ def collect(paths: List[str], ext: str) -> List:
                     collect(os.path.join(dirpath, file))
         else:
             collect(path)
-    return src_paths
+    return caches
 
 
 @cli.command(help="Run source files and save the caches.")
@@ -64,27 +63,27 @@ def collect(paths: List[str], ext: str) -> List:
 @max_option
 @paths_argument
 def run(paths, ext, max, restart, shutdown, force, verbose):
-    paths = collect(paths, ext)
+    caches = collect(paths, ext)
 
-    length = len(paths)
+    length = len(caches)
     click.secho(f"collected {length} files.", bold=True)
 
-    if len(paths) > max:  # pragma: no cover
+    if len(caches) > max:  # pragma: no cover
         click.secho(f"Too many files. Aborted.", fg="yellow")
         sys.exit()
 
     if force:
-        for path, cached, _ in paths:
-            if cached:
-                path_ = cache_path(path)
-                os.remove(path_)
-                click.echo(path_ + " was deleted.")
+        for cache in caches:
+            if cache.has_cache:
+                path = cache.cache_path
+                os.remove(path)
+                click.echo(path + " was deleted.")
 
     from pheasant.core.pheasant import Pheasant
 
     pheasant = Pheasant(restart=restart, shutdown=shutdown, verbose=verbose)
     pheasant.jupyter.safe = True
-    pheasant.convert_from_files(path[0] for path in paths)
+    pheasant.convert_from_files(cache.path for cache in caches)
     click.secho(f"{pheasant.log.info}", bold=True)
 
 
@@ -92,14 +91,25 @@ def run(paths, ext, max, restart, shutdown, force, verbose):
 @ext_option
 @paths_argument
 def list(paths, ext):
-    paths = collect(paths, ext)
+    caches = collect(paths, ext)
 
-    for path, cached, modified_ in paths:
-        path = ("* " if modified_ else "  ") + path + (" (cached)" if cached else "")
+    def size(cache):
+        size = cache.size / 1024
+        if size > 1024:
+            size /= 1024
+            return f'{size:.01f}MB'
+        else:
+            return f'{size:.01f}KB'
+
+    for cache in caches:
+        path = (
+            ("* " if cache.modified else "  ")
+            + cache.path
+            + (f" (cached, {size(cache)})" if cache.has_cache else "")
+        )
         click.echo(path)
 
-    length = len(paths)
-    click.secho(f"collected {length} files.", bold=True)
+    click.secho(f"collected {len(caches)} files.", bold=True)
 
 
 @cli.command(help="Delete caches for source files.")
@@ -107,12 +117,12 @@ def list(paths, ext):
 @ext_option
 @paths_argument
 def clean(paths, ext, yes):
-    paths = [path for path, cache, _ in collect(paths, ext) if cache]
+    caches = [cache for cache in collect(paths, ext) if cache.has_cache]
 
-    for path in paths:
-        click.echo(path)
+    for cache in caches:
+        click.echo(cache.path)
 
-    length = len(paths)
+    length = len(caches)
     if length == 0:
         click.secho(f"No cache found. Aborted.", bold=True)
         sys.exit()
@@ -124,10 +134,10 @@ def clean(paths, ext, yes):
             "Are you sure you want to delete the caches for these files?", abort=True
         )
 
-    for path in paths:
-        path_ = cache_path(path)
-        os.remove(path_)
-        click.echo(path_ + " was deleted.")
+    for cache in caches:
+        path = cache.cache_path
+        os.remove(path)
+        click.echo(path + " was deleted.")
 
 
 @cli.command(help="Python script prompt.")

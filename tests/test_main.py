@@ -29,7 +29,7 @@ def test_main_command():
         assert len(kernels.kernels) == 1
 
         result = runner.invoke(cli, ["list"])
-        assert "example.md (cached)" in result.output
+        assert "example.md (cached," in result.output
         result = runner.invoke(cli, ["clean"], input="n\n")
         assert "Aborted" in result.output
         result = runner.invoke(cli, ["clean"], input="y\n")
