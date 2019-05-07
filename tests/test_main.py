@@ -48,3 +48,15 @@ def test_main_prompt():
         assert "[html]" in result.output
         assert '<code class="python">2*3</code>' in result.output
         assert '<code class="nohighlight">6</code>' in result.output
+
+
+def test_main_script():
+    runner = CliRunner()
+    with runner.isolated_filesystem():
+        result = runner.invoke(cli, ['python'], input="print('abc')\n\n")
+        assert result.exit_code == 0
+        assert "[source]" in result.output
+        assert "[markdown]" in result.output
+        assert "[html]" in result.output
+        assert '<code class="python">print(&#39;abc&#39;)</code>' in result.output
+        assert '<code class="nohighlight">abc</code>' in result.output
