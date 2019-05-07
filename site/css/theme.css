@@ -50,6 +50,12 @@ button {
   outline: none;
 }
 
+img {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+}
+
 .nav ul,
 .breadcrumbs ul {
   padding: 0px;
