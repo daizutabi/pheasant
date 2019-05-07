@@ -15,7 +15,7 @@ class Header(Renderer):
     number_list: Dict[str, List[int]] = field(default_factory=dict)
     header_kind: Dict[str, str] = field(default_factory=dict)
 
-    HEADER_PATTERN = r"^(?P<prefix>#+)(?P<kind>[!\w]*) *(?P<title>.*?)\n"
+    HEADER_PATTERN = r"^(?P<prefix>#+)(?P<header>[!\w]*) *(?P<title>.*?)\n"
     TAG_PATTERN = r"\{#(?P<tag>\S+?)#\}"
 
     markdown = Markdown(extensions=["tables"])
@@ -23,23 +23,19 @@ class Header(Renderer):
     def init(self):
         self.register(Header.HEADER_PATTERN, self.render_header)
         self.set_template("header")
-        self.config["kind_prefix"] = {}
-        self.header_kind[""] = "header"
-        for kind in ["figure", "table"]:
-            self.header_kind[kind[:3].lower()] = kind
-            self.config["kind_prefix"][kind] = kind[0].upper() + kind[1:]
-        self.header_kind["eq"] = "equation"
-        self.config["kind"] = list(self.header_kind.values())
+        self.header_kind.update(fig="figure", tab="table", eq="equation")
+        prefix = dict(figure="Figure", table="Table")
+        self.set_config(prefix=prefix, number=dict(separator="."))
         self.start()
 
     def start(self) -> None:
         self.meta["ignored_path"] = set()
         self.meta["ignored_depth"] = 100
-        for kind in self.config["kind"]:
+        for kind in list(self.config["prefix"].keys()) + ["header", "equation"]:
             self.number_list[kind] = [0] * 6
 
     def render_header(self, context, splitter, parser) -> Iterator[str]:
-        if context["kind"] == "!":
+        if context["header"] == "!":
             self.start()
             return
         context = self.resolve(context)
@@ -73,15 +69,15 @@ class Header(Renderer):
                 splitter.send(rest)
 
     def resolve(self, context):
-        kind = context["kind"][:3].lower()
-        if kind in self.header_kind:
-            kind = self.header_kind[kind]
-        else:
-            kind = context["kind"]
-            if kind not in self.config["kind"]:
-                self.config["kind"].append(kind)
+        header = context["header"][:3].lower()
+        if header and header not in self.header_kind:
+            kind = context["header"]
+            if kind not in self.config["prefix"]:
                 self.number_list[kind] = [0] * 6
-                self.config["kind_prefix"][kind] = kind
+                self.config["prefix"][kind] = kind
+        else:
+            kind = self.header_kind.get(header, "header")
+
         depth = len(context["prefix"]) - 1
         title = context["title"]
 
@@ -109,7 +105,7 @@ class Header(Renderer):
             if number_list:
                 self.number_list[kind] = [0] * 6
                 self.number_list[kind][depth : depth + len(number_list)] = number_list
-                if kind == 'header':
+                if kind == "header":
                     depth += len(number_list) - 1
                     context["prefix"] = "#" * (depth + 1)
             else:
@@ -117,13 +113,15 @@ class Header(Renderer):
                 reset = [0] * (5 - depth)
                 self.number_list[kind][depth + 1 :] = reset
             number_list = normalize_number_list(self.number_list, kind, depth)
-            number_string = number_list_format(number_list)
+            func = self.config["number"].get
+            args = [func(key, "") for key in ["separator", "prefix", "suffix"]]
+            number_string = number_list_format(number_list, *args)
         else:
             number_list = []
             number_string = ""
 
         header = context["prefix"] if kind == "header" else ""
-        prefix = self.config["kind_prefix"].get(kind, "")
+        prefix = self.config["prefix"].get(kind, "")
         title, tag = split_tag(title)
         title, inline_pattern = split_inline_pattern(title)
         title, link = split_link(title)
@@ -217,9 +215,10 @@ def normalize_number_list(
         ]
 
 
-def number_list_format(number_list: List[int]) -> str:
-    return ".".join([str(x) for x in number_list])
-    # return ".".join([str(x) for x in number_list if x])
+def number_list_format(
+    number_list: List[int], sep: str = ".", prefix: str = "", suffix: str = ""
+) -> str:
+    return "".join([prefix, sep.join([str(x) for x in number_list]), suffix])
 
 
 RE_TAG_PATTERN = re.compile(Header.TAG_PATTERN)

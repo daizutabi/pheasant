@@ -24,12 +24,14 @@ class PheasantPlugin(BasePlugin):
         ("jupyter", config_options.Type(bool, default=True)),
         ("dirty", config_options.Type(bool, default=True)),
         ("version", config_options.Type(string_types, default="")),
+        ("header", config_options.Type(dict, default={})),
     )
     converter = Pheasant()
     logger.info(f"[Pheasant] Converter created.")
 
     def on_config(self, config, **kwargs):
         self.converter.jupyter.enabled = self.config["jupyter"]
+        self.converter.header.set_config(self.config["header"])
 
         if self.config["version"]:
             try:

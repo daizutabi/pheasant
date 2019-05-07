@@ -63,6 +63,16 @@ class Renderer(Base):
             parser.register(pattern, render, render_name)
         return parser
 
+    def set_config(self, *args, **kwargs) -> None:
+        for arg in args:
+            for key, value in arg.items():
+                *prefix, key = key.split(".")
+                config = self.config
+                for pre in prefix:
+                    config = config.setdefault(pre, {})
+                config[key] = value
+        self.config.update(kwargs)
+
     def set_template(self, names: Union[str, List[str]], directory: str = ".") -> List:
         module = importlib.import_module(self.__module__)
         default = os.path.join(os.path.dirname(module.__file__), "templates")

@@ -6,8 +6,7 @@ site_author: daizutabi
 repo_url: https://github.com/daizutabi/pheasant/
 edit_uri: ""
 
-theme:
-    name: ivory
+theme: ivory
 
 plugins:
   - pheasant:

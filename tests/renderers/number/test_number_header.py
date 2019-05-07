@@ -13,10 +13,8 @@ def test_complile_pattern():
 
 def test_renderer(header):
     assert header.config["__dummy__"] == "test"
-    assert "kind" in header.config
     assert header.config["header_template"] is not None
     assert header.header_kind == {
-        "": "header",
         "eq": "equation",
         "fig": "figure",
         "tab": "table",
@@ -110,7 +108,7 @@ def test_header_equation(header):
 
 def test_header_unknown_kind(header):
     output = header.parse("#abc title\nabc\n\n")
-    assert "abc" in header.config["kind"]
+    assert "abc" in header.config["prefix"]
     assert 'class="prefix">abc</span> <span class="number">1<' in output
 
 
