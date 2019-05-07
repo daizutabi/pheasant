@@ -67,6 +67,10 @@ Image('docs/img/cat.jpg')
 ```
 
 ```python
+Image('docs/img/cat.jpg', width=50)
+```
+
+```python
 from IPython.display import Image
 Image('docs/img/cvae.gif')
 ```

@@ -6,8 +6,12 @@
         {%- autoescape false -%}{{ output.data[type] }}{%- endautoescape -%}
       {%- elif type == 'text/latex'-%}
         {%- autoescape false -%}{{ output.data[type] }}{%- endautoescape -%}
-      {%- elif type in ['image/png','image/jpeg', 'image/gif'] -%}
-          <p><img alt="{{ type }}" src="data:{{ type }};base64,{{ output.data[type] }}"/></p>
+      {%- elif type in ['image/png', 'image/jpeg', 'image/gif'] -%}
+          <p><img alt="{{ type }}" src="data:{{ type }};base64,{{ output.data[type] }}"
+          {%- set width=output | get_metadata('width', type) -%}
+          {%- if width is not none %} width="{{ width }}"{%- endif %}
+          {%- set height=output | get_metadata('height', type) -%}
+          {%- if height is not none %} height="{{ height }}"{%- endif %}/></p>
       {%- else -%}
           <p><span style="color: red;">Unspported data type: '{{ type }}'</span></p>
       {%- endif -%}

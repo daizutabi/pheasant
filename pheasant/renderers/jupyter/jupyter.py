@@ -15,6 +15,7 @@ from pheasant.renderers.jupyter.kernel import (format_report, kernels,
                                                output_hook)
 from pheasant.utils import cache
 from pheasant.utils.progress import ProgressBar, progress_bar_factory
+from pheasant.renderers.jupyter.filters import get_metadata
 
 
 @dataclass
@@ -51,7 +52,8 @@ class Jupyter(Renderer):
     def init(self):
         self.register(Jupyter.FENCED_CODE_PATTERN, self.render_fenced_code)
         self.register(Jupyter.INLINE_CODE_PATTERN, self.render_inline_code)
-        self.set_template(["fenced_code", "inline_code"])
+        templates = self.set_template(["fenced_code", "inline_code"])
+        templates[0].environment.filters['get_metadata'] = get_metadata
 
     def enter(self):
         self.count = 0

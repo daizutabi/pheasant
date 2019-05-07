@@ -63,19 +63,23 @@ class Renderer(Base):
             parser.register(pattern, render, render_name)
         return parser
 
-    def set_template(self, names: Union[str, List[str]], directory: str = ".") -> None:
+    def set_template(self, names: Union[str, List[str]], directory: str = ".") -> List:
         module = importlib.import_module(self.__module__)
         default = os.path.join(os.path.dirname(module.__file__), "templates")
         loader = FileSystemLoader([directory, default])
         env = Environment(loader=loader, autoescape=select_autoescape(["jinja2"]))
         names = [names] if isinstance(names, str) else names
+        templates = []
         for name in names:
             if ":" in name:
                 name, path = name.split(":")
             else:
                 path = name
-            template = f"{path}.jinja2" if "." not in name else name
-            self.config[f"{name}_template"] = env.get_template(template)
+            template_name = f"{path}.jinja2" if "." not in name else name
+            template = env.get_template(template_name)
+            self.config[f"{name}_template"] = template
+            templates.append(template)
+        return templates
 
     def render(self, name: str, context: Dict[str, Any], **kwargs) -> str:
         template = self.config[f"{name}_template"]
