@@ -14,12 +14,12 @@ You can check your currently installed version using `pheasant --version`:
 
 ~~~bash terminal
 $ pheasant --version
-pheasant, version 2.2.26 from /path/to/pheasant (Python 3.7)
+pheasant, version 2.2.27 from /path/to/pheasant (Python 3.7)
 ~~~
 
 ## Change log
 
-### Version 2.2.26 (2019-05-07)
+### Version 2.2.27 (2019-05-07)
 
 * `dirty` mode in Converter for MkDocs serve command.
 
