@@ -1,4 +1,8 @@
+import datetime
+import os
+import time
 from collections import OrderedDict
+from contextlib import contextmanager
 from dataclasses import field
 from typing import Any, Dict, Iterable, Iterator, List
 
@@ -6,12 +10,19 @@ from pheasant.core.base import Base
 from pheasant.core.page import Page
 from pheasant.core.parser import Parser
 from pheasant.core.renderer import Renderer
+from pheasant.utils.time import format_timedelta_human
+
+
+class Log:
+    pass
 
 
 class Converter(Base):
     parsers: Dict[str, Parser] = field(default_factory=OrderedDict)
     renderers: Dict[str, List[Renderer]] = field(default_factory=dict)
     pages: Dict[str, Page] = field(default_factory=dict)
+    dirty: bool = False
+    log: Log = field(default_factory=Log, init=False)
 
     def __post_init__(self):
         super().__post_init__()
@@ -48,7 +59,8 @@ class Converter(Base):
     def start(self):
         for renderer in self.renderer_iter():
             renderer.start()
-        self.pages = {}
+        if not self.dirty:
+            self.pages.clear()
 
     def register(self, renderers: Iterable[Renderer], name: str = "default"):
         """Register renderer's processes to a parser.
@@ -84,8 +96,8 @@ class Converter(Base):
         """
         return self.parsers[name].parse(source)
 
-    def convert(self, path: str, name: str = "default") -> str:
-        """Convert a source file.
+    def convert_by_name(self, path: str, name: str) -> str:
+        """Convert a source file with a named parser.
 
         Parameters
         ----------
@@ -113,8 +125,62 @@ class Converter(Base):
             raise
         else:
             page.source = source
+            page.converted_time = time.time()
 
         for renderer in self.renderers[name]:
             renderer.exit()
 
         return page.source
+
+    def _convert(self, path: str) -> str:
+        """Convert a source file with sequntial parsers.
+
+        Parameters
+        ----------
+        path
+            The source path to be converted.
+
+        Returns
+        -------
+        Converted output text.
+        """
+        return self.convert_by_name(path, "default")
+
+    def convert(self, path: str) -> str:
+        """Convert a source file with sequntial parsers.
+
+        Parameters
+        ----------
+        path
+            The source path to be converted.
+
+        Returns
+        -------
+        Converted output text.
+        """
+        if self.dirty and path in self.pages:
+            if self.pages[path].converted_time > os.stat(path).st_mtime:
+                return self.pages[path].source
+            else:
+                self.pages.pop(path)
+
+        return self._convert(path)
+
+    def _convert_from_files(self, paths: Iterable[str]) -> List[str]:
+        return ["Not implemented" for path in paths]
+
+    def convert_from_files(self, paths: Iterable[str]) -> List[str]:
+        with elapsed_time(self.log):
+            return self._convert_from_files(paths)
+
+
+@contextmanager
+def elapsed_time(log):
+    log.start = datetime.datetime.now()
+    try:
+        yield
+    finally:
+        log.end = datetime.datetime.now()
+        log.elapsed = log.end - log.start
+        time = format_timedelta_human(log.elapsed)
+        log.info = f"Elapsed time: {time}"
