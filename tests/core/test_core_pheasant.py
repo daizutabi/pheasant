@@ -12,20 +12,18 @@ def test_pheasant(tmpdir):
     assert 'pheasant-header' in output
     assert 'cell jupyter input' in output
 
-    now = time.time()
-    assert converter.pages[path].converted_time < now
+    prev = converter.pages[path].converted_time
     time.sleep(0.1)
     converter.convert(path)
-    assert converter.pages[path].converted_time > now
+    assert converter.pages[path].converted_time > prev
+    prev = converter.pages[path].converted_time
 
     converter.dirty = True
-    now = time.time()
     output = converter.convert(path)
-    assert converter.pages[path].converted_time < now
+    assert converter.pages[path].converted_time == prev
     assert 'class="python">1</code>' in output
 
-    now = time.time()
     f.write("# Title\n## Section\n```python\n2\n```\n")
     output = converter.convert(path)
-    assert converter.pages[path].converted_time > now
+    assert converter.pages[path].converted_time > prev
     assert 'class="python">2</code>' in output
