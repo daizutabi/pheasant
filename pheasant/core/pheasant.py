@@ -1,5 +1,3 @@
-import datetime
-from contextlib import contextmanager
 from dataclasses import field
 from typing import Dict, Iterable, List
 
@@ -10,11 +8,6 @@ from pheasant.renderers.jupyter.jupyter import CacheMismatchError, Jupyter
 from pheasant.renderers.jupyter.kernel import kernels
 from pheasant.renderers.number.number import Anchor, Header
 from pheasant.renderers.script.script import Script
-from pheasant.utils.time import format_timedelta_human
-
-
-class Log:
-    pass
 
 
 class Pheasant(Converter):
@@ -25,7 +18,6 @@ class Pheasant(Converter):
     anchor: Anchor = field(default_factory=Anchor, init=False)
     decorator: Decorator = field(default_factory=Decorator, init=False)
     pages: Dict[str, Page] = field(default_factory=dict, init=False)
-    log: Log = field(default_factory=Log, init=False)
     shutdown: bool = False
     restart: bool = False
     verbose: int = 0  # 0: no info, 1: output, 2: code and output
@@ -41,18 +33,32 @@ class Pheasant(Converter):
 
         self.jupyter.verbose = self.verbose
 
+    def _convert(self, path: str) -> str:
+        """Convert a source file with pheasant's parsers except 'link' parser.
+
+        Parameters
+        ----------
+        path
+            The source path to be converted.
+
+        Returns
+        -------
+        Converted output text.
+        """
+        if path.endswith(".py"):
+            self.convert_by_name(path, "script")
+        try:
+            return self.convert_by_name(path, "main")
+        except CacheMismatchError:
+            return self.convert_by_name(path, "main")
+
     def _convert_from_files(self, paths: Iterable[str]) -> List[str]:
         paths = list(paths)
         self.start()
-        self.jupyter.progress_bar.step = 1
         self.jupyter.progress_bar.multi = len(paths)
         for k, path in enumerate(paths):
-            if path.endswith(".py"):
-                self.convert(path, "script")
-            try:
-                self.convert(path, "main")
-            except CacheMismatchError:
-                self.convert(path, "main")
+            self.jupyter.progress_bar.step = k + 1
+            self.convert(path)
 
             if self.shutdown:
                 kernels.shutdown()
@@ -60,22 +66,6 @@ class Pheasant(Converter):
                 kernels.restart()
 
         for path in paths:
-            self.convert(path, "link")
+            self.convert_by_name(path, "link")
 
         return [self.pages[path].source for path in paths]
-
-    def convert_from_files(self, paths: Iterable[str]) -> List[str]:
-        with elapsed_time(self.log):
-            return self._convert_from_files(paths)
-
-
-@contextmanager
-def elapsed_time(log):
-    log.start = datetime.datetime.now()
-    try:
-        yield
-    finally:
-        log.end = datetime.datetime.now()
-        log.elapsed = log.end - log.start
-        time = format_timedelta_human(log.elapsed)
-        log.info = f"Elapsed time: {time}"

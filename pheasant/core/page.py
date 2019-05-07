@@ -8,6 +8,7 @@ class Page:
     path: str = ""
     source: str = ""
     meta: Dict[str, Any] = field(default_factory=dict, init=False)
+    converted_time: float = 0.0
 
     def read(self, path: str = "") -> "Page":
         if path:

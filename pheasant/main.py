@@ -81,10 +81,10 @@ def run(paths, ext, max, restart, shutdown, force, verbose):
 
     from pheasant.core.pheasant import Pheasant
 
-    pheasant = Pheasant(restart=restart, shutdown=shutdown, verbose=verbose)
-    pheasant.jupyter.safe = True
-    pheasant.convert_from_files(cache.path for cache in caches)
-    click.secho(f"{pheasant.log.info}", bold=True)
+    converter = Pheasant(restart=restart, shutdown=shutdown, verbose=verbose)
+    converter.jupyter.safe = True
+    converter.convert_from_files(cache.path for cache in caches)
+    click.secho(f"{converter.log.info}", bold=True)
 
 
 @cli.command(help="List source files.")
@@ -158,11 +158,11 @@ def prompt(script=False):
     from markdown import Markdown
     from pheasant.core.pheasant import Pheasant
 
-    pheasant = Pheasant()
+    converter = Pheasant()
     if script:
-        source = pheasant.parse(source, "script")
-    output = pheasant.parse(source, "main")
-    output = pheasant.parse(output, "link")
+        source = converter.parse(source, "script")
+    output = converter.parse(source, "main")
+    output = converter.parse(output, "link")
     click.echo("[source]")
     click.echo(source.strip())
     click.echo("[markdown]")

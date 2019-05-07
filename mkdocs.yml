@@ -12,6 +12,7 @@ theme:
 plugins:
   - pheasant:
       version: pheasant
+      dirty: true
 
 nav:
   - Home: index.md

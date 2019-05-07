@@ -22,14 +22,15 @@ markdown_extensions.append(".py")
 class PheasantPlugin(BasePlugin):
     config_scheme = (
         ("jupyter", config_options.Type(bool, default=True)),
+        ("dirty", config_options.Type(bool, default=True)),
         ("version", config_options.Type(string_types, default="")),
     )
     converter = Pheasant()
-    version = pheasant.__version__
     logger.info(f"[Pheasant] Converter created.")
 
     def on_config(self, config, **kwargs):
         self.converter.jupyter.enabled = self.config["jupyter"]
+
         if self.config["version"]:
             try:
                 module = importlib.import_module(self.config["version"])
@@ -104,6 +105,7 @@ class PheasantPlugin(BasePlugin):
         return output.replace('.js" defer></script>', '.js"></script>')
 
     def on_serve(self, server, **kwargs):  # pragma: no cover
+        self.converter.dirty = self.config['dirty']
         watcher = server.watcher
         builder = list(watcher._tasks.values())[0]["func"]
         root = os.path.join(os.path.dirname(pheasant.__file__), "theme")
