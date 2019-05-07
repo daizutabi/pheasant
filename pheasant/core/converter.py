@@ -1,6 +1,5 @@
 import datetime
 import os
-import time
 from collections import OrderedDict
 from contextlib import contextmanager
 from dataclasses import field
@@ -21,7 +20,7 @@ class Converter(Base):
     parsers: Dict[str, Parser] = field(default_factory=OrderedDict)
     renderers: Dict[str, List[Renderer]] = field(default_factory=dict)
     pages: Dict[str, Page] = field(default_factory=dict)
-    dirty: bool = False
+    dirty: bool = True
     log: Log = field(default_factory=Log, init=False)
 
     def __post_init__(self):
@@ -125,7 +124,6 @@ class Converter(Base):
             raise
         else:
             page.source = source
-            page.converted_time = time.time()
 
         for renderer in self.renderers[name]:
             renderer.exit()
@@ -159,12 +157,14 @@ class Converter(Base):
         Converted output text.
         """
         if self.dirty and path in self.pages:
-            if self.pages[path].converted_time > os.stat(path).st_mtime:
+            if self.pages[path].st_mtime == os.stat(path).st_mtime:
                 return self.pages[path].source
             else:
                 self.pages.pop(path)
 
-        return self._convert(path)
+        output = self._convert(path)
+        self.pages[path].st_mtime = os.stat(path).st_mtime
+        return output
 
     def _convert_from_files(self, paths: Iterable[str]) -> List[str]:
         return ["Not implemented" for path in paths]

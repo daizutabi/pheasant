@@ -1,5 +1,6 @@
+import os
+
 from pheasant.core.pheasant import Pheasant
-import time
 
 
 def test_pheasant(tmpdir):
@@ -9,21 +10,18 @@ def test_pheasant(tmpdir):
 
     converter = Pheasant()
     output = converter.convert(path)
-    assert 'pheasant-header' in output
-    assert 'cell jupyter input' in output
+    assert "pheasant-header" in output
+    assert "cell jupyter input" in output
 
-    prev = converter.pages[path].converted_time
-    time.sleep(0.1)
+    st_mtime = os.stat(path).st_mtime
+    assert converter.pages[path].st_mtime == st_mtime
     converter.convert(path)
-    assert converter.pages[path].converted_time > prev
-    prev = converter.pages[path].converted_time
-
-    converter.dirty = True
-    output = converter.convert(path)
-    assert converter.pages[path].converted_time == prev
+    assert converter.pages[path].st_mtime == st_mtime
     assert 'class="python">1</code>' in output
 
     f.write("# Title\n## Section\n```python\n2\n```\n")
+    assert st_mtime < os.stat(path).st_mtime
     output = converter.convert(path)
-    # assert converter.pages[path].converted_time > prev
+    assert converter.pages[path].st_mtime > st_mtime
+    assert converter.pages[path].st_mtime == os.stat(path).st_mtime
     assert 'class="python">2</code>' in output
