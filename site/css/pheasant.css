@@ -341,56 +341,6 @@ h2, h3, h4, h5 {
 }
 
 /**************************************************
- Pandas DataFrame style
-**************************************************/
-table.dataframe {
-  border-collapse: collapse;
-  border: none;
-  font-size: 0.8rem;
-}
-
-table.dataframe thead tr,
-table.dataframe thead th,
-table.dataframe tbody tr,
-table.dataframe tbody th,
-table.dataframe tbody td {
-  border: none;
-  text-align: center;
-  padding: 2px 6px !important;
-}
-
-table.dataframe thead th {
-  color: darkblue;
-  background: lightcyan;
-  border: 1px solid #333366 !important;
-}
-
-table.dataframe tbody th {
-  color: black;
-  background: #ffffee;
-  border: 1px solid #666633 !important;
-}
-
-table.dataframe tbody td {
-  color: black;
-  background: #fcfcfc;
-  border-bottom: 1px solid #b9b9b9 !important;
-  border-right: 1px solid #b9b9b9 !important;
-}
-
-.dataframe tr th:last-child, .dataframe tr td:last-child {
-  border-right: 1px solid #333366 !important;
-}
-
-.dataframe tr:last-child td, .dataframe tr:last-child th {
-  border-bottom: 1px solid #333366 !important;
-}
-
-.dataframe tbody tr:nth-child(2n+1) td {
-  background: #f1f6fc;
-}
-
-/**************************************************
  HoloViews
 **************************************************/
 .holoform label {

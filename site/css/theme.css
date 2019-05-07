@@ -528,3 +528,47 @@ main {
     font-size: 1.0rem;
   }
 }
+
+/**************************************************
+ Table style
+**************************************************/
+table {
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+th, td {
+  text-align: center;
+  padding: 2px 4px;
+}
+
+th {
+  color: darkblue;
+  background: #eee;
+  border: 1px solid #333;
+}
+
+td {
+  color: black;
+  border: 1px solid #b9b9b9;
+}
+
+tr th:first-child, tr td:first-child {
+  border-left: 1px solid #333366;
+}
+
+tr th:last-child, tr td:last-child {
+  border-right: 1px solid #333366;
+}
+
+tr:first-child td, tr:first-child th {
+  border-top: 1px solid #333366;
+}
+
+tr:last-child td, tr:last-child th {
+  border-bottom: 1px solid #333366;
+}
+
+tbody tr:nth-child(2n+1) td {
+  background: #fafafa;
+}
