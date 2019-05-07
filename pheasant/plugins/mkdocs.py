@@ -30,7 +30,7 @@ class PheasantPlugin(BasePlugin):
     logger.info(f"[Pheasant] Converter created.")
 
     def on_config(self, config, **kwargs):
-        self.converter.jupyter.enabled = self.config["jupyter"]
+        self.converter.jupyter.set_config(enabled=self.config["jupyter"])
         self.converter.header.set_config(self.config["header"])
 
         if self.config["version"]:
@@ -107,7 +107,7 @@ class PheasantPlugin(BasePlugin):
         return output.replace('.js" defer></script>', '.js"></script>')
 
     def on_serve(self, server, **kwargs):  # pragma: no cover
-        self.converter.dirty = self.config['dirty']
+        self.converter.dirty = self.config["dirty"]
         watcher = server.watcher
         builder = list(watcher._tasks.values())[0]["func"]
         root = os.path.join(os.path.dirname(pheasant.__file__), "theme")

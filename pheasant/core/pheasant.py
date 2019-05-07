@@ -31,7 +31,7 @@ class Pheasant(Converter):
         self.decorator.name = "pheasant"
         self.decorator.register([self.header, self.jupyter, self.embed], "surround")
 
-        self.jupyter.verbose = self.verbose
+        self.jupyter.set_config(verbose=self.verbose)
 
     def _convert(self, path: str) -> str:
         """Convert a source file with pheasant's parsers except 'link' parser.

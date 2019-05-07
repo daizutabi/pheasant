@@ -6,6 +6,7 @@ from typing import Dict, Iterator, List, Tuple
 
 from pheasant.core.decorator import commentable, surround
 from pheasant.core.renderer import Renderer
+from pheasant.renderers.jupyter.filters import get_metadata
 from pheasant.renderers.jupyter.ipython import (extra_html, get_extra_module,
                                                 latex_display_format,
                                                 select_display_data,
@@ -15,7 +16,6 @@ from pheasant.renderers.jupyter.kernel import (format_report, kernels,
                                                output_hook)
 from pheasant.utils import cache
 from pheasant.utils.progress import ProgressBar, progress_bar_factory
-from pheasant.renderers.jupyter.filters import get_metadata
 
 
 @dataclass
@@ -38,9 +38,6 @@ class Jupyter(Renderer):
     cache: List[Cell] = field(default_factory=list, init=False)
     extra_html: str = field(default="", init=False)
     progress_bar: ProgressBar = field(default_factory=progress_bar_factory, init=False)
-    enabled: bool = field(default=True, init=False)
-    safe: bool = field(default=False, init=False)  # If True, code must match cache.
-    verbose: int = 0  # 0: no info, 1: output, 2: code and output
 
     FENCED_CODE_PATTERN = (
         r"^(?P<mark>`{3,})(?P<language>\w*) ?(?P<option>.*?)\n"
@@ -53,7 +50,10 @@ class Jupyter(Renderer):
         self.register(Jupyter.FENCED_CODE_PATTERN, self.render_fenced_code)
         self.register(Jupyter.INLINE_CODE_PATTERN, self.render_inline_code)
         templates = self.set_template(["fenced_code", "inline_code"])
-        templates[0].environment.filters['get_metadata'] = get_metadata
+        templates[0].environment.filters["get_metadata"] = get_metadata
+        # safe: If True, code must match cache.
+        # verbose: 0: no info, 1: output, 2: code and output
+        self.set_config(enabled=True, safe=False, verbose=0)
 
     def enter(self):
         self.count = 0
@@ -67,7 +67,7 @@ class Jupyter(Renderer):
             self.extra_html = extra_html(extra_modules)
         self.page.meta["extra_html"] = self.extra_html
 
-        if self.enabled and self.page.path and self.cache:
+        if self.config["enabled"] and self.page.path and self.cache:
             for cell in self.cache:
                 cell.cached = True
             cache.save(self.page.path, (self.cache, self.extra_html))
@@ -111,12 +111,12 @@ class Jupyter(Renderer):
                     relpath = os.path.relpath(self.page.path)
                     self.progress_bar.progress(relpath, count=self.count)
                 return surround(cached.output, "cached")
-            elif self.safe and self.page.path:
+            elif self.config["safe"] and self.page.path:
                 cache.delete(self.page.path)
                 self.progress_bar.finish(done=False)
                 raise CacheMismatchError
 
-        if not self.enabled:
+        if not self.config["enabled"]:
             return self.render(
                 template, context, outputs=[], report={"count": self.count}
             )
@@ -145,13 +145,13 @@ class Jupyter(Renderer):
                     f"formatter_kwargs.update(dict({kwargs}))"
                 )
 
+        verbose = self.config["verbose"]
+
         def execute():
-            if self.verbose == 2:
+            if verbose == 2:
                 code_ = "\n".join([language + "> " + line for line in code.split("\n")])
                 print(code_)
-            outputs = kernel.execute(
-                code, output_hook=output_hook if self.verbose else None
-            )
+            outputs = kernel.execute(code, output_hook=output_hook if verbose else None)
             report = format_report(kernel.report)
             report["count"] = self.count
             return outputs, report
@@ -173,7 +173,7 @@ class Jupyter(Renderer):
 
         if "debug" in context["option"]:
             outputs = [{"type": "execute_result", "data": {"text/plain": outputs}}]
-        elif 'display-last' in context['option']:
+        elif "display-last" in context["option"]:
             select_last_display_data(outputs)
         elif template == "inline_code":
             select_outputs(outputs)
