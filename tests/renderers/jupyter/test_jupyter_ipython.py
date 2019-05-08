@@ -5,6 +5,7 @@ import sympy
 from bokeh.plotting import figure
 
 from pheasant.renderers.jupyter import ipython
+from pheasant.renderers.jupyter.kernel import kernels
 
 
 def test_ipython_pandas():
@@ -47,3 +48,15 @@ def test_ipython_sympy():
     html, meta = ipython.sympy_to_latex(3 * x ** 2)
     assert html == "3 x^{2}"
     assert meta == {"module": "sympy"}
+
+
+def test_ipython_select_last_display_data():
+    kernel = kernels["python"]
+    kernel.execute("import matplotlib.pyplot as plt")
+    code = "for k in range(2):\n print(1)\n plt.plot([1,2])\n plt.show()\n print(2)"
+    outputs = kernel.execute(code)
+    assert len(outputs) == 5
+    ipython.select_last_display_data(outputs)
+    assert len(outputs) == 2
+    assert outputs[0]["type"] == "display_data"
+    assert outputs[1]["text"] == "1\n2\n1\n2"

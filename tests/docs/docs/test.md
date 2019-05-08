@@ -52,11 +52,13 @@ def f(k):
   print(k)
   plt.plot([1, k])
   plt.show()
+  print("a")
 ```
 
 ```python display-last
 for k in range(3):
   f(k)
+  print('b')
 ```
 
 ![jpg](img/cat.jpg)

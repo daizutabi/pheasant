@@ -322,8 +322,25 @@ def select_last_display_data(outputs: List[Dict]) -> None:
         return
 
     outputs[:] = [
-        output for output in outputs[: k] if output["type"] != "display_data"
-    ] + outputs[k:]
+        output for output in outputs[:last] if output["type"] != "display_data"
+    ] + outputs[last:]
+
+    join_stream(outputs)
+
+
+def join_stream(outputs: List[Dict]) -> None:
+    stream: Dict[str, List[str]] = {"stdout": [], "stderr": []}
+    outputs_ = []
+    for output in outputs:
+        if output["type"] == "stream":
+            stream[output["name"]].append(output["text"])
+        else:
+            outputs_.append(output)
+    for name in ["stdout", "stderr"]:
+        if stream[name]:
+            text = "\n".join(stream[name])
+            outputs_.append({"type": "stream", "name": name, "text": text})
+    outputs[:] = outputs_
 
 
 def select_outputs(outputs: List[Dict]) -> None:
