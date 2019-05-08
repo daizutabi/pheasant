@@ -62,7 +62,7 @@ def f():
 # paragraph 4
 # paragraph 4
 
-# -inline display
+# %%inline display
 def g():
     """Function g
 

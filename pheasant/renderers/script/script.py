@@ -13,7 +13,6 @@ class Comment(Renderer):
     max_line_length: int = 0
     option: str = field(default="", init=False)
 
-    # HEADER_PATTERN = r"^(?P<source>#.*?\n)"
     HEADER_PATTERN = r"^(?P<prefix>#+.*? +?)(?P<title>.*?\n)"
     FENCED_CODE_PATTERN = r"^(?P<mark>~{3,}|`{3,}).*?\n(?P=mark)\n"
     LIST_PATTERN = r"^ *?(?P<prefix>[-\+\*]|\d+\.) +.*?\n"
@@ -53,7 +52,10 @@ class Comment(Renderer):
         if cell.match is None:
             if self.max_line_length == 0 and cell.source.startswith("-"):
                 cell.output = ""
-                self.option = " " + cell.source[1:-1]
+                self.option = " " + cell.source[1:-1].strip()
+            elif self.max_line_length == 0 and cell.source.startswith("%%"):
+                cell.output = ""
+                self.option = " " + cell.source[2:-1].strip()
             else:
                 cell.output = format_source(cell.source, self.max_line_length)
 

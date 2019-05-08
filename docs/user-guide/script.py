@@ -43,44 +43,51 @@ def sub(x: int, y: int) -> int:
 a = 1
 
 # Despite of a Markdown cell, you may want to devide successive codes into separate
-# cells. This can be done by putting a special marker. The marker is `# -`
-# [sharp-space-minus] at the begining of line. For example,
+# cells. This can be done by putting a special inline comment to define a cell. The
+# comment pattern is `# -` or `# %%`. For example,
 
 # ~~~python
-# a, b = 1, 2
+# # * a markdown cell
+# a, b, c = 1, 2, 3
 # a
 # # -
 # b
+# # %%
+# c
 # ~~~
 
 # becomes
 
-a, b = 1, 2
+# * a markdown cell
+a, b, c = 1, 2, 3
 a
 # -
 b
+# %%
+c
 
-# You can add options to a code block by adding them after a block devider (`# -`).
+# You can add options to a code block by adding them after a cell devider.
 
 # ~~~python
-# # -hide
-# c = 3
-# # Output: `c` is equal to {{c}}.
+# # %% hide
+# d = 4
+# # * Output: `d` is equal to {{d}}.
 # ~~~
 
 # Above python code is equivalent to the next Markdown source.
+
 # ~~~
 # ```python hide
-# c = 3
+# d = 4
 # ```
-# Output: `c` is equal to {{c}}.
+# * Output: `d` is equal to {{d}}.
 # ~~~
 
-# -hide
-c = 3
-# Output: `c` is equal to {{c}}.
+# Then you can hide the python code cell.
 
-# Other Pheasant features also work. For example, go to Fig. {#cat#}
+# %% hide
+d = 4
+# * Output: `d` is equal to {{d}}.
 
 # ## Fenced code block in Python source
 # You can write a fenced code block in a Python source as comment.
@@ -120,8 +127,8 @@ c = 3
 # In this scheme, we have to write many comments for Markdown cells. But a linter such
 # as pycodestyle doesn't allow us to write a very long comment in one line longer than
 # (for example) 79 characters. This means that we have to write Markdown source with
-# several new line characters even we are writing one paragraph. In order to
-# overcome this incovenient situation, a comment formatting pakage
+# several new line characters even we are writing one paragraph. In order to overcome
+# this incovenient situation, a comment formatting pakage
 # [`pyls-cwrap`](https://github.com/daizutabi/pyls-cwrap) has been prepared. You can
 # install this package as `pip install pyls-cwrap`. In Atom, if you use
 # [`ide-python`](https://atom.io/packages/ide-python), just press [Ctrl]+[Shift]+[C]

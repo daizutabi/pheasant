@@ -104,37 +104,50 @@ a = 1</code></pre></div>
 <span class="start">2019-05-07 10:57:17</span> (<span class="time">8.00ms</span>)
 <span class="right"><span class="kernel">python3</span> (<span class="total">2.63s</span>)</span></p></div></div></div></div>
 
-<p>Despite of a Markdown cell, you may want to devide successive codes into separate cells. This can be done by putting a special marker. The marker is <code># -</code> [sharp-space-minus] at the begining of line. For example,</p>
-<div class="pheasant-fenced-code"><div class="cell embed source"><div class="code"><pre><code class="python">a, b = 1, 2
+<p>Despite of a Markdown cell, you may want to devide successive codes into separate cells. This can be done by putting a special inline comment to define a cell. The comment pattern is <code># -</code> or <code># %%</code>. For example,</p>
+<div class="pheasant-fenced-code"><div class="cell embed source"><div class="code"><pre><code class="python"># * a markdown cell
+a, b, c = 1, 2, 3
 a
 # -
-b</code></pre></div></div></div>
+b
+# %%
+c</code></pre></div></div></div>
 
 <p>becomes</p>
-<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">a, b = 1, 2
+<ul>
+<li>a markdown cell</li>
+</ul>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">a, b, c = 1, 2, 3
 a</code></pre></div>
 <div class="report"><p><span class="count">[3]</span>
-<span class="start">2019-05-07 10:57:17</span> (<span class="time">7.00ms</span>)
-<span class="right"><span class="kernel">python3</span> (<span class="total">2.63s</span>)</span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="nohighlight">1</code></pre></div></div></div></div>
+<span class="start">2019-05-09 06:06:35</span> (<span class="time">9.01ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">83.1ms</span>)</span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="nohighlight">1</code></pre></div></div></div></div>
 
 <div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">b</code></pre></div>
 <div class="report"><p><span class="count">[4]</span>
-<span class="start">2019-05-07 10:57:17</span> (<span class="time">15.0ms</span>)
-<span class="right"><span class="kernel">python3</span> (<span class="total">2.65s</span>)</span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="nohighlight">2</code></pre></div></div></div></div>
+<span class="start">2019-05-09 06:06:35</span> (<span class="time">9.00ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">92.1ms</span>)</span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="nohighlight">2</code></pre></div></div></div></div>
 
-<p>You can add options to a code block by adding them after a block devider (<code># -</code>).</p>
-<div class="pheasant-fenced-code"><div class="cell embed source"><div class="code"><pre><code class="python"># -hide
-c = 3
-# Output: `c` is equal to {{c}}.</code></pre></div></div></div>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">c</code></pre></div>
+<div class="report"><p><span class="count">[5]</span>
+<span class="start">2019-05-09 06:06:35</span> (<span class="time">8.03ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">100ms</span>)</span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="nohighlight">3</code></pre></div></div></div></div>
+
+<p>You can add options to a code block by adding them after a cell devider.</p>
+<div class="pheasant-fenced-code"><div class="cell embed source"><div class="code"><pre><code class="python"># %% hide
+d = 4
+# * Output: `d` is equal to {{d}}.</code></pre></div></div></div>
 
 <p>Above python code is equivalent to the next Markdown source.</p>
 <div class="pheasant-fenced-code"><div class="cell embed source"><div class="code"><pre><code class="markdown">```python hide
-c = 3
+d = 4
 ```
-Output: `c` is equal to {{c}}.</code></pre></div></div></div>
+* Output: `d` is equal to {{d}}.</code></pre></div></div></div>
 
-<p>Output: <code>c</code> is equal to 3.</p>
-<p>Other Pheasant features also work. For example, go to Fig. <a href="../..#cat">1</a></p>
+<p>Then you can hide the python code cell.</p>
+<ul>
+<li>Output: <code>d</code> is equal to 4.</li>
+</ul>
 <h2 id="52-fenced-code-block-in-python-source"><span class="pheasant-header"><span class="header"><span class="number">5.2</span> <span class="title">Fenced code block in Python source</span></span></span></h2>
 <p>You can write a fenced code block in a Python source as comment.</p>
 <div class="pheasant-fenced-code"><div class="cell embed source"><div class="code"><pre><code class="python"># ```python
@@ -143,9 +156,9 @@ Output: `c` is equal to {{c}}.</code></pre></div></div></div>
 
 <p>becomes:</p>
 <div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">print(1)</code></pre></div>
-<div class="report"><p><span class="count">[7]</span>
-<span class="start">2019-05-07 10:57:17</span> (<span class="time">7.00ms</span>)
-<span class="right"><span class="kernel">python3</span> (<span class="total">2.67s</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code"><pre><code class="nohighlight">1</code></pre></div></div></div></div>
+<div class="report"><p><span class="count">[8]</span>
+<span class="start">2019-05-09 06:09:27</span> (<span class="time">10.0ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">396ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code"><pre><code class="nohighlight">1</code></pre></div></div></div></div>
 
 <p>And,</p>
 <div class="pheasant-fenced-code"><div class="cell embed source"><div class="code"><pre><code class="python"># ~~~
@@ -211,44 +224,51 @@ def sub(x: int, y: int) -&gt; int:
 a = 1
 
 # Despite of a Markdown cell, you may want to devide successive codes into separate
-# cells. This can be done by putting a special marker. The marker is `# -`
-# [sharp-space-minus] at the begining of line. For example,
+# cells. This can be done by putting a special inline comment to define a cell. The
+# comment pattern is `# -` or `# %%`. For example,
 
 # ~~~python
-# a, b = 1, 2
+# # * a markdown cell
+# a, b, c = 1, 2, 3
 # a
 # # -
 # b
+# # %%
+# c
 # ~~~
 
 # becomes
 
-a, b = 1, 2
+# * a markdown cell
+a, b, c = 1, 2, 3
 a
 # -
 b
+# %%
+c
 
-# You can add options to a code block by adding them after a block devider (`# -`).
+# You can add options to a code block by adding them after a cell devider.
 
 # ~~~python
-# # -hide
-# c = 3
-# # Output: `c` is equal to {{c}}.
+# # %% hide
+# d = 4
+# # * Output: `d` is equal to {{d}}.
 # ~~~
 
 # Above python code is equivalent to the next Markdown source.
+
 # ~~~
 # ```python hide
-# c = 3
+# d = 4
 # ```
-# Output: `c` is equal to {{c}}.
+# * Output: `d` is equal to {{d}}.
 # ~~~
 
-# -hide
-c = 3
-# Output: `c` is equal to {{c}}.
+# Then you can hide the python code cell.
 
-# Other Pheasant features also work. For example, go to Fig. [1](../index.md#cat)
+# %% hide
+d = 4
+# * Output: `d` is equal to {{d}}.
 
 # ## Fenced code block in Python source
 # You can write a fenced code block in a Python source as comment.
@@ -288,8 +308,8 @@ c = 3
 # In this scheme, we have to write many comments for Markdown cells. But a linter such
 # as pycodestyle doesn&#39;t allow us to write a very long comment in one line longer than
 # (for example) 79 characters. This means that we have to write Markdown source with
-# several new line characters even we are writing one paragraph. In order to
-# overcome this incovenient situation, a comment formatting pakage
+# several new line characters even we are writing one paragraph. In order to overcome
+# this incovenient situation, a comment formatting pakage
 # [`pyls-cwrap`](https://github.com/daizutabi/pyls-cwrap) has been prepared. You can
 # install this package as `pip install pyls-cwrap`. In Atom, if you use
 # [`ide-python`](https://atom.io/packages/ide-python), just press [Ctrl]+[Shift]+[C]
