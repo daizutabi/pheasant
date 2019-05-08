@@ -9,7 +9,7 @@ $ npm install -g ijavascript
 $ ijsinstall
 ~~~
 
-~~~copy
+~~~
 ```javascript
 console.log("Hello, IJavascript!")
 ```
@@ -22,7 +22,7 @@ julia> using Pkg
 julia> Pkg.add("IJulia")
 ~~~
 
-~~~copy
+~~~
 ```julia
 println("Hello, IJulia!")
 ```

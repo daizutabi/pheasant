@@ -58,8 +58,8 @@ print(1)
 Other language code can be executed if a kernel for the language has been installed. For example,
 
 ~~~copy
-```javascript
-console.log("Hello Javascript")
+```julia
+println("Hello, IJulia!")
 ```
 ~~~
 
