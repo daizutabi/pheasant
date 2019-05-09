@@ -188,9 +188,6 @@ class Jupyter(Renderer):
             template, context, kernel_name=kernel_name, outputs=outputs, report=report
         )
 
-        print(self.cache)
-
-        print(self.count, "-----------------------")
         if len(self.cache) == self.count - 1:
             self.cache.append(cell)
         else:
