@@ -3,12 +3,13 @@ from pheasant.renderers.jupyter.kernel import kernels
 
 
 def test_render_inline_option(jupyter):
-    kernels.execute("import holoviews as hv")
-    kernels.execute("from bokeh.plotting import figure")
-    kernels.execute("import altair as alt")
-    kernels.execute("import pandas as pd")
+    kernel = kernels['python']
+    kernel.execute("import holoviews as hv")
+    kernel.execute("from bokeh.plotting import figure")
+    kernel.execute("import altair as alt")
+    kernel.execute("import pandas as pd")
 
-    kernels.execute("plot = figure(plot_width=250, plot_height=250)")
+    kernel.execute("plot = figure(plot_width=250, plot_height=250)")
     output = jupyter.parse("```python inline\nplot\n```\n")
     assert '<div class="cell jupyter display"' in output
     assert jupyter.cache[-1].extra_module == "bokeh"
@@ -17,7 +18,7 @@ def test_render_inline_option(jupyter):
     assert '<div class="cell jupyter display"' in output
     assert jupyter.cache[-1].extra_module == "holoviews"
 
-    kernels.execute(
+    kernel.execute(
         (
             "source = pd.DataFrame({"
             "'a': ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'],"
@@ -55,7 +56,8 @@ def test_render_debug_option(jupyter):
 
 
 def test_render_latex(jupyter):
-    kernels.execute("import sympy")
+    kernel = kernels['python']
+    kernel.execute("import sympy")
     output = jupyter.parse("```python\nx=sympy.symbols('x')\nx**2\n```\n")
     assert "$$x^{2}$$" in output
 

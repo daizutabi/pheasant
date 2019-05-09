@@ -34,6 +34,7 @@ class CacheMismatchError(BaseException):
 
 
 class Jupyter(Renderer):
+    language: str = "python"
     count: int = field(default=0, init=False)
     cache: List[Cell] = field(default_factory=list, init=False)
     extra_html: str = field(default="", init=False)
@@ -121,8 +122,8 @@ class Jupyter(Renderer):
                 template, context, outputs=[], report={"count": self.count}
             )
 
-        language = context.get("language", kernels.language)
-        kernel_name = kernels.get_kernel_name(language)
+        self.language = context.get("language", self.language)
+        kernel_name = kernels.get_kernel_name(self.language)
 
         if not kernel_name:
             return self.render(
@@ -136,8 +137,7 @@ class Jupyter(Renderer):
             self.progress_bar.progress("Start", count=self.count)
 
         kwargs = ""
-        if language == "python":
-            # context["option"], kwargs = split_kwargs_from_option(context["option"])
+        if self.language == "python":
             _, kwargs = split_kwargs_from_option(context["option"])
             if kwargs:
                 kernel.execute(
@@ -148,9 +148,9 @@ class Jupyter(Renderer):
         verbose = self.config["verbose"]
 
         def execute():
-            if verbose == 2:
-                code_ = "\n".join([language + "> " + line for line in code.split("\n")])
-                print(code_)
+            if verbose >= 2:
+                codes = [self.language + "> " + line for line in code.split("\n")]
+                print("\n".join(codes))
             outputs = kernel.execute(code, output_hook=output_hook if verbose else None)
             report = format_report(kernel.report)
             report["count"] = self.count
@@ -188,6 +188,9 @@ class Jupyter(Renderer):
             template, context, kernel_name=kernel_name, outputs=outputs, report=report
         )
 
+        print(self.cache)
+
+        print(self.count, "-----------------------")
         if len(self.cache) == self.count - 1:
             self.cache.append(cell)
         else:

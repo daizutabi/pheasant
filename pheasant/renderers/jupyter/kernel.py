@@ -114,8 +114,7 @@ class Kernel:
 class Kernels:
     _kernel_names: Dict[str, list] = field(default_factory=dict)
     kernels: Dict[str, Kernel] = field(default_factory=dict)
-    report: Dict[str, Any] = field(default_factory=dict)
-    language: str = "python"
+    # report: Dict[str, Any] = field(default_factory=dict)
 
     @property
     def kernel_names(self) -> Dict[str, list]:
@@ -149,17 +148,6 @@ class Kernels:
         if not kernel_name:
             raise KeyError(f"No kernel found for language {language}.")
         return self.get_kernel(kernel_name)
-
-    def execute(self, code: str, kernel_name: str = "", language: str = "") -> List:
-        language = language or self.language
-        kernel_name = kernel_name or self.get_kernel_name(language)
-        if not kernel_name:
-            raise ValueError(f"No kernel found for language {language}.")
-        kernel = self.get_kernel(kernel_name)
-        outputs = kernel.execute(code)
-        self.language = language
-        self.report = kernel.report
-        return outputs
 
     def shutdown(self):
         for kernel_name in list(self.kernels.keys()):

@@ -118,7 +118,7 @@ def read_file(path):
 def inspect(obj: str, kernel_name: str) -> str:
     """Inspect source code."""
     code = f"import inspect\ninspect.getsourcelines({obj})"
-    outputs = kernels.execute(code, kernel_name=kernel_name)
+    outputs = kernels.get_kernel(kernel_name).execute(code)
     try:
         lines, lineno = literal_eval(outputs[0]["data"]["text/plain"])
     except Exception:

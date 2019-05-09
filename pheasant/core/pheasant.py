@@ -53,8 +53,8 @@ class Pheasant(Converter):
             return self.convert_by_name(path, "main")
 
     def _convert_from_files(self, paths: Iterable[str]) -> List[str]:
-        paths = list(paths)
         self.start()
+        paths = list(paths)
         self.jupyter.progress_bar.multi = len(paths)
         for k, path in enumerate(paths):
             self.jupyter.progress_bar.step = k + 1

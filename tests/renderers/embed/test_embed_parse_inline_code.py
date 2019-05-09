@@ -47,7 +47,7 @@ def test_embed_parse_file_not_founed(parse):
 
 
 def test_embed_parse_inspect(parse):
-    kernels.execute("import pheasant", language="python")
+    kernels['python'].execute("import pheasant")
     output = parse("?pheasant")
     answer = (
         '\n\n<div class="cell embed file"><div class="code">'
