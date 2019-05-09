@@ -1,7 +1,7 @@
 import os
 import pickle
 from dataclasses import dataclass
-from typing import Any
+from typing import Any, List
 
 
 def cache_path(path: str) -> str:
@@ -57,3 +57,23 @@ class Cache:
         self.modified = modified(self.path)
         if self.has_cache:
             self.size = os.path.getsize(self.cache_path)
+
+
+def collect(paths: List[str], ext: str) -> List:
+    exts = ext.split(",")
+    caches = []
+
+    def collect(path):
+        if os.path.splitext(path)[-1][1:] in exts:
+            caches.append(Cache(os.path.normpath(path)))
+
+    if not paths:
+        paths = ["."]
+    for path in paths:
+        if os.path.isdir(path):
+            for dirpath, dirnames, filenames in os.walk(path):
+                for file in filenames:
+                    collect(os.path.join(dirpath, file))
+        else:
+            collect(path)
+    return caches

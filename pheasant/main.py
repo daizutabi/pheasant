@@ -1,11 +1,10 @@
 import os
 import sys
-from typing import List
 
 import click
 
 from pheasant import __version__
-from pheasant.utils.cache import Cache
+from pheasant.utils.cache import collect
 
 pgk_dir = os.path.dirname(os.path.abspath(__file__))
 version_msg = f"{__version__} from {pgk_dir} (Python {sys.version[:3]})."
@@ -30,26 +29,6 @@ max_option = click.option(
     "--max", default=100, show_default=True, help="Maximum number of files."
 )
 paths_argument = click.argument("paths", nargs=-1, type=click.Path(exists=True))
-
-
-def collect(paths: List[str], ext: str) -> List:
-    exts = ext.split(",")
-    caches = []
-
-    def collect(path):
-        if os.path.splitext(path)[-1][1:] in exts:
-            caches.append(Cache(os.path.normpath(path)))
-
-    if not paths:
-        paths = ["."]
-    for path in paths:
-        if os.path.isdir(path):
-            for dirpath, dirnames, filenames in os.walk(path):
-                for file in filenames:
-                    collect(os.path.join(dirpath, file))
-        else:
-            collect(path)
-    return caches
 
 
 @cli.command(help="Run source files and save the caches.")
@@ -97,9 +76,9 @@ def list(paths, ext):
         size = cache.size / 1024
         if size > 1024:
             size /= 1024
-            return f'{size:.01f}MB'
+            return f"{size:.01f}MB"
         else:
-            return f'{size:.01f}KB'
+            return f"{size:.01f}KB"
 
     for cache in caches:
         path = (
@@ -171,3 +150,13 @@ def prompt(script=False):
     markdown = Markdown()
     html = markdown.convert(output)
     click.echo(html.strip())
+
+
+@cli.command(help="Serve web application.")
+@click.option("--port", default=8000, show_default=True, help="Port number.")
+@paths_argument
+def serve(port, paths):
+    from pheasant.app.app import App
+
+    app = App(paths)
+    app.run(port)
