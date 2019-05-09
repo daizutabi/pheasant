@@ -40,7 +40,8 @@ def load(path: str) -> Any:
 
 def delete(path: str) -> None:
     path = cache_path(path)
-    os.remove(path)
+    if os.path.exists(path):
+        os.remove(path)
 
 
 @dataclass

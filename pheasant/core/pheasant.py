@@ -51,6 +51,8 @@ class Pheasant(Converter):
             return self.convert_by_name(path, "main")
         except CacheMismatchError:
             return self.convert_by_name(path, "main")
+        except NameError:
+            return self.convert_by_name(path, "main")
 
     def _convert_from_files(self, paths: Iterable[str]) -> List[str]:
         self.start()

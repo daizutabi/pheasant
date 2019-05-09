@@ -14,10 +14,14 @@ You can check your currently installed version using `pheasant --version`:
 
 ~~~bash terminal
 $ pheasant --version
-pheasant, version 2.2.29 from /path/to/pheasant (Python 3.7)
+pheasant, version 2.2.30 from /path/to/pheasant (Python 3.7)
 ~~~
 
 ## Change log
+
+### Version 2.2.30 (2019-05-10)
+
+* jupyter.kernel: raises `NameError` to delete cache and rerun.
 
 ### Version 2.2.29 (2019-05-09)
 

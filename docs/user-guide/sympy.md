@@ -4,6 +4,7 @@ First, import the SymPy package.
 
 ```python
 import sympy
+
 ```
 
 ## Basic usage
@@ -85,68 +86,15 @@ In equation \eqref{eq:sample}, we find the value of an interesting integral:
 
 ## LaTeX utility function
 
-For convenience, Pheasant prepares some utility functions.
+For convenience, Pheasant prepares utility classes to display LaTeX expressions.
 
-### #subscript
 ```python
-from pheasant.utils import latex as L
-print(L.subscript("x", 1))
-print(L.subscript("y", "i"))
-```
-
-### #row
-```python
-print(L.row("a", 3))
-print(L.row("b", 3, 4))
-print(L.row("c", 3, 4, transpose=True))
-```
-
-### #matrix
-```python
-print(L.matrix("x", 2, 3))
-```
-```python
-print(L.matrix("x", 2, 3, delim="("))
-```
-```python
-print(L.matrix("x", 2, 3, transpose=True))
-```
-
-### #sympy_matrix
-```python
-L.sympy_matrix("x", 2, 3)
-```
-
-### #const, ones, zeros
-```python
-print(L.const(1, 2, 3))
-```
-```python
-print(L.ones(2, 3))
-```
-```python
-print(L.zeros(2, 3))
-```
-
-### #vector
-```python
-print(L.vector("v", 4))
-```
-```python
-print(L.vector("u", 4, transpose=True, delim="("))
-```
-
-### #partial
-```python
-print(L.partial("f", "x"))
-```
-```python
-print(L.partial("f", "x", frac=True))
+from pheasant.utils.latex import Matrix, Vector
 ```
 
 ### #Matrix
 ```python
-X = L.Matrix("x", 3, 2)
+X = Matrix("x", 3, 2)
 X
 ```
 ```python
@@ -162,12 +110,15 @@ X.partial("f")
 X.partial("f", frac=True)
 ```
 ```python
-print(X.spartial("f"))
+X.spartial("f")
+```
+```python
+X.spartial("f", frac=True)
 ```
 
 ### #Vector
 ```python
-V = L.Vector("v", 2)
+V = Vector("v", 2)
 V
 ```
 ```python
@@ -183,5 +134,8 @@ V.partial("f")
 V.partial("f", frac=True)
 ```
 ```python
-print(V.spartial("f"))
+V.spartial("f")
+```
+```python
+V.spartial("f", frac=True)
 ```

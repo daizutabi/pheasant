@@ -105,14 +105,37 @@ def partial(f: str, x: str, frac: bool = False) -> str:
 
 
 @dataclass
-class Matrix:
+class Expression:
+    expr: str
+
+    def _repr_latex_(self) -> str:
+        return self.expr
+
+
+@dataclass
+class Base:
     var: str
     n: int
-    m: int
+    m: int = 0
+    _symbol: str = ""
     transpose: bool = False
     delim: str = "["
     env: str = "array"
 
+    def __post_init__(self):
+        if not self._symbol:
+            self._symbol = f"\\mathbf{{{self.var.upper()}}}"
+
+    @property
+    def symbol(self):
+        return Expression(self._symbol)
+
+    def spartial(self, f: str, frac: bool = False) -> Expression:
+        return Expression(partial(f, self._symbol, frac))
+
+
+@dataclass
+class Matrix(Base):
     def _repr_latex_(self) -> str:
         return matrix(self.var, self.n, self.m, self.transpose, self.delim, self.env)
 
@@ -151,18 +174,9 @@ class Matrix:
             env=self.env,
         )
 
-    def spartial(self, f: str, frac: bool = False) -> str:
-        return partial(f, f"\\mathbf{{{self.var.upper()}}}", frac)
-
 
 @dataclass
-class Vector:
-    var: str
-    n: int
-    transpose: bool = False
-    delim: str = "["
-    env: str = "array"
-
+class Vector(Base):
     def _repr_latex_(self) -> str:
         return vector(self.var, self.n, self.transpose, self.delim, self.env)
 
@@ -192,6 +206,3 @@ class Vector:
         return Vector(
             var, self.n, transpose=self.transpose, delim=self.delim, env=self.env
         )
-
-    def spartial(self, f: str, frac: bool = False) -> str:
-        return partial(f, f"\\mathbf{{{self.var.upper()}}}", frac)

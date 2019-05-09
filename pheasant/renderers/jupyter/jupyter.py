@@ -151,7 +151,14 @@ class Jupyter(Renderer):
             if verbose >= 2:
                 codes = [self.language + "> " + line for line in code.split("\n")]
                 print("\n".join(codes))
-            outputs = kernel.execute(code, output_hook=output_hook if verbose else None)
+            try:
+                outputs = kernel.execute(
+                    code, output_hook=output_hook if verbose else None
+                )
+            except NameError:
+                cache.delete(self.page.path)
+                self.progress_bar.finish(done=False)
+                raise
             report = format_report(kernel.report)
             report["count"] = self.count
             return outputs, report
