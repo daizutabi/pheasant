@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from typing import Callable, Optional, Union
 
 import sympy
@@ -6,144 +7,191 @@ import sympy
 def subscript(var: str, sub: Union[str, int]) -> str:
     if "{_}" not in var:
         var += "{_}"
-    return var.replace("{_}", "_{" + str(sub) + "}")
+    return var.replace("{_}", f"_{{{sub}}}")
 
 
-def row(var: str, r: int, c: Optional[int] = None, transpose: bool = False) -> str:
-    if c is None:
-        c = r
+def row(var: str, n: int, m: Optional[int] = None, transpose: bool = False) -> str:
+    if m is None:
+        m = n
         sub = "{i}"
     else:
-        sub = "{i}{r}" if transpose else "{r}{i}"
-    return "&".join(subscript(var, sub.format(r=r, i=i)) for i in range(1, c + 1))
+        sub = "{i}{n}" if transpose else "{n}{i}"
+    return "&".join(subscript(var, sub.format(n=n, i=i)) for i in range(1, m + 1))
 
 
-def wrap_matrix(mat: str, mat_delim: str = "[") -> str:
-    if mat_delim == "[":
-        mat_delim = "[]"
-    elif mat_delim == "(":
-        mat_delim = "()"
+def wrap_matrix(mat: str, delim: str = "[") -> str:
+    if delim == "[":
+        delim = "[]"
+    elif delim == "(":
+        delim = "()"
     else:
-        raise ValueError("mat_delim must be '(' or '['")
-    return f"\\left{mat_delim[0]}{mat}\\right{mat_delim[1]}"
+        raise ValueError("delim must be '(' or '['")
+    return f"\\left{delim[0]}{mat}\\right{delim[1]}"
+
+
+def begin(env: str, align: str) -> str:
+    return f"\\begin{{{env}}}{{{align}}}"
+
+
+def end(env: str) -> str:
+    return f"\\end{{{env}}}"
 
 
 def matrix(
-    var: str, nrows: int, ncols: int, transpose: bool = False, mat_delim: str = "["
+    var: str,
+    n: int,
+    m: int,
+    transpose: bool = False,
+    delim: str = "[",
+    env: str = "array",
 ) -> str:
-    align = "c" * ncols
-    mat = "\\\\\n".join([row(var, i, ncols, transpose) for i in range(1, nrows + 1)])
-    mat = "\n".join(["\\begin{array}{" + align + "}", mat, "\\end{array}"])
-    return wrap_matrix(mat, mat_delim)
+    align = "c" * m
+    mat = "\\\\\n".join([row(var, i, m, transpose) for i in range(1, n + 1)])
+    mat = "\n".join([begin(env, align), mat, end(env)])
+    return wrap_matrix(mat, delim)
 
 
 def sympy_matrix(var: str, n: int, m: int) -> sympy.Matrix:
-    matrix = [
-        [sympy.symbols(f"{var}_{i}{j}") for j in range(1, m + 1)]
-        for i in range(1, n + 1)
-    ]
+    if n == 0:
+        matrix = [[sympy.symbols(f"{var}_{j}") for j in range(1, m + 1)]]
+    elif m == 0:
+        matrix = [[sympy.symbols(f"{var}_{i}")] for i in range(1, n + 1)]
+    else:
+        matrix = [
+            [sympy.symbols(f"{var}_{i}{j}") for j in range(1, m + 1)]
+            for i in range(1, n + 1)
+        ]
     return sympy.Matrix(matrix)
 
 
-def const(value, nrows: int, ncols: Optional[int] = None, mat_delim: str = "[") -> str:
-    if ncols is None:
-        nrows, ncols = 1, nrows
-    align = "c" * ncols
-    row = "&".join([str(value)] * ncols)
-    mat = "\\\\\n".join([row] * nrows)
-    mat = "\n".join(["\\begin{array}{" + align + "}", mat, "\\end{array}"])
-    return wrap_matrix(mat, mat_delim)
+def const(
+    value, n: int, m: Optional[int] = None, delim: str = "[", env: str = "array"
+) -> str:
+    if m is None:
+        n, m = 1, n
+    align = "c" * m
+    row = "&".join([str(value)] * m)
+    mat = "\\\\\n".join([row] * n)
+    mat = "\n".join([begin(env, align), mat, end(env)])
+    return wrap_matrix(mat, delim)
 
 
-def ones(nrows: int, ncols: Optional[int] = None) -> str:
-    return const(1, nrows, ncols)
+def ones(n: int, m: Optional[int] = None, delim: str = "[") -> str:
+    return const(1, n, m, delim)
 
 
-def zeros(nrows: int, ncols: Optional[int] = None) -> str:
-    return const(0, nrows, ncols)
+def zeros(n: int, m: Optional[int] = None, delim: str = "[") -> str:
+    return const(0, n, m, delim)
 
 
-def vector(var: str, length: int, transpose: bool = False, mat_delim: str = "[") -> str:
-    vec = row(var, length)
+def vector(
+    var: str, n: int, transpose: bool = False, delim: str = "[", env: str = "array"
+) -> str:
+    vec = row(var, n)
     if transpose:
         align = "c"
         vec = vec.replace("&", "\\\\")
     else:
-        align = "c" * length
-    vec = "\n".join(["\\begin{array}{" + align + "}", vec, "\\end{array}"])
-    return wrap_matrix(vec, mat_delim)
+        align = "c" * n
+    vec = "\n".join([begin(env, align), vec, end(env)])
+    return wrap_matrix(vec, delim)
 
 
 def partial(f: str, x: str, frac: bool = False) -> str:
     if frac:
-        return "\\frac{\\partial " + f + "}{\\partial\\mathbf{" + x.upper() + "}}"
+        return f"\\frac{{\\partial {f}}}{{\\partial {x}}}"
     else:
-        return "\\partial " + f + "/\\partial\\mathbf{" + x.upper() + "}"
+        return f"\\partial {f}/\\partial {x}"
 
 
+@dataclass
 class Matrix:
-    def __init__(self, var: str, nrows: int, ncols: int):
-        self.var = var
-        self.nrows = nrows
-        self.ncols = ncols
+    var: str
+    n: int
+    m: int
+    transpose: bool = False
+    delim: str = "["
+    env: str = "array"
 
-    def __repr__(self) -> str:
-        return matrix(self.var, self.nrows, self.ncols)
+    def _repr_latex_(self) -> str:
+        return matrix(self.var, self.n, self.m, self.transpose, self.delim, self.env)
 
     @property
-    def T(self) -> str:
-        return matrix(self.var, self.ncols, self.nrows, transpose=True)
+    def T(self) -> "Matrix":
+        return Matrix(
+            self.var,
+            self.m,
+            self.n,
+            transpose=not self.transpose,
+            delim=self.delim,
+            env=self.env,
+        )
 
     @property
     def S(self) -> sympy.Matrix:
-        return sympy_matrix(self.var, self.nrows, self.ncols)
+        return sympy_matrix(self.var, self.n, self.m)
 
     def apply(self, func: Callable) -> sympy.Matrix:
         mat = self.S
         vec = sympy.Matrix([[func(x) for x in mat]])
-        return vec.reshape(self.nrows, self.ncols)
+        return vec.reshape(self.n, self.m)
 
     @property
     def shape(self) -> tuple:
-        return (self.nrows, self.ncols)
+        return (self.n, self.m)
 
-    def partial(self, f: str, frac: bool = False) -> str:
-        if frac:
-            var = "\\frac{\\partial " + f + "}{\\partial " + self.var + "{_}}"
-        else:
-            var = "\\partial " + f + "/\\partial " + self.var + "{_}"
-        return matrix(var, self.nrows, self.ncols)
+    def partial(self, f: str, frac: bool = False) -> "Matrix":
+        var = partial(f, self.var + "{_}", frac)
+        return Matrix(
+            var,
+            self.n,
+            self.m,
+            transpose=self.transpose,
+            delim=self.delim,
+            env=self.env,
+        )
 
     def spartial(self, f: str, frac: bool = False) -> str:
-        return partial(f, self.var, frac)
+        return partial(f, f"\\mathbf{{{self.var.upper()}}}", frac)
 
 
+@dataclass
 class Vector:
-    def __init__(self, var: str, length: int):
-        self.var = var
-        self.length = length
+    var: str
+    n: int
+    transpose: bool = False
+    delim: str = "["
+    env: str = "array"
 
-    def __repr__(self) -> str:
-        return vector(self.var, self.length)
+    def _repr_latex_(self) -> str:
+        return vector(self.var, self.n, self.transpose, self.delim, self.env)
 
     @property
-    def T(self) -> str:
-        return vector(self.var, self.length, transpose=True)
+    def T(self) -> "Vector":
+        return Vector(
+            self.var,
+            self.n,
+            transpose=not self.transpose,
+            delim=self.delim,
+            env=self.env,
+        )
 
     @property
     def S(self) -> sympy.Matrix:
-        return sympy_matrix(self.var, 1, self.length)
+        if self.transpose:
+            return sympy_matrix(self.var, self.n, 0)
+        else:
+            return sympy_matrix(self.var, 0, self.n)
 
     @property
     def shape(self) -> tuple:
-        return (self.length,)
+        return (self.n,)
 
-    def partial(self, f: "str", frac: bool = False) -> str:
-        if frac:
-            var = "\\frac{\\partial " + f + "}{\\partial " + self.var + "{_}}"
-        else:
-            var = "\\partial " + f + "/\\partial " + self.var + "{_}"
-        return vector(var, self.length)
+    def partial(self, f: "str", frac: bool = False) -> "Vector":
+        var = partial(f, self.var + "{_}", frac)
+        return Vector(
+            var, self.n, transpose=self.transpose, delim=self.delim, env=self.env
+        )
 
     def spartial(self, f: str, frac: bool = False) -> str:
-        return partial(f, self.var, frac)
+        return partial(f, f"\\mathbf{{{self.var.upper()}}}", frac)

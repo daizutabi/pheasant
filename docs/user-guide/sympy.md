@@ -106,7 +106,7 @@ print(L.row("c", 3, 4, transpose=True))
 print(L.matrix("x", 2, 3))
 ```
 ```python
-print(L.matrix("x", 2, 3, mat_delim="("))
+print(L.matrix("x", 2, 3, delim="("))
 ```
 ```python
 print(L.matrix("x", 2, 3, transpose=True))
@@ -133,7 +133,7 @@ print(L.zeros(2, 3))
 print(L.vector("v", 4))
 ```
 ```python
-print(L.vector("u", 4, transpose=True, mat_delim="("))
+print(L.vector("u", 4, transpose=True, delim="("))
 ```
 
 ### #partial
@@ -147,19 +147,19 @@ print(L.partial("f", "x", frac=True))
 ### #Matrix
 ```python
 X = L.Matrix("x", 3, 2)
-print(X)
+X
 ```
 ```python
-print(X.T)
+X.T
 ```
 ```python
 X.S  # sympy.Matrix
 ```
 ```python
-print(X.partial("f"))
+X.partial("f")
 ```
 ```python
-print(X.partial("f", frac=True))
+X.partial("f", frac=True)
 ```
 ```python
 print(X.spartial("f"))
@@ -168,19 +168,19 @@ print(X.spartial("f"))
 ### #Vector
 ```python
 V = L.Vector("v", 2)
-print(V)
+V
 ```
 ```python
-print(V.T)
+V.T
 ```
 ```python
 V.S  # sympy.Matrix
 ```
 ```python
-print(V.partial("f"))
+V.partial("f")
 ```
 ```python
-print(V.partial("f", frac=True))
+V.partial("f", frac=True)
 ```
 ```python
 print(V.spartial("f"))
