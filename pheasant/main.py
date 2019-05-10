@@ -152,8 +152,9 @@ def prompt(script=False):
 @cli.command(help="Serve web application.")
 @click.option("--port", default=8000, show_default=True, help="Port number.")
 @paths_argument
-def serve(port, paths):
+@ext_option
+def serve(port, paths, ext):
     from pheasant.app.app import App
 
-    app = App(paths)
-    app.run(port)
+    app = App(paths, ext)
+    app.run(port=port)

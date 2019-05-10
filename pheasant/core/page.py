@@ -71,29 +71,48 @@ class Page:
         else:
             return os.stat(self.path).st_mtime > os.stat(self.cache.path).st_mtime
 
+    def to_dict(self) -> Dict[str, Any]:
+        return dict(
+            path=self.path,
+            has_cache=self.has_cache,
+            modified=self.modified,
+            cache_size=self.cache.size,
+        )
+
 
 @dataclass
 class Pages:
-    roots: List[str]
+    paths: List[str]
     ext: str
+    _pages: List[Page] = field(default_factory=list, init=False)
 
     def __post_init__(self):
-        if not self.roots:
-            self.roots = ["."]
+        if not self.paths:
+            self.paths = ["."]
 
     def collect(self) -> List[Page]:
         exts = self.ext.split(",")
-        pages = []
+        self._pages = []
 
         def collect(path):
             if os.path.splitext(path)[-1][1:] in exts:
-                pages.append(Page(os.path.normpath(path)))
+                self._pages.append(Page(os.path.normpath(path)))
 
-        for root in self.roots:
-            if os.path.isdir(root):
-                for dirpath, dirnames, filenames in os.walk(root):
+        for path in self.paths:
+            if os.path.isdir(path):
+                for dirpath, dirnames, filenames in os.walk(path):
                     for file in filenames:
                         collect(os.path.join(dirpath, file))
             else:
-                collect(root)
-        return pages
+                collect(path)
+
+        return self._pages
+
+    def __getitem__(self, index):
+        return self._pages[index]
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {"pages": self.to_list()}
+
+    def to_list(self) -> List:
+        return [page.to_dict() for page in self._pages]
