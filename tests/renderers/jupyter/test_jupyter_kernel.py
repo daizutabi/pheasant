@@ -84,3 +84,8 @@ def test_output_hook_factory():
     output_hook = output_hook_factory(func_error)
     kernel = kernels["python"]
     kernel.execute("[][1]", output_hook=output_hook)
+
+
+def test_inspect():
+    kernel = kernels["python"]
+    kernel.execute("?print")

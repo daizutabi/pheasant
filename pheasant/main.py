@@ -4,7 +4,7 @@ import sys
 import click
 
 from pheasant import __version__
-from pheasant.utils.cache import collect
+from pheasant.core.page import Pages
 
 pgk_dir = os.path.dirname(os.path.abspath(__file__))
 version_msg = f"{__version__} from {pgk_dir} (Python {sys.version[:3]})."
@@ -42,27 +42,26 @@ paths_argument = click.argument("paths", nargs=-1, type=click.Path(exists=True))
 @max_option
 @paths_argument
 def run(paths, ext, max, restart, shutdown, force, verbose):
-    caches = collect(paths, ext)
+    pages = Pages(paths, ext).collect()
 
-    length = len(caches)
+    length = len(pages)
     click.secho(f"collected {length} files.", bold=True)
 
-    if len(caches) > max:  # pragma: no cover
+    if length > max:  # pragma: no cover
         click.secho(f"Too many files. Aborted.", fg="yellow")
         sys.exit()
 
     if force:
-        for cache in caches:
-            if cache.has_cache:
-                path = cache.cache_path
-                os.remove(path)
-                click.echo(path + " was deleted.")
+        for page in pages:
+            if page.has_cache:
+                page.cache.delete()
+                click.echo(page.cache.path + " was deleted.")
 
     from pheasant.core.pheasant import Pheasant
 
     converter = Pheasant(restart=restart, shutdown=shutdown, verbose=verbose)
     converter.jupyter.safe = True
-    converter.convert_from_files(cache.path for cache in caches)
+    converter.convert_from_files(page.path for page in pages)
     click.secho(f"{converter.log.info}", bold=True)
 
 
@@ -70,7 +69,7 @@ def run(paths, ext, max, restart, shutdown, force, verbose):
 @ext_option
 @paths_argument
 def list(paths, ext):
-    caches = collect(paths, ext)
+    pages = Pages(paths, ext).collect()
 
     def size(cache):
         size = cache.size / 1024
@@ -80,15 +79,14 @@ def list(paths, ext):
         else:
             return f"{size:.01f}KB"
 
-    for cache in caches:
-        path = (
-            ("* " if cache.modified else "  ")
-            + cache.path
-            + (f" (cached, {size(cache)})" if cache.has_cache else "")
+    for page in pages:
+        click.echo(
+            ("* " if page.modified else "  ")
+            + page.path
+            + (f" (cached, {size(page.cache)})" if page.has_cache else "")
         )
-        click.echo(path)
 
-    click.secho(f"collected {len(caches)} files.", bold=True)
+    click.secho(f"collected {len(pages)} files.", bold=True)
 
 
 @cli.command(help="Delete caches for source files.")
@@ -96,17 +94,17 @@ def list(paths, ext):
 @ext_option
 @paths_argument
 def clean(paths, ext, yes):
-    caches = [cache for cache in collect(paths, ext) if cache.has_cache]
+    pages = Pages(paths, ext).collect()
+    caches = [page.cache for page in pages if page.has_cache]
+
+    if not caches:
+        click.secho(f"No cache found. Aborted.", bold=True)
+        sys.exit()
 
     for cache in caches:
         click.echo(cache.path)
 
-    length = len(caches)
-    if length == 0:
-        click.secho(f"No cache found. Aborted.", bold=True)
-        sys.exit()
-
-    click.secho(f"collected {length} files.", bold=True)
+    click.secho(f"collected {len(caches)} files.", bold=True)
 
     if not yes:
         click.confirm(
@@ -114,9 +112,8 @@ def clean(paths, ext, yes):
         )
 
     for cache in caches:
-        path = cache.cache_path
-        os.remove(path)
-        click.echo(path + " was deleted.")
+        cache.delete()
+        click.echo(cache.path + " was deleted.")
 
 
 @cli.command(help="Python script prompt.")
