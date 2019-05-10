@@ -1,10 +1,10 @@
 # Embeded objects
 
-Pheasant can embed codes from a file system or Python module.
+Pheasant can embed codes from source files or include other source files.
 
-## File system
+## Embeded codes
 
-Extenal resources are read from file system by Pheasant syntax: `{%#=object%}`. For example,
+Extenal source files are read from file system by Pheasant syntax: `{%#=object%}`. For example,
 
 ~~~
 {%=/mkdocs.yml%}
@@ -27,33 +27,6 @@ Imported file can be numbered like figures and tables. Use this inline notation:
 ~~~copy
 #File {%=/mkdocs.yml[:8]%}
 ~~~
-
-## Python module source
-
-Python module sources that the current Jupyter kernel can find are also inspected. Now Pheasant imported its own package `pheasant`, so you can read the source from this document by Pheasant syntax: `{%#?object%}`.
-
-You can write to inspect the whole module content:
-
-
-```python run
-import pheasant
-```
-
-~~~copy
-{%?pheasant%}
-~~~
-
-A part of the module can be specified as usual.
-
-```python
-from pheasant.renderers.jupyter.jupyter import Jupyter
-```
-
-~~~copy
-{%?Jupyter[:21]%}
-~~~
-
-With this functionality, you can guarantee the reproducible relation between your source code and results easily.
 
 ## Include other file as Markdown source.
 

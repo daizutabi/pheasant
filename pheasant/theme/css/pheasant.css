@@ -130,6 +130,11 @@ h2, h3, h4, h5 {
   color: var(--output-color);
 }
 
+.pheasant-fenced-code .cell.jupyter.source::before {
+  content: "Src";
+  color: var(--output-color);
+}
+
 .pheasant-fenced-code .cell.stdout::before,
 .pheasant-fenced-code .cell.stderr::before,
 .pheasant-fenced-code .cell.error::before,

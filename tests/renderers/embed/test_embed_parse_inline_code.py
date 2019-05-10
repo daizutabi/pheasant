@@ -2,8 +2,6 @@ import os
 
 import pytest
 
-from pheasant.renderers.jupyter.kernel import kernels
-
 
 @pytest.fixture()
 def parse(parser):
@@ -44,13 +42,3 @@ def test_embed_parse_file_not_founed(parse):
     path = "xxx.py"
     output = parse(path)
     assert '<p style="font-color:red">File not found:' in output
-
-
-def test_embed_parse_inspect(parse):
-    kernels['python'].execute("import pheasant")
-    output = parse("?pheasant")
-    answer = (
-        '\n\n<div class="cell embed file"><div class="code">'
-        '<pre><code class="python">__version__ ='
-    )
-    assert output.startswith(answer)
