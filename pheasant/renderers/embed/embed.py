@@ -1,12 +1,10 @@
 import os
 import re
-from ast import literal_eval
 from dataclasses import field
 from typing import Any, Dict, Iterator
 
 from pheasant.core.decorator import commentable
 from pheasant.core.renderer import Renderer
-from pheasant.renderers.jupyter.kernel import kernels
 from pheasant.renderers.script.script import Script
 
 
@@ -43,25 +41,17 @@ class Embed(Renderer):
     def render_inline_code(self, context, splitter, parser) -> Iterator[str]:
         context.update(resolve_path(context["source"].strip(), self.page.path))
         language = context["language"]
-        if context["mode"] in ["file", "include"]:
-            path = context["abs_src_path"]
-            if not os.path.exists(path):
-                yield f'<p style="font-color:red">File not found: {path}</p>\n'
-                return
-            source = read_file(path)
-            if context["mode"] == "include":
-                if path.endswith(".py"):
-                    source = self.script.parse(source)
-                source = shift_header(source, context.get("shift", 0))
-        else:
-            language = "python"
-            kernel_name = kernels.get_kernel_name(language)
-            if kernel_name is None:  # pragma: no cover
-                yield f'<p style="font-color:red">Kernel not found for {language}</p>\n'
-                return
-            source = inspect(context["path"], kernel_name)
+        path = context["abs_src_path"]
+        if not os.path.exists(path):
+            yield f'<p style="font-color:red">File not found: {path}</p>\n'
+            return
+        source = read_file(path)
+        if context["mode"] == "include":
+            if path.endswith(".py"):
+                source = self.script.parse(source)
+            source = shift_header(source, context.get("shift", 0))
         source = select_source(source, context.get("lineno"))
-        if context["mode"] in ["file", "inspect"]:
+        if context["mode"] == "file":
             source = f"\n~~~{language} file\n{source}\n~~~\n"
         else:
             source += "\n"
@@ -70,15 +60,12 @@ class Embed(Renderer):
 
 def resolve_path(path: str, root: str) -> Dict[str, str]:
     context: Dict[str, Any] = {}
-    if "?" in path and not path.startswith("?"):
+    if "?" in path:
         path, context["language"] = path.split("?")
     if "[" in path and ":" in path and path.endswith("]"):
         path, context["lineno"] = path[:-1].split("[")
 
-    if path.startswith("?"):
-        context["mode"] = "inspect"
-        path = path[1:]
-    elif path.startswith("="):
+    if path.startswith("="):
         context["mode"] = "file"
         path = path[1:]
     else:
@@ -113,18 +100,6 @@ def get_language_from_path(path: str) -> str:
 def read_file(path):
     with open(path, "r", encoding="utf-8-sig") as file:
         return file.read().strip()
-
-
-def inspect(obj: str, kernel_name: str) -> str:
-    """Inspect source code."""
-    code = f"import inspect\ninspect.getsourcelines({obj})"
-
-    try:
-        outputs = kernels.get_kernel(kernel_name).execute(code)
-        lines, lineno = literal_eval(outputs[0]["data"]["text/plain"])
-    except Exception:
-        lines = ["inspect error"]
-    return "".join(lines)
 
 
 def select_source(source: str, lineno: str) -> str:

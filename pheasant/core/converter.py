@@ -110,7 +110,8 @@ class Converter(Base):
         Converted output text.
         """
         if path not in self.pages:
-            self.pages[path] = Page(path).read()
+            self.pages[path] = Page(path)
+            self.pages[path].read()
 
         page = self.pages[path]
 

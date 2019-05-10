@@ -1,4 +1,5 @@
 """Jupyter Kernel"""
+import ast
 import atexit
 import datetime
 import re
@@ -18,6 +19,7 @@ from pheasant.utils.time import format_timedelta_human
 class Kernel:
     name: str
     init_code: str = ""
+    language: str = ""
     manager: Optional[KernelManager] = field(default=None, init=False)
     client: Optional[KernelClient] = field(default=None, init=False)
     report: Dict[str, Any] = field(default_factory=dict, init=False)
@@ -25,7 +27,8 @@ class Kernel:
     def __post_init__(self):
         self.report["total"] = datetime.timedelta(0)
         kernel_spec = get_kernel_spec(self.name)
-        if kernel_spec.language == "python":
+        self.language = kernel_spec.language
+        if self.language == "python":
             self.init_code = (
                 "from pheasant.renderers.jupyter.ipython import register_formatters\n"
                 "register_formatters()"
@@ -95,6 +98,9 @@ class Kernel:
                 self.client.execute_interactive(self.init_code)
 
     def execute(self, code: str, output_hook=None) -> List:
+        if self.language == "python" and (code.startswith("?") or code.endswith("?")):
+            return self.inspect(code, output_hook=output_hook)
+
         client = self.client or self.start()
         outputs = []
 
@@ -108,6 +114,21 @@ class Kernel:
         msg = client.execute_interactive(code, output_hook=_output_hook)
         update_report(self.report, msg)
         return list(stream_joiner(outputs))
+
+    def inspect(self, code: str, output_hook=None) -> List:
+        match = re.match(r"^(\?*?)([^?.]*?)(\?*?)$", code, re.DOTALL)
+        if match is None:
+            return []
+        code = match.group(2)
+        self.execute("import inspect")
+        self.execute(code)
+        self.execute("_pheasant = _")
+        output = self.execute("inspect.getsource(_pheasant)")[0]
+        if output["type"] == "execute_result":
+            source = ast.literal_eval(output["data"]["text/plain"])
+            return [dict(type="stream", name="source", text=source)]
+        else:
+            return [output]
 
 
 @dataclass
@@ -201,8 +222,8 @@ def output_from_msg(msg: Dict[str, Any]) -> Optional[dict]:
         return dict(type=msg_type, name=content["name"], text=content["text"])
     elif msg_type == "error":
         traceback = "\n".join([strip_ansi(tr) for tr in content["traceback"][1:-1]])
-        if content['ename'] == 'NameError':
-            raise NameError(content['evalue'])
+        if content["ename"] == "NameError":
+            raise NameError(content["evalue"])
         return dict(
             type=msg_type,
             ename=content["ename"],
@@ -270,7 +291,7 @@ def output_hook_factory(callback=None):
     if callback is None:
 
         def callback(stream, data):
-            if stream == 'stdout':
+            if stream == "stdout":
                 sys.stdout.write(data)
             else:
                 sys.stderr.write(data)

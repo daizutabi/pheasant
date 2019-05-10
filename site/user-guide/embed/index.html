@@ -39,9 +39,8 @@
     <li class="toctree-l2"><a class="nav-item" href="../images/">2 Image</a></li>
     <li class="toctree-l2 current"><a class="nav-item current" href="./">3 Embeded objects</a>
   <ul class="subnav">
-      <li class="toctree-l3"><a class="nav-item toc" href="#31-file-system">3.1 File system</a></li>
-      <li class="toctree-l3"><a class="nav-item toc" href="#32-python-module-source">3.2 Python module source</a></li>
-      <li class="toctree-l3"><a class="nav-item toc" href="#33-include-other-file-as-markdown-source">3.3 Include other file as Markdown source.</a></li>
+      <li class="toctree-l3"><a class="nav-item toc" href="#31-embeded-codes">3.1 Embeded codes</a></li>
+      <li class="toctree-l3"><a class="nav-item toc" href="#32-include-other-file-as-markdown-source">3.2 Include other file as Markdown source.</a></li>
   </ul></li>
     <li class="toctree-l2"><a class="nav-item" href="../sympy/">4 SymPy and LaTeX</a></li>
     <li class="toctree-l2"><a class="nav-item" href="../script/">5 Standalone Script</a></li>
@@ -76,9 +75,9 @@
 </nav>
         <div id="content">
 <h1 id="3-embeded-objects"><span class="pheasant-header"><span class="header"><span class="number">3</span> <span class="title">Embeded objects</span></span></span></h1>
-<p>Pheasant can embed codes from a file system or Python module.</p>
-<h2 id="31-file-system"><span class="pheasant-header"><span class="header"><span class="number">3.1</span> <span class="title">File system</span></span></span></h2>
-<p>Extenal resources are read from file system by Pheasant syntax: <code>{%=object%}</code>. For example,</p>
+<p>Pheasant can embed codes from source files or include other source files.</p>
+<h2 id="31-embeded-codes"><span class="pheasant-header"><span class="header"><span class="number">3.1</span> <span class="title">Embeded codes</span></span></span></h2>
+<p>Extenal source files are read from file system by Pheasant syntax: <code>{%=object%}</code>. For example,</p>
 <div class="pheasant-fenced-code"><div class="cell embed source"><div class="code"><pre><code class="markdown">{%=/mkdocs.yml%}</code></pre></div></div></div>
 
 <p>writes the content of the real <code>mkdocs.yml</code> of this document:</p>
@@ -140,51 +139,7 @@ edit_uri: &#34;&#34;
 
 </div></div></div>
 
-<h2 id="32-python-module-source"><span class="pheasant-header"><span class="header"><span class="number">3.2</span> <span class="title">Python module source</span></span></span></h2>
-<p>Python module sources that the current Jupyter kernel can find are also inspected. Now Pheasant imported its own package <code>pheasant</code>, so you can read the source from this document by Pheasant syntax: <code>{%?object%}</code>.</p>
-<p>You can write to inspect the whole module content:</p>
-<div class="pheasant-fenced-code"><div class="cell jupyter input"><div class="code"><pre><code class="python">import pheasant</code></pre></div>
-<div class="report"><p><span class="count">[1]</span>
-<span class="start">2019-05-10 07:19:26</span> (<span class="time">4.00ms</span>)
-<span class="right"><span class="option">(run)</span> <span class="kernel">python3</span> (<span class="total">4.00ms</span>)</span></p></div></div></div>
-
-<div class="pheasant-fenced-code"><div class="cell embed source"><div class="code"><pre><code class="markdown">{%?pheasant%}</code></pre></div></div></div>
-
-<div class="pheasant-fenced-code"><div class="cell embed file"><div class="code"><pre><code class="python">__version__ = &#34;2.2.30&#34;
-</code></pre></div></div></div>
-
-<p>A part of the module can be specified as usual.</p>
-<div class="pheasant-fenced-code"><div class="cell jupyter input"><div class="code"><pre><code class="python">from pheasant.renderers.jupyter.jupyter import Jupyter</code></pre></div>
-<div class="report"><p><span class="count">[2]</span>
-<span class="start">2019-05-10 07:19:26</span> (<span class="time">28.0ms</span>)
-<span class="right"><span class="kernel">python3</span> (<span class="total">40.0ms</span>)</span></p></div></div></div>
-
-<div class="pheasant-fenced-code"><div class="cell embed source"><div class="code"><pre><code class="markdown">{%?Jupyter[:21]%}</code></pre></div></div></div>
-
-<div class="pheasant-fenced-code"><div class="cell embed file"><div class="code"><pre><code class="python">class Jupyter(Renderer):
-    language: str = &#34;python&#34;
-    count: int = field(default=0, init=False)
-    cache: List[Cell] = field(default_factory=list, init=False)
-    extra_html: str = field(default=&#34;&#34;, init=False)
-    progress_bar: ProgressBar = field(default_factory=progress_bar_factory, init=False)
-
-    FENCED_CODE_PATTERN = (
-        r&#34;^(?P&lt;mark&gt;`{3,})(?P&lt;language&gt;\w*) ?(?P&lt;option&gt;.*?)\n&#34;
-        r&#34;(?P&lt;code&gt;.*?)\n(?P=mark)\n&#34;
-    )
-    INLINE_CODE_PATTERN = r&#34;\{\{(?P&lt;code&gt;.+?)\}\}&#34;
-    RE_INLINE_CODE_PATTERN = re.compile(INLINE_CODE_PATTERN)
-
-    def init(self):
-        self.register(Jupyter.FENCED_CODE_PATTERN, self.render_fenced_code)
-        self.register(Jupyter.INLINE_CODE_PATTERN, self.render_inline_code)
-        templates = self.set_template([&#34;fenced_code&#34;, &#34;inline_code&#34;])
-        templates[0].environment.filters[&#34;get_metadata&#34;] = get_metadata
-        # safe: If True, code must match cache.
-        # verbose: 0: no info, 1: output, 2: code and output</code></pre></div></div></div>
-
-<p>With this functionality, you can guarantee the reproducible relation between your source code and results easily.</p>
-<h2 id="33-include-other-file-as-markdown-source"><span class="pheasant-header"><span class="header"><span class="number">3.3</span> <span class="title">Include other file as Markdown source.</span></span></span></h2>
+<h2 id="32-include-other-file-as-markdown-source"><span class="pheasant-header"><span class="header"><span class="number">3.2</span> <span class="title">Include other file as Markdown source.</span></span></span></h2>
 <p>Assume that there is a directory named <code>link</code> under the same directory of this file and there are some files under the <code>link</code> directory. You can include the content of a file like below:</p>
 <div class="pheasant-fenced-code"><div class="cell embed source"><div class="code"><pre><code class="markdown">{% link/included.md %}</code></pre></div></div></div>
 
@@ -193,11 +148,11 @@ edit_uri: &#34;&#34;
 <div class="pheasant-fenced-code"><div class="cell embed source"><div class="code"><pre><code class="markdown">{% link/included.py %}</code></pre></div></div></div>
 
 <p>Script can be included.</p>
-<div class="pheasant-fenced-code"><div class="cell jupyter input"><div class="code"><pre><code class="python">def func(x, y):
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">def func(x, y):
     return x + y</code></pre></div>
-<div class="report"><p><span class="count">[3]</span>
-<span class="start">2019-05-10 07:19:26</span> (<span class="time">5.02ms</span>)
-<span class="right"><span class="kernel">python3</span> (<span class="total">64.1ms</span>)</span></p></div></div></div>
+<div class="report"><p><span class="count">[1]</span>
+<span class="start">2019-05-10 13:15:57</span> (<span class="time">10.1ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">1.20s</span>)</span></p></div></div></div></div>
 
 <p>If the included file contains header statements, the document structure may be broken. For example, a file to be included contains:</p>
 <div class="pheasant-header"><div class="other"><p class="caption"><span class="prefix">File</span> <span class="number">2</span>

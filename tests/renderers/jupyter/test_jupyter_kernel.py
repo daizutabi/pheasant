@@ -84,3 +84,22 @@ def test_output_hook_factory():
     output_hook = output_hook_factory(func_error)
     kernel = kernels["python"]
     kernel.execute("[][1]", output_hook=output_hook)
+
+
+def test_inspect():
+    kernel = kernels["python"]
+    outputs = kernel.execute("print?")
+    assert outputs[0]["type"] == "error"
+
+    source = "def func():\n return 1\n"
+    kernel.execute(source)
+    outputs = kernel.execute("func?")
+    assert outputs[0]["type"] == "stream"
+    assert outputs[0]["name"] == "source"
+    assert outputs[0]["text"] == source
+
+    kernel.execute('from pheasant.renderers.jupyter.jupyter import Jupyter')
+    outputs = kernel.execute("Jupyter?")
+    assert outputs[0]["type"] == "stream"
+    assert outputs[0]["name"] == "source"
+    assert outputs[0]["text"].startswith('class Jupyter')
