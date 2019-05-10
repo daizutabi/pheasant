@@ -1,5 +1,3 @@
-from typing import Any, Dict
-
 import responder
 
 from pheasant.core.page import Pages
