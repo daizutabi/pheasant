@@ -125,9 +125,11 @@ class Jupyter(Renderer):
         kernel_name = kernels.get_kernel_name(self.language)
 
         if not kernel_name:
-            return self.render(
+            cell.output = self.render(
                 template, context, outputs=[], report={"count": self.count}
             )
+            self.update_cache(cell)
+            return cell.output
 
         kernel = kernels.get_kernel(kernel_name)
         kernel.start(silent=self.page.path == "")
@@ -150,10 +152,9 @@ class Jupyter(Renderer):
             if verbose >= 2:
                 codes = [self.language + "> " + line for line in code.split("\n")]
                 print("\n".join(codes))
+            func = kernel.inspect if "inspect" in context["option"] else kernel.execute
             try:
-                outputs = kernel.execute(
-                    code, output_hook=output_hook if verbose else None
-                )
+                outputs = func(code, output_hook=output_hook if verbose else None)
             except NameError:
                 if self.page.path:
                     self.page.cache.delete()
@@ -194,14 +195,16 @@ class Jupyter(Renderer):
         cell.output = self.render(
             template, context, kernel_name=kernel_name, outputs=outputs, report=report
         )
+        self.update_cache(cell)
+        return cell.output
 
+    def update_cache(self, cell: Cell) -> None:
         if len(self.cache) == self.count - 1:
             self.cache.append(cell)
         else:
             self.cache[self.count - 1] = cell
             if len(self.cache) > self.count:
                 self.cache[self.count].valid = False
-        return cell.output
 
 
 def split_option(code: str) -> Tuple[str, str]:
