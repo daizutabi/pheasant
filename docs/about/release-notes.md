@@ -19,6 +19,11 @@ pheasant, version 2.2.30 from /path/to/pheasant (Python 3.7)
 
 ## Change log
 
+### Version 2.2.31 (2019-05-11)
+
+* `inspect` option to get source.
+* Bug fixed: Update cache for code with an unknown kernel name.
+
 ### Version 2.2.30 (2019-05-10)
 
 * jupyter.kernel: raises `NameError` to delete cache and rerun.

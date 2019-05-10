@@ -72,6 +72,17 @@ a = 4
 x = 2
 ```
 
-```pytnon
+```unknown
 4 * x
+```
+
+```python
+def func(x):
+    pass
+
+func
+```
+
+```python
+print(1)
 ```

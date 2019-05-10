@@ -88,18 +88,18 @@ def test_output_hook_factory():
 
 def test_inspect():
     kernel = kernels["python"]
-    outputs = kernel.execute("print?")
+    outputs = kernel.inspect("print")
     assert outputs[0]["type"] == "error"
 
     source = "def func():\n return 1\n"
-    kernel.execute(source)
-    outputs = kernel.execute("func?")
+    outputs = kernel.inspect(source + '\nfunc')
     assert outputs[0]["type"] == "stream"
     assert outputs[0]["name"] == "source"
+    outputs
     assert outputs[0]["text"] == source
 
     kernel.execute('from pheasant.renderers.jupyter.jupyter import Jupyter')
-    outputs = kernel.execute("Jupyter?")
+    outputs = kernel.inspect("Jupyter")
     assert outputs[0]["type"] == "stream"
     assert outputs[0]["name"] == "source"
     assert outputs[0]["text"].startswith('class Jupyter')

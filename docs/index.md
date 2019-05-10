@@ -67,7 +67,7 @@ You can check the kernel name and its total execution count during the conversio
 
 ### Inline code embeded in a Markdown source
 
-**"Inline code"** is a powerful feature of Pheasant. Any executable codes surrounded by `{{#` and `}}` are automatically executed and the result remains there. For example, `{{#3*5}}` becomes {{3*5}}. Variables can be assigned in an inline code like this: `{{#name='Pheasant'}}`{{name='Pheasant'}}. Then, `"I'm {{#name}}."` becomes "I'm {{name}}."
+**"Inline code"** is a powerful feature of Pheasant. Any executable codes surrounded by `{{#` and `}}` are automatically executed and the result remains there. For example, `{{#3*4}}` becomes {{3*4}}. Variables can be assigned in an inline code like this: `{{#name='Pheasant'}}`{{name='Pheasant'}}. Then, `"I'm {{#name}}."` becomes "I'm {{name}}."
 
 ### Visualization
 
@@ -247,10 +247,29 @@ For example, go to Fig. {##cat#}
 
 For example, go to Fig. {#cat#}
 
-### Link from a header
-
 You can add external link from section headers.
 
 ~~~copy
 #### MkDocs (https://www.mkdocs.org/)
+~~~
+
+### Inspect source (Python only)
+
+`inspect` option to get source.
+
+~~~copy
+```python inspect
+def func(x):
+    return x + 1
+
+func
+```
+~~~
+
+~~~copy
+```python inspect
+from pheasant.renderers.jupyter.jupyter import Cell
+
+Cell
+```
 ~~~
