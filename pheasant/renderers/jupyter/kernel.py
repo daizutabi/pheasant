@@ -98,9 +98,6 @@ class Kernel:
                 self.client.execute_interactive(self.init_code)
 
     def execute(self, code: str, output_hook=None) -> List:
-        if self.language == "python" and (code.startswith("?") or code.endswith("?")):
-            return self.inspect(code, output_hook=output_hook)
-
         client = self.client or self.start()
         outputs = []
 
@@ -115,27 +112,21 @@ class Kernel:
         update_report(self.report, msg)
         return list(stream_joiner(outputs))
 
-    def inspect(self, code: str, output_hook=None) -> List:
-        match = re.match(r"^(\?*?)([^?.]*?)(\?*?)$", code, re.DOTALL)
-        if match is None:
-            return []
-        code = match.group(2)
+    def inspect(self, code: str, func: str = "getsource", output_hook=None) -> List:
         self.execute("import inspect")
-        self.execute(code)
-        self.execute("_pheasant = _")
-        output = self.execute("inspect.getsource(_pheasant)")[0]
-        if output["type"] == "execute_result":
-            source = ast.literal_eval(output["data"]["text/plain"])
+        self.execute(code, output_hook=output_hook)
+        outputs = self.execute(f"inspect.{func}(_)")
+        if len(outputs) == 1 and outputs[0]["type"] == "execute_result":
+            source = ast.literal_eval(outputs[0]["data"]["text/plain"])
             return [dict(type="stream", name="source", text=source)]
         else:
-            return [output]
+            return outputs
 
 
 @dataclass
 class Kernels:
     _kernel_names: Dict[str, list] = field(default_factory=dict)
     kernels: Dict[str, Kernel] = field(default_factory=dict)
-    # report: Dict[str, Any] = field(default_factory=dict)
 
     @property
     def kernel_names(self) -> Dict[str, list]:
