@@ -63,7 +63,16 @@ println("Hello, IJulia!")
 ```
 ~~~
 
-You can check the kernel name and its total execution count during the conversion process at the right side of input cells.
+You can check the kernel name and its total execution time during the conversion process at the right side of an input cell.
+
+Like Jupyter Notebook, the last object in a code cell is displayed as the output of the cell.
+
+~~~copy
+```python
+greeting = 'Hello, Python'
+greeting
+```
+~~~
 
 ### Inline code embeded in a Markdown source
 
@@ -83,7 +92,7 @@ Plot a line.
 
 ~~~copy
 ```python
-plt.plot([1, 3])
+plt.plot([1, 2])
 ```
 ~~~
 
@@ -91,80 +100,11 @@ Execution of the above Markdown source on a Jupyter client creates a plain text 
 
 ~~~copy
 ```python inline
-plt.plot([1, 2])
+plt.plot([1, 3])
 ```
 ~~~
 
-Pheasant also supports Bokeh's HTML output.
-
-```python
-from bokeh.plotting import figure
-plot = figure(plot_width=250, plot_height=250)
-plot.circle([1, 2, 3, 4, 5], [1, 2, 3, 4, 5], size=10)
-plot
-```
-
-As well as a fenced code style, we can choose inline code style: `{{#plot}}` {{plot}}
-
-Furthermore, Pheasant supports HoloViews objects as well as interactive HoloMap.
-
-```python
-import holoviews as hv
-hv.Curve(((1, 2), (2, 3)))
-```
-
-HoloMap can work as in a Jupyter Notebook.
-
-```python
-import numpy as np
-
-def sine_curve(phase, freq):
-    xvals = [0.1* i for i in range(100)]
-    return hv.Curve((xvals, [np.sin(phase+freq*x) for x in xvals]))
-
-frequencies = [0.5, 0.75, 1.0]
-curve_dict = {f: sine_curve(0, f) for f in frequencies}
-hv.HoloMap(curve_dict, kdims='Frequency')
-```
-
-Finally, Altair plots from official [Example Gallery](https://altair-viz.github.io/gallery/index.html),
-
-```python
-import altair as alt
-import pandas as pd
-
-source = pd.DataFrame({
-    'a': ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'],
-    'b': [30, 55, 43, 91, 81, 53, 19, 87, 52]
-})
-
-alt.Chart(source).mark_bar().encode(x='a', y='b')
-```
-
-```python
-import altair as alt
-from vega_datasets import data
-
-source = data.seattle_weather()
-brush = alt.selection(type='interval', encodings=['x'])
-
-bars = alt.Chart().mark_bar().encode(
-    x='month(date):O',
-    y='mean(precipitation):Q',
-    opacity=alt.condition(brush, alt.OpacityValue(1), alt.OpacityValue(0.7))
-).add_selection(
-    brush
-)
-
-line = alt.Chart().mark_rule(color='firebrick').encode(
-    y='mean(precipitation):Q',
-    size=alt.SizeValue(3)
-).transform_filter(
-    brush
-)
-
-alt.layer(bars, line, data=source)
-```
+Or use an inline code directly: `{{#plt.plot([1, 4])}}` {{plt.plot([1, 4])}}
 
 ### Auto numbering of headers, figures, tables, *etc*.
 
@@ -183,7 +123,7 @@ You can use a special **"header"** statement for figure, table, *etc*. to number
 Supported numbered headers are shown in Table {#numbered-header#}:
 
 #Tab Supported numbered headers {#numbered-header#}
-Type     | Markdown
+Type     | Markdown (case-insensitive)
 ---------|-------------------------------
 Header   | # (title)
 Figure   | #Figure (title), #Fig (title)
@@ -234,7 +174,7 @@ A **plain** Markdown source which is not processed by Pheasant has to be separat
 In addition, Pheasant provides an easy way to number figures, tables, *etc*. regardless of whether they actually have any blank lines or not. Try this:
 
 ~~~copy
-#Figure {{plot}} Inline numbering method.
+#Figure {{plt.plot([1, 5])}} Numbered figure using an inline code.
 ~~~
 
 ### Hyperlink
@@ -247,7 +187,7 @@ For example, go to Fig. {##cat#}
 
 For example, go to Fig. {#cat#}
 
-You can add external link from section headers.
+You can add external link in a header.
 
 ~~~copy
 #### MkDocs (https://www.mkdocs.org/)
@@ -257,19 +197,27 @@ You can add external link from section headers.
 
 `inspect` option to get source.
 
+#### Source code in a code cell
 ~~~copy
 ```python inspect
 def func(x):
-    return x + 1
+    return x + 2
 
 func
 ```
 ~~~
 
+#### Source code from file
 ~~~copy
 ```python inspect
 from pheasant.renderers.jupyter.jupyter import Cell
 
 Cell
 ```
+~~~
+
+#### Inline mode (with custom 'Code' header)
+
+~~~copy
+#Code {{ func # inspect }}
 ~~~

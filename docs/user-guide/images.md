@@ -55,8 +55,6 @@ Pheasant uses this functionality inside automatically. You can get a Bokeh plot 
 
 ## HoloViews
 
-HoloViews provides an explorable multi-dimensional dictionary of HoloViews objects called [HoloMap](https://holoviews.org/reference/containers/bokeh/HoloMap.html). Pheasant can also embed this interactive object in your MkDocs Documents as well as other HoloViews objects.
-
 First, a normal HoloViews object.
 
 ```python
@@ -64,24 +62,19 @@ import holoviews as hv
 hv.Curve(([1, 2, 4], [2, 3, 4]))
 ```
 
-Showing a HoloMap is straightforward. From HoloViews's official documents,
+HoloViews provides an explorable multi-dimensional dictionary of HoloViews objects called [HoloMap](https://holoviews.org/reference/containers/bokeh/HoloMap.html). Pheasant can also embed this interactive object in your MkDocs documents as well as other normal HoloViews objects.
 
 ```python
 import numpy as np
-frequencies = [0.5, 0.75, 1.0, 1.25]
 
 def sine_curve(phase, freq):
     xvals = [0.1* i for i in range(100)]
     return hv.Curve((xvals, [np.sin(phase+freq*x) for x in xvals]))
 
-curve_dict = {f:sine_curve(0,f) for f in frequencies}
-hv.HoloMap(curve_dict, kdims='frequency')
-```
-
-```python
+frequencies = [0.5, 0.75, 1.0, 1.25]
 phases = [0, np.pi/2, np.pi, 3*np.pi/2]
-curve_dict_2D = {(p,f):sine_curve(p,f) for p in phases for f in frequencies}
-hv.HoloMap(curve_dict_2D, kdims=['phase', 'frequency'])
+curve_dict = {(p, f): sine_curve(p,f) for p in phases for f in frequencies}
+hv.HoloMap(curve_dict, kdims=['phase', 'frequency'])
 ```
 
 ## Altair
@@ -99,12 +92,8 @@ source = pd.DataFrame({
     'b': [28, 55, 43, 91, 81, 53, 19, 87, 52]
 })
 
-alt.Chart(source).mark_bar().encode(
-    x='a',
-    y='b'
-)
+alt.Chart(source).mark_bar().encode(x='a', y='b')
 ```
-
 
 ### Multi-Line Tooltip
 
@@ -157,5 +146,5 @@ rules = alt.Chart().mark_rule(color='gray').encode(
 
 # Put the five layers into a chart and bind the data
 alt.layer(line, selectors, points, rules, text,
-          data=source, width=600, height=300)
+          data=source, width=400, height=300)
 ```

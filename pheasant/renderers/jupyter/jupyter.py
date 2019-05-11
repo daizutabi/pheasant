@@ -96,12 +96,17 @@ class Jupyter(Renderer):
     @commentable("code")
     def render_inline_code(self, context, splitter, parser) -> Iterator[str]:
         code, context["option"] = split_option(context["code"])
-        if "fenced-code" not in context["option"]:
+        if 'inspect' in context["option"]:
+            source = f"\n```python inspect hide-input\n{code}\n```\n"
+            splitter.send(source)
+            return
+        elif "fenced-code" not in context["option"]:
             code = code.replace(";", "\n")
         yield self.execute_and_render(code, context, "inline_code")
 
     def execute_and_render(self, code, context, template) -> str:
         self.count += 1
+        context['option'] = context['option'].split()
 
         cell = Cell(code, context, template)
         if len(self.cache) >= self.count and "run" not in context["option"]:

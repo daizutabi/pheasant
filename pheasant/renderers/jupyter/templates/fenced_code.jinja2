@@ -1,11 +1,13 @@
 {%- from 'macro.jinja2' import output_display with context -%}
 
 {%- if 'hide' not in option -%}
-<div class="cell jupyter input"><div class="code"><pre><code class="{{ language }}">{{ code }}</code></pre></div>
+{%- if 'hide-input' not in option -%}
+<div class="cell jupyter input"><div class="code"><pre><code class="{{ language }}">{{ code }}{% if 'inspect' in option %}?{% endif %}</code></pre></div>
 <div class="report"><p><span class="count">[{{ report.count }}]</span>
 <span class="start">{{ report.start }}</span> (<span class="time">{{ report.time }}</span>)
 <span class="right">{%- if option -%}<span class="option">({{ option }})</span> {% endif -%}
 <span class="kernel">{{ kernel_name }}</span> (<span class="total">{{ report.total }}</span>)</span></p></div></div>
+{%- endif -%}
 {%- for output in outputs if output.type != 'display_data' -%}
   {%- if output.type == 'error' -%}
       <div class="cell jupyter error"><div class="code"><pre><code class="nohighlight">{{ output.ename }}: {{ output.evalue }}</code></pre></div>
