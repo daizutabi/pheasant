@@ -62,7 +62,7 @@ def test_render_latex(jupyter):
     assert "$$x^{2}$$" in output
 
 
-def test_render_fenced_code_with_option(jupyter):
+def test_render_fenced_code_with_option():
     from pheasant.renderers.jupyter.jupyter import Jupyter
 
     jupyter = Jupyter()

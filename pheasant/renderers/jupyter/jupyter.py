@@ -106,7 +106,8 @@ class Jupyter(Renderer):
 
     def execute_and_render(self, code, context, template) -> str:
         self.count += 1
-        context['option'] = context['option'].split()
+        if isinstance(context['option'], str):
+            context['option'] = context['option'].split()
 
         cell = Cell(code, context, template)
         if len(self.cache) >= self.count and "run" not in context["option"]:
