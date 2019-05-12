@@ -1,7 +1,3 @@
-"""A module processes inline code.
-
-IMPORTANT: `display` function is called from jupyter kernel.
-"""
 import ast
 import json
 import re
