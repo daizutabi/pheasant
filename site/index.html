@@ -101,7 +101,7 @@
 print(1)
 ```</code></pre></div></div></div>
 
-<p>a <code>print</code> function is executed via <a href="https://jupyter-client.readthedocs.io/en/stable/">Jupyter client</a> and converted into HTML source:</p>
+<p>a <code>print</code> function is executed via <a href="https://jupyter-client.readthedocs.io/en/stable/">Jupyter client</a> and converted into HTML:</p>
 <div class="pheasant-fenced-code"><div class="cell embed source"><div class="code"><pre><code class="html">&lt;div class=&#34;input&#34;&gt;&lt;pre&gt;&lt;code class=&#34;python&#34;&gt;print(1)&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;div class=&#34;stdout&#34;&gt;&lt;pre&gt;&lt;code class=&#34;nohighlight&#34;&gt;1&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</code></pre></div></div></div>
 
@@ -124,7 +124,7 @@ println(&#34;Hello, IJulia!&#34;)
       <pre><code class="nohighlight">Hello, IJulia!</code></pre></div></div></div></div>
 
 <p>You can check the kernel name and its total execution time during the conversion process at the right side of an input cell.</p>
-<p>Like Jupyter Notebook, the last object in a code cell is displayed as the output of the cell.</p>
+<p>Like <a href="https://jupyter-notebook.readthedocs.io/en/stable/">Jupyter Notebook</a>, the last object in a code cell is displayed as the output of the cell.</p>
 <div class="pheasant-fenced-code"><div class="cell embed source"><div class="code"><pre><code class="markdown">```python
 greeting = &#39;Hello, Python&#39;
 greeting
@@ -137,9 +137,9 @@ greeting</code></pre></div>
 <span class="right"><span class="kernel">python3</span> (<span class="total">119ms</span>)</span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="nohighlight">&#39;Hello, Python&#39;</code></pre></div></div></div></div>
 
 <h3 id="132-inline-code-embeded-in-a-markdown-source"><span class="pheasant-header"><span class="header"><span class="number">1.3.2</span> <span class="title">Inline code embeded in a Markdown source</span></span></span></h3>
-<p><strong>"Inline code"</strong> is a powerful feature of Pheasant. Any executable codes surrounded by <code>{{</code> and <code>}}</code> are automatically executed and the result remains there. For example, <code>{{3*4}}</code> becomes 12. Variables can be assigned in an inline code like this: <code>{{name='Pheasant'}}</code>. Then, <code>"I'm {{name}}."</code> becomes "I'm Pheasant."</p>
+<p><strong>"Inline code"</strong> is a powerful feature of Pheasant. Any executable codes surrounded by <code>{{</code> and <code>}}</code> are automatically executed and the codes are replaced with the execution result. For example, <code>{{3*4}}</code> becomes 12. Variables can be assigned in an inline code like this: <code>{{name='Pheasant'}}</code>. Then, <code>"I'm {{name}}."</code> becomes "I'm Pheasant."</p>
 <h3 id="133-visualization"><span class="pheasant-header"><span class="header"><span class="number">1.3.3</span> <span class="title">Visualization</span></span></span></h3>
-<p>Pheasant supports various output formats other than the standard stream (<code>sys.stdout</code>/<code>sys.stderr</code>) or a plain text output. For example, you can create a PNG image using Matplotlib. First, import Matplotlib plotting library.</p>
+<p>Pheasant supports various output formats other than the standard stream (<code>stdout</code>/<code>stderr</code>) or a plain text output. For example, you can create a PNG image using <a href="https://matplotlib.org/">Matplotlib</a>. First, import the Matplotlib plotting library.</p>
 <div class="pheasant-fenced-code"><div class="cell embed source"><div class="code"><pre><code class="markdown">```python
 import matplotlib.pyplot as plt
 ```</code></pre></div></div></div>
@@ -218,7 +218,7 @@ plt.plot([1, 3])
 </tbody>
 </table></div></div></div>
 
-<p>In the above Markdown source, <code>{#&lt;tag&gt;#}</code> is an ID tag for hyperlink described below. Off course, you can use any code to create a figure.</p>
+<p>In the above Markdown source, <code>{#&lt;tag&gt;#}</code> is an ID tag for hyperlink described below. Off course, you can use any codes to create a figure.</p>
 <div class="pheasant-fenced-code"><div class="cell embed source"><div class="code"><pre><code class="markdown">#Figure A Matplotlib figure
 ```python
 plt.plot([2, 4])
@@ -309,7 +309,7 @@ pd.DataFrame([[1, 2], [3, 4]], index=list(&#39;XY&#39;), columns=list(&#39;ab&#3
 <p class="caption"><span class="prefix">Figure</span> <span class="number">3</span>
 <span class="title">A figure with a blank line</span></p></div></div>
 
-<p>In addition, Pheasant provides an easy way to number figures, tables, <em>etc</em>. regardless of whether they actually have any blank lines or not. Try this:</p>
+<p>In addition, Pheasant provides an easy way to number objects regardless of whether they actually have any blank lines or not. Try this:</p>
 <div class="pheasant-fenced-code"><div class="cell embed source"><div class="code"><pre><code class="markdown">#Figure {{plt.plot([1, 5])}} Numbered figure using an inline code.</code></pre></div></div></div>
 
 <div class="pheasant-header"><div class="figure"><div class="content">
@@ -326,7 +326,7 @@ pd.DataFrame([[1, 2], [3, 4]], index=list(&#39;XY&#39;), columns=list(&#39;ab&#3
 <div class="pheasant-fenced-code"><div class="cell embed source"><div class="code"><pre><code class="markdown">For example, go to Fig. {#cat#}</code></pre></div></div></div>
 
 <p>For example, go to Fig. <a href=".#cat">1</a></p>
-<p>You can add external link in a header.</p>
+<p>You can add an external link in a header.</p>
 <div class="pheasant-fenced-code"><div class="cell embed source"><div class="code"><pre><code class="markdown">#### MkDocs (https://www.mkdocs.org/)</code></pre></div></div></div>
 
 <h4 id="1351-mkdocs"><span class="pheasant-header"><span class="header"><span class="number">1.3.5.1</span> <span class="title">MkDocs</span><span class="link"><a href="https://www.mkdocs.org/" target="_blank" title="https://www.mkdocs.org/"></a></span></span></span></h4>

@@ -42,7 +42,7 @@ print(1)
 ```
 ~~~
 
-a `print` function is executed via [Jupyter client](https://jupyter-client.readthedocs.io/en/stable/) and converted into HTML source:
+a `print` function is executed via [Jupyter client](https://jupyter-client.readthedocs.io/en/stable/) and converted into HTML:
 
 ~~~html
 <div class="input"><pre><code class="python">print(1)</code></pre></div>
@@ -65,7 +65,7 @@ println("Hello, IJulia!")
 
 You can check the kernel name and its total execution time during the conversion process at the right side of an input cell.
 
-Like Jupyter Notebook, the last object in a code cell is displayed as the output of the cell.
+Like [Jupyter Notebook](https://jupyter-notebook.readthedocs.io/en/stable/), the last object in a code cell is displayed as the output of the cell.
 
 ~~~copy
 ```python
@@ -76,11 +76,11 @@ greeting
 
 ### Inline code embeded in a Markdown source
 
-**"Inline code"** is a powerful feature of Pheasant. Any executable codes surrounded by `{{#` and `}}` are automatically executed and the result remains there. For example, `{{#3*4}}` becomes {{3*4}}. Variables can be assigned in an inline code like this: `{{#name='Pheasant'}}`{{name='Pheasant'}}. Then, `"I'm {{#name}}."` becomes "I'm {{name}}."
+**"Inline code"** is a powerful feature of Pheasant. Any executable codes surrounded by `{{#` and `}}` are automatically executed and the codes are replaced with the execution result. For example, `{{#3*4}}` becomes {{3*4}}. Variables can be assigned in an inline code like this: `{{#name='Pheasant'}}`{{name='Pheasant'}}. Then, `"I'm {{#name}}."` becomes "I'm {{name}}."
 
 ### Visualization
 
-Pheasant supports various output formats other than the standard stream (`sys.stdout`/`sys.stderr`) or a plain text output. For example, you can create a PNG image using Matplotlib. First, import Matplotlib plotting library.
+Pheasant supports various output formats other than the standard stream (`stdout`/`stderr`) or a plain text output. For example, you can create a PNG image using [Matplotlib](https://matplotlib.org/). First, import the Matplotlib plotting library.
 
 ~~~copy
 ```python
@@ -131,7 +131,7 @@ Table    | #Table (title), #Tab (title)
 Equation | #Eq (equation), #Eq* (equation)
 [other]  | #[other] (title)
 
-In the above Markdown source, `{##<tag>#}` is an ID tag for hyperlink described below. Off course, you can use any code to create a figure.
+In the above Markdown source, `{##<tag>#}` is an ID tag for hyperlink described below. Off course, you can use any codes to create a figure.
 
 ~~~~copy
 #Figure A Matplotlib figure
@@ -171,7 +171,7 @@ A **plain** Markdown source which is not processed by Pheasant has to be separat
 ~~~
 ~~~~
 
-In addition, Pheasant provides an easy way to number figures, tables, *etc*. regardless of whether they actually have any blank lines or not. Try this:
+In addition, Pheasant provides an easy way to number objects regardless of whether they actually have any blank lines or not. Try this:
 
 ~~~copy
 #Figure {{plt.plot([1, 5])}} Numbered figure using an inline code.
@@ -187,7 +187,7 @@ For example, go to Fig. {##cat#}
 
 For example, go to Fig. {#cat#}
 
-You can add external link in a header.
+You can add an external link in a header.
 
 ~~~copy
 #### MkDocs (https://www.mkdocs.org/)
