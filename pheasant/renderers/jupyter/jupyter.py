@@ -96,7 +96,7 @@ class Jupyter(Renderer):
     @commentable("code")
     def render_inline_code(self, context, splitter, parser) -> Iterator[str]:
         code, context["option"] = split_option(context["code"])
-        if 'inspect' in context["option"]:
+        if "inspect" in context["option"]:
             source = f"\n```python inspect hide-input\n{code}\n```\n"
             splitter.send(source)
             return
@@ -106,34 +106,30 @@ class Jupyter(Renderer):
 
     def execute_and_render(self, code, context, template) -> str:
         self.count += 1
-        if isinstance(context['option'], str):
-            context['option'] = context['option'].split()
 
         cell = Cell(code, context, template)
-        if len(self.cache) >= self.count and "run" not in context["option"]:
+        if len(self.cache) >= self.count:
             cached = self.cache[self.count - 1]
             if cell == cached:
-                if (self.count - 1) % 5 == 0 and self.page.path:
+                if self.page.path and (self.count - 1) % 5 == 0:
                     relpath = os.path.relpath(self.page.path)
                     self.progress_bar.progress(relpath, count=self.count)
                 return surround(cached.output, "cached")
-            elif self.config["safe"] and self.page.path:
+            elif self.page.path and self.config["safe"]:
                 self.page.cache.delete()
                 self.progress_bar.finish(done=False)
                 raise CacheMismatchError
 
         if not self.config["enabled"]:
-            return self.render(
-                template, context, outputs=[], report={"count": self.count}
-            )
+            report = {"count": self.count}
+            return self.render(template, context, outputs=[], report=report)
 
         self.language = context.get("language", self.language)
         kernel_name = kernels.get_kernel_name(self.language)
 
         if not kernel_name:
-            cell.output = self.render(
-                template, context, outputs=[], report={"count": self.count}
-            )
+            report = {"count": self.count}
+            cell.output = self.render(template, context, outputs=[], report=report)
             self.update_cache(cell)
             return cell.output
 
@@ -198,8 +194,14 @@ class Jupyter(Renderer):
             return output["type"] != "error" or output["ename"] != "SystemExit"
 
         outputs = list(takewhile(not_system_exit, outputs))
+        option = context["option"].split()
         cell.output = self.render(
-            template, context, kernel_name=kernel_name, outputs=outputs, report=report
+            template,
+            context,
+            option=option,
+            kernel_name=kernel_name,
+            outputs=outputs,
+            report=report,
         )
         self.update_cache(cell)
         return cell.output
@@ -220,6 +222,7 @@ def split_option(code: str) -> Tuple[str, str]:
     return code.strip(), option.strip()
 
 
+# TODO: kwargs which contains space.
 def split_kwargs_from_option(option: str) -> Tuple[str, str]:
     if "=" not in option:
         return option, ""

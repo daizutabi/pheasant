@@ -43,7 +43,7 @@ source = pd.DataFrame({
 alt.Chart(source).mark_bar().encode(x='a', y='b')
 ```
 
-```python run
+```python
 import matplotlib.pyplot as plt
 ```
 
