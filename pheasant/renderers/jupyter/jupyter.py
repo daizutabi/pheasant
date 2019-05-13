@@ -178,8 +178,6 @@ class Jupyter(Renderer):
                 "formatter_kwargs.clear()"
             )
 
-        print(outputs)
-
         cell.extra_module = get_extra_module(outputs)
         select_display_data(outputs)
 
@@ -213,7 +211,10 @@ class Jupyter(Renderer):
             self.cache.append(cell)
         else:
             self.cache[self.count - 1] = cell
-            if len(self.cache) > self.count:
+            if (
+                len(self.cache) > self.count
+                and "freeze" not in self.cache[self.count].context["option"]
+            ):
                 self.cache[self.count].valid = False
 
 
