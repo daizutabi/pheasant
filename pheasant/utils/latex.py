@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Callable, Optional, Union
 
 import sympy
@@ -108,8 +108,11 @@ def partial(f: str, x: str, frac: bool = False) -> str:
 class Expression:
     expr: str
 
-    def _repr_latex_(self) -> str:
+    def __repr__(self):
         return self.expr
+
+    def _repr_latex_(self):
+        return self.expr, {"module": "sympy"}
 
 
 @dataclass
@@ -117,10 +120,10 @@ class Base:
     var: str
     n: int
     m: int = 0
-    _symbol: str = ""
-    transpose: bool = False
-    delim: str = "["
-    env: str = "array"
+    _symbol: str = field(default="", repr=False)
+    transpose: bool = field(default=False, repr=False)
+    delim: str = field(default="[", repr=False)
+    env: str = field(default="array", repr=False)
 
     def __post_init__(self):
         if not self._symbol:
@@ -136,8 +139,9 @@ class Base:
 
 @dataclass
 class Matrix(Base):
-    def _repr_latex_(self) -> str:
-        return matrix(self.var, self.n, self.m, self.transpose, self.delim, self.env)
+    def _repr_latex_(self):
+        latex = matrix(self.var, self.n, self.m, self.transpose, self.delim, self.env)
+        return latex, {"module": "sympy"}
 
     @property
     def T(self) -> "Matrix":
@@ -177,8 +181,9 @@ class Matrix(Base):
 
 @dataclass
 class Vector(Base):
-    def _repr_latex_(self) -> str:
-        return vector(self.var, self.n, self.transpose, self.delim, self.env)
+    def _repr_latex_(self):
+        latex = vector(self.var, self.n, self.transpose, self.delim, self.env)
+        return latex, {"module": "sympy"}
 
     @property
     def T(self) -> "Vector":

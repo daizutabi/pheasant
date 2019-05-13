@@ -178,6 +178,8 @@ class Jupyter(Renderer):
                 "formatter_kwargs.clear()"
             )
 
+        print(outputs)
+
         cell.extra_module = get_extra_module(outputs)
         select_display_data(outputs)
 

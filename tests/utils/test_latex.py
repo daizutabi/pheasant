@@ -49,16 +49,15 @@ def test_partial():
 
 def test_matrix_class():
     m = L.Matrix("m", 2, 1)
-    assert (
-        m._repr_latex_()
-        == "\\left[\\begin{array}{c}\nm_{11}\\\\\nm_{21}\n\\end{array}\\right]"
-    )
-    assert (
-        m.T._repr_latex_()
-        == "\\left[\\begin{array}{cc}\nm_{11}&m_{21}\n\\end{array}\\right]"
-    )
+    latex, meta = m._repr_latex_()
+    answer = "\\left[\\begin{array}{c}\nm_{11}\\\\\nm_{21}\n\\end{array}\\right]"
+    assert latex == answer
+    assert meta == {"module": "sympy"}
+    latex, meta = m.T._repr_latex_()
+    answer = "\\left[\\begin{array}{cc}\nm_{11}&m_{21}\n\\end{array}\\right]"
+    assert latex == answer
+    assert meta == {"module": "sympy"}
     assert isinstance(m.S, sympy.Matrix)
-
     assert m.shape == (2, 1)
 
     answer = "\\left[\\begin{matrix}m_{11} + 1\\\\m_{21} + 1\\end{matrix}\\right]"
@@ -68,23 +67,25 @@ def test_matrix_class():
         "\\left[\\begin{array}{c}\n\\partial f/\\partial m_{11}\\\\\n"
         "\\partial f/\\partial m_{21}\n\\end{array}\\right]"
     )
-    assert m.partial("f")._repr_latex_() == answer
+    assert m.partial("f")._repr_latex_()[0] == answer
     answer = (
         "\\left[\\begin{array}{c}\n\\frac{\\partial g}{\\partial m_{11}}\\\\\n"
         "\\frac{\\partial g}{\\partial m_{21}}\n\\end{array}\\right]"
     )
-    assert m.partial("g", frac=True)._repr_latex_() == answer
-    assert m.spartial("f", False)._repr_latex_() == "\\partial f/\\partial \\mathbf{M}"
+    assert m.partial("g", frac=True)._repr_latex_()[0] == answer
+    assert (
+        m.spartial("f", False)._repr_latex_()[0] == "\\partial f/\\partial \\mathbf{M}"
+    )
 
 
 def test_vector_class():
     v = L.Vector("v", 2)
     assert (
-        v._repr_latex_()
+        v._repr_latex_()[0]
         == "\\left[\\begin{array}{cc}\nv_{1}&v_{2}\n\\end{array}\\right]"
     )
     assert (
-        v.T._repr_latex_()
+        v.T._repr_latex_()[0]
         == "\\left[\\begin{array}{c}\nv_{1}\\\\v_{2}\n\\end{array}\\right]"
     )
     assert isinstance(v.S, sympy.Matrix)
@@ -94,11 +95,13 @@ def test_vector_class():
         "\\left[\\begin{array}{cc}\n\\partial f/\\partial v_{1}&\\partial f/"
         "\\partial v_{2}\n\\end{array}\\right]"
     )
-    assert v.partial("f")._repr_latex_() == answer
+    assert v.partial("f")._repr_latex_()[0] == answer
     answer = (
         "\\left[\\begin{array}{cc}\n\\frac{\\partial g}{\\partial v_{1}}&"
         "\\frac{\\partial g}{\\partial v_{2}}\n\\end{array}\\right]"
     )
-    assert v.partial("g", frac=True)._repr_latex_() == answer
+    assert v.partial("g", frac=True)._repr_latex_()[0] == answer
 
-    assert v.spartial("f", False)._repr_latex_() == "\\partial f/\\partial \\mathbf{V}"
+    assert (
+        v.spartial("f", False)._repr_latex_()[0] == "\\partial f/\\partial \\mathbf{V}"
+    )
