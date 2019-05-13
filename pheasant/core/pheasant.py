@@ -25,7 +25,7 @@ class Pheasant(Converter):
     def init(self):
         self.anchor.header = self.header
         self.register([self.script], "script")
-        self.register([self.header, self.jupyter, self.embed], "main")
+        self.register([self.header, self.jupyter, self.embed], "main", preprocess)
         self.register([self.anchor], "link")
 
         self.decorator.name = "pheasant"
@@ -71,3 +71,11 @@ class Pheasant(Converter):
             self.convert_by_name(path, "link")
 
         return [self.pages[path].source for path in paths]
+
+
+def preprocess(source: str) -> str:
+    break_comment = "<!--break-->\n"
+    try:
+        return source[: source.index(break_comment)]
+    except ValueError:
+        return source

@@ -161,7 +161,7 @@ class Jupyter(Renderer):
                 if self.page.path:
                     self.page.cache.delete()
                     self.progress_bar.finish(done=False)
-                raise
+                raise NameError(f"Cell number: {self.count}\n{context['code']}")
             report = format_report(kernel.report)
             report["count"] = self.count
             return outputs, report

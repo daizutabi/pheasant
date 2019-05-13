@@ -76,3 +76,7 @@ Image('docs/img/cat.jpg', width=50)
 from IPython.display import Image
 Image('docs/img/cvae.gif')
 ```
+
+<!--break-->
+
+abc

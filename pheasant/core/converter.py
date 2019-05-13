@@ -3,7 +3,7 @@ import os
 from collections import OrderedDict
 from contextlib import contextmanager
 from dataclasses import field
-from typing import Any, Dict, Iterable, Iterator, List
+from typing import Any, Callable, Dict, Iterable, Iterator, List, Optional
 
 from pheasant.core.base import Base
 from pheasant.core.page import Page
@@ -19,6 +19,8 @@ class Log:
 class Converter(Base):
     parsers: Dict[str, Parser] = field(default_factory=OrderedDict)
     renderers: Dict[str, List[Renderer]] = field(default_factory=dict)
+    preprocesses: Dict[str, Callable[[str], str]] = field(default_factory=dict)
+    postprocesses: Dict[str, Callable[[str], str]] = field(default_factory=dict)
     pages: Dict[str, Page] = field(default_factory=dict)
     dirty: bool = True
     log: Log = field(default_factory=Log, init=False)
@@ -61,7 +63,13 @@ class Converter(Base):
         if not self.dirty:
             self.pages.clear()
 
-    def register(self, renderers: Iterable[Renderer], name: str = "default"):
+    def register(
+        self,
+        renderers: Iterable[Renderer],
+        name: str = "default",
+        preprocess: Optional[Callable[[str], str]] = None,
+        postprocess: Optional[Callable[[str], str]] = None,
+    ) -> None:
         """Register renderer's processes to a parser.
 
         Parameters
@@ -78,6 +86,10 @@ class Converter(Base):
             renderer.parser = parser
         self.parsers[name] = parser
         self.renderers[name] = list(renderers)
+        if preprocess:
+            self.preprocesses[name] = preprocess
+        if postprocess:
+            self.postprocesses[name] = postprocess
 
     def parse(self, source: str, name: str = "default") -> str:
         """Parse a source text.
@@ -119,12 +131,13 @@ class Converter(Base):
             renderer.page = page
             renderer.enter()
 
-        try:
-            source = self.parse(page.source, name)
-        except Exception:
-            raise
-        else:
-            page.source = source
+        source = page.source
+        if name in self.preprocesses:
+            source = self.preprocesses[name](source)
+        source = self.parse(source, name)
+        if name in self.postprocesses:
+            source = self.postprocesses[name](source)
+        page.source = source
 
         for renderer in self.renderers[name]:
             renderer.exit()
