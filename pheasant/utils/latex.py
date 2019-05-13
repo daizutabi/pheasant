@@ -130,7 +130,7 @@ class Base:
     def symbol(self):
         return Expression(self._symbol)
 
-    def spartial(self, f: str, frac: bool = False) -> Expression:
+    def spartial(self, f: str, frac: bool = True) -> Expression:
         return Expression(partial(f, self._symbol, frac))
 
 

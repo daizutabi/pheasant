@@ -74,7 +74,7 @@ def test_matrix_class():
         "\\frac{\\partial g}{\\partial m_{21}}\n\\end{array}\\right]"
     )
     assert m.partial("g", frac=True)._repr_latex_() == answer
-    assert m.spartial("f")._repr_latex_() == "\\partial f/\\partial \\mathbf{M}"
+    assert m.spartial("f", False)._repr_latex_() == "\\partial f/\\partial \\mathbf{M}"
 
 
 def test_vector_class():
@@ -101,4 +101,4 @@ def test_vector_class():
     )
     assert v.partial("g", frac=True)._repr_latex_() == answer
 
-    assert v.spartial("f")._repr_latex_() == "\\partial f/\\partial \\mathbf{V}"
+    assert v.spartial("f", False)._repr_latex_() == "\\partial f/\\partial \\mathbf{V}"
