@@ -110,7 +110,7 @@ class Jupyter(Renderer):
         cell = Cell(code, context, template)
         if len(self.cache) >= self.count:
             cached = self.cache[self.count - 1]
-            if cell == cached:
+            if 'freeze' in context['option'] or cell == cached:
                 if self.page.path and (self.count - 1) % 5 == 0:
                     relpath = os.path.relpath(self.page.path)
                     self.progress_bar.progress(relpath, count=self.count)
@@ -209,12 +209,11 @@ class Jupyter(Renderer):
     def update_cache(self, cell: Cell) -> None:
         if len(self.cache) == self.count - 1:
             self.cache.append(cell)
-        else:
-            self.cache[self.count - 1] = cell
-            if (
-                len(self.cache) > self.count
-                and "freeze" not in self.cache[self.count].context["option"]
-            ):
+            return
+
+        self.cache[self.count - 1] = cell
+        if len(self.cache) > self.count:
+            if "freeze" not in cell.context["option"]:
                 self.cache[self.count].valid = False
 
 
