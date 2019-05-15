@@ -4,7 +4,6 @@ First, import the SymPy package.
 
 ```python
 import sympy
-
 ```
 
 ## Basic usage
@@ -13,7 +12,7 @@ SymPy symbols or expressions in a fenced code block are automatically rendered i
 
 ```python
 x = sympy.Symbol('x')
-x**2
+x**3
 ```
 
 On the other hand, in an inline code, a SymPy object just returns a latex string like this `{{#x**2}}` = {{x**2}}. This is intentional behavior. You can choose inline mode or display mode.

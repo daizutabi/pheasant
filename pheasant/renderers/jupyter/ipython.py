@@ -39,13 +39,6 @@ def register_pandas_formatter(formatters):  # pragma: no cover
         formatters["text/html"].for_type(pd.Series, pandas_series_to_html)
 
 
-def sympy_to_latex(obj) -> Tuple[str, Dict]:
-    """Convert a Sympy's object into latex string."""
-    import sympy
-
-    return sympy.latex(obj, **formatter_kwargs), {"module": "sympy"}
-
-
 def sympy_extra_resources() -> Dict[str, List[str]]:
     js = (
         '<script type="text/x-mathjax-config">MathJax.Hub.Config({\n'
@@ -57,18 +50,25 @@ def sympy_extra_resources() -> Dict[str, List[str]]:
     return {"extra_raw_javascript": [js]}
 
 
-def register_sympy_formatter(formatters):  # pragma: no cover
+def register_sympy_formatter(formatters, latex_printer=None):  # pragma: no cover
     try:
         from sympy.core.basic import Basic
         from sympy.matrices.matrices import MatrixBase
         from sympy.physics.vector import Vector, Dyadic
         from sympy.tensor.array import NDimArray
     except ImportError:
-        pass
-    else:
-        types = [Basic, MatrixBase, Vector, Dyadic, NDimArray]
-        for cls in types:
-            formatters["text/latex"].for_type(cls, sympy_to_latex)
+        return
+
+    from sympy import latex
+    latex = latex_printer or latex
+
+    def sympy_to_latex(obj) -> Tuple[str, Dict]:
+        """Convert a Sympy's object into latex string."""
+        return latex(obj, **formatter_kwargs), {"module": "sympy"}
+
+    types = [Basic, MatrixBase, Vector, Dyadic, NDimArray]
+    for cls in types:
+        formatters["text/latex"].for_type(cls, sympy_to_latex)
 
 
 def bokeh_to_html(obj) -> Tuple[str, Dict]:
@@ -222,13 +222,13 @@ def register_altair_formatter(formatters):  # pragma: no cover
             formatters["text/html"].for_type(cls, altair_to_html)
 
 
-def register_formatters():  # pragma: no cover
+def register_formatters(latex_printer=None):  # pragma: no cover
     ip = get_ipython()
     formatters = ip.display_formatter.formatters
     register_altair_formatter(formatters)
     register_bokeh_formatter(formatters)
     register_holoviews_formatter(formatters)
-    register_sympy_formatter(formatters)
+    register_sympy_formatter(formatters, latex_printer=latex_printer)
     register_pandas_formatter(formatters)
 
 
