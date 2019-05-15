@@ -1,7 +1,6 @@
 import altair as alt
 import holoviews as hv
 import pandas as pd
-import sympy
 from bokeh.plotting import figure
 
 from pheasant.renderers.jupyter import ipython
