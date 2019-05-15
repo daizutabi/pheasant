@@ -43,11 +43,11 @@ def test_ipython_altair():
     assert meta == {"module": "altair"}
 
 
-def test_ipython_sympy():
-    x = sympy.symbols("x")
-    html, meta = ipython.sympy_to_latex(3 * x ** 2)
-    assert html == "3 x^{2}"
-    assert meta == {"module": "sympy"}
+# def test_ipython_sympy():
+#     x = sympy.symbols("x")
+#     html, meta = ipython.sympy_to_latex(3 * x ** 2)
+#     assert html == "3 x^{2}"
+#     assert meta == {"module": "sympy"}
 
 
 def test_ipython_select_last_display_data():
