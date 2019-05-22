@@ -115,12 +115,24 @@ class Kernel:
     def inspect(self, code: str, func: str = "getsource", output_hook=None) -> List:
         self.execute("import inspect")
         self.execute(code, output_hook=output_hook)
-        outputs = self.execute(f"inspect.{func}(_)")
+        outputs = self.execute(code_for_inspect(func))
         if len(outputs) == 1 and outputs[0]["type"] == "execute_result":
             source = ast.literal_eval(outputs[0]["data"]["text/plain"])
             return [dict(type="stream", name="source", text=source)]
         else:
             return outputs
+
+
+def code_for_inspect(func: str) -> str:
+    codes = [
+        f"__dummy__ = _",
+        f"if isinstance(__dummy__, list):",
+        f"    __dummy__ = '\\n\\n'.join(inspect.{func}(x) for x in __dummy__)",
+        f"else:",
+        f"    __dummy__ = inspect.{func}(__dummy__)",
+        f"__dummy__",
+    ]
+    return "\n".join(codes)
 
 
 @dataclass
