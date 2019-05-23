@@ -6,7 +6,7 @@ def test_cache():
     assert jupyter.cache == []
     assert jupyter.count == 0
 
-    context = {"a": "a", "b": "b", "language": "python", "option": ""}
+    context = {"code": "1", "b": "b", "language": "python", "option": ""}
     template = "fenced_code"
     output = jupyter.execute_and_render("1", context, template)
     assert jupyter.count == 1
