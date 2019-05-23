@@ -81,6 +81,7 @@ class Jupyter(Renderer):
                 break
 
     def render_fenced_code(self, context, splitter, parser) -> Iterator[str]:
+        context["code"] = context["code"].replace("  # isort:skip", "")
         code = context["code"]
         if code.startswith("# option:"):
             index = code.index("\n")
@@ -110,7 +111,7 @@ class Jupyter(Renderer):
         cell = Cell(code, context, template)
         if len(self.cache) >= self.count:
             cached = self.cache[self.count - 1]
-            if 'freeze' in context['option'] or cell == cached:
+            if "freeze" in context["option"] or cell == cached:
                 if self.page.path and (self.count - 1) % 5 == 0:
                     relpath = os.path.relpath(self.page.path)
                     self.progress_bar.progress(relpath, count=self.count)
@@ -195,9 +196,11 @@ class Jupyter(Renderer):
 
         outputs = list(takewhile(not_system_exit, outputs))
         option = context["option"].split()
+        code = context["code"].replace("\n\n", "\n")
         cell.output = self.render(
             template,
             context,
+            code=code,
             option=option,
             kernel_name=kernel_name,
             outputs=outputs,
