@@ -196,7 +196,7 @@ class Jupyter(Renderer):
 
         outputs = list(takewhile(not_system_exit, outputs))
         option = context["option"].split()
-        code = context["code"].replace("\n\n", "\n")
+        code = context["code"].replace("\n\n\n", "\n\n")
         cell.output = self.render(
             template,
             context,
