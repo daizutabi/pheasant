@@ -16,7 +16,8 @@ class Header(Renderer):
     header_kind: Dict[str, str] = field(default_factory=dict)
 
     HEADER_PATTERN = r"^(?P<prefix>#+)(?P<header>[!\w]*) *(?P<title>.*?)\n"
-    TAG_PATTERN = r"\{#(?P<tag>\S+?)#\}"
+    TAG_PATTERN = r"\{#(?P<tag>.+?)#\}"
+    # TAG_PATTERN = r"\{#(?P<tag>\S+?)#\}"
 
     markdown = Markdown(extensions=["tables"])
 
@@ -188,11 +189,19 @@ class Anchor(Renderer):
     def resolve(self, tag: str) -> Dict[str, Any]:
         if self.header is None:
             raise ValueError("A Header instance has not set yet.")
+        if "|" in tag:
+            tag, fmt = tag.split("|")
+            fmt = fmt.strip()
+        else:
+            fmt = ""
+        tag = tag.strip()
         tag_context = self.header.tag_context  # type: ignore
         found = tag in tag_context
         context = {"found": found, "tag": tag}
         if found:
             context.update(tag_context[tag])
+            if fmt:
+                context["number_string"] = format_tag(fmt, context["number_list"])
             try:
                 relpath = os.path.relpath(  # type: ignore
                     context["path"], os.path.dirname(self.page.path)
@@ -245,7 +254,7 @@ def split_tag(title: str) -> Tuple[str, str]:
     """
     match = RE_TAG_PATTERN.search(title)
     if match:
-        return title.replace(match.group(), "").strip(), match.group(1)
+        return title.replace(match.group(), "").strip(), match.group(1).strip()
     else:
         return title, ""
 
@@ -304,3 +313,9 @@ def split_link(title: str) -> Tuple[str, str]:
         return title, link[1:-1].replace("/ ", "/")
     else:
         return title, ""
+
+
+def format_tag(fmt: str, number_list) -> str:
+    for k in range(len(number_list)):
+        fmt = fmt.replace(str(k + 1), str(number_list[k]))
+    return fmt

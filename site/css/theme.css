@@ -31,15 +31,8 @@ pre {
 }
 
 a {
-  text-decoration: none;
-}
-
-p a {
   color: #39f;
-}
-
-p a:visited {
-  color: #99f;
+  text-decoration: none;
 }
 
 button {
@@ -80,6 +73,7 @@ img {
   line-height: 1.1;
   padding-top: 5px;
   padding-bottom: 5px;
+  padding-right: 5px;
 }
 
 .nav-item.section {
@@ -296,8 +290,8 @@ a.nav-item:hover {
 }
 
 aside {
-  flex: 0 0 350px;
-  width: 350px;
+  flex: 0 0 300px;
+  width: 300px;
   order: 1;
   background: #333;
   z-index: 999;

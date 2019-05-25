@@ -71,6 +71,10 @@ def test_parse_anchor(anchor, source_parsed):
 
 
 def test_parse_anchor_misc(anchor):
-    assert anchor.parse("{#tag-a#}") == '[1](#tag-a)'
+    assert anchor.parse("{# tag-a #}") == '[1](#tag-a)'
     assert anchor.parse("{##tag-a#}") == '{#tag-a#}'
     assert 'Unknown tag' in anchor.parse("{#tag-A#}")
+
+
+def test_parse_anchor_format(anchor):
+    assert anchor.parse("{# tag-a | 第1章 #}") == '[第1章](#tag-a)'

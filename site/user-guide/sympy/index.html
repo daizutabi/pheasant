@@ -29,7 +29,7 @@
         <div class="title">
           <button class="hamburger"></button>
           <a href="../.." class="site-name"> Pheasant</a>
-        </div><div class="version">2.2.32</div>
+        </div><div class="version">2.2.33</div>
       </div>
       <nav class="nav">
         <ul class="root">
@@ -80,21 +80,20 @@ TeX: { equationNumbers: { autoNumber: "AMS" } } });</script>
 
 <h1 id="4-sympy-and-latex"><span class="pheasant-header"><span class="header"><span class="number">4</span> <span class="title">SymPy and LaTeX</span></span></span></h1>
 <p>First, import the SymPy package.</p>
-<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">import sympy
-</code></pre></div>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">import sympy</code></pre></div>
 <div class="report"><p><span class="count">[1]</span>
-<span class="start">2019-05-14 21:38:28</span> (<span class="time">5.03ms</span>)
-<span class="right"><span class="kernel">python3</span> (<span class="total">772ms</span>)</span></p></div></div></div></div>
+<span class="start">2019-05-15 10:03:14</span> (<span class="time">5.02ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">2.18s</span>)</span></p></div></div></div></div>
 
 <h2 id="41-basic-usage"><span class="pheasant-header"><span class="header"><span class="number">4.1</span> <span class="title">Basic usage</span></span></span></h2>
 <p>SymPy symbols or expressions in a fenced code block are automatically rendered in display mode:</p>
 <div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">x = sympy.Symbol(&#39;x&#39;)
-x**2</code></pre></div>
+x**3</code></pre></div>
 <div class="report"><p><span class="count">[2]</span>
-<span class="start">2019-05-14 21:38:28</span> (<span class="time">9.00ms</span>)
-<span class="right"><span class="kernel">python3</span> (<span class="total">781ms</span>)</span></p></div></div>
+<span class="start">2019-05-15 10:03:14</span> (<span class="time">12.0ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">2.20s</span>)</span></p></div></div>
 
-<div class="cell jupyter display"><div class="content">$$x^{2}$$</div></div></div></div>
+<div class="cell jupyter display"><div class="content">$$x^{3}$$</div></div></div></div>
 
 <p>On the other hand, in an inline code, a SymPy object just returns a latex string like this <code>{{x**2}}</code> = x^{2}. This is intentional behavior. You can choose inline mode or display mode.</p>
 <div class="pheasant-fenced-code"><div class="cell embed source"><div class="code"><pre><code class="markdown">This is an inline mode example: ${{x**2+1/x+1}}$</code></pre></div></div></div>
@@ -132,8 +131,8 @@ x**sympy.Rational(2, 3)
 
 <div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">x**sympy.Rational(2, 3)</code></pre></div>
 <div class="report"><p><span class="count">[13]</span>
-<span class="start">2019-05-14 21:38:28</span> (<span class="time">9.00ms</span>)
-<span class="right"><span class="option">(fold_frac_powers=True)</span> <span class="kernel">python3</span> (<span class="total">906ms</span>)</span></p></div></div>
+<span class="start">2019-05-15 10:03:14</span> (<span class="time">13.0ms</span>)
+<span class="right"><span class="option">(fold_frac_powers=True)</span> <span class="kernel">python3</span> (<span class="total">2.32s</span>)</span></p></div></div>
 
 <div class="cell jupyter display"><div class="content">$$x^{2/3}$$</div></div></div></div>
 
