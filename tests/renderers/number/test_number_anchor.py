@@ -23,12 +23,14 @@ def test_tag_context(anchor, source_simple):
             "number_list": [1],
             "number_string": "1",
             "path": "",
+            "title": "Title",
         },
         "tag-b": {
             "kind": "figure",
             "number_list": [1],
             "number_string": "1",
             "path": "",
+            "title": "Figure A",
         },
     }
     assert anchor.header.tag_context == tag_context

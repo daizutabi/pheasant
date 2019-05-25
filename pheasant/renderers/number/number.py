@@ -144,6 +144,7 @@ class Header(Renderer):
                 "number_list": number_list,
                 "number_string": number_string,
                 "path": self.page.path,
+                "title": title,
             }
             context.update(tag=tag)
         return context
@@ -201,7 +202,9 @@ class Anchor(Renderer):
         if found:
             context.update(tag_context[tag])
             if fmt:
-                context["number_string"] = format_tag(fmt, context["number_list"])
+                context["number_string"] = format_tag(
+                    fmt, context["number_list"], context["title"]
+                )
             try:
                 relpath = os.path.relpath(  # type: ignore
                     context["path"], os.path.dirname(self.page.path)
@@ -315,7 +318,8 @@ def split_link(title: str) -> Tuple[str, str]:
         return title, ""
 
 
-def format_tag(fmt: str, number_list) -> str:
+def format_tag(fmt: str, number_list, title) -> str:
     for k in range(len(number_list)):
         fmt = fmt.replace(str(k + 1), str(number_list[k]))
+    fmt = fmt.replace('title', title)
     return fmt
