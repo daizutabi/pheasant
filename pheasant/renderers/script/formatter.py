@@ -62,7 +62,7 @@ def is_wide(character: str) -> bool:
 
 def is_splittable(line: str, index: int) -> bool:
     if index < len(line) - 1:
-        return line[index] == " " or is_wide(line[index]) or is_wide(line[index + 1])
+        return line[index] == " " or (is_wide(line[index]) and is_wide(line[index + 1]))
     else:
         return False
 
