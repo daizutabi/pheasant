@@ -9,7 +9,7 @@ def test_format_text(script, nl):
     ).replace("\n", nl)
     answer = (
         "a=1\n\n# あいうえ\n# おかきく\n# けこabc\n# def ghi\n# jkl mno\n"
-        "# pqrさし\n# すせそな\n# にぬねの\n# abc def\n# hij klm\n# aaaa"
+        "# pqrさし\n# すせそな\n# にぬね\n# のabc def\n# hij klm\n# aaaa"
         "aaaaaaaaaaaaa\n"
     ).replace("\n", nl)
     assert script.convert(source, 10) == answer
