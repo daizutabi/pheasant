@@ -82,6 +82,7 @@ class Jupyter(Renderer):
 
     def render_fenced_code(self, context, splitter, parser) -> Iterator[str]:
         context["code"] = context["code"].replace("  # isort:skip", "")
+        context["code"] = context["code"].replace("  # type:ignore", "")
         code = context["code"]
         if code.startswith("# option:"):
             index = code.index("\n")
