@@ -65,6 +65,43 @@ def run(paths, ext, max, restart, shutdown, force, verbose):
     click.secho(f"{converter.log.info}", bold=True)
 
 
+@cli.command(help="Convert source files to rendered Markdown.")
+@click.option("-r", "--restart", is_flag=True, help="Restart kernel after run.")
+@click.option("-s", "--shutdown", is_flag=True, help="Shutdown kernel after run.")
+@click.option("-f", "--force", is_flag=True, help="Delete cache and run.")
+@click.option(
+    "-v", "--verbose", count=True, help="Print input codes and/or outputs from kernel."
+)
+@ext_option
+@max_option
+@paths_argument
+def convert(paths, ext, max, restart, shutdown, force, verbose):
+    pages = Pages(paths, ext).collect()
+
+    length = len(pages)
+    click.secho(f"collected {length} files.", bold=True)
+
+    if length > max:  # pragma: no cover
+        click.secho(f"Too many files. Aborted.", fg="yellow")
+        sys.exit()
+
+    if force:
+        for page in pages:
+            if page.has_cache:
+                page.cache.delete()
+                click.echo(page.cache.path + " was deleted.")
+
+    from pheasant.core.pheasant import Pheasant
+
+    converter = Pheasant(restart=restart, shutdown=shutdown, verbose=verbose)
+    converter.jupyter.safe = True
+    outputs = converter.convert_from_files(page.path for page in pages)
+    for page, output in zip(pages, outputs):
+        path = page.path.replace(".py", ".md").replace(".md", ".out.md")
+        with open(path, "w", encoding="utf-8") as f:
+            f.write(output)
+
+
 @cli.command(help="List source files.")
 @ext_option
 @paths_argument
