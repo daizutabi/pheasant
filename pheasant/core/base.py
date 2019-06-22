@@ -42,7 +42,7 @@ class Base(metaclass=MetaClass):
 
 
 def get_render_name(render: Render) -> str:
-    """Return a render name which is used to resolve the mattched pattern.
+    """Return a render name which is used to resolve the matched pattern.
 
     Usualy, render_name = '<class_name>__<render_function_name>' in lower case.
     If render function name starts with 'render_', it is omitted from the name.
