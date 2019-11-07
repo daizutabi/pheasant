@@ -9,9 +9,9 @@ edit_uri: ""
 theme: ivory
 
 plugins:
+  - search
   - pheasant:
       version: pheasant
-  - search
 
 nav:
   - Home: index.md
