@@ -92,7 +92,7 @@ setup(
         "pytest-cov",
         "altair",
         "bokeh",
-        "holoviews",
+        "holoviews==1.11.3",
         "matplotlib",
         "mkdocs",
         "pandas",
