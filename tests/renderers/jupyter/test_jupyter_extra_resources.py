@@ -18,12 +18,13 @@ def test_bokeh_extra_resources(key, values):
 @pytest.mark.parametrize(
     "index, host, name",
     [
-        (3, "maxcdn.bootstrapcdn.com", "bootstrap.min.css"),
-        (4, "code.jquery.com", "jquery-ui.css"),
+        (0, "maxcdn.bootstrapcdn.com", "bootstrap.min.css"),
+        (1, "code.jquery.com", "jquery-ui.css"),
     ],
 )
 def test_holoviews_extra_css(index, host, name):
     resources = holoviews_extra_resources()
+    resources["extra_css"]
     split = resources["extra_css"][index].split("/")
     assert split[2] == host
     assert split[-1] == name
@@ -62,11 +63,11 @@ def test_holoviews_extra_raw_javascript():
 
 def test_altair_extra_resources():
     resources = altair_extra_resources()
-    assert 'extra_raw_css' in resources
-    assert len(resources['extra_javascript']) == 3
+    assert "extra_raw_css" in resources
+    assert len(resources["extra_javascript"]) == 3
 
 
 def test_sympy_extra_resources():
     resources = sympy_extra_resources()
-    assert 'extra_raw_javascript' in resources
-    assert len(resources['extra_raw_javascript']) == 1
+    assert "extra_raw_javascript" in resources
+    assert len(resources["extra_raw_javascript"]) == 1

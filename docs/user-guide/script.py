@@ -1,5 +1,5 @@
 # # Standalone Script
-# Using Atom's [Hydorgen](https://nteract.gitbooks.io/hydrogen/) package, you can
+# Using Atom's [Hydrogen](https://nteract.gitbooks.io/hydrogen/) package, you can
 # execute any Python script codes within a fenced code block in a Markdown source. So
 # you can edit your code verifying its execution results. But unfortunately (as long as
 # I know), the entire Markdown source cannot be executed all at once as a standalone
