@@ -11,6 +11,7 @@ theme: ivory
 plugins:
   - pheasant:
       version: pheasant
+  - search
 
 nav:
   - Home: index.md

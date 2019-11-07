@@ -2,79 +2,88 @@
 <html>
 
 <head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="author" content="daizutabi">
-  <link rel="shortcut icon" href="../../img/favicon.ico">
-  <title>Kernel &mdash; Pheasant</title>
-  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:400,700">
-  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/tonsky/FiraCode@1.206/distr/fira_code.css">
-  <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/all.css">
-  <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/v4-shims.css">
-  <link rel="stylesheet" href="../../css/theme.css">
-  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
-  <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/all.css">
-  <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/v4-shims.css">
-  <link rel="stylesheet" href="../../css/pheasant.css">
-  <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script> 
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="daizutabi">
+    <link rel="shortcut icon" href="../../img/favicon.ico">
+    <title>6 Kernel &mdash; Pheasant</title>
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:400,700">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/tonsky/FiraCode@1.206/distr/fira_code.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/all.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/v4-shims.css">
+    <link rel="stylesheet" href="../../css/theme.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/all.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/v4-shims.css">
+    <link rel="stylesheet" href="../../css/pheasant.css">
+    <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <script>
+        hljs.initHighlightingOnLoad();
+    </script> 
 </head>
 
 <body ontouchstart="">
-  <div id="container">
-    <aside>
-      <div class="home">
-        <div class="title">
-          <button class="hamburger"></button>
-          <a href="../.." class="site-name"> Pheasant</a>
-        </div><div class="version">2.2.33</div>
-      </div>
-      <nav class="nav">
-        <ul class="root">
-          <li class="toctree-l1"><a class="nav-item" href="../..">1 Home</a></li>
-          <li class="toctree-l1"><button class="section nav-item">User Guide</button>
-  <ul class="subnav">
+    <div id="container">
+        <aside>
+            <div class="home">
+                <div class="title">
+                    <button class="hamburger"></button>
+                    <a href="../.." class="site-name"> Pheasant</a>
+                </div><div class="version">2.2.34</div>
+                <div class="search">
+                    <div role="search">
+    <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+        <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+    </form>
+</div>
+                </div>
+            </div>
+            <nav class="nav">
+                <ul class="root">
+                    <li class="toctree-l1"><a class="nav-item" href="../..">1 Home</a></li>
+                    <li class="toctree-l1"><button class="section nav-item">User Guide</button>
+<ul class="subnav">
     <li class="toctree-l2"><a class="nav-item" href="../images/">2 Image</a></li>
     <li class="toctree-l2"><a class="nav-item" href="../embed/">3 Embeded objects</a></li>
     <li class="toctree-l2"><a class="nav-item" href="../sympy/">4 SymPy and LaTeX</a></li>
     <li class="toctree-l2"><a class="nav-item" href="../script/">5 Standalone Script</a></li>
     <li class="toctree-l2 current"><a class="nav-item current" href="./">6 Kernel</a>
-  <ul class="subnav">
-      <li class="toctree-l3"><a class="nav-item toc" href="#61-ijavascript">6.1 IJavascript</a></li>
-      <li class="toctree-l3"><a class="nav-item toc" href="#62-ijulia">6.2 IJulia</a></li>
-      <li class="toctree-l3"><a class="nav-item toc" href="#63-kernel-list">6.3 Kernel list</a></li>
-  </ul></li>
-  </ul></li>
-          <li class="toctree-l1"><button class="section nav-item">About</button>
-  <ul class="subnav">
+<ul class="subnav">
+<li class="toctree-l3"><a class="nav-item toc" href="#61-ijavascript">6.1 IJavascript</a></li>
+<li class="toctree-l3"><a class="nav-item toc" href="#62-ijulia">6.2 IJulia</a></li>
+<li class="toctree-l3"><a class="nav-item toc" href="#63-kernel-list">6.3 Kernel list</a></li>
+</ul></li>
+</ul></li>
+                    <li class="toctree-l1"><button class="section nav-item">About</button>
+<ul class="subnav">
     <li class="toctree-l2"><a class="nav-item" href="../../about/release-notes/">Release Notes</a></li>
     <li class="toctree-l2"><a class="nav-item" href="../../about/license/">License</a></li>
-  </ul></li>
-        </ul>
-      </nav>
-      <div class="repo">
+</ul></li>
+                </ul>
+            </nav>
+            <div class="repo">
     <div class="link">
         <a href="https://github.com/daizutabi/pheasant/" class="fa fa-github"> GitHub</a>
     </div>
     <div class="previous"><a href="../script/">&laquo; Previous</a></div>
     <div class="next"><a href="../../about/release-notes/">Next &raquo;</a></div>
 </div>
-    </aside>
-    <div id="spacer"><button class="arrow"></button></div>
-    <main>
-      <div class="home-top">
-        <button class="hamburger"></button>
-        <a href="../.." class="site-name"> Pheasant</a>
-      </div>
-      <div id="main">
-        <nav class="breadcrumbs">
-  <ul>
-  <li>User Guide</li>
-  </ul>
+        </aside>
+        <div id="spacer"><button class="arrow"></button></div>
+        <main>
+            <div class="home-top">
+                <button class="hamburger"></button>
+                <a href="../.." class="site-name"> Pheasant</a>
+            </div>
+            <div id="main">
+                <nav class="breadcrumbs">
+<ul>
+    <li>User Guide</li>
+</ul>
 </nav>
-        <div id="content">
+                <div id="content">
 <h1 id="6-kernel"><span class="pheasant-header"><span class="header"><span class="number">6</span> <span class="title">Kernel</span></span></span></h1>
 <h2 id="61-ijavascript"><span class="pheasant-header"><span class="header"><span class="number">6.1</span> <span class="title">IJavascript</span></span></span></h2>
 <div class="pheasant-fenced-code"><div class="cell embed terminal"><div class="code"><pre><code class="bash">$ conda install jupyter
@@ -101,20 +110,26 @@ kernels.kernel_names</code></pre></div>
 <div class="report"><p><span class="count">[1]</span>
 <span class="start">2019-05-12 09:32:46</span> (<span class="time">15.0ms</span>)
 <span class="right"><span class="kernel">python3</span> (<span class="total">2.32s</span>)</span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="nohighlight">{&#39;julia&#39;: [&#39;julia-1.1&#39;], &#39;python&#39;: [&#39;python3&#39;]}</code></pre></div></div></div></div></div>
-        <footer>
+                <footer>
     <div class="footer-buttons">
-        <div class="previous"><a href="../script/" title="Script"><span>Previous</span></a></div>
+        <div class="previous"><a href="../script/" title="5 Standalone Script"><span>Previous</span></a></div>
         <div class="next"><a href="../../about/release-notes/" title="Release Notes"><span>Next</span></a></div>
     </div>
-  <div class="footer-note"><p>
-    Built with <a href="http://www.mkdocs.org">MkDocs</a> using
-    <a href="https://github.com/daizutabi/mkdocs-ivory">Ivory theme</a>.
-  </p></div>
+    <div class="footer-note">
+        <p>
+            Built with <a href="http://www.mkdocs.org">MkDocs</a> using
+            <a href="https://github.com/daizutabi/mkdocs-ivory">Ivory theme</a>.
+        </p>
+    </div>
 </footer>
-      </div>
-    </main>
-  </div>
-  <script src="../../js/theme.js"></script>
-  <script src="../../js/pheasant.js"></script>
+            </div>
+        </main>
+    </div>
+    <script>
+        var base_url = '.';
+    </script>
+    <script src="../../js/theme.js"></script>
+    <script src="../../js/pheasant.js"></script>
 </body>
+
 </html>

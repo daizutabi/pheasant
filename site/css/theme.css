@@ -535,6 +535,7 @@ main {
 table {
   border-collapse: collapse;
   font-size: 0.9rem;
+  margin: auto;
 }
 
 th, td {
