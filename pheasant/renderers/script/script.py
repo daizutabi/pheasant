@@ -53,9 +53,6 @@ class Comment(Renderer):
             if self.max_line_length == 0 and cell.source.startswith("-"):
                 cell.output = ""
                 self.option = " " + cell.source[1:-1].strip()
-            elif self.max_line_length == 0 and cell.source.startswith("%%"):
-                cell.output = ""
-                self.option = " " + cell.source[2:-1].strip()
             else:
                 cell.output = format_source(cell.source, self.max_line_length)
 
@@ -90,6 +87,9 @@ class Script(Renderer):
                     yield source.replace("\n# !", "\n# ")
                     self.comment.option = ""
                 else:
+                    yield source
+            elif kind == 'Cell':
+                if self.comment.max_line_length > 0:
                     yield source
             elif kind == "Docstring":
                 match = DOCSTRING_PATTERN.match(source)

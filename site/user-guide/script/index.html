@@ -31,7 +31,7 @@
                 <div class="title">
                     <button class="hamburger"></button>
                     <a href="../.." class="site-name"> Pheasant</a>
-                </div><div class="version">2.2.36</div>
+                </div><div class="version">2.3.0</div>
                 <div class="search">
                     <div role="search">
     <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -55,7 +55,8 @@
 <li class="toctree-l3"><a class="nav-item toc" href="#53-a-package-for-comment-formatting">5.3 A package for comment formatting</a></li>
 <li class="toctree-l3"><a class="nav-item toc" href="#54-source-code">5.4 Source code</a></li>
 </ul></li>
-    <li class="toctree-l2"><a class="nav-item" href="../kernel/">6 Kernel</a></li>
+    <li class="toctree-l2"><a class="nav-item" href="../cell/">6 Cell Markers</a></li>
+    <li class="toctree-l2"><a class="nav-item" href="../kernel/">7 Kernel</a></li>
 </ul></li>
                     <li class="toctree-l1"><button class="section nav-item">About</button>
 <ul class="subnav">
@@ -69,7 +70,7 @@
         <a href="https://github.com/daizutabi/pheasant/" class="fa fa-github"> GitHub</a>
     </div>
     <div class="previous"><a href="../sympy/">&laquo; Previous</a></div>
-    <div class="next"><a href="../kernel/">Next &raquo;</a></div>
+    <div class="next"><a href="../cell/">Next &raquo;</a></div>
 </div>
         </aside>
         <div id="spacer"><button class="arrow"></button></div>
@@ -98,8 +99,8 @@ def sub(x: int, y: int) -&gt; int:
     &#34;&#34;&#34;Substract `y` from `x`.&#34;&#34;&#34;
     return x - y  # a comment in a code cell.</code></pre></div>
 <div class="report"><p><span class="count">[1]</span>
-<span class="start">2019-11-07 21:41:57</span> (<span class="time">7.00ms</span>)
-<span class="right"><span class="kernel">python3</span> (<span class="total">2.31s</span>)</span></p></div></div></div></div>
+<span class="start">2019-11-11 14:27:51</span> (<span class="time">6.05ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">6.05ms</span>)</span></p></div></div></div></div>
 
 <p>When a comment starts at the begining of line after a code block, it divides the source into a code cell and a Markdown cell. This new Markdown cell will continue until next Python code appears.</p>
 <p>If you want to include a comment at the begining of line, you can write like this:</p>
@@ -110,17 +111,15 @@ a = 1</code></pre></div></div></div>
 <div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python"># First comment in a code cell.
 a = 1</code></pre></div>
 <div class="report"><p><span class="count">[2]</span>
-<span class="start">2019-11-07 21:41:57</span> (<span class="time">5.00ms</span>)
-<span class="right"><span class="kernel">python3</span> (<span class="total">2.32s</span>)</span></p></div></div></div></div>
+<span class="start">2019-11-11 14:27:51</span> (<span class="time">4.97ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">11.0ms</span>)</span></p></div></div></div></div>
 
-<p>Despite of a Markdown cell, you may want to devide successive codes into separate cells. This can be done by putting a special inline comment to define a cell. The comment pattern is <code># -</code> or <code># %%</code>. For example,</p>
+<p>Despite of a Markdown cell, you may want to devide successive codes into separate cells. This can be done by putting a special inline comment to define a cell. The comment pattern is <code># -</code>. For example,</p>
 <div class="pheasant-fenced-code"><div class="cell embed source"><div class="code"><pre><code class="python"># * a markdown cell
 a, b, c = 1, 2, 3
 a
 # -
-b
-# %%
-c</code></pre></div></div></div>
+b</code></pre></div></div></div>
 
 <p>becomes</p>
 <ul>
@@ -129,21 +128,16 @@ c</code></pre></div></div></div>
 <div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">a, b, c = 1, 2, 3
 a</code></pre></div>
 <div class="report"><p><span class="count">[3]</span>
-<span class="start">2019-11-07 21:41:57</span> (<span class="time">6.00ms</span>)
-<span class="right"><span class="kernel">python3</span> (<span class="total">2.32s</span>)</span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="nohighlight">1</code></pre></div></div></div></div>
+<span class="start">2019-11-11 14:27:52</span> (<span class="time">7.01ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">18.0ms</span>)</span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="nohighlight">1</code></pre></div></div></div></div>
 
 <div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">b</code></pre></div>
 <div class="report"><p><span class="count">[4]</span>
-<span class="start">2019-11-07 21:41:57</span> (<span class="time">8.03ms</span>)
-<span class="right"><span class="kernel">python3</span> (<span class="total">2.33s</span>)</span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="nohighlight">2</code></pre></div></div></div></div>
-
-<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">c</code></pre></div>
-<div class="report"><p><span class="count">[5]</span>
-<span class="start">2019-11-07 21:41:57</span> (<span class="time">7.00ms</span>)
-<span class="right"><span class="kernel">python3</span> (<span class="total">2.34s</span>)</span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="nohighlight">3</code></pre></div></div></div></div>
+<span class="start">2019-11-11 14:27:52</span> (<span class="time">8.99ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">27.0ms</span>)</span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="nohighlight">2</code></pre></div></div></div></div>
 
 <p>You can add options to a code block by adding them after a cell devider.</p>
-<div class="pheasant-fenced-code"><div class="cell embed source"><div class="code"><pre><code class="python"># %% hide
+<div class="pheasant-fenced-code"><div class="cell embed source"><div class="code"><pre><code class="python"># -hide
 d = 4
 # * Output: `d` is equal to {{d}}.</code></pre></div></div></div>
 
@@ -165,9 +159,9 @@ d = 4
 
 <p>becomes:</p>
 <div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">print(1)</code></pre></div>
-<div class="report"><p><span class="count">[8]</span>
-<span class="start">2019-11-07 21:41:57</span> (<span class="time">5.00ms</span>)
-<span class="right"><span class="kernel">python3</span> (<span class="total">2.36s</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code">
+<div class="report"><p><span class="count">[7]</span>
+<span class="start">2019-11-11 14:27:52</span> (<span class="time">9.00ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">51.0ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code">
       <pre><code class="nohighlight">1</code></pre></div></div></div></div>
 
 <p>And,</p>
@@ -235,7 +229,7 @@ a = 1
 
 # Despite of a Markdown cell, you may want to devide successive codes into separate
 # cells. This can be done by putting a special inline comment to define a cell. The
-# comment pattern is `# -` or `# %%`. For example,
+# comment pattern is `# -`. For example,
 
 # ~~~python
 # # * a markdown cell
@@ -243,8 +237,6 @@ a = 1
 # a
 # # -
 # b
-# # %%
-# c
 # ~~~
 
 # becomes
@@ -254,13 +246,11 @@ a, b, c = 1, 2, 3
 a
 # -
 b
-# %%
-c
 
 # You can add options to a code block by adding them after a cell devider.
 
 # ~~~python
-# # %% hide
+# # -hide
 # d = 4
 # # * Output: `d` is equal to {{d}}.
 # ~~~
@@ -276,7 +266,7 @@ c
 
 # Then you can hide the python code cell.
 
-# %% hide
+# -hide
 d = 4
 # * Output: `d` is equal to {{d}}.
 
@@ -332,7 +322,7 @@ d = 4
                 <footer>
     <div class="footer-buttons">
         <div class="previous"><a href="../sympy/" title="4 SymPy and LaTeX"><span>Previous</span></a></div>
-        <div class="next"><a href="../kernel/" title="6 Kernel"><span>Next</span></a></div>
+        <div class="next"><a href="../cell/" title="6 Cell Markers"><span>Next</span></a></div>
     </div>
     <div class="footer-note">
         <p>

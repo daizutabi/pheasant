@@ -20,6 +20,7 @@ nav:
     - Embed: user-guide/embed.md
     - SymPy: user-guide/sympy.md
     - Script: user-guide/script.py
+    - Cell: user-guide/cell.py
     - Kernel: user-guide/kernel.md
   - About:
     - Release Notes: about/release-notes.md

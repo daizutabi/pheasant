@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="author" content="daizutabi">
     <link rel="shortcut icon" href="../../img/favicon.ico">
-    <title>7 Kernel &mdash; Pheasant</title>
+    <title>6 Cell Markers &mdash; Pheasant</title>
     <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:400,700">
     <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/tonsky/FiraCode@1.206/distr/fira_code.css">
     <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/all.css">
@@ -49,13 +49,11 @@
     <li class="toctree-l2"><a class="nav-item" href="../embed/">3 Embeded objects</a></li>
     <li class="toctree-l2"><a class="nav-item" href="../sympy/">4 SymPy and LaTeX</a></li>
     <li class="toctree-l2"><a class="nav-item" href="../script/">5 Standalone Script</a></li>
-    <li class="toctree-l2"><a class="nav-item" href="../cell/">6 Cell Markers</a></li>
-    <li class="toctree-l2 current"><a class="nav-item current" href="./">7 Kernel</a>
+    <li class="toctree-l2 current"><a class="nav-item current" href="./">6 Cell Markers</a>
 <ul class="subnav">
-<li class="toctree-l3"><a class="nav-item toc" href="#71-ijavascript">7.1 IJavascript</a></li>
-<li class="toctree-l3"><a class="nav-item toc" href="#72-ijulia">7.2 IJulia</a></li>
-<li class="toctree-l3"><a class="nav-item toc" href="#73-kernel-list">7.3 Kernel list</a></li>
+<li class="toctree-l3"><a class="nav-item toc" href="#61-markdown-header">6.1 Markdown Header</a></li>
 </ul></li>
+    <li class="toctree-l2"><a class="nav-item" href="../kernel/">7 Kernel</a></li>
 </ul></li>
                     <li class="toctree-l1"><button class="section nav-item">About</button>
 <ul class="subnav">
@@ -68,8 +66,8 @@
     <div class="link">
         <a href="https://github.com/daizutabi/pheasant/" class="fa fa-github"> GitHub</a>
     </div>
-    <div class="previous"><a href="../cell/">&laquo; Previous</a></div>
-    <div class="next"><a href="../../about/release-notes/">Next &raquo;</a></div>
+    <div class="previous"><a href="../script/">&laquo; Previous</a></div>
+    <div class="next"><a href="../kernel/">Next &raquo;</a></div>
 </div>
         </aside>
         <div id="spacer"><button class="arrow"></button></div>
@@ -85,36 +83,28 @@
 </ul>
 </nav>
                 <div id="content">
-<h1 id="7-kernel"><span class="pheasant-header"><span class="header"><span class="number">7</span> <span class="title">Kernel</span></span></span></h1>
-<h2 id="71-ijavascript"><span class="pheasant-header"><span class="header"><span class="number">7.1</span> <span class="title">IJavascript</span></span></span></h2>
-<div class="pheasant-fenced-code"><div class="cell embed terminal"><div class="code"><pre><code class="bash">$ conda install jupyter
-$ conda install nodejs==8.9.3
-$ npm install -g ijavascript
-$ ijsinstall</code></pre></div></div></div>
+<h1 id="6-cell-markers"><span class="pheasant-header"><span class="header"><span class="number">6</span> <span class="title">Cell Markers</span></span></span></h1>
+<div class="pheasant-fenced-code"><div class="cell embed source"><div class="code"><pre><code class="python"># %% [markdown]
+# ## Markdown Header
+# Text. Text.
+# %% [code]
+# comment
+a = 1
+print(a)</code></pre></div></div></div>
 
-<div class="pheasant-fenced-code"><div class="cell embed source"><div class="code"><pre><code class="markdown">```javascript
-console.log(&#34;Hello, IJavascript!&#34;)
-```</code></pre></div></div></div>
-
-<h2 id="72-ijulia"><span class="pheasant-header"><span class="header"><span class="number">7.2</span> <span class="title">IJulia</span></span></span></h2>
-<div class="pheasant-fenced-code"><div class="cell embed source"><div class="code"><pre><code class="julia">julia&gt; using Pkg
-julia&gt; Pkg.add(&#34;IJulia&#34;)</code></pre></div></div></div>
-
-<div class="pheasant-fenced-code"><div class="cell embed source"><div class="code"><pre><code class="markdown">```julia
-println(&#34;Hello, IJulia!&#34;)
-```</code></pre></div></div></div>
-
-<h2 id="73-kernel-list"><span class="pheasant-header"><span class="header"><span class="number">7.3</span> <span class="title">Kernel list</span></span></span></h2>
-<p>Mapping a language to kernel names can be obtained as a dictionary by <code>kernels.kernel_names</code> property:</p>
-<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">from pheasant.renderers.jupyter.kernel import kernels
-kernels.kernel_names</code></pre></div>
+<h2 id="61-markdown-header"><span class="pheasant-header"><span class="header"><span class="number">6.1</span> <span class="title">Markdown Header</span></span></span></h2>
+<p>Text. Text.</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python"># comment
+a = 1
+print(a)</code></pre></div>
 <div class="report"><p><span class="count">[1]</span>
-<span class="start">2019-11-07 21:41:57</span> (<span class="time">16.0ms</span>)
-<span class="right"><span class="kernel">python3</span> (<span class="total">2.37s</span>)</span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="nohighlight">{&#39;julia&#39;: [&#39;julia-1.1&#39;], &#39;python&#39;: [&#39;python3&#39;]}</code></pre></div></div></div></div></div>
+<span class="start">2019-11-11 14:59:28</span> (<span class="time">13.0ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">40.0ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code">
+      <pre><code class="nohighlight">1</code></pre></div></div></div></div></div>
                 <footer>
     <div class="footer-buttons">
-        <div class="previous"><a href="../cell/" title="6 Cell Markers"><span>Previous</span></a></div>
-        <div class="next"><a href="../../about/release-notes/" title="Release Notes"><span>Next</span></a></div>
+        <div class="previous"><a href="../script/" title="5 Standalone Script"><span>Previous</span></a></div>
+        <div class="next"><a href="../kernel/" title="7 Kernel"><span>Next</span></a></div>
     </div>
     <div class="footer-note">
         <p>

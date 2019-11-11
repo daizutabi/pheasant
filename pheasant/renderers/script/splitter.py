@@ -5,6 +5,7 @@ from typing import Iterator, List, Tuple
 pattern = r'^(?P<quote>"""|\'\'\')(.*?)(?P=quote)\n'
 DOCSTRING_PATTERN = re.compile(pattern, re.DOTALL | re.MULTILINE)
 AST_PATTERN = re.compile(r"<_ast\.(.+?) ")
+CELL_PATTERN = re.compile(r"^# %%.*?\n", re.MULTILINE)
 
 
 def split(source: str) -> Iterator[Tuple[str, str]]:
@@ -20,6 +21,31 @@ def split(source: str) -> Iterator[Tuple[str, str]]:
 
 
 def split_block(source: str) -> Iterator[Tuple[str, str]]:
+    if CELL_PATTERN.search(source):
+        yield from split_block_from_cell(source)
+    else:
+        yield from split_block_from_line(source)
+
+
+def split_block_from_cell(source: str) -> Iterator[Tuple[str, str]]:
+    kind = ""
+    start = 0
+    for match in CELL_PATTERN.finditer(source):
+        if start:
+            if kind == 'Comment':
+                yield from split_block_from_line(source[start : match.start()])
+            else:
+                yield kind, source[start : match.start()]
+        yield "Cell", match.group()
+        start = match.end()
+        kind = "Comment" if "markdown" in match.group() else "Code"
+    if kind == 'Comment':
+        yield from split_block_from_line(source[start:])
+    else:
+        yield kind, source[start:]
+
+
+def split_block_from_line(source) -> Iterator[Tuple[str, str]]:
     current = ""
     lines = []
     for kind, line in split_line(source):

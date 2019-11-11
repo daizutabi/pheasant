@@ -44,7 +44,7 @@ a = 1
 
 # Despite of a Markdown cell, you may want to devide successive codes into separate
 # cells. This can be done by putting a special inline comment to define a cell. The
-# comment pattern is `# -` or `# %%`. For example,
+# comment pattern is `# -`. For example,
 
 # ~~~python
 # # * a markdown cell
@@ -52,8 +52,6 @@ a = 1
 # a
 # # -
 # b
-# # %%
-# c
 # ~~~
 
 # becomes
@@ -63,13 +61,11 @@ a, b, c = 1, 2, 3
 a
 # -
 b
-# %%
-c
 
 # You can add options to a code block by adding them after a cell devider.
 
 # ~~~python
-# # %% hide
+# # -hide
 # d = 4
 # # * Output: `d` is equal to {{d}}.
 # ~~~
@@ -85,7 +81,7 @@ c
 
 # Then you can hide the python code cell.
 
-# %% hide
+# -hide
 d = 4
 # * Output: `d` is equal to {{d}}.
 
