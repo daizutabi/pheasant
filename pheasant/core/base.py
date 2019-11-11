@@ -113,9 +113,9 @@ def make_cell_class(pattern: str, render: Render, render_name: str) -> type:
     def parse(self, splitter, parser):
         return "".join(self.render(splitter, parser))
 
-    return make_dataclass(  # type: ignore
+    return make_dataclass(
         "Cell",
-        fields,
+        fields,  # type: ignore
         namespace={"render": _render, "parse": parse, "_render": render},
         bases=(Cell,),
     )
