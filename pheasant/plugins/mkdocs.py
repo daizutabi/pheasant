@@ -9,7 +9,7 @@ import yaml
 from mkdocs.config import config_options
 from mkdocs.plugins import BasePlugin
 from mkdocs.structure.files import get_files
-from mkdocs.utils import markdown_extensions, string_types
+from mkdocs.utils import markdown_extensions
 
 import pheasant
 from pheasant.core.pheasant import Pheasant
@@ -23,7 +23,7 @@ class PheasantPlugin(BasePlugin):
     config_scheme = (
         ("jupyter", config_options.Type(bool, default=True)),
         ("dirty", config_options.Type(bool, default=True)),
-        ("version", config_options.Type(string_types, default="")),
+        ("version", config_options.Type(str, default="")),
         ("header", config_options.Type(dict, default={})),
     )
     converter = Pheasant()
