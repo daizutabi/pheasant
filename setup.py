@@ -86,18 +86,6 @@ setup(
         "colorama",
     ],
     python_requires=">=3.7",
-    setup_requires=["pytest-runner"],
-    tests_require=[
-        "pytest",
-        "pytest-cov",
-        "altair",
-        "bokeh",
-        "holoviews",
-        "matplotlib",
-        "mkdocs",
-        "pandas",
-        "sympy",
-    ],
     entry_points={
         "console_scripts": ["pheasant = pheasant.main:cli"],
         "mkdocs.plugins": ["pheasant = pheasant.plugins.mkdocs:PheasantPlugin"],

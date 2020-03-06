@@ -15,7 +15,9 @@ install:
   - conda info -a
   - conda create -q -n test-environment python=%PYTHON_VERSION%
   - activate test-environment
+  - pip install pandas sympy
+  - pip install pytest pytest-cov altair bokeh holoviews matplotlib mkdocs
   - pip install -e .
 
 test_script:
-  - python setup.py test
+  - pytest
