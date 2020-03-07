@@ -1,5 +1,3 @@
-# Pheasant
-
 [![PyPI version][pypi-image]][pypi-link]
 [![Python versions][pyversions-image]][pyversions-link]
 [![Travis][travis-image]][travis-link]
@@ -26,10 +24,28 @@
 [anaconda-v-link]: https://anaconda.org/daizutabi/pheasant
 -->
 
-## Description
+# Pheasant
 
 Pheasant is a Markdown converter which is designed to be used as a plugin for static site generators, especially MkDocs. The one of the main features of Pheasant is auto Markdown generation of outputs after execution of any Python or other language codes written in a fenced code block of Markdown source. This process is executed by the Jupyter client functionality. In addition to the code execution, Pheasant can automatically number headers, figures, tables, *etcs*.
 
-## Document
+## Setup
 
-See [Pheasant document](https://pheasant.daizutabi.net).
+Install the plugin using pip:
+
+```bash
+pip install pheasant
+```
+
+Next, add the following lines to your `mkdocs.yml`:
+
+```yml
+plugins:
+  - search
+  - pheasant
+```
+
+> If you have no `plugins` entry in your config file yet, you'll likely also want to add the `search` plugin. MkDocs enables it by default if there is no `plugins` entry set.
+
+## Documentation
+
+See [Pheasant documentation](https://pheasant.daizutabi.net).
