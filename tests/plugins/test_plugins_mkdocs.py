@@ -48,7 +48,7 @@ def files(config, plugin, env):
 @pytest.fixture(scope="module")
 def nav(config, plugin, files):
     nav = get_navigation(files, config)
-    nav = plugin.on_nav(nav, config)
+    nav = plugin.on_nav(nav, config, files)
     return nav
 
 
@@ -72,9 +72,9 @@ def test_plugins_mkdocs_files(files, plugin, nav):
 def test_plugins_mkdocs_page_render(files, plugin, config):
     for file in files.documentation_pages():
         page = file.page
-        page.markdown = plugin.on_page_read_source(None, page)
+        page.markdown = plugin.on_page_read_source(page, config)
         page.render(config, files)
-        page.content = plugin.on_page_content(page.content, page)
+        page.content = plugin.on_page_content(page.content, page, config, files)
         assert (
             '<span class="pheasant-header">' in page.content
             or "Skipped." in page.content
@@ -93,7 +93,7 @@ def test_plugins_mkdocs_build(files, plugin, config, nav, env):
         else:
             template = env.get_template("main.html")
         output = template.render(context)
-        output = plugin.on_post_page(output)
+        output = plugin.on_post_page(output, page, config)
         assert "pheasant" in output
 
         page.active = False
