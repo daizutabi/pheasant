@@ -29,7 +29,7 @@ class PheasantPlugin(BasePlugin):
     converter = Pheasant()
     logger.info(f"[Pheasant] Converter created.")
 
-    def on_config(self, config, **kwargs):
+    def on_config(self, config):
         self.converter.jupyter.set_config(enabled=self.config["jupyter"])
         self.converter.header.set_config(self.config["header"])
 
@@ -83,32 +83,32 @@ class PheasantPlugin(BasePlugin):
 
         return files
 
-    def on_nav(self, nav, config, **kwargs):
+    def on_nav(self, nav, config, files):
         paths = [page.file.abs_src_path for page in nav.pages]
         logger.info(f"[Pheasant] Converting {len(paths)} pages.")
         self.converter.convert_from_files(paths)
         logger.info(f"[Pheasant] Conversion finished. {self.converter.log.info}")
         return nav
 
-    def on_page_read_source(self, source, page, **kwargs):
+    def on_page_read_source(self, page, config):
         try:
             return self.converter.pages[page.file.abs_src_path].source
         except KeyError:
             return "Skipped."
 
-    def on_page_content(self, content, page, **kwargs):
+    def on_page_content(self, html, page, config, files):
         if page.toc.items:
             page.title = page.toc.items[0].title
         if page.file.abs_src_path not in self.converter.pages:
-            return content
+            return html
         else:
             extra = self.converter.pages[page.file.abs_src_path].meta["extra_html"]
-            return "\n".join([extra, content])
+            return "\n".join([extra, html])
 
-    def on_post_page(self, output, **kwargs):  # This is needed for holoviews.
+    def on_post_page(self, output, page, config):  # This is needed for holoviews.
         return output.replace('.js" defer></script>', '.js"></script>')
 
-    def on_serve(self, server, **kwargs):  # pragma: no cover
+    def on_serve(self, server, config):
         self.converter.dirty = self.config["dirty"]
         watcher = server.watcher
         builder = list(watcher._tasks.values())[0]["func"]

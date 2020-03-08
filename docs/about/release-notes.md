@@ -19,6 +19,10 @@ pheasant, version 2.2.33 from /path/to/pheasant (Python 3.7)
 
 ## Change log
 
+### Version 2.4.0 (2020-03-08)
+
+* Support for MkDocs 1.1
+
 ### Version 2.2.33 (2019-05-26)
 
 * Configurable link like `{## tag | Ch 1 Sec 2 #}`
