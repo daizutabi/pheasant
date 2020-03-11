@@ -93,6 +93,8 @@ class Header(Renderer):
             pass
         elif depth > self.meta["ignored_depth"]:
             pass
+        elif 'disabled' in self.config and self.config['disabled']:
+            pass
         else:
             self.meta["ignored_depth"] = 100
             numbered = True
