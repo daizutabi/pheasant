@@ -1,3 +1,4 @@
+import os
 from dataclasses import field
 from typing import Dict, Iterable, List
 
@@ -45,6 +46,9 @@ class Pheasant(Converter):
         -------
         Converted output text.
         """
+        if self.jupyter.config["enabled"]:
+            directory = os.path.dirname(path)
+            kernels["python"].execute(f"import os\nos.chdir(r'{directory}')")
         if path.endswith(".py"):
             self.convert_by_name(path, "script")
         try:

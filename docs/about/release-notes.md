@@ -19,6 +19,10 @@ pheasant, version 2.2.33 from /path/to/pheasant (Python 3.7)
 
 ## Change log
 
+### Version 2.4.2 (2020-03-11)
+
+* Current directory (`os.curdir`) of Python jupyter kernel is automatically changed to the directory in which the current page exists.
+
 ### Version 2.4.1 (2020-03-11)
 
 * To disable numbering, in mkdocs.yaml:
