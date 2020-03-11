@@ -23,12 +23,12 @@ pheasant, version 2.2.33 from /path/to/pheasant (Python 3.7)
 
 * To disable numbering, in mkdocs.yaml:
 
-```yaml
+~~~yaml
 plugins:
   - pheasant:
       header:
         disabled: true
-```
+~~~
 
 ### Version 2.4.0 (2020-03-08)
 
