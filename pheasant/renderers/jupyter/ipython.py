@@ -98,7 +98,10 @@ def holoviews_to_html(obj) -> Tuple[str, Dict]:
     import holoviews as hv
 
     renderer = hv.renderer("bokeh")
-    html = renderer.html(obj, fmt=None)  # fmt=None is important!
+    try:
+        html = renderer.html(obj, fmt=None)  # fmt=None is important!
+    except ValueError:
+        raise
     return html, {"module": "holoviews"}
 
 

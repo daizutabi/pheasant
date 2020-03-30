@@ -8,8 +8,8 @@ matrix:
 
 install:
   - pip install pycodestyle pyflakes mypy coveralls pandas sympy
-  - pip install bokeh==1.4.0
   - pip install pytest pytest-cov altair holoviews matplotlib mkdocs
+  - pip install bokeh==1.4.0
   - pip install -e .
 
 before_script:

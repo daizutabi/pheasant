@@ -16,8 +16,8 @@ install:
   - conda create -q -n test-environment python=%PYTHON_VERSION%
   - activate test-environment
   - pip install pandas sympy
-  - pip install bokeh==1.4.0
   - pip install pytest pytest-cov altair holoviews matplotlib mkdocs
+  - pip install bokeh==1.4.0
   - pip install -e .
 
 test_script:
