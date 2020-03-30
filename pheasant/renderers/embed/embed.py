@@ -91,7 +91,7 @@ def get_language_from_path(path: str) -> str:
     _, ext = os.path.splitext(path)
     if ext in [".py"]:
         return "python"
-    elif ext in [".yml"]:
+    elif ext in [".yml", ".yaml"]:
         return "yaml"
     else:
         return "text"
