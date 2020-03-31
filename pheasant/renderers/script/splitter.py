@@ -32,14 +32,14 @@ def split_block_from_cell(source: str) -> Iterator[Tuple[str, str]]:
     start = 0
     for match in CELL_PATTERN.finditer(source):
         if start:
-            if kind == 'Comment':
+            if kind == "Comment":
                 yield from split_block_from_line(source[start : match.start()])
             else:
                 yield kind, source[start : match.start()]
         yield "Cell", match.group()
         start = match.end()
         kind = "Comment" if "markdown" in match.group() else "Code"
-    if kind == 'Comment':
+    if kind == "Comment":
         yield from split_block_from_line(source[start:])
     else:
         yield kind, source[start:]
@@ -52,6 +52,13 @@ def split_block_from_line(source) -> Iterator[Tuple[str, str]]:
         if current in ["Comment", "Blank"]:
             if kind == current:
                 lines.append(line)
+            elif (
+                kind == "Code"
+                and current == "Comment"
+                and not lines[-1].startswith("# -")
+            ):
+                lines.append(line)
+                current = "Code"
             else:
                 yield current, "\n".join(lines) + "\n"
                 current = kind

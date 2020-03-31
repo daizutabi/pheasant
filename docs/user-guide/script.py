@@ -12,42 +12,41 @@
 # be recognized as a Markdown cell, `#` must be at the begining of lines. But we can
 # insert a blank line to make a paragraph.
 
-# Normal Python code is treated as a code cell as you expect. A code cell can contain
-# any comments as long as the comments don't start at the begining of line.
+# Normal Python code is treated as a code cell as you expect.
 
 
 def add(x: int, y: int) -> int:
     """Add `x` and `y`."""
-    return x + y  # a comment in a code cell.
+    return x + y
 
 
 def sub(x: int, y: int) -> int:
     """Substract `y` from `x`."""
-    return x - y  # a comment in a code cell.
+    return x - y
 
 
 # When a comment starts at the begining of line after a code block, it divides the
 # source into a code cell and a Markdown cell. This new Markdown cell will continue
 # until next Python code appears.
 
-# If you want to include a comment at the begining of line, you can write like this:
+# If you want to include a comment at the begining of line, you can write the comment
+# just above the following codes without a blank line.
 
 # ~~~python
-# # !First comment in a code cell.
-# a = 1
+# # First comment in a code cell.
+# a = 2
 # ~~~
 
 # becomes
 
-# !First comment in a code cell.
-a = 1
+# First comment in a code cell.
+a = 2
 
 # Despite of a Markdown cell, you may want to devide successive codes into separate
 # cells. This can be done by putting a special inline comment to define a cell. The
 # comment pattern is `# -`. For example,
 
 # ~~~python
-# # * a markdown cell
 # a, b, c = 1, 2, 3
 # a
 # # -
@@ -56,7 +55,6 @@ a = 1
 
 # becomes
 
-# * a markdown cell
 a, b, c = 1, 2, 3
 a
 # -

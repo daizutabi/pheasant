@@ -6,8 +6,7 @@ from pheasant.renderers.script.splitter import split
 def test_split_docstring():
     source = '# test\na=1\n"""\ndocstring 1\n\ndocstring 2\n  """\na\n'
     splitter = split(source)
-    assert next(splitter) == ("Comment", "# test\n")
-    assert next(splitter) == ("Code", "a=1\n")
+    assert next(splitter) == ("Code", "# test\na=1\n")
     assert next(splitter) == ("Docstring", '"""\ndocstring 1\n\ndocstring 2\n  """\n')
     assert next(splitter) == ("Code", "a\n")
 

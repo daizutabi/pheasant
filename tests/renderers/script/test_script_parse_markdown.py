@@ -20,13 +20,13 @@ def test_python_parse_source(convert):
 
 
 def test_python_parse_code(convert):
-    assert convert("# # Title\na=1\n") == "# Title\n```python\na=1\n```\n"
+    assert convert("# # Title\na=1\n") == "```python\n# # Title\na=1\n```\n"
     assert convert("# # Title\n\na=1\n") == "# Title\n\n```python\na=1\n```\n"
-    assert convert("# a\na=1\n") == "a\n```python\na=1\n```\n"
+    assert convert("# a\na=1\n") == "```python\n# a\na=1\n```\n"
 
 
 def test_python_parse_code_escaped(convert):
     assert (
-        convert("# a\n# ~~~\n# abc\n# ~~~\na=1\n")
-        == "a\n~~~\nabc\n~~~\n```python\na=1\n```\n"
+        convert("# a\n# ~~~\n# abc\n# ~~~\n\na=1\n")
+        == "a\n~~~\nabc\n~~~\n\n```python\na=1\n```\n"
     )
