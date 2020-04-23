@@ -5,18 +5,19 @@ matrix:
   include:
     - os: linux
       python: 3.7
+    - os: linux
+      python: 3.8
 
 install:
   - pip install pycodestyle pyflakes mypy coveralls pandas sympy
   - pip install pytest pytest-cov altair matplotlib mkdocs
-  - pip install holoviews==1.12.7
-  - pip install bokeh==1.4.0
+  - pip install holoviews, bokeh
   - pip install -e .
 
 before_script:
   - pycodestyle pheasant
   - pyflakes pheasant
-  # - mypy pheasant
+   - mypy pheasant
   - pycodestyle tests
   - pyflakes tests
 

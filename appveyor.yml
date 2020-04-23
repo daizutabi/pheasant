@@ -4,6 +4,8 @@ environment:
   matrix:
     - PYTHON_VERSION: 3.7
       MINICONDA: C:\Miniconda37-x64
+    - PYTHON_VERSION: 3.8
+      MINICONDA: C:\Miniconda37-x64
 
 init:
   - "ECHO %PYTHON_VERSION% %MINICONDA%"
@@ -17,8 +19,7 @@ install:
   - activate test-environment
   - pip install pandas sympy
   - pip install pytest pytest-cov altair matplotlib mkdocs
-  - pip install holoviews==1.12.7
-  - pip install bokeh==1.4.0
+  - pip install holoviews, bokeh
   - pip install -e .
 
 test_script:
