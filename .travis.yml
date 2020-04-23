@@ -11,7 +11,7 @@ matrix:
 install:
   - pip install pycodestyle pyflakes mypy coveralls pandas sympy
   - pip install pytest pytest-cov altair matplotlib mkdocs
-  - pip install holoviews, bokeh
+  - pip install holoviews bokeh
   - pip install -e .
 
 before_script:

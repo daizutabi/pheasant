@@ -19,7 +19,7 @@ install:
   - activate test-environment
   - pip install pandas sympy
   - pip install pytest pytest-cov altair matplotlib mkdocs
-  - pip install holoviews, bokeh
+  - pip install holoviews bokeh
   - pip install -e .
 
 test_script:
