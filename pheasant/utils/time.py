@@ -29,4 +29,4 @@ def format_timedelta_human(timedelta) -> str:
     elif sec >= 1e-6:
         return f"{sec*1e6:.00f}us"
     else:
-        return f"<1us"
+        return "<1us"

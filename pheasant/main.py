@@ -48,7 +48,7 @@ def run(paths, ext, max, restart, shutdown, force, verbose):
     click.secho(f"collected {length} files.", bold=True)
 
     if length > max:  # pragma: no cover
-        click.secho(f"Too many files. Aborted.", fg="yellow")
+        click.secho("Too many files. Aborted.", fg="yellow")
         sys.exit()
 
     if force:
@@ -82,7 +82,7 @@ def convert(paths, ext, max, restart, shutdown, force, verbose):
     click.secho(f"collected {length} files.", bold=True)
 
     if length > max:  # pragma: no cover
-        click.secho(f"Too many files. Aborted.", fg="yellow")
+        click.secho("Too many files. Aborted.", fg="yellow")
         sys.exit()
 
     if force:
@@ -135,7 +135,7 @@ def clean(paths, ext, yes):
     caches = [page.cache for page in pages if page.has_cache]
 
     if not caches:
-        click.secho(f"No cache found. Aborted.", bold=True)
+        click.secho("No cache found. Aborted.", bold=True)
         sys.exit()
 
     for cache in caches:

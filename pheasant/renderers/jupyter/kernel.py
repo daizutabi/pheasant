@@ -125,12 +125,12 @@ class Kernel:
 
 def code_for_inspect(func: str) -> str:
     codes = [
-        f"__dummy__ = _",
-        f"if isinstance(__dummy__, list):",
+        "__dummy__ = _",
+        "if isinstance(__dummy__, list):",
         f"    __dummy__ = '\\n\\n'.join(inspect.{func}(x) for x in __dummy__)",
-        f"else:",
+        "else:",
         f"    __dummy__ = inspect.{func}(__dummy__)",
-        f"__dummy__",
+        "__dummy__",
     ]
     return "\n".join(codes)
 

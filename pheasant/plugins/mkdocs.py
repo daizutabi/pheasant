@@ -27,7 +27,7 @@ class PheasantPlugin(BasePlugin):
         ("header", config_options.Type(dict, default={})),
     )
     converter = Pheasant()
-    logger.info(f"[Pheasant] Converter created.")
+    logger.info("[Pheasant] Converter created.")
 
     def on_config(self, config):
         self.converter.jupyter.set_config(enabled=self.config["jupyter"])
@@ -44,7 +44,7 @@ class PheasantPlugin(BasePlugin):
         self.config["extra_css"] = list(config["extra_css"])
         self.config["extra_javascript"] = list(config["extra_javascript"])
 
-        logger.info(f"[Pheasant] Converter configured.")
+        logger.info("[Pheasant] Converter configured.")
 
         if config["nav"]:
             config["nav"] = build_nav(config["nav"], config["docs_dir"])
