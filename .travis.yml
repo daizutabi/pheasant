@@ -17,7 +17,7 @@ install:
 before_script:
   - pycodestyle pheasant
   - pyflakes pheasant
-   - mypy pheasant
+  - mypy pheasant
   - pycodestyle tests
   - pyflakes tests
 
