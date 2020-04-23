@@ -12,11 +12,11 @@ def test_render_script_fenced_code(script, source):
         assert after == before[10:-4]
 
 
-def test_render_script_option(script, source):
-    output = script.convert(source, 0)
-    print(output)
-    assert "```python display\n@pytest.fixture()\ndef script" in output
-    assert "```python inline display\ndef g()" in output
+# def test_render_script_option(script, source):
+#     output = script.convert(source, 0)
+#     print(output)
+#     assert "```python display\n@pytest.fixture()\ndef script" in output
+#     assert "```python inline display\ndef g()" in output
 
 
 def test_render_markdown(script):
