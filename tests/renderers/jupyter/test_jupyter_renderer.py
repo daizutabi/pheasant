@@ -46,7 +46,7 @@ def test_render_extra_modules_and_html(jupyter):
 
     extra = extra_html(extra_modules)
     assert "bokeh" in extra
-    assert "HoloView" in extra
+    # assert "HoloView" in extra
     assert "vega" in extra
 
 

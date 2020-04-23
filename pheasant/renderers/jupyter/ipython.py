@@ -60,6 +60,7 @@ def register_sympy_formatter(formatters, latex_printer=None):  # pragma: no cove
         return
 
     from sympy import latex
+
     latex = latex_printer or latex
 
     def sympy_to_latex(obj) -> Tuple[str, Dict]:
@@ -98,11 +99,13 @@ def holoviews_to_html(obj) -> Tuple[str, Dict]:
     import holoviews as hv
 
     renderer = hv.renderer("bokeh")
-    try:
-        html = renderer.html(obj, fmt=None)  # fmt=None is important!
-    except ValueError:
-        raise
-    return html, {"module": "holoviews"}
+    # try:
+    #     html = renderer.html(obj, fmt=None)  # fmt=None is important!
+    # except ValueError:
+    #     raise
+    # return html, {"module": "holoviews"}
+    data, metadata = renderer.components(obj)
+    return data["text/html"], {"module": "holoviews"}
 
 
 def holoviews_extra_resources() -> Dict[str, List[str]]:
@@ -251,11 +254,14 @@ def get_extra_module(outputs: List[dict]) -> str:
 def _extra_resources(module: str) -> Dict[str, List[str]]:
     module_dict = {
         "bokeh": bokeh_extra_resources,
-        "holoviews": holoviews_extra_resources,
+        # "holoviews": holoviews_extra_resources,
         "altair": altair_extra_resources,
         "sympy": sympy_extra_resources,
     }
-    return module_dict[module]()
+    if module not in module_dict:
+        return {}
+    else:
+        return module_dict[module]()
 
 
 def extra_resources(modules: Iterable[str]) -> Dict[str, List[str]]:

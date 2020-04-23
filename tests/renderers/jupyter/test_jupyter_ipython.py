@@ -25,7 +25,7 @@ def test_ipython_bokeh():
 def test_ipython_holoviews():
     curve = hv.Curve(((1, 2), (3, 4)))
     html, meta = ipython.holoviews_to_html(curve)
-    assert html.startswith("<div style")
+    assert html.startswith("<div ")
     assert meta == {"module": "holoviews"}
 
 

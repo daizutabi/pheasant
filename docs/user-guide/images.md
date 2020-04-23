@@ -1,6 +1,6 @@
 # Image
 
-In this section, we study how to embed images created by [Matplotlib](https://matplotlib.org/), [Bokeh](https://bokeh.pydata.org/en/latest/), [HoloViews](https://holoviews.org/), and [Altair](https://altair-viz.github.io/) libraries.
+In this section, we study how to embed images created by [Matplotlib](https://matplotlib.org/), [Bokeh](https://bokeh.pydata.org/en/latest/), and [Altair](https://altair-viz.github.io/) libraries.
 
 ## Matplotlib
 
@@ -52,30 +52,6 @@ print('[div]:', div[:40].strip(), '...')
 Pheasant uses this functionality inside automatically. You can get a Bokeh plot just write `{{#plot}}`:
 
 {{plot}}
-
-## HoloViews
-
-First, a normal HoloViews object.
-
-```python
-import holoviews as hv
-hv.Curve(([1, 2, 4], [2, 3, 4]))
-```
-
-HoloViews provides an explorable multi-dimensional dictionary of HoloViews objects called [HoloMap](https://holoviews.org/reference/containers/bokeh/HoloMap.html). Pheasant can also embed this interactive object in your MkDocs documents as well as other normal HoloViews objects.
-
-```python
-import numpy as np
-
-def sine_curve(phase, freq):
-    xvals = [0.1* i for i in range(100)]
-    return hv.Curve((xvals, [np.sin(phase+freq*x) for x in xvals]))
-
-frequencies = [0.5, 0.75, 1.0, 1.25]
-phases = [0, np.pi/2, np.pi, 3*np.pi/2]
-curve_dict = {(p, f): sine_curve(p,f) for p in phases for f in frequencies}
-hv.HoloMap(curve_dict, kdims=['phase', 'frequency'])
-```
 
 ## Altair
 

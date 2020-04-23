@@ -46,7 +46,7 @@ def test_execute_holoviews():
     code = "hv.Curve(((1, 2), (3, 4)))"
     outputs = kernel.execute(code)
     print(outputs)
-    assert outputs[0]["data"]["text/html"].startswith("<div style")
+    assert outputs[0]["data"]["text/html"].startswith("<div ")
     assert outputs[0]["metadata"]["text/html"] == {"module": "holoviews"}
 
 

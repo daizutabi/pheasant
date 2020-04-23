@@ -221,3 +221,10 @@ Cell
 ~~~copy
 #Code {{ func # inspect }}
 ~~~
+
+
+```python
+import holoviews as hv
+
+hv.Curve(([1, 2, 4], [2, 3, 4]))
+```
