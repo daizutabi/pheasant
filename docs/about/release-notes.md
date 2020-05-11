@@ -14,10 +14,20 @@ You can check your currently installed version using `pheasant --version`:
 
 ~~~bash terminal
 $ pheasant --version
-pheasant, version 2.2.33 from /path/to/pheasant (Python 3.7)
+pheasant, version 2.5.2 from /path/to/pheasant (Python 3.7)
 ~~~
 
 ## Change log
+
+### Version 2.5.2 (2020-05-11)
+
+* Default behavior changed: Now, header numbering doesn't occur unless users set it explicitly. To enable numbering, in mkdocs.yaml:
+
+~~~yaml
+plugins:
+  - pheasant:
+      nav_number: true
+~~~
 
 ### Version 2.4.2 (2020-03-11)
 

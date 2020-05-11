@@ -22,16 +22,20 @@ markdown_extensions.append(".py")
 class PheasantPlugin(BasePlugin):
     config_scheme = (
         ("jupyter", config_options.Type(bool, default=True)),
+        ("nav_number", config_options.Type(bool, default=False)),
         ("dirty", config_options.Type(bool, default=True)),
         ("version", config_options.Type(str, default="")),
-        ("header", config_options.Type(dict, default={})),
+        ("header", config_options.Type(dict, default={})),  # for backward-compatibility
     )
     converter = Pheasant()
     logger.info("[Pheasant] Converter created.")
 
     def on_config(self, config):
         self.converter.jupyter.set_config(enabled=self.config["jupyter"])
-        self.converter.header.set_config(self.config["header"])
+        numbering = self.config['nav_number']
+        if 'disabled' in self.config['header'] and self.config['header']['disabled']:
+            numbering = False
+        self.converter.header.set_config(numbering=numbering)
 
         if self.config["version"]:
             try:

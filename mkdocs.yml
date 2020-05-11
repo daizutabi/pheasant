@@ -13,6 +13,7 @@ plugins:
   - search
   - pheasant:
       version: pheasant
+      nav_number: true
 
 nav:
   - Home: index.md

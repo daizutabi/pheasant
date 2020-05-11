@@ -26,7 +26,7 @@ class Header(Renderer):
         self.set_template("header")
         self.header_kind.update(fig="figure", tab="table", eq="equation")
         prefix = dict(figure="Figure", table="Table")
-        self.set_config(prefix=prefix, number=dict(separator="."))
+        self.set_config(prefix=prefix, number=dict(separator="."), numbering=True)
         self.start()
 
     def start(self) -> None:
@@ -82,7 +82,7 @@ class Header(Renderer):
         depth = len(context["prefix"]) - 1
         title = context["title"]
 
-        numbered = False
+        numbering = False
         if title.startswith("##"):
             title = title[2:]
             self.meta["ignored_path"].add(self.page.path)
@@ -93,17 +93,15 @@ class Header(Renderer):
             pass
         elif depth > self.meta["ignored_depth"]:
             pass
-        elif 'disabled' in self.config and self.config['disabled']:
-            pass
-        else:
+        elif self.config["numbering"] or kind != 'header':
             self.meta["ignored_depth"] = 100
-            numbered = True
+            numbering = True
 
         if title.startswith("!"):
             title = title[1:]
             self.number_list[kind] = [0] * 6
 
-        if numbered:
+        if numbering:
             title, number_list = split_number(title)
             if number_list:
                 self.number_list[kind] = [0] * 6
@@ -323,5 +321,5 @@ def split_link(title: str) -> Tuple[str, str]:
 def format_tag(fmt: str, number_list, title) -> str:
     for k in range(len(number_list)):
         fmt = fmt.replace(str(k + 1), str(number_list[k]))
-    fmt = fmt.replace('title', title)
+    fmt = fmt.replace("title", title)
     return fmt
