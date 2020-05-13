@@ -112,10 +112,10 @@ class PheasantPlugin(BasePlugin):
     def on_post_page(self, output, page, config):  # This is needed for holoviews.
         return output.replace('.js" defer></script>', '.js"></script>')
 
-    def on_serve(self, server, config):
+    def on_serve(self, server, config, builder):
         self.converter.dirty = self.config["dirty"]
         watcher = server.watcher
-        builder = list(watcher._tasks.values())[0]["func"]
+        # builder = list(watcher._tasks.values())[0]["func"]
         root = os.path.join(os.path.dirname(pheasant.__file__), "theme")
         server.watch(root, builder)
         watcher.ignore_dirs(".pheasant_cache")
