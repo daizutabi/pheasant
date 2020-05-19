@@ -88,15 +88,15 @@ class Script(Renderer):
                     self.comment.option = ""
                 else:
                     yield source
-            elif kind == 'Cell':
+            elif kind == "Cell":
                 if self.comment.max_line_length > 0:
                     yield source
             elif kind == "Docstring":
                 match = DOCSTRING_PATTERN.match(source)
                 quote, source = match.groups()  # type: ignore
-                markdown = "markdown\n"
-                if source.startswith(markdown):
-                    source = source[len(markdown) :]
+                if source.startswith("markdown\n") or source.startswith("md\n"):
+                    index = source.index("\n")
+                    markdown, source = source[: index + 1], source[index + 1 :]
                     if not source.endswith("\n"):
                         source = source + "\n"
                     source = add_prefix(source)
