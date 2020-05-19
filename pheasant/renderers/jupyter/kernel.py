@@ -115,9 +115,7 @@ class Kernel:
     def inspect(self, code: str, output_hook=None) -> List:
         self.execute("import inspect")
         self.execute(code, output_hook=output_hook)
-        print(CODE_FOR_INSPECT)
         outputs = self.execute(CODE_FOR_INSPECT)
-        print(outputs)
         if len(outputs) == 1 and outputs[0]["type"] == "execute_result":
             source = ast.literal_eval(outputs[0]["data"]["text/plain"])
             return [dict(type="stream", name="source", text=source)]
