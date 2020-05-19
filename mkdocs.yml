@@ -16,7 +16,7 @@ plugins:
       nav_number: true
 
 nav:
-  - Home: index.md
+  - Pheasant: index.md
   - User Guide:
     - Images: user-guide/images.md
     - Embed: user-guide/embed.md
