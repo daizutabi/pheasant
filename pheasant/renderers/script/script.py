@@ -16,11 +16,13 @@ class Comment(Renderer):
     HEADER_PATTERN = r"^(?P<prefix>#+.*? +?)(?P<title>.*?\n)"
     FENCED_CODE_PATTERN = r"^(?P<mark>~{3,}|`{3,}).*?\n(?P=mark)\n"
     LIST_PATTERN = r"^ *?(?P<prefix>[-\+\*]|\d+\.) +.*?\n"
+    ADMONITION_PATTERN = r"^!!! .*(?!^    )"
 
     def init(self):
         self.register(Comment.HEADER_PATTERN, self.render_header)
         self.register(Comment.FENCED_CODE_PATTERN, self.render_fenced_code)
         self.register(Comment.LIST_PATTERN, self.render_list)
+        self.register(Comment.ADMONITION_PATTERN, self.render_admonition)
 
     def render_header(self, context, splitter, parser) -> Iterator[str]:
         prefix, title = context["prefix"], context["title"]
@@ -47,6 +49,16 @@ class Comment(Renderer):
 
     def render_list(self, context, splitter, parser) -> Iterator[str]:
         yield context["_source"]
+
+    def render_admonition(self, context, splitter, parser) -> Iterator[str]:
+        lines = context["_source"].strip().split("\n")
+        header = lines[0]
+        content = "\n".join(line[4:] for line in lines[1:]) + "\n"
+        content = format_source(content, self.max_line_length - 4)
+        lines = content.strip().split("\n")
+        content = "\n".join("    " + line for line in lines) + "\n"
+        output = "\n".join([header, content])
+        yield output
 
     def decorate(self, cell) -> None:
         if cell.match is None:
@@ -84,7 +96,7 @@ class Script(Renderer):
             elif kind == "Code":
                 if self.comment.max_line_length == 0:
                     source = f"```python{self.comment.option}\n{source}```\n"
-                    yield source.replace("\n# !", "\n# ")
+                    yield source
                     self.comment.option = ""
                 else:
                     yield source

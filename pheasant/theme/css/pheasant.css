@@ -45,10 +45,11 @@ h2, h3, h4, h5 {
   margin: 1px auto 0px auto;
 }
 
-.pheasant-header .figure .caption,
-.pheasant-header .table .caption,
-.pheasant-header .other .caption {
+.pheasant-header div.figure p.caption,
+.pheasant-header div.table p.caption,
+.pheasant-header div.other p.caption {
   font-size: 0.95rem;
+  font-style: normal;
 }
 
 .pheasant-header .other .caption {
@@ -179,12 +180,15 @@ h2, h3, h4, h5 {
   background: transparent;
 }
 
-.pheasant-fenced-code code {
+.pheasant-fenced-code pre code {
   display: block;
   color: black;
   background: transparent;
   padding: 0px;
   overflow-x: auto;
+  border: none;
+  font-size: 0.9em;
+  line-height: 1.3em;
 }
 
 .pheasant-fenced-code .input .code {

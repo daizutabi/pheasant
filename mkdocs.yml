@@ -8,6 +8,7 @@ repo_url: https://github.com/daizutabi/pheasant/
 edit_uri: ""
 
 theme: ivory
+# theme: readthedocs
 
 plugins:
   - search

@@ -179,7 +179,7 @@ In addition, Pheasant provides an easy way to number objects regardless of wheth
 
 ### Hyperlink
 
-Numbered objects are linked from Markdown source using `{##<tag>#}`:
+Numbered objects are linked from Markdown source like below:
 
 ~~~markdown
 For example, go to Fig. {##cat#}
