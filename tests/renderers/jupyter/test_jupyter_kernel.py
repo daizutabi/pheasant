@@ -102,4 +102,4 @@ def test_inspect():
     outputs = kernel.inspect("Jupyter")
     assert outputs[0]["type"] == "stream"
     assert outputs[0]["name"] == "source"
-    assert outputs[0]["text"].startswith('class Jupyter')
+    assert outputs[0]["text"].startswith('@dataclass')

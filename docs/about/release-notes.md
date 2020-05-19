@@ -19,6 +19,10 @@ pheasant, version 2.5.3 from /path/to/pheasant (Python 3.7)
 
 ## Change log
 
+### Version 2.5.5 (2020-05-19)
+
+* Inspect of dataclass is supported.
+
 ### Version 2.5.4 (2020-05-19)
 
 * [Admonition](https://squidfunk.github.io/mkdocs-material/extensions/admonition/) supported.

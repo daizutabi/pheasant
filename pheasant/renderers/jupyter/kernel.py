@@ -112,10 +112,12 @@ class Kernel:
         update_report(self.report, msg)
         return list(stream_joiner(outputs))
 
-    def inspect(self, code: str, func: str = "getsource", output_hook=None) -> List:
+    def inspect(self, code: str, output_hook=None) -> List:
         self.execute("import inspect")
         self.execute(code, output_hook=output_hook)
-        outputs = self.execute(code_for_inspect(func))
+        print(CODE_FOR_INSPECT)
+        outputs = self.execute(CODE_FOR_INSPECT)
+        print(outputs)
         if len(outputs) == 1 and outputs[0]["type"] == "execute_result":
             source = ast.literal_eval(outputs[0]["data"]["text/plain"])
             return [dict(type="stream", name="source", text=source)]
@@ -123,16 +125,38 @@ class Kernel:
             return outputs
 
 
-def code_for_inspect(func: str) -> str:
-    codes = [
-        "__dummy__ = _",
-        "if isinstance(__dummy__, list):",
-        f"    __dummy__ = '\\n\\n'.join(inspect.{func}(x) for x in __dummy__)",
-        "else:",
-        f"    __dummy__ = inspect.{func}(__dummy__)",
-        "__dummy__",
-    ]
-    return "\n".join(codes)
+CODE_FOR_INSPECT = """
+def getsource(obj):
+    if hasattr(obj, '__dataclass_params__'):
+        is_dataclass = True
+    else:
+        is_dataclass = False
+    source = inspect.getsource(obj)
+    defaults = [('init', True), ('repr', True), ('eq', True), ('order', False),
+                ('unsafe_hash', False), ('frozen', False)]
+    if is_dataclass and not source.startswith('@dataclass'):
+        args = []
+        params = obj.__dataclass_params__
+        if params.init is False:
+            args.append('init=False')
+        if params.repr is False:
+            args.append('repr=False')
+        if params.eq is False:
+            args.append('eq=False')
+        if params.order is True:
+            args.append('order=True')
+        if params.unsafe_hash is True:
+            args.append('unsafe_hash=True')
+        if params.frozen is True:
+            args.append('frozen=True')
+        if args:
+            args = "(" + ", ".join(args) + ")"
+        else:
+            args = ""
+        source = f"@dataclass{args}\\n{source}"
+    return source
+getsource(_)
+"""
 
 
 @dataclass
