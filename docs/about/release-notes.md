@@ -14,10 +14,14 @@ You can check your currently installed version using `pheasant --version`:
 
 ~~~bash terminal
 $ pheasant --version
-pheasant, version 2.5.2 from /path/to/pheasant (Python 3.7)
+pheasant, version 2.5.3 from /path/to/pheasant (Python 3.7)
 ~~~
 
 ## Change log
+
+### Version 2.5.3 (2020-05-19)
+
+* Docstring like `"""markdown` or `"""md` is converted into Markdown in python file.
 
 ### Version 2.5.2 (2020-05-11)
 
