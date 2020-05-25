@@ -50,8 +50,8 @@ class PheasantPlugin(BasePlugin):
 
         logger.info("[Pheasant] Converter configured.")
 
-        if config["nav"]:
-            config["nav"] = build_nav(config["nav"], config["docs_dir"])
+        # if config["nav"]:
+        #     config["nav"] = build_nav(config["nav"], config["docs_dir"])
         return config
 
     def on_files(self, files, config):
@@ -101,8 +101,8 @@ class PheasantPlugin(BasePlugin):
             return "Skipped."
 
     def on_page_content(self, html, page, config, files):
-        if page.toc.items:
-            page.title = page.toc.items[0].title
+        # if page.toc.items:
+        #     page.title = page.toc.items[0].title
         if page.file.abs_src_path not in self.converter.pages:
             return html
         else:
