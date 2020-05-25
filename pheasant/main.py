@@ -2,6 +2,7 @@ import os
 import sys
 
 import click
+import yaml
 
 from pheasant import __version__
 from pheasant.core.page import Pages
@@ -61,8 +62,36 @@ def run(paths, ext, max, restart, shutdown, force, verbose):
 
     converter = Pheasant(restart=restart, shutdown=shutdown, verbose=verbose)
     converter.jupyter.safe = True
+    set_config(converter)
     converter.convert_from_files(page.path for page in pages)
     click.secho(f"{converter.log.info}", bold=True)
+
+
+def set_config(converter):
+    if not os.path.exists("mkdocs.yml"):
+        return
+    with open("mkdocs.yml", "r") as f:
+        config = yaml.safe_load(f)
+    plugins = config.get("plugins", [])
+    for plugin in plugins:
+        if isinstance(plugin, dict) and 'pheasant' in plugin:
+            config = plugin['pheasant']
+            break
+    else:
+        return
+    cur_dir = config.get("cur_dir", 'page')
+    confing_dir = os.getcwd()
+    if cur_dir == "docs":
+        cur_dir = os.path.join(confing_dir, 'docs')
+    elif cur_dir == "config":
+        cur_dir = confing_dir
+    sys_paths = config.get("sys_paths", [])
+    sys_paths = [os.path.join(confing_dir, path) for path in sys_paths]
+    sys_paths = [os.path.normpath(path) for path in sys_paths]
+    converter.jupyter.set_config(
+        cur_dir=cur_dir,
+        sys_paths=sys_paths
+    )
 
 
 @cli.command(help="Convert source files to rendered Markdown.")

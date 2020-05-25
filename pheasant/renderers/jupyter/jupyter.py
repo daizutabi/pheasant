@@ -157,13 +157,7 @@ class Jupyter(Renderer):
                 codes = [self.language + "> " + line for line in code.split("\n")]
                 print("\n".join(codes))
             func = kernel.inspect if "inspect" in context["option"] else kernel.execute
-            try:
-                outputs = func(code, output_hook=output_hook if verbose else None)
-            except NameError:
-                if self.page.path:
-                    self.page.cache.delete()
-                    self.progress_bar.finish(done=False)
-                raise NameError(f"Cell number: {self.count}\n{context['code']}")
+            outputs = func(code, output_hook=output_hook if verbose else None)
             report = format_report(kernel.report)
             report["count"] = self.count
             return outputs, report
@@ -222,7 +216,7 @@ class Jupyter(Renderer):
 
 
 def split_option(code: str) -> Tuple[str, str]:
-    if "#" not in code:
+    if "#" not in code or code.strip().startswith("#"):
         return code, ""
     code, option = code.split("#")
     return code.strip(), option.strip()

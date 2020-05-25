@@ -195,6 +195,13 @@ class Kernels:
             raise KeyError(f"No kernel found for language {language}.")
         return self.get_kernel(kernel_name)
 
+    def __contains__(self, language: str) -> bool:
+        try:
+            kernels[language]
+        except KeyError:
+            return False
+        return True
+
     def shutdown(self):
         for kernel_name in list(self.kernels.keys()):
             kernel = self.kernels.pop(kernel_name)
@@ -247,8 +254,8 @@ def output_from_msg(msg: Dict[str, Any]) -> Optional[dict]:
         return dict(type=msg_type, name=content["name"], text=content["text"])
     elif msg_type == "error":
         traceback = "\n".join([strip_ansi(tr) for tr in content["traceback"][1:-1]])
-        if content["ename"] == "NameError":
-            raise NameError(content["evalue"])
+        # if content["ename"] == "NameError":
+        #     raise NameError(content["evalue"])
         return dict(
             type=msg_type,
             ename=content["ename"],

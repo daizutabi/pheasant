@@ -46,9 +46,21 @@ class Pheasant(Converter):
         -------
         Converted output text.
         """
-        if self.jupyter.config["enabled"]:
-            directory = os.path.dirname(path)
-            kernels["python"].execute(f"import os\nos.chdir(r'{directory}')")
+        config = self.jupyter.config
+        if config["enabled"] and 'python' in kernels:
+            kernel = kernels['python']
+            cur_dir = config.get("cur_dir")
+            if cur_dir == "page":
+                directory = os.path.dirname(path)
+                kernel.execute(f"import os\nos.chdir(r'{directory}')")
+            elif cur_dir:
+                kernel.execute(f"import os\nos.chdir(r'{cur_dir}')")
+            sys_paths = config.get("sys_paths", [])
+            if sys_paths:
+                kernel.execute("import sys")
+                for p in sys_paths:
+                    code = f"if r'{p}' not in sys.path:\n  sys.path.insert(0, r'{p}')\n"
+                    kernel.execute(code)
         if path.endswith(".py"):
             self.convert_by_name(path, "script")
         try:

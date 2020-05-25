@@ -22,6 +22,8 @@ markdown_extensions.append(".py")
 class PheasantPlugin(BasePlugin):
     config_scheme = (
         ("jupyter", config_options.Type(bool, default=True)),
+        ("cur_dir", config_options.Type(str, default="page")),
+        ("sys_paths", config_options.Type(list, default=[])),
         ("nav_number", config_options.Type(bool, default=False)),
         ("dirty", config_options.Type(bool, default=True)),
         ("version", config_options.Type(str, default="")),
@@ -31,9 +33,22 @@ class PheasantPlugin(BasePlugin):
     logger.info("[Pheasant] Converter created.")
 
     def on_config(self, config):
-        self.converter.jupyter.set_config(enabled=self.config["jupyter"])
-        numbering = self.config['nav_number']
-        if 'disabled' in self.config['header'] and self.config['header']['disabled']:
+        cur_dir = self.config["cur_dir"]
+        confing_dir = os.path.dirname(config["config_file_path"])
+        if cur_dir == "docs":
+            cur_dir = config["docs_dir"]
+        elif cur_dir == "config":
+            cur_dir = confing_dir
+        sys_paths = self.config["sys_paths"]
+        sys_paths = [os.path.join(confing_dir, path) for path in sys_paths]
+        sys_paths = [os.path.normpath(path) for path in sys_paths]
+        self.converter.jupyter.set_config(
+            enabled=self.config["jupyter"],
+            cur_dir=cur_dir,
+            sys_paths=sys_paths
+        )
+        numbering = self.config["nav_number"]
+        if "disabled" in self.config["header"] and self.config["header"]["disabled"]:
             numbering = False
         self.converter.header.set_config(numbering=numbering)
 

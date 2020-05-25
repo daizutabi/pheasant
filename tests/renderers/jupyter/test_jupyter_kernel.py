@@ -53,11 +53,6 @@ def test_kernel():
     kernel = kernels.get_kernel(kernel_name)
     kernel.execute("a=1")
     assert kernel.execute("a")[0]["data"]["text/plain"] == "1"
-    kernel.restart()
-    with pytest.raises(NameError):
-        kernel.execute("a")
-
-    assert kernel is kernels["python"]
 
 
 def test_output_hook_factory():

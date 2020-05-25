@@ -14,10 +14,19 @@ You can check your currently installed version using `pheasant --version`:
 
 ~~~bash terminal
 $ pheasant --version
-pheasant, version 2.5.3 from /path/to/pheasant (Python 3.7)
+pheasant, version 2.5.6 from /path/to/pheasant (Python 3.7)
 ~~~
 
 ## Change log
+
+### Version 2.5.6 (2020-05-26)
+
+* New options for MkDocs plugin (for Python only).
+    - `cur_dir`: Change current directory.
+        - `page`: each page
+        - `docs`: `docs_dir` of `mkdocs.yml`
+        - `config`: directory of `mkdocs.yml`.
+    - `sys_paths`: List of paths to insert to `sys.path`.
 
 ### Version 2.5.5 (2020-05-19)
 
