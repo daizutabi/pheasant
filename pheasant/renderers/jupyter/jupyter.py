@@ -97,6 +97,10 @@ class Jupyter(Renderer):
 
     @commentable("code")
     def render_inline_code(self, context, splitter, parser) -> Iterator[str]:
+        if context['code'].strip() == "# cache:clear":
+            self.cache = []
+            yield ""
+            return
         code, context["option"] = split_option(context["code"])
         if "inspect" in context["option"]:
             source = f"\n```python inspect hide-input\n{code}\n```\n"
