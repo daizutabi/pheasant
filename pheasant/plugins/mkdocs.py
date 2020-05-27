@@ -42,10 +42,9 @@ class PheasantPlugin(BasePlugin):
         sys_paths = self.config["sys_paths"]
         sys_paths = [os.path.join(confing_dir, path) for path in sys_paths]
         sys_paths = [os.path.normpath(path) for path in sys_paths]
+        self.config["sys_paths"] = sys_paths
         self.converter.jupyter.set_config(
-            enabled=self.config["jupyter"],
-            cur_dir=cur_dir,
-            sys_paths=sys_paths
+            enabled=self.config["jupyter"], cur_dir=cur_dir, sys_paths=sys_paths
         )
         numbering = self.config["nav_number"]
         if "disabled" in self.config["header"] and self.config["header"]["disabled"]:
@@ -134,7 +133,8 @@ class PheasantPlugin(BasePlugin):
         root = os.path.join(os.path.dirname(pheasant.__file__), "theme")
         server.watch(root, builder)
         watcher.ignore_dirs(".pheasant_cache")
-
+        for path in self.config["sys_paths"]:
+            watcher.ignore_dirs(path)
         return server
 
 
