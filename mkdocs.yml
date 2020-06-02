@@ -7,8 +7,8 @@ site_dir: ../pheasant-site/site
 repo_url: https://github.com/daizutabi/pheasant/
 edit_uri: ""
 
-# theme: ivory
-theme: readthedocs
+theme: ivory
+# theme: readthedocs
 
 plugins:
   - search
