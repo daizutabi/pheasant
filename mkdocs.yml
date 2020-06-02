@@ -7,8 +7,8 @@ site_dir: ../pheasant-site/site
 repo_url: https://github.com/daizutabi/pheasant/
 edit_uri: ""
 
-theme: ivory
-# theme: readthedocs
+# theme: ivory
+theme: readthedocs
 
 plugins:
   - search
@@ -24,7 +24,7 @@ nav:
     - SymPy: user-guide/sympy.md
     - Script: user-guide/script.py
     - Cell: user-guide/cell.py
-    - Kernel: user-guide/kernel.md
+    - user-guide/kernel.md
   - About:
     - Release Notes: about/release-notes.md
     - License: about/license.md

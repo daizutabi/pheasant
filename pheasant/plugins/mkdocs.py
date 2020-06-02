@@ -115,6 +115,8 @@ class PheasantPlugin(BasePlugin):
             return "Skipped."
 
     def on_page_content(self, html, page, config, files):
+        if page.title:
+            page.title = re.sub(r'<.*?>', '', page.title)
         # if page.toc.items:
         #     page.title = page.toc.items[0].title
         if page.file.abs_src_path not in self.converter.pages:
