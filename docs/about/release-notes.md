@@ -19,6 +19,10 @@ pheasant, version 2.5.6 from /path/to/pheasant (Python 3.7)
 
 ## Change log
 
+### Version 2.5.8 (2020-06-02)
+
+* Strip HTML tags from `page.title`.
+
 ### Version 2.5.7 (2020-05-26)
 
 * New inline code "`# cache:clear`" to clear cache.
