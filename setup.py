@@ -84,6 +84,7 @@ setup(
         "jinja2",
         "termcolor",
         "colorama",
+        "pyyaml",
     ],
     python_requires=">=3.7",
     entry_points={
