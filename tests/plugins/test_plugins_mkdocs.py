@@ -69,18 +69,6 @@ def test_plugins_mkdocs_files(files, plugin, nav):
     assert len(files.documentation_pages()) == 9
 
 
-def test_plugins_mkdocs_page_render(files, plugin, config):
-    for file in files.documentation_pages():
-        page = file.page
-        page.markdown = plugin.on_page_read_source(page, config)
-        page.render(config, files)
-        page.content = plugin.on_page_content(page.content, page, config, files)
-        assert (
-            '<span class="pheasant-header">' in page.content
-            or "Skipped." in page.content
-        )
-
-
 def test_plugins_mkdocs_build(files, plugin, config, nav, env):
     for file in files.documentation_pages():
         page = file.page
