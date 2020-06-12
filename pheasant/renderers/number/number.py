@@ -97,9 +97,9 @@ class Header(Renderer):
             self.meta["ignored_depth"] = 100
             numbering = True
 
-        if title.startswith("!"):
-            title = title[1:]
-            self.number_list[kind] = [0] * 6
+        # if title.startswith("!"):
+        #     title = title[1:]
+        #     self.number_list[kind] = [0] * 6
 
         if numbering:
             title, number_list = split_number(title)

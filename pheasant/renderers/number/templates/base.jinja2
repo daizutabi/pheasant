@@ -1,5 +1,9 @@
 {%- if kind == 'header' -%}
+  {%- if not tag and not number_string -%}
+  {{ header }} {{ title }}
+  {%- else -%}
   {{ header }} <span class="header"{% if tag %} id="{{ tag }}"{% endif %}>{%- block header -%}{%- endblock -%}</span>
+  {%- endif -%}
 {%- else -%}
   <div class="{% if kind in ['figure', 'table', 'equation'] %}{{ kind }}{% else %}other{% endif %}"{% if tag %} id="{{ tag }}"{% endif %}>
   {%- if kind == 'figure' -%}
