@@ -28,7 +28,7 @@
 .pheasant-header div.figure p.caption,
 .pheasant-header div.table p.caption,
 .pheasant-header div.other p.caption {
-  font-size: 0.95rem;
+  font-size: 95%;
   font-style: normal;
 }
 
@@ -94,7 +94,7 @@
   content: "";
   position: absolute;
   left: -2.6em;
-  font-size: 0.8rem;
+  font-size: 80%;
   width: 2.3em;
   text-align: right;
   margin-top: 3px;
