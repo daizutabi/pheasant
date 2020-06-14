@@ -112,7 +112,7 @@ class PheasantPlugin(BasePlugin):
         try:
             return self.converter.pages[page.file.abs_src_path].source
         except KeyError:
-            return "Skipped."
+            return None
 
     def on_page_content(self, html, page, config, files):
         if page.title:
