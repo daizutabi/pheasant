@@ -1,17 +1,19 @@
-import pytest
-from bokeh.resources import CDN
+# import pytest
+# from bokeh.resources import CDN
 
-from pheasant.renderers.jupyter.ipython import (altair_extra_resources,
-                                                bokeh_extra_resources,
-                                                sympy_extra_resources)
-
-
-@pytest.mark.parametrize(
-    "key, values", [("extra_css", CDN.css_files), ("extra_javascript", CDN.js_files)]
+from pheasant.renderers.jupyter.ipython import (  # bokeh_extra_resources,
+    altair_extra_resources,
+    sympy_extra_resources,
 )
-def test_bokeh_extra_resources(key, values):
-    resources = bokeh_extra_resources()
-    assert resources[key] == values
+
+# @pytest.mark.parametrize(
+#     "key, values", [("extra_css", CDN.css_files), ("extra_javascript", CDN.js_files)]
+# )
+# def test_bokeh_extra_resources(key, values):
+#     resources = bokeh_extra_resources()
+#     print(resources)
+#     print(values)
+#     assert resources[key] == values
 
 
 # @pytest.mark.parametrize(

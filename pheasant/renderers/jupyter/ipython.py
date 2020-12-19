@@ -46,7 +46,6 @@ def sympy_extra_resources() -> Dict[str, List[str]]:
         '<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/'
         '2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>\n'
     )
-
     return {"extra_raw_javascript": [js]}
 
 
@@ -54,7 +53,7 @@ def register_sympy_formatter(formatters, latex_printer=None):  # pragma: no cove
     try:
         from sympy.core.basic import Basic
         from sympy.matrices.matrices import MatrixBase
-        from sympy.physics.vector import Vector, Dyadic
+        from sympy.physics.vector import Dyadic, Vector
         from sympy.tensor.array import NDimArray
     except ImportError:
         return
@@ -188,8 +187,8 @@ def altair_extra_resources() -> Dict[str, List[str]]:
             VEGALITE_VERSION,
         )
     except ImportError:
-        from altair.vegalite.v3.display import (  # type: ignore
-            VEGA_VERSION,
+        from altair.vegalite.v3.display import (
+            VEGA_VERSION,  # type: ignore
             VEGAEMBED_VERSION,
             VEGALITE_VERSION,
         )
