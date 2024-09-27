@@ -1,0 +1,87 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "pheasant"
+version = "3.0.0"
+description = "Documentation tool for Markdown conversion by Jupyter client"
+readme = "README.md"
+license = "MIT"
+authors = [{ name = "daizutabi", email = "daizutabi@gmail.com" }]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+]
+requires-python = ">=3.10"
+dependencies = ["mkdocs>=1.6", "ipykernel"]
+
+[project.urls]
+Documentation = "https://github.com/daizutabi/pheasant"
+Source = "https://github.com/daizutabi/pheasant"
+Issues = "https://github.com/daizutabi/pheasant/issues"
+
+[tool.uv]
+dev-dependencies = [
+  "mkdocs-material",
+  "pytest-asyncio",
+  "pytest-clarity",
+  "pytest-cov",
+  "pytest-randomly",
+  "pytest-xdist",
+  "ruff",
+]
+
+[tool.hatch.build.targets.sdist]
+exclude = ["/.github", "/docs"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/pheasant"]
+
+[tool.pytest.ini_options]
+addopts = ["--doctest-modules", "--cov=pheasant", "--cov-report=lcov:lcov.info"]
+doctest_optionflags = ["NORMALIZE_WHITESPACE", "IGNORE_EXCEPTION_DETAIL"]
+filterwarnings = ['ignore:pkg_resources is deprecated:DeprecationWarning']
+asyncio_default_fixture_loop_scope = "function"
+
+[tool.coverage.report]
+exclude_lines = ["no cov", "raise NotImplementedError", "if TYPE_CHECKING:"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["ALL"]
+unfixable = ["F401"]
+ignore = [
+  "ANN003",
+  "ANN401",
+  "ARG002",
+  "B904",
+  "D105",
+  "D107",
+  "D203",
+  "D213",
+  "EM101",
+  "PGH003",
+  "TRY003",
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = [
+  "A001",
+  "ANN",
+  "ARG",
+  "D",
+  "FBT",
+  "PD",
+  "PLR",
+  "PT",
+  "S",
+  "SIM117",
+  "SLF",
+]

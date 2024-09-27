@@ -1,32 +1,16 @@
-[![PyPI version][pypi-image]][pypi-link]
-[![Python versions][pyversions-image]][pyversions-link]
-[![Travis][travis-image]][travis-link]
-[![AppVeyor][appveyor-image]][appveyor-link]
-[![Coverage Status][coveralls-image]][coveralls-link]
-[![Code style: black][black-image]][black-link]
-
-[pypi-image]: https://badge.fury.io/py/pheasant.svg
-[pypi-link]: https://pypi.org/project/pheasant
-[travis-image]: https://travis-ci.org/daizutabi/pheasant.svg?branch=master
-[travis-link]: https://travis-ci.org/daizutabi/pheasant
-[appveyor-image]: https://ci.appveyor.com/api/projects/status/ys2ic8n4j7r5j4bg/branch/master?svg=true
-[appveyor-link]: https://ci.appveyor.com/project/daizutabi/pheasant
-[coveralls-image]: https://coveralls.io/repos/github/daizutabi/pheasant/badge.svg?branch=master
-[coveralls-link]: https://coveralls.io/github/daizutabi/pheasant?branch=master
-[black-image]: https://img.shields.io/badge/code%20style-black-000000.svg
-[black-link]: https://github.com/ambv/black
-[pyversions-image]: https://img.shields.io/pypi/pyversions/pheasant.svg
-[pyversions-link]: https://pypi.org/project/pheasant
-
-<!--
-[![Anaconda Version][anaconda-v-image]][anaconda-v-link]
-[anaconda-v-image]: https://anaconda.org/daizutabi/pheasant/badges/version.svg
-[anaconda-v-link]: https://anaconda.org/daizutabi/pheasant
--->
-
 # Pheasant
 
-Pheasant is a Markdown converter which is designed to be used as a plugin for static site generators, especially MkDocs. The one of the main features of Pheasant is auto Markdown generation of outputs after execution of any Python or other language codes written in a fenced code block of Markdown source. This process is executed by the Jupyter client functionality. In addition to the code execution, Pheasant can automatically number headers, figures, tables, *etcs*.
+[![PyPI Version][pypi-v-image]][pypi-v-link]
+[![Python Version][python-v-image]][python-v-link]
+[![Build Status][GHAction-image]][GHAction-link]
+[![Coverage Status][codecov-image]][codecov-link]
+
+
+Pheasant is a Markdown converter which is designed to be used as a plugin
+for static site generators, especially MkDocs. The one of the main features
+of Pheasant is auto Markdown generation of outputs after execution of any
+Python or other language codes written in a fenced code block of Markdown source.
+This process is executed by the Jupyter client functionality.
 
 ## Setup
 
@@ -44,8 +28,13 @@ plugins:
   - pheasant
 ```
 
-> If you have no `plugins` entry in your config file yet, you'll likely also want to add the `search` plugin. MkDocs enables it by default if there is no `plugins` entry set.
 
-## Documentation
-
-See [Pheasant documentation](https://pheasant.daizutabi.net).
+<!-- Badges -->
+[pypi-v-image]: https://img.shields.io/pypi/v/pheasant.svg
+[pypi-v-link]: https://pypi.org/project/pheasant/
+[python-v-image]: https://img.shields.io/pypi/pyversions/pheasant.svg
+[python-v-link]: https://pypi.org/project/pheasant
+[GHAction-image]: https://github.com/daizutabi/pheasant/actions/workflows/ci.yml/badge.svg?branch=main&event=push
+[GHAction-link]: https://github.com/daizutabi/pheasant/actions?query=event%3Apush+branch%3Amain
+[codecov-image]: https://codecov.io/github/daizutabi/pheasant/coverage.svg?branch=main
+[codecov-link]: https://codecov.io/github/daizutabi/pheasant?branch=main
