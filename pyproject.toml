@@ -15,44 +15,35 @@ classifiers = [
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
 ]
 requires-python = ">=3.10"
-dependencies = ["mkdocs>=1.6", "ipykernel"]
+dependencies = ["mkdocs>=1.6", "ipykernel>=6"]
 
 [project.urls]
 Documentation = "https://github.com/daizutabi/pheasant"
 Source = "https://github.com/daizutabi/pheasant"
 Issues = "https://github.com/daizutabi/pheasant/issues"
 
-[tool.uv]
-dev-dependencies = [
+[dependency-groups]
+dev = [
   "mkdocs-material",
-  "pytest-asyncio",
-  "pytest-clarity",
-  "pytest-cov",
-  "pytest-randomly",
-  "pytest-xdist",
-  "ruff",
+  "pytest-clarity>=1",
+  "pytest-cov>=6",
+  "pytest-randomly>=3.16",
+  "pytest-xdist>=3.6",
 ]
-
-[tool.hatch.build.targets.sdist]
-exclude = ["/.github", "/docs"]
-
-[tool.hatch.build.targets.wheel]
-packages = ["src/pheasant"]
 
 [tool.pytest.ini_options]
 addopts = ["--doctest-modules", "--cov=pheasant", "--cov-report=lcov:lcov.info"]
-doctest_optionflags = ["NORMALIZE_WHITESPACE", "IGNORE_EXCEPTION_DETAIL"]
-filterwarnings = ['ignore:pkg_resources is deprecated:DeprecationWarning']
-asyncio_default_fixture_loop_scope = "function"
 
 [tool.coverage.report]
 exclude_lines = ["no cov", "raise NotImplementedError", "if TYPE_CHECKING:"]
+skip_covered = true
 
 [tool.ruff]
 line-length = 88
-target-version = "py310"
+target-version = "py311"
 
 [tool.ruff.lint]
 select = ["ALL"]
@@ -85,3 +76,9 @@ ignore = [
   "SIM117",
   "SLF",
 ]
+
+[tool.pyright]
+include = ["src", "tests"]
+strictDictionaryInference = true
+strictListInference = true
+strictSetInference = true
